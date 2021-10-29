@@ -43,7 +43,7 @@
 
 ## 🌮 관련 링크
 
-### [💜 프로토타입](https://www.figma.com/file/cHfiiAwilyKdbPcO7KgWmu/%EB%82%98%EB%A7%8C%EC%9D%98-%EC%9D%80%EB%B0%80%ED%95%9C-%EB%9D%BC%EB%94%B0%EB%9A%9C%EC%9D%B4%E2%9D%A4?node-id=64%3A9879)
+### [💜 프로토타입 / C4 모델](https://www.figma.com/file/cHfiiAwilyKdbPcO7KgWmu/%EB%82%98%EB%A7%8C%EC%9D%98-%EC%9D%80%EB%B0%80%ED%95%9C-%EB%9D%BC%EB%94%B0%EB%9A%9C%EC%9D%B4%E2%9D%A4?node-id=64%3A9879)
 ### [🤎 백로그](https://docs.google.com/spreadsheets/d/1vEL1eakho71AsXfejBZ_s8rf3ol1djSEHNhL8YVzziU/edit?usp=sharing) 
 ### [🖤 그라운드 룰](https://github.com/boostcampwm-2021/Android08-Ratatouille/wiki/Ground-Rules)
 ### [🤍 컨벤션](https://github.com/boostcampwm-2021/Android08-Ratatouille/wiki/Convention)
