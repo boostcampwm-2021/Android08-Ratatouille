@@ -1,0 +1,14 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "Ratatouille"
+include ':app'
+include ':presentation'
+include ':domain'
+include ':data'
+include ':local'
+include ':remote'
