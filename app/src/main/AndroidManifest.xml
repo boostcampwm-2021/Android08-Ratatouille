@@ -3,6 +3,7 @@
     package="com.kdjj.ratatouille">
 
     <application
+        android:name=".app.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -10,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Ratatouille">
         <activity
-            android:name=".MainActivity"
+            android:name="com.kdjj.presentation.view.splash.LaunchActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
