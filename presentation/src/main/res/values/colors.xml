@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--  Color Palette Start  -->
+
+    <color name="light_100">#FEFEFE</color>
+    <color name="light_300">#FBFBFB</color>
+    <color name="light_500">#F3F3F3</color>
+
+    <color name="dark_100">#EAF2F5</color>
+    <color name="dark_200">#D6E4EC</color>
+    <color name="dark_500">#343C44</color>
+    <color name="dark_600">#262F3A</color>
+    <color name="dark_900">#091020</color>
+
+    <color name="blue_100">#E3E6FF</color>
+    <color name="blue_500">#091020</color>
+    <color name="blue_600">#545FDB</color>
+    <color name="blue_800">#252B93</color>
+    <color name="blue_900">#161B7A</color>
+
+    <!--  Color Palette End  -->
+
+</resources>
