@@ -6,23 +6,27 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import com.kdjj.domain.model.RecipeStepType
+import com.kdjj.presentation.common.RecipeStepValidator
+import com.kdjj.presentation.common.RecipeValidator
 import com.kdjj.presentation.model.RecipeStepModel
 import javax.inject.Inject
 
 class RecipeEditorViewModel @Inject constructor(
+    private val recipeValidator: RecipeValidator,
+    private val recipeStepValidator: RecipeStepValidator,
 ) : ViewModel() {
 
     //livedata naming convention
     val liveTitle = MutableLiveData<String>()
     val liveTitleState = liveTitle.switchMap {
-        MutableLiveData(validateTitle(it))
+        MutableLiveData(recipeValidator.validateTitle(it))
     }
 
     val liveCategoryPosition = MutableLiveData<Int>(0) // spinner position
 
     val liveStuff = MutableLiveData<String>()
     val liveStuffState = liveStuff.switchMap {
-        MutableLiveData(validateStuff(it))
+        MutableLiveData(recipeValidator.validateStuff(it))
     }
 
     val liveRecipeImgPath = MutableLiveData<String>()
@@ -48,15 +52,5 @@ class RecipeEditorViewModel @Inject constructor(
                 else _liveStepList.value = it.subList(position, it.size)
             }
         }
-    }
-
-    private fun validateTitle(title: String): Boolean {
-        // to-do
-        return true
-    }
-
-    private fun validateStuff(stuff: String): Boolean {
-        // to-do
-        return true
     }
 }
