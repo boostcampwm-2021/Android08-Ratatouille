@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="editor_imageView_stroke">1dp</dimen>
+    <dimen name="editor_imageView_corner">8dp</dimen>
+    <dimen name="editor_imageView_size">100dp</dimen>
+    <dimen name="editor_recipeImage_marginStart">16dp</dimen>
+    <dimen name="editor_recipeImage_marginTop">16dp</dimen>
+</resources>
