@@ -1,6 +1,7 @@
 package com.kdjj.ratatouille.di.presentation
 
 import com.kdjj.domain.model.Recipe
+import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.repository.RecipeRepository
 import dagger.Module
 import dagger.Provides
@@ -17,7 +18,7 @@ class FakeModule {
                 TODO("Not yet implemented")
             }
 
-            override suspend fun fetchRecipeTypes(): Result<List<Recipe.Type>> {
+            override suspend fun fetchRecipeTypes(): Result<List<RecipeType>> {
                 TODO("Not yet implemented")
             }
         }
