@@ -5,7 +5,7 @@ import com.kdjj.local.model.RecipeTypeEntity
 
 interface LocalDataSource {
 
-    suspend fun saveRecipe(recipe: Recipe)
+    suspend fun saveRecipe(recipe: Recipe): Result<Boolean>
 
     suspend fun saveRecipeTypes()
 
