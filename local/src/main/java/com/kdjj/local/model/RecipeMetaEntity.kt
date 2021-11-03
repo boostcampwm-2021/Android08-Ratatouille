@@ -1,4 +1,4 @@
-package com.kdjj.local
+package com.kdjj.local.model
 
 import androidx.room.*
 
