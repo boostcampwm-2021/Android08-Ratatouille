@@ -1,4 +1,4 @@
-package com.kdjj.local
+package com.kdjj.local.database
 
 import android.content.Context
 import androidx.room.Database
