@@ -1,3 +1,4 @@
 <resources>
     <string name="addRecipe">레시피 추가</string>
+    <string name="recipeImage">레시피 이미지</string>
 </resources>
