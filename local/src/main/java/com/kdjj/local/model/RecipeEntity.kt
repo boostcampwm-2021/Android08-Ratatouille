@@ -7,8 +7,8 @@ data class RecipeEntity(
     @Embedded val recipeMeta: RecipeMetaEntity,
 
     @Relation(
-        parentColumn = "recipeMetaId",
-        entityColumn = "parentRecipeId"
+        parentColumn = "recipeTypeId",
+        entityColumn = "recipeTypeId"
     )
     val recipeType: RecipeTypeEntity,
 
