@@ -31,6 +31,25 @@ class RecipeEditorViewModel @Inject constructor(
         liveRecipeImgPath.value = uri.path
     }
 
+    private val _liveStepList = MutableLiveData<List<RecipeStepModel>>()
+    val liveStepList: LiveData<List<RecipeStepModel>> = _liveStepList
+
+    fun addRecipeStep() {
+        _liveStepList.value?.let {
+            _liveStepList.value = it.plus(RecipeStepModel())
+        }
+    }
+
+    fun removeRecipeStep(position: Int) {
+        _liveStepList.value?.let {
+            if (it.size <= 1) _liveStepList.value = emptyList()
+            else {
+                if (position == 0) _liveStepList.value = it.subList(1, it.size)
+                else _liveStepList.value = it.subList(position, it.size)
+            }
+        }
+    }
+
     private fun validateTitle(title: String): Boolean {
         // to-do
         return true
