@@ -35,8 +35,8 @@ class RecipeEditorViewModelTest {
     @Test
     fun titleSwitchMap_titleSetValue_titleStateChanged() {
         assertEquals(
-            viewModel.titleState.getOrAwaitValue {
-                viewModel.title.value = "hi"
+            viewModel.liveTitle.getOrAwaitValue {
+                viewModel.liveTitle.value = "hi"
             },
             true
         )
