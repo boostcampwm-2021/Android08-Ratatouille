@@ -1,8 +1,8 @@
 package com.kdjj.ratatouille.di
 
-import com.kdjj.domain.request.RecipeRequest
-import com.kdjj.domain.usecase.SaveRecipeUseCase
-import com.kdjj.domain.usecase.UseCase
+import com.kdjj.domain.model.Recipe
+import com.kdjj.domain.model.RecipeType
+import com.kdjj.domain.repository.RecipeRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,6 +14,4 @@ abstract class RepositoryModule {
 
 //    @Binds
 //    abstract fun provideRecipeRepository(recipeRepositoryImpl: RecipeRepositoryImpl): RecipeRepository
-    @Binds
-    abstract fun provideSaveRecipeUseCase(saveRecipeUseCase: SaveRecipeUseCase): UseCase<RecipeRequest, Boolean>
 }

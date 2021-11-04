@@ -4,24 +4,14 @@ import androidx.annotation.VisibleForTesting
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.kdjj.domain.model.RecipeType
-import com.kdjj.domain.request.EmptyRequest
 import com.kdjj.domain.usecase.FetchRecipeTypesUseCase
 import com.kdjj.domain.usecase.SaveRecipeUseCase
-import com.kdjj.presentation.common.RecipeMapper
 import com.kdjj.presentation.common.RecipeStepValidator
 import com.kdjj.presentation.common.RecipeValidator
-import com.kdjj.presentation.model.RecipeItem
 import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.*
-import kotlinx.coroutines.test.TestCoroutineScope
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TestWatcher
-import org.junit.runner.Description
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.mockito.Mockito.mock
@@ -29,7 +19,6 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import org.mockito.Mockito.`when`
-import kotlin.coroutines.ContinuationInterceptor
 
 @RunWith(Parameterized::class) // 반복적 테스트
 class RecipeEditorViewModelTest(
@@ -45,9 +34,11 @@ class RecipeEditorViewModelTest(
         @Parameterized.Parameters
         fun data() : Collection<Array<Any>>{
             return listOf(
-                arrayOf(5, 1, 2, 3),
-                arrayOf(5, 4, 3, 2),
+                arrayOf(5, 0, 0, 1),
+                arrayOf(5, 4, 0, 4),
                 arrayOf(5, 3, 2, 1),
+                arrayOf(1, 0, 0, 0),
+                arrayOf(0, 0, 0, 0),
             )
         }
     }
@@ -55,48 +46,35 @@ class RecipeEditorViewModelTest(
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    @ExperimentalCoroutinesApi
-    @get:Rule
-    var mainCoroutineRule = MainCoroutineRule()
-
     lateinit var saveRecipeUseCase: SaveRecipeUseCase
+
     lateinit var fetchRecipeTypesUseCase: FetchRecipeTypesUseCase
+
     lateinit var recipeValidator: RecipeValidator
+
     lateinit var recipeStepValidator: RecipeStepValidator
-    lateinit var recipeMapper: RecipeMapper
 
     private lateinit var viewModel: RecipeEditorViewModel
 
-    @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
         saveRecipeUseCase = mock(SaveRecipeUseCase::class.java)
         fetchRecipeTypesUseCase = mock(FetchRecipeTypesUseCase::class.java)
         recipeValidator = mock(RecipeValidator::class.java)
         recipeStepValidator = mock(RecipeStepValidator::class.java)
-        recipeMapper = mock(RecipeMapper::class.java)
-        TestCoroutineScope(mainCoroutineRule.coroutineContext).launch {
-            setViewModel()
-        }
+        viewModel = RecipeEditorViewModel(recipeValidator, recipeStepValidator)
 
         repeat(stepSize) {
             viewModel.addRecipeStep()
         }
     }
 
-    suspend fun setViewModel() {
-        `when`(fetchRecipeTypesUseCase.invoke(EmptyRequest())).thenReturn(Result.success(listOf(RecipeType(0, "중식"))))
-        viewModel = RecipeEditorViewModel(recipeValidator, recipeStepValidator, saveRecipeUseCase, fetchRecipeTypesUseCase, recipeMapper)
-//        viewModel.fetchRecipeTypes()
-    }
-
     @Test
     fun titleSwitchMap_titleSetValue_titleStateChanged() {
         `when`(recipeValidator.validateTitle("hi")).thenReturn(true)
-        val recipeModel = viewModel.liveRecipeItemList.value!![0] as RecipeItem.RecipeMetaModel
-        recipeModel.liveTitle.value = "hi"
+        viewModel.liveTitle.value = "hi"
         assertEquals(
-            recipeModel.liveTitleState.getOrAwaitValue(),
+            viewModel.liveTitleState.getOrAwaitValue(),
             true
         )
     }
@@ -105,10 +83,9 @@ class RecipeEditorViewModelTest(
     fun stepSwitchMap_stepNameSetValue_stepNameStateChanged() {
         `when`(recipeStepValidator.validateName("h")).thenReturn(true)
         if (stepSize > 0) {
-            val recipeModel = viewModel.liveRecipeItemList.value!![1] as RecipeItem.RecipeStepModel
-            recipeModel.liveName.value = "h"
+            viewModel.liveStepList.value!![0].liveName.value = "h"
             assertEquals(
-                recipeModel.liveNameState.getOrAwaitValue(),
+                viewModel.liveStepList.value!![0].liveNameState.getOrAwaitValue(),
                 true
             )
         }
@@ -118,35 +95,20 @@ class RecipeEditorViewModelTest(
     fun stepRemove_removeOne_stepSizeDecreased() {
         viewModel.removeRecipeStep(removeStepPosition)
         if (stepSize == 0) {
-            assertEquals(0, viewModel.liveRecipeItemList.value?.size)
+            assertEquals(0, viewModel.liveStepList.value?.size)
         } else {
-            // meta item + button item = 2
-            assertEquals(stepSize + 2 - 1, viewModel.liveRecipeItemList.value?.size)
+            assertEquals(stepSize - 1, viewModel.liveStepList.value?.size)
         }
     }
 
     @Test
     fun stepPositionChange_fromTo_fromEqualsTo() {
         if (stepSize != 0) {
-            val from = viewModel.liveRecipeItemList.value!![moveStepFrom]
+            val from = viewModel.liveStepList.value!![moveStepFrom]
             viewModel.changeRecipeStepPosition(moveStepFrom, moveStepTo)
-            val to = viewModel.liveRecipeItemList.value!![moveStepTo]
+            val to = viewModel.liveStepList.value!![moveStepTo]
             assertEquals(from, to)
         }
-    }
-}
-
-@ExperimentalCoroutinesApi
-class MainCoroutineRule : TestWatcher(), TestCoroutineScope by TestCoroutineScope() {
-
-    override fun starting(description: Description?) {
-        super.starting(description)
-        Dispatchers.setMain(this.coroutineContext[ContinuationInterceptor] as CoroutineDispatcher)
-    }
-
-    override fun finished(description: Description?) {
-        super.finished(description)
-        Dispatchers.resetMain()
     }
 }
 
