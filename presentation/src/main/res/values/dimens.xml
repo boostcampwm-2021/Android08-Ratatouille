@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="editor_imageView_stroke">1dp</dimen>
+    <dimen name="editor_imageView_corner">8dp</dimen>
+    <dimen name="editor_imageView_size">100dp</dimen>
+    <dimen name="editor_recipeImage_marginStart">16dp</dimen>
+    <dimen name="editor_recipeImage_marginTop">16dp</dimen>
+    <dimen name="editor_inputField_corner">8dp</dimen>
+    <dimen name="editor_inputField_stroke">1dp</dimen>
+    <dimen name="editor_inputField_textSize">14sp</dimen>
+    <dimen name="editor_inputField_paddingVertical">8dp</dimen>
+    <dimen name="editor_inputField_paddingHorizontal">16dp</dimen>
+    <dimen name="editor_inputLabel_textSize">16sp</dimen>
+    <dimen name="editor_inputLabel_marginStart">16dp</dimen>
+    <dimen name="editor_inputField_marginStart">8dp</dimen>
+    <dimen name="editor_inputField_marginEnd">16dp</dimen>
+    <dimen name="editor_stuffLabel_marginTop">24dp</dimen>
+    <dimen name="editor_stuffInput_marginTop">8dp</dimen>
+    <dimen name="editor_stuffInput_height">80dp</dimen>
+    <dimen name="editor_step_marginTop">24dp</dimen>
+    <dimen name="editor_step_padding">16dp</dimen>
+    <dimen name="editor_step_marginHorizontal">16dp</dimen>
+    <dimen name="editor_stepImage_marginTop">8dp</dimen>
+    <dimen name="editor_stepField_marginTop">8dp</dimen>
+    <dimen name="editor_stepTimer_marginStart">4dp</dimen>
+    <dimen name="editor_btnAddHeight_height">70dp</dimen>
+    <dimen name="bottomButton_corner">8dp</dimen>
+    <dimen name="bottomButton_margin">16dp</dimen>
+    <dimen name="bottomButton_padding">16dp</dimen>
+    <dimen name="bottomButton_textSize">24sp</dimen>
+    <dimen name="bottomButton_space">100dp</dimen>
+</resources>

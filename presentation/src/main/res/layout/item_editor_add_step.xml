@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/editor_btnAddHeight_height"
+        android:layout_marginStart="@dimen/editor_step_marginHorizontal"
+        android:layout_marginTop="@dimen/editor_step_marginTop"
+        android:layout_marginEnd="@dimen/editor_step_marginHorizontal"
+        android:layout_marginBottom="@dimen/bottomButton_space"
+        app:cardBackgroundColor="@color/light_300">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/addStepButton"
+            android:src="@drawable/ic_round_add_24" />
+    </androidx.cardview.widget.CardView>
+</layout>

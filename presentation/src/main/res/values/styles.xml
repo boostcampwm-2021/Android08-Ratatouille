@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/blue_600</item>
+        <item name="titleTextColor">@color/light_100</item>
+    </style>
+
+    <style name="EditorInputField" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/bg_editor_input_field</item>
+        <item name="android:textColor">@color/dark_500</item>
+        <item name="android:textSize">@dimen/editor_inputField_textSize</item>
+        <item name="android:paddingTop">@dimen/editor_inputField_paddingVertical</item>
+        <item name="android:paddingBottom">@dimen/editor_inputField_paddingVertical</item>
+        <item name="android:paddingStart">@dimen/editor_inputField_paddingHorizontal</item>
+        <item name="android:paddingEnd">@dimen/editor_inputField_paddingHorizontal</item>
+        <item name="android:layout_marginStart">@dimen/editor_inputField_marginStart</item>
+        <item name="android:layout_marginEnd">@dimen/editor_inputField_marginEnd</item>
+    </style>
+
+    <style name="EditorInputLabel" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/dark_500</item>
+        <item name="android:textSize">@dimen/editor_inputLabel_textSize</item>
+        <item name="android:layout_marginStart">@dimen/editor_inputLabel_marginStart</item>
+    </style>
+</resources>
