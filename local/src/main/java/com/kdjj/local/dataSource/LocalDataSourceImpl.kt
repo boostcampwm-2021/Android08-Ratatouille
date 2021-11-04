@@ -55,7 +55,7 @@ class LocalDataSourceImpl(
     override suspend fun localUriToByteArray(uri: String): Result<ByteArray> =
         fileSaveHelper.convertToByteArray(uri)
 
-    //Image ByteArray를 Internal 저장소에 저장후 imagePath(파일 경로 반환) fileName = recipe or step ID
+    //Image ByteArray를 Internal 저장소에 저장후 imagePath(파일 경로 반환) fileName == recipe or step ID
     override suspend fun byteArrayToLocalUri(
         byteArray: ByteArray,
         fileName: String
@@ -63,7 +63,7 @@ class LocalDataSourceImpl(
         fileSaveHelper.convertToInternalStorageUri(byteArray, fileName)
 
     /**
-     * 추가로 구현해야하는 함수:
+     * 추가로 구현해야하는 함수(Firebase에서 훔쳐온 레시피):
      * fun remoteUriToByteArray(str: String): ByteArray
      * fun byteArrayToRemoteUri(array: ByteArray): String
      * */
