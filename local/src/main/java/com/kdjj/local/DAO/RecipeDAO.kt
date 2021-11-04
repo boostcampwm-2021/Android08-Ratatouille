@@ -16,14 +16,11 @@ interface RecipeDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertRecipeType(recipeType: RecipeTypeEntity)
 
-    @Query("SELECT * FROM RecipeType")
-    fun getAllRecipeTypes(): List<RecipeTypeEntity>
-
     //RecipeStep
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertRecipeStep(recipeStep: RecipeStepEntity)
 
     @Transaction
-    @Query("SELECT * FROM RecipeMeta")
+    @Query("SELECT * FROM recipeMeta")
     fun getAllRecipe(): List<RecipeEntity>
 }
