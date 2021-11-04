@@ -24,9 +24,4 @@
     <dimen name="editor_stepField_marginTop">8dp</dimen>
     <dimen name="editor_stepTimer_marginStart">4dp</dimen>
     <dimen name="editor_btnAddHeight_height">70dp</dimen>
-    <dimen name="bottomButton_corner">8dp</dimen>
-    <dimen name="bottomButton_margin">16dp</dimen>
-    <dimen name="bottomButton_padding">16dp</dimen>
-    <dimen name="bottomButton_textSize">24sp</dimen>
-    <dimen name="bottomButton_space">100dp</dimen>
 </resources>
