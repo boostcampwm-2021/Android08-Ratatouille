@@ -20,17 +20,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/imageView_editor_recipe"
-            android:layout_width="@dimen/editor_imageView_size"
-            android:layout_height="@dimen/editor_imageView_size"
-            android:layout_marginTop="@dimen/editor_recipeImage_marginTop"
-            android:layout_marginStart="@dimen/editor_recipeImage_marginStart"
-            android:contentDescription="@string/recipeImage"
-            android:background="@drawable/bg_editor_image"
-            tools:src="@drawable/ic_baseline_fastfood_24"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
