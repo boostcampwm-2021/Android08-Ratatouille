@@ -14,7 +14,4 @@
     <dimen name="editor_inputLabel_marginStart">16dp</dimen>
     <dimen name="editor_inputField_marginStart">8dp</dimen>
     <dimen name="editor_inputField_marginEnd">16dp</dimen>
-    <dimen name="editor_stuffLabel_marginTop">24dp</dimen>
-    <dimen name="editor_stuffInput_marginTop">8dp</dimen>
-    <dimen name="editor_stuffInput_height">80dp</dimen>
 </resources>
