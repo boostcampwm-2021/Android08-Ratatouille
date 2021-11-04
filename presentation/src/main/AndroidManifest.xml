@@ -4,9 +4,6 @@
 
     <application>
         <activity
-            android:name=".view.recipeeditor.RecipeEditorActivity"
-            android:exported="false" />
-        <activity
             android:name=".view.splash.LaunchActivity"
             android:exported="true" />
     </application>
