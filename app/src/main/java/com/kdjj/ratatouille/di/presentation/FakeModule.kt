@@ -5,11 +5,8 @@ import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.repository.RecipeRepository
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(SingletonComponent::class)
 class FakeModule {
     /*
     아직 RecipeRepository Impl 이 구현 되지 않아 추가한 코드, 삭제해야 합니다.
