@@ -44,6 +44,10 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
+    // Mockito framework
+    testImplementation "org.mockito:mockito-inline:$mockito_inline_version"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+
     implementation project(path: ':domain')
 
     testImplementation 'junit:junit:4.+'
