@@ -45,9 +45,4 @@ dependencies {
 
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
-
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$livedata_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$livedata_version"
-
-    implementation project(path: ':domain')
 }
