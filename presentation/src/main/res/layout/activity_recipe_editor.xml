@@ -31,7 +31,7 @@
             android:background="@drawable/bg_editor_image"
             tools:src="@drawable/ic_baseline_fastfood_24"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_editor" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             style="@style/EditorInputLabel"
@@ -39,6 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title"
+            android:layout_marginStart="@dimen/editor_inputLabel_marginStart"
             android:labelFor="@id/editText_editor_recipeTitle"
             app:layout_constraintStart_toEndOf="@id/imageView_editor_recipe"
             app:layout_constraintTop_toTopOf="@id/editText_editor_recipeTitle"
@@ -49,34 +50,11 @@
             android:id="@+id/editText_editor_recipeTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/editor_inputField_marginStart"
+            android:layout_marginEnd="@dimen/editor_inputField_marginEnd"
             android:inputType="text"
             android:importantForAutofill="no"
             app:layout_constraintTop_toTopOf="@id/imageView_editor_recipe"
-            app:layout_constraintBottom_toTopOf="@id/spinner_editor_recipeType"
-            app:layout_constraintStart_toEndOf="@id/textView_editor_recipeTitle"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <TextView
-            style="@style/EditorInputLabel"
-            android:id="@+id/textView_editor_recipeType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/type"
-            android:labelFor="@id/spinner_editor_recipeType"
-            app:layout_constraintStart_toEndOf="@id/imageView_editor_recipe"
-            app:layout_constraintTop_toTopOf="@id/spinner_editor_recipeType"
-            app:layout_constraintBottom_toBottomOf="@id/spinner_editor_recipeType"/>
-
-        <Spinner
-            android:id="@+id/spinner_editor_recipeType"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_editor_input_field"
-            android:layout_marginStart="@dimen/editor_inputField_marginStart"
-            android:layout_marginEnd="@dimen/editor_inputField_marginEnd"
-            tools:listitem="@layout/item_editor_recipe_type"
-            app:layout_constraintTop_toBottomOf="@id/editText_editor_recipeTitle"
-            app:layout_constraintBottom_toBottomOf="@id/imageView_editor_recipe"
             app:layout_constraintStart_toEndOf="@id/textView_editor_recipeTitle"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

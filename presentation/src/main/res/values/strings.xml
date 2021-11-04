@@ -2,5 +2,4 @@
     <string name="addRecipe">레시피 추가</string>
     <string name="recipeImage">레시피 이미지</string>
     <string name="title">제목</string>
-    <string name="type">종류</string>
 </resources>
