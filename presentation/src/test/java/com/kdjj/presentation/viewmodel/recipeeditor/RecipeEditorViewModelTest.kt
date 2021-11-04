@@ -12,35 +12,13 @@ import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.Parameterized
 import org.mockito.Mockito.mock
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import org.mockito.Mockito.`when`
 
-@RunWith(Parameterized::class) // 반복적 테스트
-class RecipeEditorViewModelTest(
-    private val stepSize: Int,
-    private val removeStepPosition: Int,
-) {
-
-    companion object{
-        //반복적 테스트를 위한 파라미터 생성
-        @JvmStatic
-        @Parameterized.Parameters
-        fun data() : Collection<Array<Any>>{
-            return listOf(
-                arrayOf(5, 0),
-                arrayOf(5, 4),
-                arrayOf(5, 3),
-                arrayOf(1, 0),
-                arrayOf(0, 0),
-            )
-        }
-    }
-
+class RecipeEditorViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
@@ -62,9 +40,7 @@ class RecipeEditorViewModelTest(
         recipeStepValidator = mock(RecipeStepValidator::class.java)
         viewModel = RecipeEditorViewModel(recipeValidator, recipeStepValidator)
 
-        repeat(stepSize) {
-            viewModel.addRecipeStep()
-        }
+        viewModel.addRecipeStep()
     }
 
     @Test
@@ -80,23 +56,11 @@ class RecipeEditorViewModelTest(
     @Test
     fun stepSwitchMap_stepNameSetValue_stepNameStateChanged() {
         `when`(recipeStepValidator.validateName("h")).thenReturn(true)
-        if (stepSize > 0) {
-            viewModel.liveStepList.value!![0].liveName.value = "h"
-            assertEquals(
-                viewModel.liveStepList.value!![0].liveNameState.getOrAwaitValue(),
-                true
-            )
-        }
-    }
-
-    @Test
-    fun stepRemove_removeOne_stepSizeDecreased() {
-        viewModel.removeRecipeStep(removeStepPosition)
-        if (stepSize == 0) {
-            assertEquals(0, viewModel.liveStepList.value?.size)
-        } else {
-            assertEquals(stepSize - 1, viewModel.liveStepList.value?.size)
-        }
+        viewModel.liveStepList.value!![0].liveName.value = "h"
+        assertEquals(
+            viewModel.liveStepList.value!![0].liveNameState.getOrAwaitValue(),
+            true
+        )
     }
 }
 
