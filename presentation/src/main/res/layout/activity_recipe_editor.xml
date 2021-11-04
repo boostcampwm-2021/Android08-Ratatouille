@@ -79,5 +79,31 @@
             app:layout_constraintBottom_toBottomOf="@id/imageView_editor_recipe"
             app:layout_constraintStart_toEndOf="@id/textView_editor_recipeTitle"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            style="@style/EditorInputLabel"
+            android:id="@+id/textView_editor_recipeStuff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/stuff"
+            android:labelFor="@id/editText_editor_recipeStuff"
+            android:layout_marginTop="@dimen/editor_stuffLabel_marginTop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageView_editor_recipe" />
+
+        <EditText
+            style="@style/EditorInputField"
+            android:id="@+id/editText_editor_recipeStuff"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/editor_stuffInput_height"
+            android:inputType="textMultiLine"
+            android:gravity="top"
+            android:importantForAutofill="no"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="@dimen/editor_stuffInput_marginTop"
+            tools:text="이것 저것\n얘도 쟤도"
+            app:layout_constraintTop_toBottomOf="@id/textView_editor_recipeStuff"
+            app:layout_constraintStart_toStartOf="@id/textView_editor_recipeStuff"
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
