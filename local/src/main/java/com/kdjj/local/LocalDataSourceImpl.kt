@@ -4,7 +4,7 @@ import com.kdjj.domain.model.Recipe
 
 class LocalDataSourceImpl: LocalDataSource {
 
-    override suspend fun saveRecipe(recipe: Recipe): Result<Boolean> {
+    override suspend fun saveRecipe(recipe: Recipe) {
         TODO("Not yet implemented")
     }
 }
