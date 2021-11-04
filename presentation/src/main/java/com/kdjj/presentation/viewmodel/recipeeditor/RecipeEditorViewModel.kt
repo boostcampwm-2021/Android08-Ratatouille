@@ -66,7 +66,8 @@ class RecipeEditorViewModel @Inject constructor(
             if (it.size <= 1) _liveStepList.value = emptyList()
             else {
                 if (position == 0) _liveStepList.value = it.subList(1, it.size)
-                else _liveStepList.value = it.subList(position, it.size)
+                else if (position == it.lastIndex) _liveStepList.value = it.subList(0, it.lastIndex)
+                else _liveStepList.value = it.subList(0, position) + it.subList(position + 1, it.size)
             }
         }
     }
