@@ -1,12 +1,10 @@
 package com.kdjj.local.dataSource
 
-import android.util.Log
 import com.kdjj.domain.model.Recipe
 import com.kdjj.local.DAO.RecipeDAO
 import com.kdjj.local.domainToEntity
 import com.kdjj.local.model.RecipeTypeEntity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.lang.Exception
@@ -28,9 +26,9 @@ class LocalDataSourceImpl(private val recipeDatabase: RecipeDAO, private val fil
     override suspend fun saveRecipe(recipe: Recipe): Result<Boolean> {
         return withContext(Dispatchers.IO) {
             return@withContext try {
-                recipeDatabase.insertRecipeMeta(domainToEntity(recipe))
+                val recipeMetaID = recipeDatabase.insertRecipeMeta(domainToEntity(recipe))
                 recipe.stepList.forEach { recipeStep ->
-                    recipeDatabase.insertRecipeStep(domainToEntity(recipeStep, recipe.recipeId))
+                    recipeDatabase.insertRecipeStep(domainToEntity(recipeStep, recipeMetaID))
                 }
                 Result.success(true)
             } catch (e: Exception) {

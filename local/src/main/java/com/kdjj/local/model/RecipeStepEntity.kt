@@ -18,12 +18,12 @@ import com.kdjj.local.model.RecipeMetaEntity
     ]
 )
 data class RecipeStepEntity(
-    @PrimaryKey
-    val stepId: String,
+    @PrimaryKey(autoGenerate = true)
+    val stepId: Long? = null,
     val name: String,
     val type: RecipeStepType,
     val description: String,
     var imgPath: String,
     val seconds: Int,
-    val parentRecipeId: String,
+    val parentRecipeId: Long,
 )
