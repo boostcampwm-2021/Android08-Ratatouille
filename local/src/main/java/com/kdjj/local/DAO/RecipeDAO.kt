@@ -10,7 +10,7 @@ import com.kdjj.local.model.RecipeTypeEntity
 interface RecipeDAO {
     //RecipeMeta
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRecipeMeta(recipeMeta: RecipeMetaEntity)
+    fun insertRecipeMeta(recipeMeta: RecipeMetaEntity): Long
 
     //RecipeType
     @Insert(onConflict = OnConflictStrategy.REPLACE)
