@@ -24,8 +24,6 @@ import org.mockito.Mockito.`when`
 class RecipeEditorViewModelTest(
     private val stepSize: Int,
     private val removeStepPosition: Int,
-    private val moveStepFrom: Int,
-    private val moveStepTo: Int,
 ) {
 
     companion object{
@@ -34,11 +32,11 @@ class RecipeEditorViewModelTest(
         @Parameterized.Parameters
         fun data() : Collection<Array<Any>>{
             return listOf(
-                arrayOf(5, 0, 0, 1),
-                arrayOf(5, 4, 0, 4),
-                arrayOf(5, 3, 2, 1),
-                arrayOf(1, 0, 0, 0),
-                arrayOf(0, 0, 0, 0),
+                arrayOf(5, 0),
+                arrayOf(5, 4),
+                arrayOf(5, 3),
+                arrayOf(1, 0),
+                arrayOf(0, 0),
             )
         }
     }
@@ -98,16 +96,6 @@ class RecipeEditorViewModelTest(
             assertEquals(0, viewModel.liveStepList.value?.size)
         } else {
             assertEquals(stepSize - 1, viewModel.liveStepList.value?.size)
-        }
-    }
-
-    @Test
-    fun stepPositionChange_fromTo_fromEqualsTo() {
-        if (stepSize != 0) {
-            val from = viewModel.liveStepList.value!![moveStepFrom]
-            viewModel.changeRecipeStepPosition(moveStepFrom, moveStepTo)
-            val to = viewModel.liveStepList.value!![moveStepTo]
-            assertEquals(from, to)
         }
     }
 }

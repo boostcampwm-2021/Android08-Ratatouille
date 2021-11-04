@@ -8,7 +8,6 @@ import androidx.lifecycle.switchMap
 import com.kdjj.presentation.common.RecipeStepValidator
 import com.kdjj.presentation.common.RecipeValidator
 import com.kdjj.presentation.model.RecipeStepModel
-import java.util.*
 import javax.inject.Inject
 
 class RecipeEditorViewModel @Inject constructor(
@@ -44,7 +43,7 @@ class RecipeEditorViewModel @Inject constructor(
         }
     }
 
-    private fun createEmptyRecipeStepModel(): RecipeStepModel {
+    fun createEmptyRecipeStepModel(): RecipeStepModel {
         val liveName =  MutableLiveData("")
         val liveDescription = MutableLiveData("")
         val liveTimerMin = MutableLiveData(0)
@@ -69,15 +68,6 @@ class RecipeEditorViewModel @Inject constructor(
                 if (position == 0) _liveStepList.value = it.subList(1, it.size)
                 else if (position == it.lastIndex) _liveStepList.value = it.subList(0, it.lastIndex)
                 else _liveStepList.value = it.subList(0, position) + it.subList(position + 1, it.size)
-            }
-        }
-    }
-
-    fun changeRecipeStepPosition(from: Int, to: Int) {
-        _liveStepList.value?.let {
-            if (it.isNotEmpty()) {
-                Collections.swap(it, from, to)
-                _liveStepList.value = it
             }
         }
     }
