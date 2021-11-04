@@ -81,21 +81,4 @@ class RecipeEditorViewModel @Inject constructor(
             }
         }
     }
-
-    private fun checkAllValidate(): Boolean {
-        // check recipe meta
-        if (liveTitleState.value != true || liveStuffState.value != true) {
-            return false
-        }
-
-        // check step list
-        liveStepList.value?.forEach {
-            if (it.liveNameState.value != true || it.liveDescriptionState.value != true ||
-                it.liveTimerMinState.value != true || it.liveTimerSecState.value != true) {
-                return false
-            }
-        } ?: return false
-
-        return true
-    }
 }
