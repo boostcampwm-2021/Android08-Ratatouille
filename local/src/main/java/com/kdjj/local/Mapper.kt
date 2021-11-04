@@ -18,10 +18,11 @@ fun domainToEntity(recipe: Recipe): RecipeMetaEntity {
     )
 }
 
-fun domainToEntity(step: RecipeStep, recipeMetaID: String): RecipeStepEntity {
+fun domainToEntity(step: RecipeStep, recipeMetaID: String, order: Int): RecipeStepEntity {
     return RecipeStepEntity(
         step.stepId,
         step.name,
+        order,
         step.type,
         step.description,
         step.imgPath,
