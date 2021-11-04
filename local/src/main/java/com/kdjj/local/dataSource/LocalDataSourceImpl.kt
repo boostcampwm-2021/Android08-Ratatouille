@@ -22,15 +22,22 @@ import java.lang.Exception
  * InputStream으로 이미지 불러와서 -> ByteStream으로 변환해서 -> Internal Storage 저장
  *
  * **/
-class LocalDataSourceImpl(private val recipeDatabase: RecipeDAO, private val filesDir: File) : LocalDataSource {
+class LocalDataSourceImpl(private val recipeDatabase: RecipeDAO, private val filesDir: File) :
+    LocalDataSource {
 
     //Recipe 저장
     override suspend fun saveRecipe(recipe: Recipe): Result<Boolean> {
         return withContext(Dispatchers.IO) {
             return@withContext try {
                 recipeDatabase.insertRecipeMeta(domainToEntity(recipe))
-                recipe.stepList.forEach { recipeStep ->
-                    recipeDatabase.insertRecipeStep(domainToEntity(recipeStep, recipe.recipeId))
+                recipe.stepList.forEachIndexed { idx, recipeStep ->
+                    recipeDatabase.insertRecipeStep(
+                        domainToEntity(
+                            recipeStep,
+                            recipe.recipeId,
+                            idx + 1
+                        )
+                    )
                 }
                 Result.success(true)
             } catch (e: Exception) {
@@ -49,7 +56,7 @@ class LocalDataSourceImpl(private val recipeDatabase: RecipeDAO, private val fil
             return@withContext try {
                 val recipeTypeList = recipeDatabase.getAllRecipeTypes()
                 Result.success(recipeTypeList)
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 Result.failure(Exception(e.message))
             }
         }
