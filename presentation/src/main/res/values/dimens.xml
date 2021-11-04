@@ -5,13 +5,4 @@
     <dimen name="editor_imageView_size">100dp</dimen>
     <dimen name="editor_recipeImage_marginStart">16dp</dimen>
     <dimen name="editor_recipeImage_marginTop">16dp</dimen>
-    <dimen name="editor_inputField_corner">8dp</dimen>
-    <dimen name="editor_inputField_stroke">1dp</dimen>
-    <dimen name="editor_inputField_textSize">14sp</dimen>
-    <dimen name="editor_inputField_paddingVertical">8dp</dimen>
-    <dimen name="editor_inputField_paddingHorizontal">16dp</dimen>
-    <dimen name="editor_inputLabel_textSize">16sp</dimen>
-    <dimen name="editor_inputLabel_marginStart">16dp</dimen>
-    <dimen name="editor_inputField_marginStart">8dp</dimen>
-    <dimen name="editor_inputField_marginEnd">16dp</dimen>
 </resources>
