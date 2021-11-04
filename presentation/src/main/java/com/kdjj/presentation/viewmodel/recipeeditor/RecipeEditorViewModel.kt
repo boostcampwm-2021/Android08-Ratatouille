@@ -12,9 +12,8 @@ class RecipeEditorViewModel @Inject constructor(
     private val saveRecipe: SaveRecipeUseCase
 ) : ViewModel() {
 
-    //livedata naming convention
-    val liveTitle = MutableLiveData<String>()
-    val liveTitleState = liveTitle.switchMap {
+    val title = MutableLiveData<String>()
+    val titleState = title.switchMap {
         MutableLiveData(validateTitle(it))
     }
 
