@@ -54,7 +54,6 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
 
     implementation "androidx.cardview:cardview:1.0.0"
-    implementation "androidx.recyclerview:recyclerview:1.2.1"
 
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
