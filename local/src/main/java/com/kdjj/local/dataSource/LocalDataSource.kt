@@ -9,5 +9,5 @@ interface LocalDataSource {
 
     suspend fun saveRecipeTypes()
 
-    suspend fun getRecipeTypes(): Result<List<RecipeTypeEntity>>
+    suspend fun getRecipeTypes(): List<RecipeTypeEntity>
 }

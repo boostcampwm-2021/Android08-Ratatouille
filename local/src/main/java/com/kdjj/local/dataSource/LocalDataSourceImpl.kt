@@ -1,12 +1,13 @@
 package com.kdjj.local.dataSource
 
+import android.util.Log
 import com.kdjj.domain.model.Recipe
 import com.kdjj.local.DAO.RecipeDAO
 import com.kdjj.local.domainToEntity
+import com.kdjj.local.model.RecipeEntity
 import com.kdjj.local.model.RecipeTypeEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.File
 import java.lang.Exception
 
 /**
@@ -17,39 +18,29 @@ import java.lang.Exception
  * 2. 내부 저장소에 그 파일을 저장하고
  * 3. 그 uri를 가져와서 DB에 저장한다
  *
- * InputStream으로 이미지 불러와서 -> ByteStream으로 변환해서 -> Internal Storage 저장
- *
  * **/
-class LocalDataSourceImpl(private val recipeDatabase: RecipeDAO, private val filesDir: File) : LocalDataSource {
+class LocalDataSourceImpl(private val recipeDatabase: RecipeDAO) : LocalDataSource {
 
-    //Recipe 저장
     override suspend fun saveRecipe(recipe: Recipe): Result<Boolean> {
         return withContext(Dispatchers.IO) {
-            return@withContext try {
+            try {
                 val recipeMetaID = recipeDatabase.insertRecipeMeta(domainToEntity(recipe))
-                recipe.stepList.forEach { recipeStep ->
+                recipe.stepList.map { recipeStep ->
                     recipeDatabase.insertRecipeStep(domainToEntity(recipeStep, recipeMetaID))
                 }
-                Result.success(true)
+                return@withContext Result.success(true)
             } catch (e: Exception) {
-                Result.failure(Exception(e.message))
+                return@withContext Result.failure(Exception(e.message))
             }
         }
     }
 
-    //Recipe Type 저장하기
     override suspend fun saveRecipeTypes() {
     }
 
-    //Recipe Type 읽어오기
-    override suspend fun getRecipeTypes(): Result<List<RecipeTypeEntity>> {
+    override suspend fun getRecipeTypes(): List<RecipeTypeEntity> {
         return withContext(Dispatchers.IO) {
-            return@withContext try {
-                val recipeTypeList = recipeDatabase.getAllRecipeTypes()
-                Result.success(recipeTypeList)
-            } catch (e: Exception){
-                Result.failure(Exception(e.message))
-            }
+            return@withContext recipeDatabase.getAllRecipeTypes()
         }
     }
 }
