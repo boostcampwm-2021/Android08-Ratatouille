@@ -2,8 +2,10 @@ package com.kdjj.presentation.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.kdjj.presentation.R
 import com.kdjj.presentation.databinding.ItemEditorAddStepBinding
 import com.kdjj.presentation.databinding.ItemEditorRecipeMetaBinding
 import com.kdjj.presentation.databinding.ItemEditorRecipeStepBinding
@@ -16,7 +18,12 @@ class RecipeEditorListAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: RecipeEditorItem.RecipeMeta) {
-
+            val adapter = ArrayAdapter(
+                binding.root.context,
+                R.layout.item_editor_recipe_type,
+                arrayOf("한식", "양식", "중식", "일식")
+            )
+            binding.spinnerEditorRecipeType.adapter = adapter
         }
     }
 
