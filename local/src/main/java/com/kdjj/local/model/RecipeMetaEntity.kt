@@ -20,7 +20,7 @@ data class RecipeMetaEntity(
     val stuff: String,
     var imgPath: String,
     val uploaderId:String?,
-    var isFavorite:  Boolean,
+    val isFavorite:  Boolean,
     val createTime: Long,
     val recipeTypeId: Long
 )
