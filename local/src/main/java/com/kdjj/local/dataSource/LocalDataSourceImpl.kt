@@ -37,7 +37,6 @@ class LocalDataSourceImpl(
 
     //Recipe Type 저장하기
     override suspend fun saveRecipeTypes() {
-        //TODO
     }
 
     //Recipe Type 읽어오기

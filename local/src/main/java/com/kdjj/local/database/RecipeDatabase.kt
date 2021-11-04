@@ -28,20 +28,23 @@ abstract class RecipeDatabase : RoomDatabase() {
         private var INSTANCE: RecipeDatabase? = null
 
         fun getInstance(context: Context): RecipeDatabase {
-            return INSTANCE ?: synchronized(RoomDatabase::class){
-                Room.databaseBuilder(
-                    context, RecipeDatabase::class.java, "RecipeDatabase.db"
-                ).addCallback(object: RoomDatabase.Callback(){
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-                        CoroutineScope(Dispatchers.IO).launch {
-                            RecipeTypeEntity.defaultTypes.forEach{ recipeType ->
-                                getInstance(context).getRecipeDao().insertRecipeType(recipeType)
+            if(INSTANCE == null){
+                synchronized(RoomDatabase::class){
+                    INSTANCE = Room.databaseBuilder(
+                        context, RecipeDatabase::class.java, "RecipeDatabase.db"
+                    ).addCallback(object: RoomDatabase.Callback(){
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            CoroutineScope(Dispatchers.IO).launch {
+                                RecipeTypeEntity.defaultTypes.forEach{ recipeType ->
+                                    getInstance(context).getRecipeDao().insertRecipeType(recipeType)
+                                }
                             }
                         }
-                    }
-                }).build().also { INSTANCE = it }
+                    }).build()
+                }
             }
+            return INSTANCE!!
         }
     }
 }
