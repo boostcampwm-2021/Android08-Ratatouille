@@ -17,4 +17,10 @@
     <dimen name="editor_stuffLabel_marginTop">24dp</dimen>
     <dimen name="editor_stuffInput_marginTop">8dp</dimen>
     <dimen name="editor_stuffInput_height">80dp</dimen>
+    <dimen name="editor_step_marginTop">24dp</dimen>
+    <dimen name="editor_step_padding">16dp</dimen>
+    <dimen name="editor_step_marginHorizontal">16dp</dimen>
+    <dimen name="editor_stepImage_marginTop">8dp</dimen>
+    <dimen name="editor_stepField_marginTop">8dp</dimen>
+    <dimen name="editor_stepTimer_marginStart">4dp</dimen>
 </resources>

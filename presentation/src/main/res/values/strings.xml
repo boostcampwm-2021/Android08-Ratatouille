@@ -4,4 +4,10 @@
     <string name="title">제목</string>
     <string name="type">종류</string>
     <string name="stuff">재료</string>
+    <string name="stepTitle">단계 제목</string>
+    <string name="stepImage">단계 이미지</string>
+    <string name="description">설명</string>
+    <string name="timer">타이머</string>
+    <string name="minute">분</string>
+    <string name="second">초</string>
 </resources>
