@@ -20,5 +20,90 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView_editor_recipe"
+            android:layout_width="@dimen/editor_imageView_size"
+            android:layout_height="@dimen/editor_imageView_size"
+            android:layout_marginTop="@dimen/editor_recipeImage_marginTop"
+            android:layout_marginStart="@dimen/editor_recipeImage_marginStart"
+            android:contentDescription="@string/recipeImage"
+            android:background="@drawable/bg_editor_image"
+            tools:src="@drawable/ic_baseline_fastfood_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_editor" />
+
+        <TextView
+            style="@style/EditorInputLabel"
+            android:id="@+id/textView_editor_recipeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title"
+            android:labelFor="@id/editText_editor_recipeTitle"
+            app:layout_constraintStart_toEndOf="@id/imageView_editor_recipe"
+            app:layout_constraintTop_toTopOf="@id/editText_editor_recipeTitle"
+            app:layout_constraintBottom_toBottomOf="@id/editText_editor_recipeTitle"/>
+
+        <EditText
+            style="@style/EditorInputField"
+            android:id="@+id/editText_editor_recipeTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:importantForAutofill="no"
+            app:layout_constraintTop_toTopOf="@id/imageView_editor_recipe"
+            app:layout_constraintBottom_toTopOf="@id/spinner_editor_recipeType"
+            app:layout_constraintStart_toEndOf="@id/textView_editor_recipeTitle"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            style="@style/EditorInputLabel"
+            android:id="@+id/textView_editor_recipeType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/type"
+            android:labelFor="@id/spinner_editor_recipeType"
+            app:layout_constraintStart_toEndOf="@id/imageView_editor_recipe"
+            app:layout_constraintTop_toTopOf="@id/spinner_editor_recipeType"
+            app:layout_constraintBottom_toBottomOf="@id/spinner_editor_recipeType"/>
+
+        <Spinner
+            android:id="@+id/spinner_editor_recipeType"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_editor_input_field"
+            android:layout_marginStart="@dimen/editor_inputField_marginStart"
+            android:layout_marginEnd="@dimen/editor_inputField_marginEnd"
+            tools:listitem="@layout/item_editor_recipe_type"
+            app:layout_constraintTop_toBottomOf="@id/editText_editor_recipeTitle"
+            app:layout_constraintBottom_toBottomOf="@id/imageView_editor_recipe"
+            app:layout_constraintStart_toEndOf="@id/textView_editor_recipeTitle"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            style="@style/EditorInputLabel"
+            android:id="@+id/textView_editor_recipeStuff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/stuff"
+            android:labelFor="@id/editText_editor_recipeStuff"
+            android:layout_marginTop="@dimen/editor_stuffLabel_marginTop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageView_editor_recipe" />
+
+        <EditText
+            style="@style/EditorInputField"
+            android:id="@+id/editText_editor_recipeStuff"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/editor_stuffInput_height"
+            android:inputType="textMultiLine"
+            android:gravity="top"
+            android:importantForAutofill="no"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="@dimen/editor_stuffInput_marginTop"
+            tools:text="이것 저것\n얘도 쟤도"
+            app:layout_constraintTop_toBottomOf="@id/textView_editor_recipeStuff"
+            app:layout_constraintStart_toStartOf="@id/textView_editor_recipeStuff"
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
