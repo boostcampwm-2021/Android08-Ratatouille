@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/editor_step_marginTop"
+    android:layout_marginStart="@dimen/editor_step_marginHorizontal"
+    android:layout_marginEnd="@dimen/editor_step_marginHorizontal"
+    app:cardBackgroundColor="@color/light_300">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/editor_step_padding">
+
+        <EditText
+            style="@style/EditorInputField"
+            android:id="@+id/editText_editor_stepTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/stepTitle"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
+            app:layout_constraintStart_toStartOf="@id/imageView_editor_step"
+            app:layout_constraintEnd_toEndOf="@id/imageView_editor_step"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView_editor_step"
+            android:layout_width="@dimen/editor_imageView_size"
+            android:layout_height="@dimen/editor_imageView_size"
+            android:layout_marginTop="@dimen/editor_stepImage_marginTop"
+            android:contentDescription="@string/stepImage"
+            tools:src="@drawable/bg_editor_input_field"
+            app:layout_constraintTop_toBottomOf="@id/editText_editor_stepTitle"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_editor_stepField"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:barrierDirection="end"
+            app:constraint_referenced_ids="textView_editor_stepType, textView_editor_stepDescription, textView_editor_stepTimer"/>
+
+        <TextView
+            style="@style/EditorInputLabel"
+            android:id="@+id/textView_editor_stepType"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/type"
+            app:layout_constraintStart_toEndOf="@id/editText_editor_stepTitle"
+            app:layout_constraintTop_toTopOf="@id/spinner_editor_stepType"
+            app:layout_constraintBottom_toBottomOf="@id/spinner_editor_stepType"/>
+
+        <Spinner
+            android:id="@+id/spinner_editor_stepType"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_editor_input_field"
+            android:layout_marginStart="@dimen/editor_inputField_marginStart"
+            tools:listitem="@layout/item_editor_recipe_type"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/barrier_editor_stepField"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            style="@style/EditorInputLabel"
+            android:id="@+id/textView_editor_stepDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/description"
+            android:labelFor="@id/editText_editor_stepDescription"
+            android:layout_marginTop="@dimen/editor_inputField_paddingVertical"
+            app:layout_constraintStart_toEndOf="@id/editText_editor_stepTitle"
+            app:layout_constraintTop_toTopOf="@id/editText_editor_stepDescription"/>
+
+        <EditText
+            style="@style/EditorInputField"
+            android:id="@+id/editText_editor_stepDescription"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:inputType="textMultiLine"
+            android:importantForAutofill="no"
+            android:gravity="top"
+            android:layout_marginEnd="0dp"
+            android:layout_marginTop="@dimen/editor_stepField_marginTop"
+            android:layout_marginBottom="@dimen/editor_stepField_marginTop"
+            tools:text="요리하고\n조리하고"
+            app:layout_constraintTop_toBottomOf="@id/spinner_editor_stepType"
+            app:layout_constraintBottom_toTopOf="@id/editText_editor_stepTimerMinute"
+            app:layout_constraintStart_toEndOf="@id/barrier_editor_stepField"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            style="@style/EditorInputLabel"
+            android:id="@+id/textView_editor_stepTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/timer"
+            app:layout_constraintStart_toEndOf="@id/editText_editor_stepTitle"
+            app:layout_constraintTop_toTopOf="@id/editText_editor_stepTimerMinute"
+            app:layout_constraintBottom_toBottomOf="@id/editText_editor_stepTimerMinute"/>
+
+        <EditText
+            android:id="@+id/editText_editor_stepTimerMinute"
+            style="@style/EditorInputField"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/textView_editor_stepTimerMinute"
+            app:layout_constraintStart_toEndOf="@id/barrier_editor_stepField" />
+
+        <TextView
+            style="@style/EditorInputLabel"
+            android:id="@+id/textView_editor_stepTimerMinute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/minute"
+            android:labelFor="@id/editText_editor_stepTimerMinute"
+            android:layout_marginStart="0dp"
+            app:layout_constraintStart_toEndOf="@id/editText_editor_stepTimerMinute"
+            app:layout_constraintEnd_toStartOf="@id/editText_editor_stepTimerSecond"
+            app:layout_constraintTop_toTopOf="@id/editText_editor_stepTimerMinute"
+            app:layout_constraintBottom_toBottomOf="@id/editText_editor_stepTimerMinute" />
+
+        <EditText
+            style="@style/EditorInputField"
+            android:id="@+id/editText_editor_stepTimerSecond"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:importantForAutofill="no"
+            app:layout_constraintStart_toEndOf="@id/textView_editor_stepTimerMinute"
+            app:layout_constraintEnd_toStartOf="@id/textView_editor_stepTimerSecond"
+            app:layout_constraintTop_toTopOf="@id/editText_editor_stepTimerMinute"
+            app:layout_constraintBottom_toBottomOf="@id/editText_editor_stepTimerMinute" />
+
+        <TextView
+            style="@style/EditorInputLabel"
+            android:id="@+id/textView_editor_stepTimerSecond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/second"
+            android:labelFor="@id/editText_editor_stepTimerSecond"
+            android:layout_marginStart="0dp"
+            app:layout_constraintStart_toEndOf="@id/editText_editor_stepTimerSecond"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/editText_editor_stepTimerMinute"
+            app:layout_constraintBottom_toBottomOf="@id/editText_editor_stepTimerMinute" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
