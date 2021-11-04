@@ -4,11 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
-import com.kdjj.domain.model.RecipeType
 import com.kdjj.presentation.R
 import com.kdjj.presentation.databinding.ActivityRecipeEditorBinding
-import com.kdjj.presentation.model.RecipeEditorItem
-import com.kdjj.presentation.view.adapter.RecipeEditorListAdapter
 
 class RecipeEditorActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRecipeEditorBinding
@@ -20,14 +17,11 @@ class RecipeEditorActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbarEditor)
         setTitle(R.string.addRecipe)
 
-        val adapter = RecipeEditorListAdapter()
-        binding.recyclerViewEditor.adapter = adapter
-
-        adapter.submitList(listOf(
-            RecipeEditorItem.RecipeMeta(
-                "", RecipeType(1, "test"), "", ""
-            ),
-            RecipeEditorItem.AddStep
-        ))
+        val adapter = ArrayAdapter(
+            this,
+            R.layout.item_editor_recipe_type,
+            arrayOf("한식", "양식", "중식", "일식")
+        )
+        binding.spinnerEditorRecipeType.adapter = adapter
     }
 }
