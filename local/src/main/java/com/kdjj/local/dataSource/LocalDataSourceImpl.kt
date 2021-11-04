@@ -1,14 +1,12 @@
 package com.kdjj.local.dataSource
 
-import android.content.ContentResolver
-import android.net.Uri
 import android.util.Log
 import com.kdjj.domain.model.Recipe
 import com.kdjj.local.DAO.RecipeDAO
-import com.kdjj.local.FileSaveHelper
 import com.kdjj.local.domainToEntity
 import com.kdjj.local.model.RecipeTypeEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.lang.Exception
@@ -24,10 +22,7 @@ import java.lang.Exception
  * InputStream으로 이미지 불러와서 -> ByteStream으로 변환해서 -> Internal Storage 저장
  *
  * **/
-class LocalDataSourceImpl(
-    private val recipeDatabase: RecipeDAO,
-    private val fileSaveHelper: FileSaveHelper
-) :
+class LocalDataSourceImpl(private val recipeDatabase: RecipeDAO, private val filesDir: File) :
     LocalDataSource {
 
     //Recipe 저장
@@ -66,8 +61,4 @@ class LocalDataSourceImpl(
             }
         }
     }
-
-    //Gallery Image Uri를 BtyeArray로 변환
-    override suspend fun localUriToByteArray(uri: String): Result<ByteArray> =
-        fileSaveHelper.convertToByteArray(uri)
 }

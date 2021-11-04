@@ -10,6 +10,4 @@ interface LocalDataSource {
     suspend fun saveRecipeTypes()
 
     suspend fun getRecipeTypes(): Result<List<RecipeTypeEntity>>
-
-    suspend fun localUriToByteArray(uri: String): Result<ByteArray>
 }
