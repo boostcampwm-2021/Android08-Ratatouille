@@ -7,8 +7,6 @@ import com.kdjj.domain.model.RecipeStep
 import com.kdjj.domain.model.RecipeStepType
 import com.kdjj.presentation.model.RecipeItem
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -16,27 +14,22 @@ class RecipeMapper @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
 
-    suspend fun recipeItemListToRecipe(recipeItemList: List<RecipeItem>): Recipe {
+    fun recipeItemListToRecipe(recipeItemList: List<RecipeItem>): Recipe {
         val recipeMetaModel = recipeItemList[0] as RecipeItem.RecipeMetaModel
         val recipeStepList = recipeItemList.subList(1, recipeItemList.lastIndex)
 
-        recipeStepList.asFlow()
-            .map { recipeStepModelToRecipeStep(it as RecipeItem.RecipeStepModel) }
-            .flowOn(Dispatchers.IO)
-            .toList().also {
-                return Recipe(
-                    recipeId = generateId(),
-                    title = recipeMetaModel.liveTitle.value ?: "",
-                    type= recipeMetaModel.liveRecipeType.value ?: throw Exception(""),
-                    stuff = recipeMetaModel.liveStuff.value ?: "",
-                    imgPath = recipeMetaModel.liveRecipeImgPath.value ?: "",
-                    stepList = it,
-                    uploaderId = recipeMetaModel.uploadId,
-                    viewCount = recipeMetaModel.viewCount,
-                    isFavorite = recipeMetaModel.isFavorite,
-                    createTime = System.currentTimeMillis()
-                )
-            }
+        return Recipe(
+            recipeId = generateId(),
+            title = recipeMetaModel.liveTitle.value ?: "",
+            type= recipeMetaModel.liveRecipeType.value ?: throw Exception(""),
+            stuff = recipeMetaModel.liveStuff.value ?: "",
+            imgPath = recipeMetaModel.liveRecipeImgPath.value ?: "",
+            stepList = recipeStepList.map { recipeStepModelToRecipeStep(it as RecipeItem.RecipeStepModel) },
+            uploaderId = recipeMetaModel.uploadId,
+            viewCount = recipeMetaModel.viewCount,
+            isFavorite = recipeMetaModel.isFavorite,
+            createTime = System.currentTimeMillis()
+        )
     }
 
     fun recipeStepModelToRecipeStep(recipeStepModel: RecipeItem.RecipeStepModel): RecipeStep {
