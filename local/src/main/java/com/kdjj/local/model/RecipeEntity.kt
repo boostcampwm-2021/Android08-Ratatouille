@@ -1,4 +1,4 @@
-package com.kdjj.local.model
+package com.kdjj.local
 
 import androidx.room.Embedded
 import androidx.room.Relation

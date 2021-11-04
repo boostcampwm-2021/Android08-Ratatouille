@@ -1,10 +1,9 @@
-package com.kdjj.local.model
+package com.kdjj.local
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.kdjj.domain.model.RecipeStepType
-import com.kdjj.local.model.RecipeMetaEntity
 
 @Entity(
     tableName = "RecipeStep",
