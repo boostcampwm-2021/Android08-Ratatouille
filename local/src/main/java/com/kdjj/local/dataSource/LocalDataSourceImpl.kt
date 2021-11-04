@@ -8,7 +8,6 @@ import com.kdjj.local.model.RecipeEntity
 import com.kdjj.local.model.RecipeTypeEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 
 /**
  * 1. uri에서
@@ -21,16 +20,12 @@ import java.lang.Exception
  * **/
 class LocalDataSourceImpl(private val recipeDatabase: RecipeDAO) : LocalDataSource {
 
-    override suspend fun saveRecipe(recipe: Recipe): Result<Boolean> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val recipeMetaID = recipeDatabase.insertRecipeMeta(domainToEntity(recipe))
-                recipe.stepList.map { recipeStep ->
-                    recipeDatabase.insertRecipeStep(domainToEntity(recipeStep, recipeMetaID))
-                }
-                return@withContext Result.success(true)
-            } catch (e: Exception) {
-                return@withContext Result.failure(Exception(e.message))
+    override suspend fun saveRecipe(recipe: Recipe) {
+
+        withContext(Dispatchers.IO) {
+            val recipeMetaID = recipeDatabase.insertRecipeMeta(domainToEntity(recipe))
+            recipe.stepList.map { recipeStep ->
+                recipeDatabase.insertRecipeStep(domainToEntity(recipeStep, recipeMetaID))
             }
         }
     }
