@@ -6,8 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.kdjj.domain.usecase.FetchRecipeTypesUseCase
 import com.kdjj.domain.usecase.SaveRecipeUseCase
-import com.kdjj.presentation.common.RecipeStepValidator
-import com.kdjj.presentation.common.RecipeValidator
 import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -16,7 +14,6 @@ import org.mockito.Mockito.mock
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
-import org.mockito.Mockito.`when`
 
 class RecipeEditorViewModelTest {
     @get:Rule
@@ -26,42 +23,25 @@ class RecipeEditorViewModelTest {
 
     lateinit var fetchRecipeTypesUseCase: FetchRecipeTypesUseCase
 
-    lateinit var recipeValidator: RecipeValidator
-
-    lateinit var recipeStepValidator: RecipeStepValidator
-
     private lateinit var viewModel: RecipeEditorViewModel
 
     @Before
     fun setUp() {
         saveRecipeUseCase = mock(SaveRecipeUseCase::class.java)
         fetchRecipeTypesUseCase = mock(FetchRecipeTypesUseCase::class.java)
-        recipeValidator = mock(RecipeValidator::class.java)
-        recipeStepValidator = mock(RecipeStepValidator::class.java)
-        viewModel = RecipeEditorViewModel(recipeValidator, recipeStepValidator)
-
-        viewModel.addRecipeStep()
+        viewModel = RecipeEditorViewModel(fetchRecipeTypesUseCase, saveRecipeUseCase)
     }
 
     @Test
     fun titleSwitchMap_titleSetValue_titleStateChanged() {
-        `when`(recipeValidator.validateTitle("hi")).thenReturn(true)
-        viewModel.liveTitle.value = "hi"
         assertEquals(
-            viewModel.liveTitleState.getOrAwaitValue(),
+            viewModel.liveTitle.getOrAwaitValue {
+                viewModel.liveTitle.value = "hi"
+            },
             true
         )
     }
 
-    @Test
-    fun stepSwitchMap_stepNameSetValue_stepNameStateChanged() {
-        `when`(recipeStepValidator.validateName("h")).thenReturn(true)
-        viewModel.liveStepList.value!![0].liveName.value = "h"
-        assertEquals(
-            viewModel.liveStepList.value!![0].liveNameState.getOrAwaitValue(),
-            true
-        )
-    }
 }
 
 @VisibleForTesting(otherwise = VisibleForTesting.NONE)

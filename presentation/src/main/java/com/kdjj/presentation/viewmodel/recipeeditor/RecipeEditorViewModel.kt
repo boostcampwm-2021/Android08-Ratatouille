@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
+import com.kdjj.domain.model.RecipeStepType
 import com.kdjj.presentation.common.RecipeStepValidator
 import com.kdjj.presentation.common.RecipeValidator
 import com.kdjj.presentation.model.RecipeStepModel
@@ -34,31 +35,13 @@ class RecipeEditorViewModel @Inject constructor(
         liveRecipeImgPath.value = uri.path
     }
 
-    private val _liveStepList = MutableLiveData<List<RecipeStepModel>>(listOf())
+    private val _liveStepList = MutableLiveData<List<RecipeStepModel>>()
     val liveStepList: LiveData<List<RecipeStepModel>> = _liveStepList
 
     fun addRecipeStep() {
         _liveStepList.value?.let {
-            _liveStepList.value = it.plus(createEmptyRecipeStepModel())
+            _liveStepList.value = it.plus(RecipeStepModel())
         }
-    }
-
-    fun createEmptyRecipeStepModel(): RecipeStepModel {
-        val liveName =  MutableLiveData("")
-        val liveDescription = MutableLiveData("")
-        val liveTimerMin = MutableLiveData(0)
-        val liveTimerSec = MutableLiveData(0)
-        return RecipeStepModel(
-            liveName = liveName,
-            liveDescription = liveDescription,
-            liveTimerMin = liveTimerMin,
-            liveTimerSec = liveTimerSec,
-
-            liveNameState = liveName.switchMap { MutableLiveData(recipeStepValidator.validateName(it)) },
-            liveDescriptionState = liveDescription.switchMap { MutableLiveData(recipeStepValidator.validateDescription(it)) },
-            liveTimerMinState = liveTimerMin.switchMap { MutableLiveData(recipeStepValidator.validateMinutes(it)) },
-            liveTimerSecState = liveTimerSec.switchMap { MutableLiveData(recipeStepValidator.validateSeconds(it)) },
-        )
     }
 
     fun removeRecipeStep(position: Int) {
