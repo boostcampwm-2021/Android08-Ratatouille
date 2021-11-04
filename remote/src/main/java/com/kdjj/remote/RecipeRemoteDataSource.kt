@@ -1,4 +1,4 @@
-package com.kdjj.remote.recipe
+package com.kdjj.remote
 
 import com.kdjj.domain.model.RecipeType
 
