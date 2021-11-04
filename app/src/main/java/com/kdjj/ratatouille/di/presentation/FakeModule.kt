@@ -3,6 +3,9 @@ package com.kdjj.ratatouille.di.presentation
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.repository.RecipeRepository
+import com.kdjj.domain.request.EmptyRequest
+import com.kdjj.domain.usecase.FetchRecipeTypesUseCase
+import com.kdjj.domain.usecase.UseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,5 +28,10 @@ class FakeModule {
                 TODO("Not yet implemented")
             }
         }
+    }
+
+    @Provides
+    fun provideFetchRecipeTypesUseCase(repository: RecipeRepository): UseCase<EmptyRequest, List<RecipeType>> {
+        return FetchRecipeTypesUseCase(repository)
     }
 }
