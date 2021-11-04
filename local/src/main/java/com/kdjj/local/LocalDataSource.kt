@@ -1,4 +1,4 @@
-package com.kdjj.local.dataSource
+package com.kdjj.local
 
 import com.kdjj.domain.model.Recipe
 
