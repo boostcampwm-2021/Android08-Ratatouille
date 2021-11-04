@@ -21,6 +21,7 @@ data class RecipeStepEntity(
     @PrimaryKey
     val stepId: String,
     val name: String,
+    val order: Int,
     val type: RecipeStepType,
     val description: String,
     var imgPath: String,
