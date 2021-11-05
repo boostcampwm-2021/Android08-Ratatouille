@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class FetchRecipeTypesUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository
-) : UseCase<EmptyRequest, List<RecipeType>> {
+) : UseCase<EmptyRequest, @JvmSuppressWildcards List<RecipeType>> {
 
     override suspend fun invoke(request: EmptyRequest): Result<List<RecipeType>> =
         recipeRepository.fetchRecipeTypes()
