@@ -15,11 +15,9 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
 
-//    @Binds
-//    abstract fun provideRecipeRepository(recipeRepositoryImpl: RecipeRepositoryImpl): RecipeRepository
     @Binds
     abstract fun provideSaveRecipeUseCase(saveRecipeUseCase: SaveRecipeUseCase): UseCase<RecipeRequest, Boolean>
-//
-//    @Binds
-//    abstract fun provideFetchRecipeTypesUseCase(fetchRecipeTypesUseCase: FetchRecipeTypesUseCase): UseCase<EmptyRequest, List<RecipeType>>
+
+    @Binds
+    abstract fun provideFetchRecipeTypesUseCase(fetchRecipeTypesUseCase: FetchRecipeTypesUseCase): UseCase<EmptyRequest, List<RecipeType>>
 }
