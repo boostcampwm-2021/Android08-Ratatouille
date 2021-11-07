@@ -78,10 +78,11 @@ class RecipeDaoTest {
     fun insertRecipeMeta_insertRecipeMetaAndGetAllRecipeMeta_true() = runBlocking {
         recipeDao.insertRecipeType(recipeType)
         recipeDao.insertRecipeMeta(recipeMeta)
+        recipeDao.insertRecipeStep(recipeStep)
 
-        val recipeMetaList = recipeDao.getAllRecipeMeta()
+        val recipeList = recipeDao.getAllRecipe()
 
-        assertThat(recipeMetaList).contains(recipeMeta)
+        assertThat(recipeList[0].recipeMeta).isEqualTo(recipeMeta)
     }
 
     @Test
@@ -90,9 +91,9 @@ class RecipeDaoTest {
         recipeDao.insertRecipeMeta(recipeMeta)
         recipeDao.insertRecipeStep(recipeStep)
 
-        val recipeStepList = recipeDao.getAllRecipeStep()
+        val recipeList = recipeDao.getAllRecipe()
 
-        assertThat(recipeStepList).contains(recipeStep)
+        assertThat(recipeList[0].steps).contains(recipeStep)
     }
 
     @Test
@@ -110,5 +111,4 @@ class RecipeDaoTest {
     fun teardown() {
         database.close()
     }
-
 }
