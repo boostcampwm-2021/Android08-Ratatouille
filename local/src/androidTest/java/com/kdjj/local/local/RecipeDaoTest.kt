@@ -66,7 +66,7 @@ class RecipeDaoTest {
     }
 
     @Test
-    fun insertRecipeType_insertRecipeTpeAndGetAllRecipeType_true() = runBlocking {
+    fun insertRecipeType_insertRecipeTypeAndGetAllRecipeType_true() = runBlocking {
         recipeDao.insertRecipeType(recipeType)
 
         val recipeTypes = recipeDao.getAllRecipeTypes()
@@ -75,7 +75,7 @@ class RecipeDaoTest {
     }
 
     @Test
-    fun insertRecipeMeta_insertRecipeMetaAndGetAllRecipeMeta_true() = runBlocking {
+    fun insertRecipeMeta_insertRecipeEntityAndGetAllRecipe_true() = runBlocking {
         recipeDao.insertRecipeType(recipeType)
         recipeDao.insertRecipeMeta(recipeMeta)
         recipeDao.insertRecipeStep(recipeStep)
@@ -86,7 +86,7 @@ class RecipeDaoTest {
     }
 
     @Test
-    fun insertRecipeStep_insertRecipeStepAndGetAllRecipeStep_true() = runBlocking {
+    fun insertRecipeStep_insertRecipeEntityAndGetAllRecipe_true() = runBlocking {
         recipeDao.insertRecipeType(recipeType)
         recipeDao.insertRecipeMeta(recipeMeta)
         recipeDao.insertRecipeStep(recipeStep)
@@ -97,7 +97,7 @@ class RecipeDaoTest {
     }
 
     @Test
-    fun getAllRecipe_insertRecipeAndGetAllRecipe_true() = runBlocking {
+    fun getAllRecipe_insertRecipeEntityAndGetAllRecipe_true() = runBlocking {
         recipeDao.insertRecipeType(recipeType)
         recipeDao.insertRecipeMeta(recipeMeta)
         recipeDao.insertRecipeStep(recipeStep)
