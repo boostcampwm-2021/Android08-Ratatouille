@@ -31,7 +31,11 @@ class RecipeEditorViewModel @Inject constructor(
     lateinit var recipeTypes : List<RecipeType>
 
     init {
-        _liveRecipeItemList.value = listOf(createEmptyRecipeMetaModel(), RecipeEditorItem.PlusButton)
+        _liveRecipeItemList.value = listOf(
+            createEmptyRecipeMetaModel(),
+            createEmptyRecipeStepModel(),
+            RecipeEditorItem.PlusButton
+        )
     }
 
     fun fetchRecipeTypes() {

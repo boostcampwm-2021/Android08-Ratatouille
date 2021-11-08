@@ -7,6 +7,8 @@
         <variable
             name="viewModel"
             type="com.kdjj.presentation.model.RecipeEditorItem.RecipeStepModel" />
+
+        <import type="com.kdjj.presentation.view.adapter.BindingConverter" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -32,6 +34,7 @@
                 android:inputType="text"
                 android:layout_marginStart="0dp"
                 android:layout_marginEnd="0dp"
+                android:text="@={viewModel.liveName}"
                 app:layout_constraintStart_toStartOf="@id/imageView_editor_step"
                 app:layout_constraintEnd_toEndOf="@id/imageView_editor_step"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -70,6 +73,7 @@
                 android:background="@drawable/bg_editor_input_field"
                 android:layout_marginStart="@dimen/editor_inputField_marginStart"
                 tools:listitem="@layout/item_editor_recipe_type"
+                android:selectedItemPosition="@={viewModel.liveTypeInt}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toEndOf="@id/barrier_editor_stepField"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -96,6 +100,7 @@
                 android:layout_marginEnd="0dp"
                 android:layout_marginTop="@dimen/editor_stepField_marginTop"
                 android:layout_marginBottom="@dimen/editor_stepField_marginTop"
+                android:text="@={viewModel.liveDescription}"
                 tools:text="요리하고\n조리하고"
                 app:layout_constraintTop_toBottomOf="@id/spinner_editor_stepType"
                 app:layout_constraintBottom_toTopOf="@id/editText_editor_stepTimerMinute"
@@ -119,6 +124,7 @@
                 android:layout_height="wrap_content"
                 android:importantForAutofill="no"
                 android:inputType="number"
+                android:text="@={BindingConverter.intToString(viewModel.liveTimerMin)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/textView_editor_stepTimerMinute"
                 app:layout_constraintStart_toEndOf="@id/barrier_editor_stepField" />
@@ -143,6 +149,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:importantForAutofill="no"
+                android:text="@={BindingConverter.intToString(viewModel.liveTimerSec)}"
                 app:layout_constraintStart_toEndOf="@id/textView_editor_stepTimerMinute"
                 app:layout_constraintEnd_toStartOf="@id/textView_editor_stepTimerSecond"
                 app:layout_constraintTop_toTopOf="@id/editText_editor_stepTimerMinute"
