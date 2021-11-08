@@ -11,7 +11,7 @@ fun entityToDomain(recipeEntity: RecipeEntity): Recipe {
 	return Recipe(
 		recipeEntity.recipeId,
 		recipeEntity.title,
-		entityToDomain(recipeEntity.type),
+		recipeEntity.type.toDomain(),
 		recipeEntity.stuff,
 		recipeEntity.imgPath,
 		recipeEntity.stepList.map { entityToDomain(it) },
