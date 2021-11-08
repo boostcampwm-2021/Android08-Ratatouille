@@ -12,7 +12,7 @@ import com.kdjj.presentation.common.IdGenerator
 import com.kdjj.presentation.common.RecipeMapper
 import com.kdjj.presentation.common.RecipeStepValidator
 import com.kdjj.presentation.common.RecipeValidator
-import com.kdjj.presentation.model.RecipeItem
+import com.kdjj.presentation.model.RecipeEditorItem
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineScope
@@ -93,7 +93,7 @@ class RecipeEditorViewModelTest(
     @Test
     fun titleSwitchMap_titleSetValue_titleStateChanged() {
         `when`(recipeValidator.validateTitle("hi")).thenReturn(true)
-        val recipeModel = viewModel.liveRecipeItemList.value!![0] as RecipeItem.RecipeMetaModel
+        val recipeModel = viewModel.liveRecipeItemList.value!![0] as RecipeEditorItem.RecipeMetaModel
         recipeModel.liveTitle.value = "hi"
         assertEquals(
             recipeModel.liveTitleState.getOrAwaitValue(),
@@ -105,7 +105,7 @@ class RecipeEditorViewModelTest(
     fun stepSwitchMap_stepNameSetValue_stepNameStateChanged() {
         `when`(recipeStepValidator.validateName("h")).thenReturn(true)
         if (stepSize > 0) {
-            val recipeModel = viewModel.liveRecipeItemList.value!![1] as RecipeItem.RecipeStepModel
+            val recipeModel = viewModel.liveRecipeItemList.value!![1] as RecipeEditorItem.RecipeStepModel
             recipeModel.liveName.value = "h"
             assertEquals(
                 recipeModel.liveNameState.getOrAwaitValue(),

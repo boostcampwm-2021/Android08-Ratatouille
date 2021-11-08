@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.kdjj.presentation.model.RecipeEditorItem.RecipeMetaModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
