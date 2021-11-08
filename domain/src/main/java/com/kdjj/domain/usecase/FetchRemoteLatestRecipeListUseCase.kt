@@ -10,5 +10,5 @@ class FetchRemoteLatestRecipeListUseCase @Inject constructor(
 ) : UseCase<FetchRemoteLatestRecipeListRequest, @JvmSuppressWildcards List<Recipe>> {
 
     override suspend fun invoke(request: FetchRemoteLatestRecipeListRequest): Result<List<Recipe>> =
-        recipeListRepository.fetchRemoteLatestRecipeList(request.lastVisibleCreateTime)
+        recipeListRepository.fetchRemoteLatestRecipeListAfter(request.lastVisibleCreateTime)
 }
