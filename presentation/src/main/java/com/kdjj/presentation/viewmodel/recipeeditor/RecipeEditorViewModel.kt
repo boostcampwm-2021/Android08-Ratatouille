@@ -78,7 +78,7 @@ class RecipeEditorViewModel @Inject constructor(
             liveStuff = liveStuff,
             liveRecipeImgPath = liveRecipeImgPath,
             liveRecipeTypeInt = liveCategoryPosition,
-            liveRecipeType = liveCategoryPosition.switchMap { MutableLiveData(_liveRecipeTypes.value?.get(it) ?: throw Exception()) },
+            liveRecipeType = liveCategoryPosition.switchMap { _liveRecipeTypes.value?.let { types -> MutableLiveData(types[it])} ?: MutableLiveData() },
 
             liveStuffState = liveStuff.switchMap { MutableLiveData(recipeValidator.validateStuff(it)) },
             liveTitleState = liveTitle.switchMap { MutableLiveData(recipeValidator.validateTitle(it)) },

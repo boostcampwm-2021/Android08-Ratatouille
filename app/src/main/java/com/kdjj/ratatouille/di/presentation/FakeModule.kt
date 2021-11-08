@@ -3,6 +3,8 @@ package com.kdjj.ratatouille.di.presentation
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.repository.RecipeRepository
+import com.kdjj.local.DAO.RecipeDAO
+import com.kdjj.local.dataSource.LocalDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,7 +24,12 @@ class FakeModule {
             }
 
             override suspend fun fetchRecipeTypes(): Result<List<RecipeType>> {
-                TODO("Not yet implemented")
+                return Result.success(listOf(
+                    RecipeType(1, "한식"),
+                    RecipeType(2, "중식"),
+                    RecipeType(3, "양식"),
+                    RecipeType(4, "일식"),
+                ))
             }
         }
     }

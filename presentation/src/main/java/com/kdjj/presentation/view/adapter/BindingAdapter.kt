@@ -14,7 +14,9 @@ fun <T, VH : RecyclerView.ViewHolder> RecyclerView.submitList(list: List<T>?) {
 }
 
 @BindingAdapter("app:typeSpinnerItems")
-fun Spinner.typeSpinnerItems(items: List<String>) {
+fun Spinner.typeSpinnerItems(items: List<String>?) {
+    items ?: return
+
     val spinnerAdapter = ArrayAdapter(
         context,
         R.layout.item_editor_recipe_type,

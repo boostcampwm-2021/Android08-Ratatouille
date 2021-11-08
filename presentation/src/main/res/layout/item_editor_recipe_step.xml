@@ -47,6 +47,7 @@
                 android:id="@+id/imageView_editor_step"
                 android:layout_width="@dimen/editor_imageView_size"
                 android:layout_height="@dimen/editor_imageView_size"
+                android:background="@drawable/bg_editor_image"
                 android:layout_marginTop="@dimen/editor_stepImage_marginTop"
                 android:contentDescription="@string/stepImage"
                 tools:src="@drawable/bg_editor_input_field"
