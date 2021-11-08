@@ -5,4 +5,6 @@ import com.kdjj.domain.model.Recipe
 interface RecipeListDao {
 
     suspend fun fetchLatestRecipeListAfter(lastVisibleCreateTime: Long): List<Recipe>
+
+    suspend fun fetchPopularRecipeListAfter(lastVisibleViewCount: Int): List<Recipe>
 }
