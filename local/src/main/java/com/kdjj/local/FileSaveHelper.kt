@@ -11,8 +11,9 @@ import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.Exception
+import javax.inject.Inject
 
-class FileSaveHelper(
+class FileSaveHelper @Inject constructor(
     private val fileDir: File,
     private val contentResolver: ContentResolver
 ) {
