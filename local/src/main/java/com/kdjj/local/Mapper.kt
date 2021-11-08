@@ -14,6 +14,7 @@ fun domainToEntity(recipe: Recipe): RecipeMetaEntity {
         recipe.authorId,
         recipe.isFavorite,
         recipe.createTime,
+        recipe.state,
         recipe.type.id.toLong()
     )
 }
