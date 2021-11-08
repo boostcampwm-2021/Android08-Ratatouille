@@ -3,14 +3,13 @@ package com.kdjj.local.dataSource
 import com.kdjj.data.recipetype.RecipeTypeLocalDataSource
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.local.DAO.RecipeDAO
-import com.kdjj.local.FileSaveHelper
 import com.kdjj.local.entityToDomain
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class RecipeTypeLocalDataSourceImpl(
-	private val recipeDatabase: RecipeDAO,
-	private val fileSaveHelper: FileSaveHelper
+class RecipeTypeLocalDataSourceImpl @Inject constructor(
+	private val recipeDatabase: RecipeDAO
 ) : RecipeTypeLocalDataSource {
 	
 	//Recipe Type 저장하기
