@@ -1,8 +1,8 @@
-package com.kdjj.remote.recipe
+package com.kdjj.data.recipetype
 
 import com.kdjj.domain.model.RecipeType
 
-interface RecipeRemoteDataSource {
+interface RecipeTypeRemoteDataSource {
 
 	suspend fun fetchRecipeTypes(): Result<List<RecipeType>>
 }
