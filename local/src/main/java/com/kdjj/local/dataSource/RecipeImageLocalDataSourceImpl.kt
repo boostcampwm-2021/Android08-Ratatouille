@@ -1,6 +1,6 @@
 package com.kdjj.local.dataSource
 
-import com.kdjj.data.recipetype.RecipeImageLocalDataSource
+import com.kdjj.data.recipeimage.RecipeImageLocalDataSource
 import com.kdjj.local.FileSaveHelper
 import javax.inject.Inject
 
