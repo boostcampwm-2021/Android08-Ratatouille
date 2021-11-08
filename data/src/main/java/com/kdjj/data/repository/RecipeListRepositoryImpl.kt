@@ -9,6 +9,6 @@ class RecipeListRepositoryImpl @Inject constructor(
     private val recipeListRemoteDataSource: RecipeListRemoteDataSource,
 ) : RecipeListRepository {
 
-    override suspend fun fetchRemoteLatestRecipeList(): Result<List<Recipe>> =
-        recipeListRemoteDataSource.fetchLatestRecipeList()
+    override suspend fun fetchRemoteLatestRecipeList(lastVisibleCreateTime: Long): Result<List<Recipe>> =
+        recipeListRemoteDataSource.fetchLatestRecipeList(lastVisibleCreateTime)
 }

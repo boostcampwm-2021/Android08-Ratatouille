@@ -4,5 +4,5 @@ import com.kdjj.domain.model.Recipe
 
 interface RecipeListDao {
 
-    suspend fun fetchLatestRecipeList(): List<Recipe>
+    suspend fun fetchLatestRecipeList(lastVisibleCreateTime: Long): List<Recipe>
 }
