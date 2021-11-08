@@ -7,37 +7,37 @@ import com.kdjj.local.model.RecipeMetaEntity
 import com.kdjj.local.model.RecipeStepEntity
 import com.kdjj.local.model.RecipeTypeEntity
 
-fun domainToEntity(recipe: Recipe): RecipeMetaEntity {
+fun Recipe.toEntity(): RecipeMetaEntity {
 	return RecipeMetaEntity(
-		recipe.recipeId,
-		recipe.title,
-		recipe.stuff,
-		recipe.imgPath,
-		recipe.authorId,
-		recipe.isFavorite,
-		recipe.createTime,
-		recipe.state,
-		recipe.type.id.toLong()
+		recipeId,
+		title,
+		stuff,
+		imgPath,
+		authorId,
+		isFavorite,
+		createTime,
+		state,
+		type.id.toLong()
 	)
 }
 
-fun domainToEntity(step: RecipeStep, recipeMetaID: String, order: Int): RecipeStepEntity {
+fun RecipeStep.toEntity(recipeMetaID: String, order: Int): RecipeStepEntity {
 	return RecipeStepEntity(
-		step.stepId,
-		step.name,
+		stepId,
+		name,
 		order,
-		step.type,
-		step.description,
-		step.imgPath,
-		step.seconds,
+		type,
+		description,
+		imgPath,
+		seconds,
 		recipeMetaID
 	)
 }
 
-fun entityToDomain(recipeTypeEntity: RecipeTypeEntity): RecipeType {
+fun RecipeTypeEntity.toDomain(): RecipeType {
 	return RecipeType(
-		recipeTypeEntity.recipeTypeId.toInt(),
-		recipeTypeEntity.title
+		recipeTypeId.toInt(),
+		title
 	)
 }
 

@@ -3,7 +3,7 @@ package com.kdjj.local.dataSource
 import com.kdjj.data.recipetype.RecipeTypeLocalDataSource
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.local.DAO.RecipeDAO
-import com.kdjj.local.entityToDomain
+import com.kdjj.local.toDomain
 import com.kdjj.local.toEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -33,7 +33,7 @@ class RecipeTypeLocalDataSourceImpl @Inject constructor(
 		withContext(Dispatchers.IO) {
 			return@withContext try {
 				val recipeTypeList = recipeDatabase.getAllRecipeTypes()
-					.map { entityToDomain(it) }
+					.map { it.toDomain() }
 				Result.success(recipeTypeList)
 			} catch (e: Exception) {
 				Result.failure(Exception(e.message))
