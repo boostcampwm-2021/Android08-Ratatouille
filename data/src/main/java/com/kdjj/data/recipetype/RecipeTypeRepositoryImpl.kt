@@ -14,7 +14,8 @@ class RecipeTypeRepositoryImpl @Inject constructor(
 	}
 	
 	override suspend fun saveRecipeType(): Result<Boolean> {
-		return localDataSource.saveRecipeType()
+		val recipeTypeList = remoteDataSource.fetchRecipeTypes().getOrThrow()
+		return localDataSource.saveRecipeType(recipeTypeList)
 	}
 	
 	override suspend fun getRecipeTypes(): Result<List<RecipeType>> {
