@@ -5,6 +5,10 @@
 
     <data>
         <variable
+            name="editorViewModel"
+            type="com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel" />
+
+        <variable
             name="viewModel"
             type="com.kdjj.presentation.model.RecipeEditorItem.RecipeStepModel" />
 
@@ -72,8 +76,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_editor_input_field"
                 android:layout_marginStart="@dimen/editor_inputField_marginStart"
-                tools:listitem="@layout/item_editor_recipe_type"
                 android:selectedItemPosition="@={viewModel.liveTypeInt}"
+                tools:listitem="@layout/item_editor_recipe_type"
+                app:typeSpinnerItems="@{editorViewModel.liveStringStepTypes}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toEndOf="@id/barrier_editor_stepField"
                 app:layout_constraintEnd_toEndOf="parent" />

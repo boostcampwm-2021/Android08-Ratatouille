@@ -19,23 +19,26 @@ class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewModel) :
     inner class RecipeMetaViewHolder(private val binding: ItemEditorRecipeMetaBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        init {
+            binding.imageViewEditorRecipe.clipToOutline = true
+        }
+
         fun bind(item: RecipeEditorItem.RecipeMetaModel) {
             binding.viewModel = item
+            binding.editorViewModel = viewModel
         }
     }
 
     inner class RecipeStepViewHolder(private val binding: ItemEditorRecipeStepBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        init {
+            binding.imageViewEditorStep.clipToOutline = true
+        }
+
         fun bind(item: RecipeEditorItem.RecipeStepModel) {
             binding.viewModel = item
-
-            val adapter = ArrayAdapter(
-                binding.root.context,
-                R.layout.item_editor_recipe_type,
-                viewModel.stepTypes
-            )
-            binding.spinnerEditorStepType.adapter = adapter
+            binding.editorViewModel = viewModel
         }
     }
 

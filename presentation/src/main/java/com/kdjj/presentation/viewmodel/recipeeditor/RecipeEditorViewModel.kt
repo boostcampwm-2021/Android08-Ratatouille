@@ -28,7 +28,12 @@ class RecipeEditorViewModel @Inject constructor(
     val liveRecipeItemList: LiveData<List<RecipeEditorItem>> get() = _liveRecipeItemList
 
     val stepTypes = RecipeStepType.values()
-    lateinit var recipeTypes : List<RecipeType>
+    val liveStringStepTypes = MutableLiveData(stepTypes.map { it.name })
+
+    private val _liveRecipeTypes = MutableLiveData<List<RecipeType>>()
+    val liveStringRecipeTypes: LiveData<List<String>> get() = _liveRecipeTypes.switchMap { list ->
+        MutableLiveData(list.map { it.title })
+    }
 
     init {
         _liveRecipeItemList.value = listOf(
@@ -36,17 +41,18 @@ class RecipeEditorViewModel @Inject constructor(
             createEmptyRecipeStepModel(),
             RecipeEditorItem.PlusButton
         )
+        fetchRecipeTypes()
     }
 
-    fun fetchRecipeTypes() {
+    private fun fetchRecipeTypes() {
         viewModelScope.launch {
-            val res = recipeTypesUseCase.invoke(EmptyRequest())
-            res.onSuccess {
-                recipeTypes = it
-            }
-            res.onFailure {
-                // todo
-            }
+            recipeTypesUseCase(EmptyRequest())
+                .onSuccess {
+                    _liveRecipeTypes.value = it
+                }
+                .onFailure {
+                    // todo
+                }
         }
     }
 
@@ -72,7 +78,7 @@ class RecipeEditorViewModel @Inject constructor(
             liveStuff = liveStuff,
             liveRecipeImgPath = liveRecipeImgPath,
             liveRecipeTypeInt = liveCategoryPosition,
-            liveRecipeType = liveCategoryPosition.switchMap { MutableLiveData(recipeTypes[it]) },
+            liveRecipeType = liveCategoryPosition.switchMap { MutableLiveData(_liveRecipeTypes.value?.get(it) ?: throw Exception()) },
 
             liveStuffState = liveStuff.switchMap { MutableLiveData(recipeValidator.validateStuff(it)) },
             liveTitleState = liveTitle.switchMap { MutableLiveData(recipeValidator.validateTitle(it)) },
