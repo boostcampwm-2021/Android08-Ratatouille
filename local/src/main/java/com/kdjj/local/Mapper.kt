@@ -40,3 +40,10 @@ fun entityToDomain(recipeTypeEntity: RecipeTypeEntity): RecipeType {
 		recipeTypeEntity.title
 	)
 }
+
+fun RecipeType.toEntity(): RecipeTypeEntity {
+	return RecipeTypeEntity(
+		id.toLong(),
+		title
+	)
+}
