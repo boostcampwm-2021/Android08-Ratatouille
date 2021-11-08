@@ -10,14 +10,16 @@ import com.kdjj.presentation.databinding.ItemEditorAddStepBinding
 import com.kdjj.presentation.databinding.ItemEditorRecipeMetaBinding
 import com.kdjj.presentation.databinding.ItemEditorRecipeStepBinding
 import com.kdjj.presentation.model.RecipeEditorItem
+import com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel
 
-class RecipeEditorListAdapter :
+class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewModel) :
     ListAdapter<RecipeEditorItem, RecyclerView.ViewHolder>(RecipeEditorItemCallback()) {
 
     class RecipeMetaViewHolder(private val binding: ItemEditorRecipeMetaBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: RecipeEditorItem.RecipeMeta) {
+        fun bind(item: RecipeEditorItem.RecipeMetaModel) {
+            binding.viewModel = item
             val adapter = ArrayAdapter(
                 binding.root.context,
                 R.layout.item_editor_recipe_type,
@@ -30,8 +32,8 @@ class RecipeEditorListAdapter :
     class RecipeStepViewHolder(private val binding: ItemEditorRecipeStepBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: RecipeEditorItem.RecipeStep) {
-
+        fun bind(item: RecipeEditorItem.RecipeStepModel) {
+            binding.viewModel = item
         }
     }
 
@@ -45,9 +47,9 @@ class RecipeEditorListAdapter :
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
-            is RecipeEditorItem.RecipeMeta -> TYPE_META
-            is RecipeEditorItem.RecipeStep -> TYPE_STEP
-            is RecipeEditorItem.AddStep -> TYPE_ADD
+            is RecipeEditorItem.RecipeMetaModel -> TYPE_META
+            is RecipeEditorItem.RecipeStepModel -> TYPE_STEP
+            RecipeEditorItem.PlusButton -> TYPE_ADD
         }
 
     override fun onCreateViewHolder(
@@ -84,9 +86,9 @@ class RecipeEditorListAdapter :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
-        (item as? RecipeEditorItem.RecipeMeta)?.let { (holder as RecipeMetaViewHolder).bind(item) }
-            ?: (item as? RecipeEditorItem.RecipeStep)?.let { (holder as RecipeStepViewHolder).bind(item) }
-            ?: (item as? RecipeEditorItem.AddStep)?.let { (holder as AddStepViewHolder).bind() }
+        (item as? RecipeEditorItem.RecipeMetaModel)?.let { (holder as RecipeMetaViewHolder).bind(item) }
+            ?: (item as? RecipeEditorItem.RecipeStepModel)?.let { (holder as RecipeStepViewHolder).bind(item) }
+            ?: (item as? RecipeEditorItem.PlusButton)?.let { (holder as AddStepViewHolder).bind() }
     }
 
     companion object {

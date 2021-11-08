@@ -8,7 +8,7 @@ import com.kdjj.domain.request.EmptyRequest
 import com.kdjj.domain.request.RecipeRequest
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.*
-import com.kdjj.presentation.model.RecipeItem
+import com.kdjj.presentation.model.RecipeEditorItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -24,14 +24,14 @@ class RecipeEditorViewModel @Inject constructor(
     private val idGenerator: IdGenerator
 ) : ViewModel() {
 
-    private var _liveRecipeItemList = MutableLiveData<List<RecipeItem>>()
-    val liveRecipeItemList = _liveRecipeItemList
+    private var _liveRecipeItemList = MutableLiveData<List<RecipeEditorItem>>()
+    val liveRecipeItemList: LiveData<List<RecipeEditorItem>> get() = _liveRecipeItemList
 
     val stepTypes = RecipeStepType.values()
     lateinit var recipeTypes : List<RecipeType>
 
     init {
-        _liveRecipeItemList.value = listOf(createEmptyRecipeMetaModel(), RecipeItem.PlusButton)
+        _liveRecipeItemList.value = listOf(createEmptyRecipeMetaModel(), RecipeEditorItem.PlusButton)
     }
 
     fun fetchRecipeTypes() {
@@ -48,7 +48,7 @@ class RecipeEditorViewModel @Inject constructor(
 
     fun setRecipeImg(uri: Uri) {
         _liveRecipeItemList.value?.let {
-            (it[0] as RecipeItem.RecipeMetaModel).liveRecipeImgPath.value = uri.path
+            (it[0] as RecipeEditorItem.RecipeMetaModel).liveRecipeImgPath.value = uri.path
         }
     }
 
@@ -58,12 +58,12 @@ class RecipeEditorViewModel @Inject constructor(
         }
     }
 
-    private fun createEmptyRecipeMetaModel(): RecipeItem.RecipeMetaModel {
+    private fun createEmptyRecipeMetaModel(): RecipeEditorItem.RecipeMetaModel {
         val liveTitle = MutableLiveData<String>("")
         val liveStuff = MutableLiveData<String>("")
         val liveRecipeImgPath = MutableLiveData<String>()
         val liveCategoryPosition = MutableLiveData(0)
-        return RecipeItem.RecipeMetaModel(
+        return RecipeEditorItem.RecipeMetaModel(
             liveTitle = liveTitle,
             liveStuff = liveStuff,
             liveRecipeImgPath = liveRecipeImgPath,
@@ -78,13 +78,13 @@ class RecipeEditorViewModel @Inject constructor(
         )
     }
 
-    private fun createEmptyRecipeStepModel(): RecipeItem.RecipeStepModel {
+    private fun createEmptyRecipeStepModel(): RecipeEditorItem.RecipeStepModel {
         val liveName =  MutableLiveData("")
         val liveDescription = MutableLiveData("")
         val liveTimerMin = MutableLiveData(0)
         val liveTimerSec = MutableLiveData(0)
         val liveTypeInt = MutableLiveData(0)
-        return RecipeItem.RecipeStepModel(
+        return RecipeEditorItem.RecipeStepModel(
             liveName = liveName,
             liveDescription = liveDescription,
             liveTimerMin = liveTimerMin,
@@ -132,12 +132,12 @@ class RecipeEditorViewModel @Inject constructor(
         // check recipe meta
         _liveRecipeItemList.value?.forEach {
             when (it) {
-                is RecipeItem.RecipeMetaModel -> {
+                is RecipeEditorItem.RecipeMetaModel -> {
                     if (it.liveTitleState.value != true || it.liveStuffState.value != true) {
                         return false
                     }
                 }
-                is RecipeItem.RecipeStepModel -> {
+                is RecipeEditorItem.RecipeStepModel -> {
                     if (it.liveNameState.value != true || it.liveDescriptionState.value != true ||
                         it.liveTimerMinState.value != true || it.liveTimerSecState.value != true) {
                         return false
