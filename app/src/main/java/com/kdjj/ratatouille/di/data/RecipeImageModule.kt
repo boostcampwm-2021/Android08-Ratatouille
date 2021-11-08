@@ -5,6 +5,7 @@ import android.content.Context
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import com.kdjj.data.recipeimage.RecipeImageLocalDataSource
 import com.kdjj.data.recipeimage.RecipeImageRemoteDataSource
@@ -48,7 +49,7 @@ abstract class RecipeImageModule {
 
         @Provides
         @Singleton
-        fun provideFirebaseStorage(): FirebaseStorage = Firebase.storage
+        fun provideFirebaseStorage(): StorageReference = Firebase.storage.reference
 
         @Provides
         @Singleton
