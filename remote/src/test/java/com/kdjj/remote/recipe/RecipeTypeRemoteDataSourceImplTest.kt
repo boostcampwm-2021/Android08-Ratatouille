@@ -9,10 +9,10 @@ import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 
-class RecipeRemoteDataSourceImplTest {
+class RecipeTypeRemoteDataSourceImplTest {
 	
 	lateinit var mockFireStoreDaoImpl: FirestoreDaoImpl
-	lateinit var recipeRemoteDataSourceImpl: RecipeRemoteDataSourceImpl
+	lateinit var recipeRemoteDataSourceImpl: RecipeTypeRemoteDataSourceImpl
 	val testRecipeTypeList = listOf(
 		RecipeType(1, "한식"),
 		RecipeType(1, "중식"),
@@ -23,7 +23,7 @@ class RecipeRemoteDataSourceImplTest {
 	fun setup() {
 		// given
 		mockFireStoreDaoImpl = mock(FirestoreDaoImpl::class.java)
-		recipeRemoteDataSourceImpl = RecipeRemoteDataSourceImpl(mockFireStoreDaoImpl)
+		recipeRemoteDataSourceImpl = RecipeTypeRemoteDataSourceImpl(mockFireStoreDaoImpl)
 	}
 	
 	@Test
@@ -33,7 +33,7 @@ class RecipeRemoteDataSourceImplTest {
 		
 		// when
 		val recipeTypeList = recipeRemoteDataSourceImpl.fetchRecipeTypes()
-		
+		println(recipeTypeList)
 		// then
 		assertEquals(Result.success(testRecipeTypeList), recipeTypeList)
 	}
