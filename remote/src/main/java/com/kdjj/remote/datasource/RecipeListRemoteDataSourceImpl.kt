@@ -8,6 +8,7 @@ import javax.inject.Inject
 class RecipeListRemoteDataSourceImpl @Inject constructor(
     private val recipeListDao: RecipeListDao,
 ) : RecipeListRemoteDataSource {
+
     override suspend fun fetchLatestRecipeListAfter(lastVisibleCreateTime: Long): Result<List<Recipe>> =
         try {
             val recipeList = recipeListDao.fetchLatestRecipeListAfter(lastVisibleCreateTime)
@@ -15,4 +16,13 @@ class RecipeListRemoteDataSourceImpl @Inject constructor(
         } catch (e: Exception) {
             Result.failure(e)
         }
+
+    override suspend fun fetchPopularRecipeListAfter(lastVisibleViewCount: Int): Result<List<Recipe>> =
+        try {
+            val recipeList = recipeListDao.fetchPopularRecipeListAfter(lastVisibleViewCount)
+            Result.success(recipeList)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+
 }

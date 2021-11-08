@@ -5,4 +5,6 @@ import com.kdjj.domain.model.Recipe
 interface RecipeListRepository {
 
     suspend fun fetchRemoteLatestRecipeListAfter(lastVisibleCreateTime: Long): Result<List<Recipe>>
+
+    suspend fun fetchRemotePopularRecipeListAfter(lastVisibleViewCount: Int): Result<List<Recipe>>
 }

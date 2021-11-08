@@ -33,6 +33,18 @@ class RecipeListDaoImpl @Inject constructor(
                 }
         }
 
+    override suspend fun fetchPopularRecipeListAfter(lastVisibleViewCount: Int): List<Recipe> =
+        withContext(Dispatchers.IO) {
+            firestore.collection(RECIPE_COLLECTION_ID)
+                .orderBy(PAGE_ORDER_BY, Query.Direction.DESCENDING)
+                .startAfter(lastVisibleViewCount)
+                .limit(PAGING_SIZE)
+                .get()
+                .await()
+                .map { queryDocumentSnapshot ->
+                    entityToDomain(queryDocumentSnapshot.toObject<RecipeEntity>())
+                }
+        }
 
     companion object {
         const val PAGE_ORDER_BY = "createTime"
