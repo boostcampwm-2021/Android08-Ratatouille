@@ -11,4 +11,8 @@ class RecipeImageRemoteDataSourceImpl @Inject constructor(
     override suspend fun fetchRecipeImage(uri: String): Result<ByteArray> {
         return firebaseStorageDao.fetchRecipeImage(uri)
     }
+
+    override suspend fun uploadRecipeImage(uri: String): Result<String> {
+        return firebaseStorageDao.uploadRecipeImage(uri)
+    }
 }
