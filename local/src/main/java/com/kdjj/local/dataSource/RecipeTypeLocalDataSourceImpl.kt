@@ -31,7 +31,7 @@ class RecipeTypeLocalDataSourceImpl @Inject constructor(
 	//Recipe Type 읽어오기
 	override suspend fun fetchRecipeTypes(): Result<List<RecipeType>> =
 		withContext(Dispatchers.IO) {
-			return@withContext try {
+			try {
 				val recipeTypeList = recipeDatabase.getAllRecipeTypes()
 					.map { it.toDomain() }
 				Result.success(recipeTypeList)
