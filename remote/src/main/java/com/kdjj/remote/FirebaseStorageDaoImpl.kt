@@ -13,10 +13,10 @@ class FirebaseStorageDaoImpl @Inject constructor(
 ) : FirebaseStorageDao {
 
     override suspend fun fetchRecipeImage(uri: String): Result<ByteArray> {
-        val maxSize: Long = 3238 * 3238
+        val tenMegaByte: Long = 10485760L
         return withContext(Dispatchers.IO) {
             try {
-                val byteArray = storage.getReferenceFromUrl(uri).getBytes(maxSize).await()
+                val byteArray = storage.getReferenceFromUrl(uri).getBytes(tenMegaByte).await()
                 Result.success(byteArray)
             } catch (e: Exception) {
                 Result.failure(e)
