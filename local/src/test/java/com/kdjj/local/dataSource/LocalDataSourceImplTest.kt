@@ -1,5 +1,6 @@
 package com.kdjj.local.dataSource
 
+import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.RecipeStepType
 import com.kdjj.local.DAO.RecipeDAO
 import com.kdjj.local.FileSaveHelper
@@ -48,9 +49,10 @@ class LocalDataSourceImplTest {
             "title",
             "stuff",
             "image path",
-            null,
+            "id123",
             false,
             1000,
+            RecipeState.CREATE,
             1
         )
         //when
