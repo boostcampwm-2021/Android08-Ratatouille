@@ -1,11 +1,12 @@
 package com.kdjj.remote.recipe
 
+import com.kdjj.data.recipetype.RecipeTypeRemoteDataSource
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.remote.FirestoreDao
 
-class RecipeRemoteDataSourceImpl(
+class RecipeTypeRemoteDataSourceImpl(
 	private val fireStoreDao: FirestoreDao
-) : RecipeRemoteDataSource {
+) : RecipeTypeRemoteDataSource {
 
 	override suspend fun fetchRecipeTypes(): Result<List<RecipeType>> =
 		try {
