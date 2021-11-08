@@ -16,7 +16,11 @@ class RecipeImageRepositoryImpl @Inject constructor(
         return recipeImageLocalDataSource.convertToByteArray(uri)
     }
 
-    override suspend fun convertToInternalStorageUri(
+    override suspend fun convertToRemoteStorageUri(uri: String): Result<String> {
+        return recipeImageRemoteDataSource.uploadRecipeImage(uri)
+    }
+
+    override suspend fun convertToLocalStorageUri(
         byteArray: ByteArray,
         fileName: String
     ): Result<String> {

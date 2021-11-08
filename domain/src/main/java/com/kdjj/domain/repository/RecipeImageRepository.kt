@@ -6,7 +6,9 @@ interface RecipeImageRepository {
 
     suspend fun convertToByteArrayLocal(uri: String): Result<ByteArray>
 
-    suspend fun convertToInternalStorageUri(
+    suspend fun convertToRemoteStorageUri(uri: String): Result<String>
+
+    suspend fun convertToLocalStorageUri(
         byteArray: ByteArray,
         fileName: String
     ): Result<String>
