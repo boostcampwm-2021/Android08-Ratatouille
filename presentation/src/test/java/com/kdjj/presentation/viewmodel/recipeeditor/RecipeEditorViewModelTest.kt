@@ -8,6 +8,7 @@ import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.request.EmptyRequest
 import com.kdjj.domain.usecase.FetchRecipeTypesUseCase
 import com.kdjj.domain.usecase.SaveRecipeUseCase
+import com.kdjj.presentation.common.IdGenerator
 import com.kdjj.presentation.common.RecipeMapper
 import com.kdjj.presentation.common.RecipeStepValidator
 import com.kdjj.presentation.common.RecipeValidator
@@ -64,8 +65,8 @@ class RecipeEditorViewModelTest(
     lateinit var recipeValidator: RecipeValidator
     lateinit var recipeStepValidator: RecipeStepValidator
     lateinit var recipeMapper: RecipeMapper
-
-    private lateinit var viewModel: RecipeEditorViewModel
+    lateinit var idGnerator: IdGenerator
+    lateinit var viewModel: RecipeEditorViewModel
 
     @ExperimentalCoroutinesApi
     @Before
@@ -75,19 +76,18 @@ class RecipeEditorViewModelTest(
         recipeValidator = mock(RecipeValidator::class.java)
         recipeStepValidator = mock(RecipeStepValidator::class.java)
         recipeMapper = mock(RecipeMapper::class.java)
+        idGnerator = mock(IdGenerator::class.java)
+        `when`(idGnerator.getDeviceId()).thenReturn("did")
+        `when`(idGnerator.generateId()).thenReturn("id")
+
         TestCoroutineScope(mainCoroutineRule.coroutineContext).launch {
-            setViewModel()
+            `when`(fetchRecipeTypesUseCase.invoke(EmptyRequest())).thenReturn(Result.success(listOf(RecipeType(0, "중식"))))
+            viewModel = RecipeEditorViewModel(recipeValidator, recipeStepValidator, saveRecipeUseCase, fetchRecipeTypesUseCase, recipeMapper, idGnerator)
+//            viewModel.fetchRecipeTypes()
+            repeat(stepSize) {
+                viewModel.addRecipeStep()
+            }
         }
-
-        repeat(stepSize) {
-            viewModel.addRecipeStep()
-        }
-    }
-
-    suspend fun setViewModel() {
-        `when`(fetchRecipeTypesUseCase.invoke(EmptyRequest())).thenReturn(Result.success(listOf(RecipeType(0, "중식"))))
-        viewModel = RecipeEditorViewModel(recipeValidator, recipeStepValidator, saveRecipeUseCase, fetchRecipeTypesUseCase, recipeMapper)
-//        viewModel.fetchRecipeTypes()
     }
 
     @Test
