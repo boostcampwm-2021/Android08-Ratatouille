@@ -6,5 +6,5 @@ interface RecipeTypeLocalDataSource {
 	
 	suspend fun saveRecipeType(recipeTypeList: List<RecipeType>): Result<Boolean>
 	
-	suspend fun getRecipeTypes(): Result<List<RecipeType>>
+	suspend fun fetchRecipeTypes(): Result<List<RecipeType>>
 }
