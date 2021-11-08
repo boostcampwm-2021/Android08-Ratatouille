@@ -4,10 +4,15 @@ import com.kdjj.domain.repository.RecipeImageRepository
 import javax.inject.Inject
 
 class RecipeImageRepositoryImpl @Inject constructor(
-    private val recipeImageLocalDataSource: RecipeImageLocalDataSource
+    private val recipeImageLocalDataSource: RecipeImageLocalDataSource,
+    private val recipeImageRemoteDataSource: RecipeImageRemoteDataSource
 ): RecipeImageRepository {
 
-    override suspend fun convertToByteArray(uri: String): Result<ByteArray> {
+    override suspend fun convertToByteArrayRemote(uri: String): Result<ByteArray> {
+        return recipeImageRemoteDataSource.fetchRecipeImage(uri)
+    }
+
+    override suspend fun convertToByteArrayLocal(uri: String): Result<ByteArray> {
         return recipeImageLocalDataSource.convertToByteArray(uri)
     }
 
