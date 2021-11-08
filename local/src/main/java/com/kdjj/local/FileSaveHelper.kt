@@ -32,7 +32,7 @@ class FileSaveHelper @Inject constructor(
         byteArray: ByteArray,
         fileName: String
     ): Result<String> = withContext(Dispatchers.IO) {
-        val filePath = "$fileDir/$fileName"
+        val filePath = "$fileDir/$fileName.jpeg"
         var fos: FileOutputStream? = null
         try {
             fos = FileOutputStream(filePath)
