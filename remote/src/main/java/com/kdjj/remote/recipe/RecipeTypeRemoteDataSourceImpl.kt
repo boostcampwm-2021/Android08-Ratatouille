@@ -3,8 +3,9 @@ package com.kdjj.remote.recipe
 import com.kdjj.data.recipetype.RecipeTypeRemoteDataSource
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.remote.FirestoreDao
+import javax.inject.Inject
 
-class RecipeTypeRemoteDataSourceImpl(
+class RecipeTypeRemoteDataSourceImpl @Inject constructor(
 	private val fireStoreDao: FirestoreDao
 ) : RecipeTypeRemoteDataSource {
 
