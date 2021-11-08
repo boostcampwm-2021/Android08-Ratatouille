@@ -28,6 +28,7 @@
             android:contentDescription="@string/addStepButton"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="@{() -> viewModel.addRecipeStep()}"
             android:src="@drawable/ic_round_add_24" />
     </androidx.cardview.widget.CardView>
 </layout>

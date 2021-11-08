@@ -3,6 +3,7 @@ package com.kdjj.presentation.view.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.kdjj.presentation.R
@@ -15,33 +16,34 @@ import com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel
 class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewModel) :
     ListAdapter<RecipeEditorItem, RecyclerView.ViewHolder>(RecipeEditorItemCallback()) {
 
-    class RecipeMetaViewHolder(private val binding: ItemEditorRecipeMetaBinding) :
+    inner class RecipeMetaViewHolder(private val binding: ItemEditorRecipeMetaBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: RecipeEditorItem.RecipeMetaModel) {
             binding.viewModel = item
-            val adapter = ArrayAdapter(
-                binding.root.context,
-                R.layout.item_editor_recipe_type,
-                arrayOf("한식", "양식", "중식", "일식")
-            )
-            binding.spinnerEditorRecipeType.adapter = adapter
         }
     }
 
-    class RecipeStepViewHolder(private val binding: ItemEditorRecipeStepBinding) :
+    inner class RecipeStepViewHolder(private val binding: ItemEditorRecipeStepBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: RecipeEditorItem.RecipeStepModel) {
             binding.viewModel = item
+
+            val adapter = ArrayAdapter(
+                binding.root.context,
+                R.layout.item_editor_recipe_type,
+                viewModel.stepTypes
+            )
+            binding.spinnerEditorStepType.adapter = adapter
         }
     }
 
-    class AddStepViewHolder(private val binding: ItemEditorAddStepBinding) :
+    inner class AddStepViewHolder(private val binding: ItemEditorAddStepBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind() {
-
+            binding.viewModel = viewModel
         }
     }
 
@@ -63,6 +65,7 @@ class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewModel) :
                     parent,
                     false
                 )
+                binding.lifecycleOwner = parent.findViewTreeLifecycleOwner()
                 RecipeMetaViewHolder(binding)
             }
             TYPE_STEP -> {
@@ -71,6 +74,7 @@ class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewModel) :
                     parent,
                     false
                 )
+                binding.lifecycleOwner = parent.findViewTreeLifecycleOwner()
                 RecipeStepViewHolder(binding)
             }
             else -> {
@@ -79,6 +83,7 @@ class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewModel) :
                     parent,
                     false
                 )
+                binding.lifecycleOwner = parent.findViewTreeLifecycleOwner()
                 AddStepViewHolder(binding)
             }
         }
