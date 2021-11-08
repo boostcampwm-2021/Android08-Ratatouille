@@ -19,16 +19,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RecipeTypeModule {
-	
-	@Provides
-	@Singleton
-	fun provideFireStore() = Firebase.firestore
-}
-
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class RecipeTypeDataSourceModule {
+abstract class RecipeTypeModule {
 	
 	@Binds
 	@Singleton
@@ -45,4 +36,11 @@ abstract class RecipeTypeDataSourceModule {
 	@Binds
 	@Singleton
 	abstract fun bindRecipeTypeRepository(recipeTypeRepositoryImpl: RecipeTypeRepositoryImpl): RecipeTypeRepository
+	
+	companion object {
+		
+		@Provides
+		@Singleton
+		fun provideFireStore() = Firebase.firestore
+	}
 }
