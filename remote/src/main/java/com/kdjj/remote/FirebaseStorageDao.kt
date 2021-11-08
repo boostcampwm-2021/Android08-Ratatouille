@@ -2,5 +2,5 @@ package com.kdjj.remote
 
 interface FirebaseStorageDao {
 
-    suspend fun FetchRecipeImage(uri: String):  Result< ByteArray>
+    suspend fun fetchRecipeImage(uri: String): Result<ByteArray>
 }
