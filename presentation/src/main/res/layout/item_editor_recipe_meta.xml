@@ -25,6 +25,7 @@
             android:layout_marginTop="@dimen/editor_recipeImage_marginTop"
             android:background="@drawable/bg_editor_image"
             android:contentDescription="@string/recipeImage"
+            app:glideSrc="@{viewModel.liveRecipeImgPath}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_baseline_fastfood_24" />
