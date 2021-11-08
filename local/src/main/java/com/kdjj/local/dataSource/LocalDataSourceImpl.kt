@@ -15,9 +15,9 @@ class LocalDataSourceImpl(
 ) : LocalDataSource {
 	
 	//Recipe 저장
-	override suspend fun saveRecipe(recipe: Recipe): Result<Boolean> {
-		return withContext(Dispatchers.IO) {
-			return@withContext try {
+	override suspend fun saveRecipe(recipe: Recipe): Result<Boolean> =
+		withContext(Dispatchers.IO) {
+			try {
 				recipeDatabase.insertRecipeMeta(domainToEntity(recipe))
 				recipe.stepList.forEachIndexed { idx, recipeStep ->
 					recipeDatabase.insertRecipeStep(
@@ -33,7 +33,6 @@ class LocalDataSourceImpl(
 				Result.failure(Exception(e.message))
 			}
 		}
-	}
 	
 	//Recipe Type 저장하기
 	override suspend fun saveRecipeTypes() {
@@ -41,8 +40,8 @@ class LocalDataSourceImpl(
 	}
 	
 	//Recipe Type 읽어오기
-	override suspend fun getRecipeTypes(): Result<List<RecipeType>> {
-		return withContext(Dispatchers.IO) {
+	override suspend fun getRecipeTypes(): Result<List<RecipeType>> =
+		withContext(Dispatchers.IO) {
 			return@withContext try {
 				val recipeTypeList = recipeDatabase.getAllRecipeTypes()
 					.map { entityToDomain(it) }
@@ -51,7 +50,6 @@ class LocalDataSourceImpl(
 				Result.failure(Exception(e.message))
 			}
 		}
-	}
 	
 	//Gallery Image Uri를 BtyeArray로 변환
 	override suspend fun localUriToByteArray(uri: String): Result<ByteArray> =
@@ -63,9 +61,4 @@ class LocalDataSourceImpl(
 		fileName: String
 	): Result<String> =
 		fileSaveHelper.convertToInternalStorageUri(byteArray, fileName)
-	/**
-	 * 추가로 구현해야하는 함수(Firebase에서 훔쳐온 레시피):
-	 * fun remoteUriToByteArray(str: String): ByteArray
-	 * fun byteArrayToRemoteUri(array: ByteArray): String
-	 * */
 }
