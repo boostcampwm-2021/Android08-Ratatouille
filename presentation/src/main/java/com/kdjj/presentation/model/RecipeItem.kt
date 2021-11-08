@@ -13,7 +13,8 @@ sealed class RecipeItem {
         val liveStuff: MutableLiveData<String>,
         val liveRecipeImgPath: MutableLiveData<String>,
         val liveRecipeType: LiveData<RecipeType>,
-        var uploadId: String? = null,
+        val recipeId: String,
+        val uploadId: String,
         var viewCount: Int = 0,
         var isFavorite: Boolean = false,
 
@@ -33,7 +34,9 @@ sealed class RecipeItem {
         val liveNameState: LiveData<Boolean>,
         val liveDescriptionState: LiveData<Boolean>,
         val liveTimerMinState: LiveData<Boolean>,
-        val liveTimerSecState: LiveData<Boolean>
+        val liveTimerSecState: LiveData<Boolean>,
+
+        val stepId: String
     ): RecipeItem()
 
     object PlusButton : RecipeItem()

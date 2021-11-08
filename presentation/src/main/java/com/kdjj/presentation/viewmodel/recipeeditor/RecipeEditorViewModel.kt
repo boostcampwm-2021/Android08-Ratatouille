@@ -7,9 +7,7 @@ import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.request.EmptyRequest
 import com.kdjj.domain.request.RecipeRequest
 import com.kdjj.domain.usecase.UseCase
-import com.kdjj.presentation.common.RecipeMapper
-import com.kdjj.presentation.common.RecipeStepValidator
-import com.kdjj.presentation.common.RecipeValidator
+import com.kdjj.presentation.common.*
 import com.kdjj.presentation.model.RecipeItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -22,7 +20,8 @@ class RecipeEditorViewModel @Inject constructor(
     private val recipeStepValidator: RecipeStepValidator,
     private val recipeSaveUseCase: UseCase<RecipeRequest, Boolean>,
     private val recipeTypesUseCase: UseCase<EmptyRequest, List<RecipeType>>,
-    private val recipeMapper: RecipeMapper
+    private val recipeMapper: RecipeMapper,
+    private val idGenerator: IdGenerator
 ) : ViewModel() {
 
     private var _liveRecipeItemList = MutableLiveData<List<RecipeItem>>()
@@ -72,7 +71,10 @@ class RecipeEditorViewModel @Inject constructor(
             liveRecipeType = liveCategoryPosition.switchMap { MutableLiveData(recipeTypes[it]) },
 
             liveStuffState = liveStuff.switchMap { MutableLiveData(recipeValidator.validateStuff(it)) },
-            liveTitleState = liveTitle.switchMap { MutableLiveData(recipeValidator.validateTitle(it)) }
+            liveTitleState = liveTitle.switchMap { MutableLiveData(recipeValidator.validateTitle(it)) },
+
+            recipeId = idGenerator.generateId(),
+            uploadId = idGenerator.getDeviceId()
         )
     }
 
@@ -94,6 +96,8 @@ class RecipeEditorViewModel @Inject constructor(
             liveDescriptionState = liveDescription.switchMap { MutableLiveData(recipeStepValidator.validateDescription(it)) },
             liveTimerMinState = liveTimerMin.switchMap { MutableLiveData(recipeStepValidator.validateMinutes(it)) },
             liveTimerSecState = liveTimerSec.switchMap { MutableLiveData(recipeStepValidator.validateSeconds(it)) },
+
+            stepId = idGenerator.generateId()
         )
     }
 
