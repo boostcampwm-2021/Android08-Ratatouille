@@ -23,7 +23,7 @@ class FileSaveHelper(
             val byteArray = inputStream?.readBytes() ?: throw Exception()
             Result.success(byteArray)
         } catch (e: Exception) {
-            Result.failure(Exception(e.message))
+            Result.failure(e)
         }
     }
 
@@ -38,7 +38,7 @@ class FileSaveHelper(
             fos.write(byteArray)
             Result.success(filePath)
         } catch (e: Exception) {
-            Result.failure(Exception(e))
+            Result.failure(e)
         }
     }
 }
