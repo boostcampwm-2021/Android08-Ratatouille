@@ -7,13 +7,6 @@ import com.kdjj.remote.entity.RecipeEntity
 import com.kdjj.remote.entity.RecipeStepEntity
 import com.kdjj.remote.entity.RecipeTypeEntity
 
-fun entityToDomain(recipeTypeEntity: RecipeTypeEntity): RecipeType {
-	return RecipeType(
-		recipeTypeEntity.id,
-		recipeTypeEntity.title
-	)
-}
-
 fun entityToDomain(recipeEntity: RecipeEntity): Recipe {
 	return Recipe(
 		recipeEntity.recipeId,
@@ -41,3 +34,6 @@ fun entityToDomain(recipeStepEntity: RecipeStepEntity): RecipeStep {
 	)
 }
 
+fun RecipeTypeEntity.toDomain(): RecipeType {
+	return RecipeType(id, title)
+}

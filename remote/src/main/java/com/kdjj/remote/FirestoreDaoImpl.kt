@@ -19,7 +19,7 @@ class FirestoreDaoImpl @Inject constructor(
 				.get()
 				.await()
 				.map { queryDocumentSnapshot ->
-					entityToDomain(queryDocumentSnapshot.toObject<RecipeTypeEntity>())
+					queryDocumentSnapshot.toObject<RecipeTypeEntity>().toDomain()
 				}
 		}
 	

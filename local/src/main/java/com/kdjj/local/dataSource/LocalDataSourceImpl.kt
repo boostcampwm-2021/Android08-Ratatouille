@@ -3,7 +3,7 @@ package com.kdjj.local.dataSource
 import com.kdjj.domain.model.Recipe
 import com.kdjj.local.DAO.RecipeDAO
 import com.kdjj.local.FileSaveHelper
-import com.kdjj.local.domainToEntity
+import com.kdjj.local.toEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -16,14 +16,10 @@ class LocalDataSourceImpl(
 	override suspend fun saveRecipe(recipe: Recipe): Result<Boolean> =
 		withContext(Dispatchers.IO) {
 			try {
-				recipeDatabase.insertRecipeMeta(domainToEntity(recipe))
+				recipeDatabase.insertRecipeMeta(recipe.toEntity())
 				recipe.stepList.forEachIndexed { idx, recipeStep ->
 					recipeDatabase.insertRecipeStep(
-						domainToEntity(
-							recipeStep,
-							recipe.recipeId,
-							idx + 1
-						)
+						recipeStep.toEntity(recipe.recipeId, idx + 1)
 					)
 				}
 				Result.success(true)
