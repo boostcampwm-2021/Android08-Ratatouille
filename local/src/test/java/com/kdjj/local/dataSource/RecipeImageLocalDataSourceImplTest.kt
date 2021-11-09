@@ -24,7 +24,7 @@ class RecipeImageLocalDataSourceImplTest {
     }
 
     @Test
-    fun convertToByteArray(): Unit = runBlocking {
+    fun convertToByteArray_getImageByteArray_true(): Unit = runBlocking {
         //given
         `when`(recipeImageLocalDataSourceImpl.convertToByteArray(testUri)).thenReturn(Result.success(testByteArray))
         //when
@@ -34,7 +34,7 @@ class RecipeImageLocalDataSourceImplTest {
     }
 
     @Test
-    fun convertToInternalStorageUri(): Unit = runBlocking {
+    fun convertToInternalStorageUri_localStorageImageUri_true(): Unit = runBlocking {
         //given
         `when`(recipeImageLocalDataSourceImpl.convertToInternalStorageUri(testByteArray, "fileName")).thenReturn(Result.success(testUri))
         //when

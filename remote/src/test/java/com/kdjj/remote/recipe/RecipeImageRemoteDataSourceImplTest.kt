@@ -34,7 +34,7 @@ class RecipeImageRemoteDataSourceImplTest {
     }
 
     @Test
-    fun uploadRecipeImage_remoteStorageImageUri_true(): Unit = runBlocking {
+    fun uploadRecipeImage_getRemoteStorageImageUri_true(): Unit = runBlocking {
         //given
         `when`(mockFireStorageDaoImpl.uploadRecipeImage(testUri)).thenReturn(Result.success(testUri))
         //when
