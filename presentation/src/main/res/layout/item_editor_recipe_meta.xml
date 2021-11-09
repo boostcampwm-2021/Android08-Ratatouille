@@ -9,7 +9,7 @@
             type="com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel" />
 
         <variable
-            name="viewModel"
+            name="model"
             type="com.kdjj.presentation.model.RecipeEditorItem.RecipeMetaModel" />
     </data>
 
@@ -25,7 +25,7 @@
             android:layout_marginTop="@dimen/editor_recipeImage_marginTop"
             android:background="@drawable/bg_editor_image"
             android:contentDescription="@string/recipeImage"
-            app:glideSrc="@{viewModel.liveRecipeImgPath}"
+            app:glideSrc="@{model.liveRecipeImgPath}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_baseline_fastfood_24" />
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:text="@={viewModel.liveTitle}"
+            android:text="@={model.liveTitle}"
             app:layout_constraintBottom_toTopOf="@id/spinner_editor_recipeType"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/textView_editor_recipeTitle"
@@ -72,7 +72,7 @@
             android:layout_marginStart="@dimen/editor_inputField_marginStart"
             android:layout_marginEnd="@dimen/editor_inputField_marginEnd"
             android:background="@drawable/bg_editor_input_field"
-            android:selectedItemPosition="@={viewModel.liveRecipeTypeInt}"
+            android:selectedItemPosition="@={model.liveRecipeTypeInt}"
             app:typeSpinnerItems="@{editorViewModel.liveStringRecipeTypes}"
             app:layout_constraintBottom_toBottomOf="@id/imageView_editor_recipe"
             app:layout_constraintEnd_toEndOf="parent"
@@ -101,7 +101,7 @@
             android:gravity="top"
             android:importantForAutofill="no"
             android:inputType="textMultiLine"
-            android:text="@={viewModel.liveStuff}"
+            android:text="@={model.liveStuff}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/textView_editor_recipeStuff"
             app:layout_constraintTop_toBottomOf="@id/textView_editor_recipeStuff"
