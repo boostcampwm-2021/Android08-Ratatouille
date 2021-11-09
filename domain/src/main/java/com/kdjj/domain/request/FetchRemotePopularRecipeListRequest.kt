@@ -1,5 +1,5 @@
 package com.kdjj.domain.request
 
-data class FetchRemotePopularRecipeListRequset(
+data class FetchRemotePopularRecipeListRequest(
     val lastVisibleViewCount: Int,
 ) : Request
