@@ -27,8 +27,8 @@ fun Spinner.typeSpinnerItems(items: List<String>?) {
     adapter = spinnerAdapter
 }
 
-@BindingAdapter("app:glideSrc")
-fun ImageView.glideSrc(src: String?) {
+@BindingAdapter("app:loadImage")
+fun ImageView.loadImage(src: String?) {
     Glide.with(context)
         .load(src ?: return)
         .into(this)
