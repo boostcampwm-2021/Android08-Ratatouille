@@ -18,7 +18,9 @@ class FirebaseStorageDaoImpl @Inject constructor(
         val tenMegaByte: Long = 10485760L
         return withContext(Dispatchers.IO) {
             try {
-                val byteArray = storageRef.storage.getReferenceFromUrl(uri).getBytes(tenMegaByte).await()
+                val byteArray = storageRef.storage
+                    .getReferenceFromUrl(uri)
+                    .getBytes(tenMegaByte).await()
                 Result.success(byteArray)
             } catch (e: Exception) {
                 Result.failure(e)
