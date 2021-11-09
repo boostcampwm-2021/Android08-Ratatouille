@@ -7,4 +7,6 @@ interface RecipeListRepository {
     suspend fun fetchRemoteLatestRecipeListAfter(lastVisibleCreateTime: Long): Result<List<Recipe>>
 
     suspend fun fetchRemotePopularRecipeListAfter(lastVisibleViewCount: Int): Result<List<Recipe>>
+
+    suspend fun fetchRemoteSearchRecipeListAfter(keyword: String, lastVisibleTitle: String): Result<List<Recipe>>
 }
