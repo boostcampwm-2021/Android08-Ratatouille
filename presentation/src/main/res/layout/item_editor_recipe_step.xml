@@ -81,7 +81,6 @@
                 android:layout_marginStart="@dimen/editor_inputField_marginStart"
                 android:selectedItemPosition="@={model.liveTypeInt}"
                 tools:listitem="@layout/item_editor_recipe_type"
-                app:typeSpinnerItems="@{editorViewModel.liveStringStepTypes}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toEndOf="@id/barrier_editor_stepField"
                 app:layout_constraintEnd_toEndOf="parent" />

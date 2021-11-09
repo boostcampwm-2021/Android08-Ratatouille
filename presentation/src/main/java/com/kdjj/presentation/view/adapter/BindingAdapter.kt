@@ -15,18 +15,6 @@ fun <T, VH : RecyclerView.ViewHolder> RecyclerView.submitList(list: List<T>?) {
     (adapter as? ListAdapter<T, VH>)?.submitList(list)
 }
 
-@BindingAdapter("app:typeSpinnerItems")
-fun Spinner.typeSpinnerItems(items: List<String>?) {
-    items ?: return
-
-    val spinnerAdapter = ArrayAdapter(
-        context,
-        R.layout.item_editor_recipe_type,
-        items
-    )
-    adapter = spinnerAdapter
-}
-
 @BindingAdapter("app:loadImage")
 fun ImageView.loadImage(src: String?) {
     Glide.with(context)
