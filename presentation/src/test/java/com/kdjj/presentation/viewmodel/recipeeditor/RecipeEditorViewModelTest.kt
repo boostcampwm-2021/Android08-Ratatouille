@@ -120,8 +120,8 @@ class RecipeEditorViewModelTest(
         if (stepSize == 0) {
             assertEquals(0, viewModel.liveRecipeItemList.value?.size)
         } else {
-            // meta item + button item = 2
-            assertEquals(stepSize + 2 - 1, viewModel.liveRecipeItemList.value?.size)
+            // meta item + default step + button item = 2
+            assertEquals(stepSize + 3 - 1, viewModel.liveRecipeItemList.value?.size)
         }
     }
 
