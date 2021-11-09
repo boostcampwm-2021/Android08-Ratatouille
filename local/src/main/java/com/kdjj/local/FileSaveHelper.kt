@@ -39,7 +39,7 @@ class FileSaveHelper @Inject constructor(
             val filePath = "$fileDir/${fileName}.png"
             fos = FileOutputStream(filePath)
             val bitmap = convertByteArrayToBitmap(byteArray)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 85, fos)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
             Result.success(filePath)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -48,8 +48,6 @@ class FileSaveHelper @Inject constructor(
     }
 
     private fun convertByteArrayToBitmap(byteArray: ByteArray): Bitmap{
-        val options = BitmapFactory.Options()
-        options.inSampleSize = 4
         val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
 
         val width = 300
