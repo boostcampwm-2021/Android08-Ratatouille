@@ -46,7 +46,27 @@ class RecipeListDaoImpl @Inject constructor(
                 }
         }
 
+    override suspend fun fetchSearchRecipeListAfter(
+        keyword: String,
+        lastVisibleTitle: String
+    ): List<Recipe> =
+        withContext(Dispatchers.IO) {
+            firestore.collection(RECIPE_COLLECTION_ID)
+                .whereGreaterThanOrEqualTo(FIELD_TITLE, keyword)
+                .whereLessThan(FIELD_TITLE, keyword + HANGLE_MAX_VALUE)
+                .orderBy(FIELD_TITLE, Query.Direction.ASCENDING)
+                .startAfter(lastVisibleTitle)
+                .limit(PAGING_SIZE)
+                .get()
+                .await()
+                .map { queryDocumentSnapshot ->
+                    entityToDomain(queryDocumentSnapshot.toObject<RecipeEntity>())
+                }
+        }
+
     companion object {
+        const val HANGLE_MAX_VALUE = "힣"
+        const val FIELD_TITLE = "title"
         const val FIELD_CREATE_TIME = "createTime"
         const val FIELD_VIEW_COUNT = "viewCount"
         const val RECIPE_COLLECTION_ID = "recipe"
