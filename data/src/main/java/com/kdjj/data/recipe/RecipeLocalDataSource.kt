@@ -1,8 +1,8 @@
-package com.kdjj.domain.repository
+package com.kdjj.data.recipe
 
 import com.kdjj.domain.model.Recipe
 
-interface RecipeRepository {
+interface RecipeLocalDataSource {
 	
 	suspend fun saveRecipe(recipe: Recipe): Result<Boolean>
 }
