@@ -15,12 +15,11 @@ class FirebaseStorageDaoImpl @Inject constructor(
 ) : FirebaseStorageDao {
 
     override suspend fun fetchRecipeImage(uri: String): Result<ByteArray> {
-        val tenMegaByte: Long = 10485760L
         return withContext(Dispatchers.IO) {
             try {
                 val byteArray = storageRef.storage
                     .getReferenceFromUrl(uri)
-                    .getBytes(tenMegaByte).await()
+                    .getBytes(MAX_SIZE).await()
                 Result.success(byteArray)
             } catch (e: Exception) {
                 Result.failure(e)
@@ -40,5 +39,9 @@ class FirebaseStorageDaoImpl @Inject constructor(
                 Result.failure(e)
             }
         }
+    }
+
+    companion object{
+        val MAX_SIZE: Long = 10485760L
     }
 }
