@@ -1,5 +1,6 @@
 package com.kdjj.data.repository
 
+import com.kdjj.data.datasource.RecipeListLocalDataSource
 import com.kdjj.data.datasource.RecipeListRemoteDataSource
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.repository.RecipeListRepository
@@ -7,6 +8,7 @@ import javax.inject.Inject
 
 class RecipeListRepositoryImpl @Inject constructor(
     private val recipeListRemoteDataSource: RecipeListRemoteDataSource,
+    private val recipeListLocalDataSource: RecipeListLocalDataSource,
 ) : RecipeListRepository {
 
     override suspend fun fetchRemoteLatestRecipeListAfter(lastVisibleCreateTime: Long): Result<List<Recipe>> =
@@ -20,5 +22,8 @@ class RecipeListRepositoryImpl @Inject constructor(
         lastVisibleTitle: String
     ): Result<List<Recipe>> =
         recipeListRemoteDataSource.fetchSearchRecipeListAfter(keyword, lastVisibleTitle)
+
+    override suspend fun fetchLocalLatestRecipeListAfter(page: Int): Result<List<Recipe>> =
+        recipeListLocalDataSource.fetchLatestRecipeListAfter(page)
 
 }
