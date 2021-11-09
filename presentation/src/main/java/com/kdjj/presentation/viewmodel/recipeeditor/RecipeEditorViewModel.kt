@@ -28,12 +28,9 @@ class RecipeEditorViewModel @Inject constructor(
     val liveRecipeItemList: LiveData<List<RecipeEditorItem>> get() = _liveRecipeItemList
 
     val stepTypes = RecipeStepType.values()
-    val liveStringStepTypes = MutableLiveData(stepTypes.map { it.name })
 
     private val _liveRecipeTypes = MutableLiveData<List<RecipeType>>()
-    val liveStringRecipeTypes: LiveData<List<String>> get() = _liveRecipeTypes.switchMap { list ->
-        MutableLiveData(list.map { it.title })
-    }
+    val liveRecipeTypes: LiveData<List<RecipeType>> get() = _liveRecipeTypes
 
     private val _liveImgTarget = MutableLiveData<RecipeEditorItem?>()
     val liveImgTarget: LiveData<RecipeEditorItem?> get() = _liveImgTarget

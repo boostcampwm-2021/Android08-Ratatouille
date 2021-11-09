@@ -21,6 +21,15 @@ class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewModel) :
 
         init {
             binding.imageViewEditorRecipe.clipToOutline = true
+            binding.lifecycleOwner?.let { owner ->
+                viewModel.liveRecipeTypes.observe(owner) { types ->
+                    binding.spinnerEditorRecipeType.adapter = ArrayAdapter(
+                        binding.root.context,
+                        R.layout.item_editor_recipe_type,
+                        types.map { it.title }
+                    )
+                }
+            }
         }
 
         fun bind(item: RecipeEditorItem.RecipeMetaModel) {
@@ -35,6 +44,11 @@ class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewModel) :
 
         init {
             binding.imageViewEditorStep.clipToOutline = true
+            binding.spinnerEditorStepType.adapter = ArrayAdapter(
+                binding.root.context,
+                R.layout.item_editor_recipe_type,
+                viewModel.stepTypes.map { it.name }
+            )
         }
 
         fun bind(item: RecipeEditorItem.RecipeStepModel) {
