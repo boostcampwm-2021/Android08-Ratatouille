@@ -24,4 +24,16 @@ class RecipeListRemoteDataSourceImpl @Inject constructor(
         } catch (e: Exception) {
             Result.failure(e)
         }
+
+    override suspend fun fetchSearchRecipeListAfter(
+        keyword: String,
+        lastVisibleTitle: String
+    ): Result<List<Recipe>> =
+        try {
+            val recipeList = recipeListDao.fetchSearchRecipeListAfter(keyword, lastVisibleTitle)
+            Result.success(recipeList)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+
 }
