@@ -24,5 +24,4 @@ class RecipeListRemoteDataSourceImpl @Inject constructor(
         } catch (e: Exception) {
             Result.failure(e)
         }
-
 }
