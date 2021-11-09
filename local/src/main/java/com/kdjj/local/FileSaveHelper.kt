@@ -49,18 +49,21 @@ class FileSaveHelper @Inject constructor(
 
     private fun convertByteArrayToBitmap(byteArray: ByteArray): Bitmap {
         val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-        val standard = 300
         val width = bitmap.width.toFloat()
         val height = bitmap.height.toFloat()
-        val (scaledWidth, scaledHeight) = if (width > standard || height > standard) {
+        val (scaledWidth, scaledHeight) = if (width > MAX_WIDTH_HEIGHT_SIZE || height > MAX_WIDTH_HEIGHT_SIZE) {
             if (width > height) {
-                standard to (standard * height / width)
+                MAX_WIDTH_HEIGHT_SIZE to (MAX_WIDTH_HEIGHT_SIZE * height / width)
             } else {
-                (standard * width / height) to standard
+                (MAX_WIDTH_HEIGHT_SIZE * width / height) to MAX_WIDTH_HEIGHT_SIZE
             }
         } else {
             width to height
         }
         return Bitmap.createScaledBitmap(bitmap, scaledWidth.toInt(), scaledHeight.toInt(), true)
+    }
+
+    companion object{
+        const val MAX_WIDTH_HEIGHT_SIZE = 300
     }
 }
