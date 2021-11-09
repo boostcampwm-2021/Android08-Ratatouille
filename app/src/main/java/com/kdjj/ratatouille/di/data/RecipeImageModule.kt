@@ -44,7 +44,6 @@ abstract class RecipeImageModule {
     @Singleton
     abstract fun bindFireStorageDao(firebaseStorageDaoImpl: FirebaseStorageDaoImpl): FirebaseStorageDao
 
-
     companion object {
 
         @Provides
