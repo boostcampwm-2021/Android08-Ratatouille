@@ -23,7 +23,7 @@ class RecipeListDaoImpl @Inject constructor(
     override suspend fun fetchLatestRecipeListAfter(lastVisibleCreateTime: Long): List<Recipe> =
         withContext(Dispatchers.IO) {
             firestore.collection(RECIPE_COLLECTION_ID)
-                .orderBy(PAGE_ORDER_BY, Query.Direction.DESCENDING)
+                .orderBy(FIELD_CREATE_TIME, Query.Direction.DESCENDING)
                 .startAfter(lastVisibleCreateTime)
                 .limit(PAGING_SIZE)
                 .get()
@@ -36,7 +36,7 @@ class RecipeListDaoImpl @Inject constructor(
     override suspend fun fetchPopularRecipeListAfter(lastVisibleViewCount: Int): List<Recipe> =
         withContext(Dispatchers.IO) {
             firestore.collection(RECIPE_COLLECTION_ID)
-                .orderBy(PAGE_ORDER_BY, Query.Direction.DESCENDING)
+                .orderBy(FIELD_VIEW_COUNT, Query.Direction.DESCENDING)
                 .startAfter(lastVisibleViewCount)
                 .limit(PAGING_SIZE)
                 .get()
@@ -47,7 +47,8 @@ class RecipeListDaoImpl @Inject constructor(
         }
 
     companion object {
-        const val PAGE_ORDER_BY = "createTime"
+        const val FIELD_CREATE_TIME = "createTime"
+        const val FIELD_VIEW_COUNT = "viewCount"
         const val RECIPE_COLLECTION_ID = "recipe"
         const val PAGING_SIZE = 10L
     }
