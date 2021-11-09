@@ -47,24 +47,20 @@ class FileSaveHelper @Inject constructor(
         }
     }
 
-    private fun convertByteArrayToBitmap(byteArray: ByteArray): Bitmap{
+    private fun convertByteArrayToBitmap(byteArray: ByteArray): Bitmap {
         val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-
-        val width = 300
-        val height = 300
-
-        var bmpWidth = bitmap.width.toFloat()
-        var bmpHeight = bitmap.height.toFloat()
-
-        if (bmpWidth > width) {
-            val scale = width / (bmpWidth / 100)
-            bmpWidth *= (scale / 100)
-            bmpHeight *= (scale / 100)
-        } else if(bmpHeight > height){
-            val scale = width / (bmpHeight / 100)
-            bmpWidth *= (scale / 100)
-            bmpHeight *= (scale / 100)
+        val standard = 300
+        val width = bitmap.width.toFloat()
+        val height = bitmap.height.toFloat()
+        val (scaledWidth, scaledHeight) = if (width > standard || height > standard) {
+            if (width > height) {
+                standard to (standard * height / width)
+            } else {
+                (standard * width / height) to standard
+            }
+        } else {
+            width to height
         }
-        return Bitmap.createScaledBitmap(bitmap, bmpWidth.toInt(), bmpHeight.toInt(), true)
+        return Bitmap.createScaledBitmap(bitmap, scaledWidth.toInt(), scaledHeight.toInt(), true)
     }
 }
