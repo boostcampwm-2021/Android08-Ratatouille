@@ -8,5 +8,5 @@ interface RecipeTypeRepository {
 	
 	suspend fun fetchLocalRecipeTypes(): Result<List<RecipeType>>
 	
-	suspend fun saveRecipeType(): Result<Boolean>
+	suspend fun saveRecipeType(recipeTypeList: List<RecipeType>): Result<Boolean>
 }
