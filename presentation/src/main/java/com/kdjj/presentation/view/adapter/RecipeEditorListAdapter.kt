@@ -26,6 +26,7 @@ class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewModel) :
         fun bind(item: RecipeEditorItem.RecipeMetaModel) {
             binding.model = item
             binding.editorViewModel = viewModel
+            binding.executePendingBindings()
         }
     }
 
@@ -39,6 +40,7 @@ class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewModel) :
         fun bind(item: RecipeEditorItem.RecipeStepModel) {
             binding.model = item
             binding.editorViewModel = viewModel
+            binding.executePendingBindings()
         }
     }
 
@@ -47,6 +49,7 @@ class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewModel) :
 
         fun bind() {
             binding.viewModel = viewModel
+            binding.executePendingBindings()
         }
     }
 
