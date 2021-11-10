@@ -3,15 +3,15 @@
     <item
         android:id="@+id/myRecipeFragment"
         android:icon="@drawable/ic_my_recipe_24dp"
-        android:title="내 레시피" />
+        android:title="@string/myRecipe" />
 
     <item
         android:id="@+id/searchRecipeFragment"
         android:icon="@drawable/ic_search_recipe_24dp"
-        android:title="검색" />
+        android:title="@string/searchRecipe" />
 
     <item
         android:id="@+id/othersRecipeFragment"
         android:icon="@drawable/ic_others_recipe_24dp"
-        android:title="힐끔보기" />
+        android:title="@string/othersRecipe" />
 </menu>
