@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -21,7 +22,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <RadioGroup
-            android:id="@+id/radio_group"
+            android:id="@+id/radioGroup_myRecipe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -36,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/orderByDate"
                 android:button="@android:color/transparent"
-                android:layout_marginLeft="24dp"/>
+                android:layout_marginLeft="@dimen/myRecipe_radioButton_marginLeft"/>
 
             <com.kdjj.presentation.view.home.my.TextRadioButton
                 android:id="@+id/radioButton_orderByFavorite"
@@ -44,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/orderByFavorite"
                 android:button="@android:color/transparent"
-                android:layout_marginLeft="24dp"/>
+                android:layout_marginLeft="@dimen/myRecipe_radioButton_marginLeft"/>
 
             <com.kdjj.presentation.view.home.my.TextRadioButton
                 android:id="@+id/radioButton_orderByName"
@@ -52,8 +53,22 @@
                 android:layout_height="wrap_content"
                 android:text="@string/orderByName"
                 android:button="@android:color/transparent"
-                android:layout_marginLeft="24dp"/>
+                android:layout_marginLeft="@dimen/myRecipe_radioButton_marginLeft"/>
         </RadioGroup>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_myRecipe"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/radioGroup_myRecipe"
+            app:layout_constraintVertical_bias="1.0"
+            tools:layout_editor_absoluteX="0dp"
+            tools:listitem="@layout/item_myrecipe_add_recipe" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
