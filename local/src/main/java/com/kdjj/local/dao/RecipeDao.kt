@@ -30,4 +30,7 @@ interface RecipeDao {
 	
 	@Query("DELETE FROM RecipeStep WHERE parentRecipeId = :recipeId")
 	suspend fun deleteStepList(recipeId: String)
+	
+	@Update
+	suspend fun updateRecipeMeta(recipeMeta: RecipeMetaEntity)
 }
