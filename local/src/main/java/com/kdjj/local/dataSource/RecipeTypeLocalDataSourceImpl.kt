@@ -2,7 +2,7 @@ package com.kdjj.local.dataSource
 
 import com.kdjj.data.recipetype.RecipeTypeLocalDataSource
 import com.kdjj.domain.model.RecipeType
-import com.kdjj.local.DAO.RecipeDAO
+import com.kdjj.local.dao.RecipeTypeDao
 import com.kdjj.local.toDomain
 import com.kdjj.local.toEntity
 import kotlinx.coroutines.Dispatchers
@@ -10,17 +10,16 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class RecipeTypeLocalDataSourceImpl @Inject constructor(
-	private val recipeDatabase: RecipeDAO
+	private val recipeTypeDao: RecipeTypeDao
 ) : RecipeTypeLocalDataSource {
 	
-	//Recipe Type 저장하기
-	override suspend fun saveRecipeType(recipeTypeList: List<RecipeType>): Result<Boolean> =
+	override suspend fun saveRecipeTypeList(recipeTypeList: List<RecipeType>): Result<Boolean> =
 		withContext(Dispatchers.IO) {
 			try {
 				recipeTypeList.map { recipeType ->
 					recipeType.toEntity()
 				}.forEach { recipeTypeEntity ->
-					recipeDatabase.insertRecipeType(recipeTypeEntity)
+					recipeTypeDao.insertRecipeType(recipeTypeEntity)
 				}
 				Result.success(true)
 			} catch (e: Exception) {
@@ -28,11 +27,10 @@ class RecipeTypeLocalDataSourceImpl @Inject constructor(
 			}
 		}
 	
-	//Recipe Type 읽어오기
-	override suspend fun fetchRecipeTypes(): Result<List<RecipeType>> =
+	override suspend fun fetchRecipeTypeList(): Result<List<RecipeType>> =
 		withContext(Dispatchers.IO) {
 			try {
-				val recipeTypeList = recipeDatabase.getAllRecipeTypes()
+				val recipeTypeList = recipeTypeDao.getAllRecipeTypeList()
 					.map { it.toDomain() }
 				Result.success(recipeTypeList)
 			} catch (e: Exception) {

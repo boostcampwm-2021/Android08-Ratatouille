@@ -10,15 +10,15 @@ class FetchRecipeTypesUseCase @Inject constructor(
 ) : UseCase<EmptyRequest, @JvmSuppressWildcards List<RecipeType>> {
 	
 	override suspend fun invoke(request: EmptyRequest): Result<List<RecipeType>> {
-		val remoteResult = recipeTypeRepository.fetchRemoteRecipeTypes()
+		val remoteResult = recipeTypeRepository.fetchRemoteRecipeTypeList()
 		return when {
 			remoteResult.isSuccess -> {
-				remoteResult.also {
-					recipeTypeRepository.saveRecipeType(it.getOrThrow())
+				remoteResult.also { result ->
+					recipeTypeRepository.saveRecipeTypeList(result.getOrThrow())
 				}
 			}
 			else -> {
-				recipeTypeRepository.fetchLocalRecipeTypes()
+				recipeTypeRepository.fetchLocalRecipeTypeList()
 			}
 		}
 	}

@@ -9,15 +9,15 @@ class RecipeTypeRepositoryImpl @Inject constructor(
 	private val remoteDataSource: RecipeTypeRemoteDataSource
 ) : RecipeTypeRepository {
 	
-	override suspend fun fetchRemoteRecipeTypes(): Result<List<RecipeType>> {
-		return remoteDataSource.fetchRecipeTypes()
+	override suspend fun fetchRemoteRecipeTypeList(): Result<List<RecipeType>> {
+		return remoteDataSource.fetchRecipeTypeList()
 	}
 	
-	override suspend fun fetchLocalRecipeTypes(): Result<List<RecipeType>> {
-		return localDataSource.fetchRecipeTypes()
+	override suspend fun fetchLocalRecipeTypeList(): Result<List<RecipeType>> {
+		return localDataSource.fetchRecipeTypeList()
 	}
 	
-	override suspend fun saveRecipeType(recipeTypeList: List<RecipeType>): Result<Boolean> {
-		return localDataSource.saveRecipeType(recipeTypeList)
+	override suspend fun saveRecipeTypeList(recipeTypeList: List<RecipeType>): Result<Boolean> {
+		return localDataSource.saveRecipeTypeList(recipeTypeList)
 	}
 }

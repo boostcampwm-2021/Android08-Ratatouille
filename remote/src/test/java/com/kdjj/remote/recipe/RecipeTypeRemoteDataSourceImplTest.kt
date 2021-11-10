@@ -32,7 +32,7 @@ class RecipeTypeRemoteDataSourceImplTest {
 		`when`(mockFireStoreDaoImpl.fetchRecipeTypes()).thenReturn(testRecipeTypeList)
 		
 		// when
-		val recipeTypeList = recipeRemoteDataSourceImpl.fetchRecipeTypes()
+		val recipeTypeList = recipeRemoteDataSourceImpl.fetchRecipeTypeList()
 		println(recipeTypeList)
 		// then
 		assertEquals(Result.success(testRecipeTypeList), recipeTypeList)

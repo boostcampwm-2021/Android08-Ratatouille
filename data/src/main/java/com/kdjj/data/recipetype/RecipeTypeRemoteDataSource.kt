@@ -4,5 +4,5 @@ import com.kdjj.domain.model.RecipeType
 
 interface RecipeTypeRemoteDataSource {
 	
-	suspend fun fetchRecipeTypes(): Result<List<RecipeType>>
+	suspend fun fetchRecipeTypeList(): Result<List<RecipeType>>
 }
