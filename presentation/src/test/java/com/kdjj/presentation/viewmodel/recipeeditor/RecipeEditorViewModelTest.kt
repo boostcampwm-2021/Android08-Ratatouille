@@ -6,8 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.request.EmptyRequest
+import com.kdjj.domain.request.RecipeRequest
 import com.kdjj.domain.usecase.FetchRecipeTypesUseCase
-import com.kdjj.domain.usecase.SaveRecipeUseCase
+import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.IdGenerator
 import com.kdjj.presentation.common.RecipeMapper
 import com.kdjj.presentation.common.RecipeStepValidator
@@ -60,7 +61,7 @@ class RecipeEditorViewModelTest(
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    lateinit var saveRecipeUseCase: SaveRecipeUseCase
+    lateinit var saveRecipeUseCase: UseCase<RecipeRequest, Boolean>
     lateinit var fetchRecipeTypesUseCase: FetchRecipeTypesUseCase
     lateinit var recipeValidator: RecipeValidator
     lateinit var recipeStepValidator: RecipeStepValidator
@@ -71,12 +72,15 @@ class RecipeEditorViewModelTest(
     @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
-        saveRecipeUseCase = mock(SaveRecipeUseCase::class.java)
         fetchRecipeTypesUseCase = mock(FetchRecipeTypesUseCase::class.java)
         recipeValidator = mock(RecipeValidator::class.java)
         recipeStepValidator = mock(RecipeStepValidator::class.java)
         recipeMapper = mock(RecipeMapper::class.java)
         idGnerator = mock(IdGenerator::class.java)
+        saveRecipeUseCase = object : UseCase<RecipeRequest, Boolean> {
+            override suspend fun invoke(request: RecipeRequest): Result<Boolean> =
+                Result.success(true)
+        }
         `when`(idGnerator.getDeviceId()).thenReturn("did")
         `when`(idGnerator.generateId()).thenReturn("id")
 
