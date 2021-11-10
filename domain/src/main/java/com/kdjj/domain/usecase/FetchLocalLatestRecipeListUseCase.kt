@@ -5,11 +5,11 @@ import com.kdjj.domain.repository.RecipeListRepository
 import com.kdjj.domain.request.FetchLocalLatestRecipeListRequest
 import javax.inject.Inject
 
-class FetchLocalLatestRecipeListUseCase @Inject constructor(
+internal class FetchLocalLatestRecipeListUseCase @Inject constructor(
     private val recipeListRepository: RecipeListRepository,
 ) : UseCase<FetchLocalLatestRecipeListRequest, @JvmSuppressWildcards List<Recipe>> {
 
-    override suspend fun invoke(request: FetchLocalLatestRecipeListRequest): Result<List<Recipe>> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun invoke(request: FetchLocalLatestRecipeListRequest): Result<List<Recipe>> =
+        recipeListRepository.fetchLocalLatestRecipeListAfter(request.page)
+
 }

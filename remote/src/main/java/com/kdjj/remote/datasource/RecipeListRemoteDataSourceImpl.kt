@@ -5,7 +5,7 @@ import com.kdjj.domain.model.Recipe
 import com.kdjj.remote.dao.RecipeListDao
 import javax.inject.Inject
 
-class RecipeListRemoteDataSourceImpl @Inject constructor(
+internal class RecipeListRemoteDataSourceImpl @Inject constructor(
     private val recipeListDao: RecipeListDao,
 ) : RecipeListRemoteDataSource {
 

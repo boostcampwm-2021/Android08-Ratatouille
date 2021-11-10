@@ -5,7 +5,7 @@ import com.kdjj.domain.repository.RecipeListRepository
 import com.kdjj.domain.request.FetchRemoteLatestRecipeListRequest
 import javax.inject.Inject
 
-class FetchRemoteLatestRecipeListUseCase @Inject constructor(
+internal class FetchRemoteLatestRecipeListUseCase @Inject constructor(
     private val recipeListRepository: RecipeListRepository
 ) : UseCase<FetchRemoteLatestRecipeListRequest, @JvmSuppressWildcards List<Recipe>> {
 

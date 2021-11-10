@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.kdjj.local.DAO.RecipeDAO
+import com.kdjj.local.DAO.RecipeListDao
 import com.kdjj.local.model.RecipeMetaEntity
 import com.kdjj.local.model.RecipeStepEntity
 import com.kdjj.local.model.RecipeTypeEntity
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 abstract class RecipeDatabase : RoomDatabase() {
 	
 	abstract fun getRecipeDao(): RecipeDAO
+	abstract fun getRecipeListDao(): RecipeListDao
 	
 	companion object {
 		
