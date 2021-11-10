@@ -29,4 +29,11 @@
     <dimen name="bottomButton_padding">16dp</dimen>
     <dimen name="bottomButton_textSize">24sp</dimen>
     <dimen name="bottomButton_space">100dp</dimen>
+
+    <dimen name="myRecipe_radioButton_marginLeft">24dp</dimen>
+    <dimen name="myRecipe_cardView_width">160dp</dimen>
+    <dimen name="myRecipe_cardView_height">160dp</dimen>
+    <dimen name="myRecipe_cardView_marginTop">24dp</dimen>
+    <dimen name="myRecipe_cardView_marginStart">16dp</dimen>
+    <dimen name="myRecipe_cardView_corner">15dp</dimen>
 </resources>
