@@ -22,6 +22,17 @@ internal class RecipeListLocalDataSourceImpl @Inject constructor(
             } ?: Exception()
         }
 
+    override suspend fun fetchFavoriteRecipeListAfter(index: Int): Result<List<Recipe>> =
+        kotlin.runCatching {
+            recipeListDao.fetchFavoriteRecipeList(PAGE_SIZE, index)
+                .map { it.toDomain() }
+        }.errorMap { throwable ->
+            throwable?.let {
+                Exception(it.message)
+            } ?: Exception()
+        }
+
+
     companion object {
         const val PAGE_SIZE = 10
     }
