@@ -3,8 +3,9 @@ package com.kdjj.domain.usecase
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.repository.RecipeListRepository
 import com.kdjj.domain.request.FetchLocalSearchRecipeListRequest
+import javax.inject.Inject
 
-internal class FetchLocalSearchRecipeListUseCase(
+internal class FetchLocalSearchRecipeListUseCase @Inject constructor(
     private val recipeListRepository: RecipeListRepository,
 ) : UseCase<FetchLocalSearchRecipeListRequest, @JvmSuppressWildcards List<Recipe>> {
 

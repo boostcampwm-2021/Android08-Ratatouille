@@ -12,6 +12,7 @@ import dagger.Module
 
 @Module
 abstract class UseCaseModule {
+
     @Binds
     internal abstract fun bindSaveRecipeUseCase(saveRecipeUseCase: SaveRecipeUseCase): UseCase<RecipeRequest, Boolean>
 
