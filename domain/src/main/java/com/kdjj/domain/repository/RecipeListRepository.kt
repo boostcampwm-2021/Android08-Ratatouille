@@ -13,4 +13,6 @@ interface RecipeListRepository {
     suspend fun fetchLocalLatestRecipeListAfter(page: Int): Result<List<Recipe>>
 
     suspend fun fetchLocalFavoriteRecipeListAfter(index: Int): Result<List<Recipe>>
+
+    suspend fun fetchLocalSearchRecipeListAfter(keyword: String, index: Int): Result<List<Recipe>>
 }
