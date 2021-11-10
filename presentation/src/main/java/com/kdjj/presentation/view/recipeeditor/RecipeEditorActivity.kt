@@ -103,6 +103,8 @@ class RecipeEditorActivity : AppCompatActivity() {
         ItemTouchHelper(itemTouchCallback).attachToRecyclerView(binding.recyclerViewEditor)
 
         setupObservers()
+
+        viewModel.initializeWith(null)
     }
 
     private fun setupObservers() {

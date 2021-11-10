@@ -2,6 +2,7 @@ package com.kdjj.presentation.viewmodel.recipeeditor
 
 import android.net.Uri
 import androidx.lifecycle.*
+import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeStepType
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.request.EmptyRequest
@@ -10,6 +11,7 @@ import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.*
 import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.model.toDomain
+import com.kdjj.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -24,7 +26,10 @@ class RecipeEditorViewModel @Inject constructor(
     private val idGenerator: IdGenerator
 ) : ViewModel() {
 
-    private var _liveRecipeItemList = MutableLiveData<List<RecipeEditorItem>>()
+    private lateinit var recipeMetaModel: RecipeEditorItem.RecipeMetaModel
+    private var recipeStepModelList = listOf<RecipeEditorItem.RecipeStepModel>()
+
+    private val _liveRecipeItemList = MutableLiveData<List<RecipeEditorItem>>()
     val liveRecipeItemList: LiveData<List<RecipeEditorItem>> get() = _liveRecipeItemList
 
     val stepTypes = RecipeStepType.values()
@@ -38,31 +43,35 @@ class RecipeEditorViewModel @Inject constructor(
     private val _liveRegisterHasPressed = MutableLiveData(false)
     val liveRegisterHasPressed: LiveData<Boolean> get() = _liveRegisterHasPressed
 
-    init {
-        _liveRecipeItemList.value = listOf(
-            createEmptyRecipeMetaModel(),
-            createEmptyRecipeStepModel(),
-            RecipeEditorItem.PlusButton
-        )
-        fetchRecipeTypes()
-    }
-
-    private fun fetchRecipeTypes() {
+    fun initializeWith(recipe: Recipe?) {
         viewModelScope.launch {
             recipeTypesUseCase(EmptyRequest())
-                .onSuccess {
-                    _liveRecipeTypes.value = it
+                .onSuccess { recipeTypes ->
+                    _liveRecipeTypes.value = recipeTypes
+                    recipe?.let {
+                        val (metaModel, stepList) =
+                            recipe.toPresentation(recipeValidator, recipeTypes, recipeStepValidator)
+                        recipeMetaModel = metaModel
+                        recipeStepModelList = stepList
+                    } ?: run {
+                        recipeMetaModel = RecipeEditorItem.RecipeMetaModel.create(
+                            idGenerator, recipeTypes, recipeValidator
+                        )
+                        recipeStepModelList = listOf(RecipeEditorItem.RecipeStepModel.create(
+                            idGenerator, recipeStepValidator
+                        ))
+                    }
+                    notifyStepListChange()
                 }
                 .onFailure {
-                    // todo
+
                 }
         }
     }
 
-    fun setRecipeImg(uri: Uri) {
-        _liveRecipeItemList.value?.let {
-            (it[0] as RecipeEditorItem.RecipeMetaModel).liveRecipeImgPath.value = uri.path
-        }
+    private fun notifyStepListChange() {
+        _liveRecipeItemList.value =
+            listOf(recipeMetaModel) + recipeStepModelList + RecipeEditorItem.PlusButton
     }
 
     fun startSelectImage(model: RecipeEditorItem) {
@@ -92,109 +101,53 @@ class RecipeEditorViewModel @Inject constructor(
     }
 
     fun addRecipeStep() {
-        _liveRecipeItemList.value?.let {
-            _liveRecipeItemList.value = it.subList(0, it.lastIndex) + createEmptyRecipeStepModel() + it.last()
-        }
-    }
-
-    private fun createEmptyRecipeMetaModel(): RecipeEditorItem.RecipeMetaModel {
-        val liveTitle = MutableLiveData<String>("")
-        val liveStuff = MutableLiveData<String>("")
-        val liveRecipeImgPath = MutableLiveData<String>()
-        val liveCategoryPosition = MutableLiveData(0)
-        return RecipeEditorItem.RecipeMetaModel(
-            liveTitle = liveTitle,
-            liveStuff = liveStuff,
-            liveRecipeImgPath = liveRecipeImgPath,
-            liveRecipeTypeInt = liveCategoryPosition,
-            liveRecipeType = liveCategoryPosition.switchMap { _liveRecipeTypes.value?.let { types -> MutableLiveData(types[it])} ?: MutableLiveData() },
-
-            liveStuffState = liveStuff.switchMap { MutableLiveData(recipeValidator.validateStuff(it)) },
-            liveTitleState = liveTitle.switchMap { MutableLiveData(recipeValidator.validateTitle(it)) },
-
-            recipeId = idGenerator.generateId(),
-            uploadId = idGenerator.getDeviceId()
-        )
-    }
-
-    private fun createEmptyRecipeStepModel(): RecipeEditorItem.RecipeStepModel {
-        val liveName =  MutableLiveData("")
-        val liveDescription = MutableLiveData("")
-        val liveTimerMin = MutableLiveData<Int?>(0)
-        val liveTimerSec = MutableLiveData<Int?>(0)
-        val liveTypeInt = MutableLiveData(0)
-        return RecipeEditorItem.RecipeStepModel(
-            liveName = liveName,
-            liveDescription = liveDescription,
-            liveTimerMin = liveTimerMin,
-            liveTimerSec = liveTimerSec,
-            liveTypeInt = liveTypeInt,
-            liveType = liveTypeInt.switchMap { MutableLiveData(stepTypes[it]) },
-
-            liveNameState = liveName.switchMap { MutableLiveData(recipeStepValidator.validateName(it)) },
-            liveDescriptionState = liveDescription.switchMap { MutableLiveData(recipeStepValidator.validateDescription(it)) },
-            liveTimerMinState = liveTimerMin.switchMap { MutableLiveData(recipeStepValidator.validateMinutes(it)) },
-            liveTimerSecState = liveTimerSec.switchMap { MutableLiveData(recipeStepValidator.validateSeconds(it)) },
-
-            stepId = idGenerator.generateId()
-        )
+        recipeStepModelList = recipeStepModelList +
+                RecipeEditorItem.RecipeStepModel.create(idGenerator, recipeStepValidator)
+        notifyStepListChange()
     }
 
     fun removeRecipeStep(position: Int) {
-        if (position > 0) {
-            _liveRecipeItemList.value?.let {
-                _liveRecipeItemList.value = it.subList(0, position) + it.subList(position + 1, it.size)
-            }
-        }
+        recipeStepModelList = recipeStepModelList.subList(0, position - 1) +
+                recipeStepModelList.subList(position, recipeStepModelList.size)
+        notifyStepListChange()
     }
 
     fun changeRecipeStepPosition(from: Int, to: Int) {
-        _liveRecipeItemList.value?.let {
-            if (it.isNotEmpty()) {
-                Collections.swap(it, from, to)
-                _liveRecipeItemList.value = it.toList()
-            }
+        recipeStepModelList = recipeStepModelList.toMutableList().apply {
+            set(from - 1, set(to - 1, get(from - 1)))
         }
+        notifyStepListChange()
     }
 
     fun saveRecipe() {
         _liveRegisterHasPressed.value = true
         if (isRecipeValid()) {
             viewModelScope.launch {
-                liveRecipeItemList.value?.let { list ->
-                    recipeSaveUseCase(
-                        RecipeRequest(
-                            (list[0] as RecipeEditorItem.RecipeMetaModel).toDomain(
-                                list.subList(
-                                    1,
-                                    list.size - 1
-                                ).map { it as RecipeEditorItem.RecipeStepModel })
-                        )
-                    ).onSuccess { /*화면 이동*/ }
-                        .onFailure {  }
-                }
+                recipeSaveUseCase(
+                    RecipeRequest(recipeMetaModel.toDomain(recipeStepModelList))
+                ).onSuccess { /*화면 이동*/ }
+                    .onFailure {  }
             }
         }
     }
 
     private fun isRecipeValid(): Boolean {
-        // check recipe meta
-        _liveRecipeItemList.value?.forEach {
-            when (it) {
-                is RecipeEditorItem.RecipeMetaModel -> {
-                    if (it.liveTitleState.value != true || it.liveStuffState.value != true) {
-                        return false
-                    }
-                }
-                is RecipeEditorItem.RecipeStepModel -> {
-                    if (it.liveNameState.value != true || it.liveDescriptionState.value != true ||
-                        it.liveTimerMinState.value != true || it.liveTimerSecState.value != true) {
-                        return false
-                    }
-                }
-                else -> {}
+        if (
+            recipeMetaModel.liveTitleState.value != true ||
+            recipeMetaModel.liveStuffState.value != true
+        ) {
+            return false
+        }
+
+        recipeStepModelList.forEach { stepModel ->
+            if (stepModel.liveNameState.value != true ||
+                stepModel.liveDescriptionState.value != true ||
+                stepModel.liveTimerMinState.value != true ||
+                stepModel.liveTimerSecState.value != true
+            ) {
+                return false
             }
-        } ?: return false
+        }
 
         return true
     }
