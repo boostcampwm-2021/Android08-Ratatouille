@@ -2,4 +2,4 @@ package com.kdjj.domain.request
 
 import com.kdjj.domain.model.Recipe
 
-class RecipeRequest(val recipe: Recipe) : Request
+class SaveRecipeRequest(val recipe: Recipe) : Request
