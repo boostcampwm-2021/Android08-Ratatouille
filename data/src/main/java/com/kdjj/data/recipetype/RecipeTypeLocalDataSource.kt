@@ -4,7 +4,7 @@ import com.kdjj.domain.model.RecipeType
 
 interface RecipeTypeLocalDataSource {
 	
-	suspend fun saveRecipeType(recipeTypeList: List<RecipeType>): Result<Boolean>
+	suspend fun saveRecipeTypeList(recipeTypeList: List<RecipeType>): Result<Boolean>
 	
-	suspend fun fetchRecipeTypes(): Result<List<RecipeType>>
+	suspend fun fetchRecipeTypeList(): Result<List<RecipeType>>
 }
