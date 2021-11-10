@@ -5,7 +5,7 @@ import androidx.lifecycle.*
 import com.kdjj.domain.model.RecipeStepType
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.request.EmptyRequest
-import com.kdjj.domain.request.RecipeRequest
+import com.kdjj.domain.request.SaveRecipeRequest
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.*
 import com.kdjj.presentation.model.RecipeEditorItem
@@ -18,7 +18,7 @@ import javax.inject.Inject
 class RecipeEditorViewModel @Inject constructor(
     private val recipeValidator: RecipeValidator,
     private val recipeStepValidator: RecipeStepValidator,
-    private val recipeSaveUseCase: UseCase<RecipeRequest, Boolean>,
+    private val recipeSaveUseCase: UseCase<SaveRecipeRequest, Boolean>,
     private val recipeTypesUseCase: UseCase<EmptyRequest, List<RecipeType>>,
     private val recipeMapper: RecipeMapper,
     private val idGenerator: IdGenerator
@@ -131,7 +131,7 @@ class RecipeEditorViewModel @Inject constructor(
     fun saveRecipe() {
         viewModelScope.launch {
             liveRecipeItemList.value?.let {
-                val res = recipeSaveUseCase.invoke( RecipeRequest(recipeMapper.recipeItemListToRecipe(it)))
+                val res = recipeSaveUseCase.invoke( SaveRecipeRequest(recipeMapper.recipeItemListToRecipe(it)))
                 res.onSuccess { /*화면 이동*/ }
                 res.onFailure {  }
             }
