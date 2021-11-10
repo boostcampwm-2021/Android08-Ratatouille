@@ -27,8 +27,8 @@ sealed class RecipeEditorItem {
         val liveTypeInt: MutableLiveData<Int>,
         val liveDescription: MutableLiveData<String>,
         val liveImgPath: MutableLiveData<String> = MutableLiveData(""),
-        val liveTimerMin: MutableLiveData<Int>,
-        val liveTimerSec: MutableLiveData<Int>,
+        val liveTimerMin: MutableLiveData<Int?>,
+        val liveTimerSec: MutableLiveData<Int?>,
         val liveType: LiveData<RecipeStepType>,
 
         val liveNameState: LiveData<Boolean>,
