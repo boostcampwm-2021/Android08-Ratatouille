@@ -2,8 +2,9 @@ package com.kdjj.presentation.model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.kdjj.domain.model.RecipeStepType
-import com.kdjj.domain.model.RecipeType
+import com.kdjj.domain.model.*
+import com.kdjj.presentation.common.calculateSeconds
+import java.lang.Exception
 
 sealed class RecipeEditorItem {
 
@@ -41,3 +42,30 @@ sealed class RecipeEditorItem {
 
     object PlusButton : RecipeEditorItem()
 }
+
+internal fun RecipeEditorItem.RecipeMetaModel.toDomain(stepModels: List<RecipeEditorItem.RecipeStepModel>) =
+    Recipe(
+        recipeId = recipeId,
+        title = liveTitle.value ?: "",
+        type= liveRecipeType.value ?: throw Exception(""),
+        stuff = liveStuff.value ?: "",
+        imgPath = liveRecipeImgPath.value ?: "",
+        stepList = stepModels.map { it.toDomain() },
+        authorId = uploadId,
+        viewCount = viewCount,
+        isFavorite = isFavorite,
+        createTime = System.currentTimeMillis(),
+        state = RecipeState.CREATE
+    )
+
+internal fun RecipeEditorItem.RecipeStepModel.toDomain() = RecipeStep(
+    stepId,
+    liveName.value ?: "",
+    liveType.value ?: RecipeStepType.FRY,
+    liveDescription.value ?: "",
+    liveImgPath.value ?: "",
+    calculateSeconds(
+        liveTimerMin.value ?: 0,
+        liveTimerSec.value ?: 0
+    )
+)

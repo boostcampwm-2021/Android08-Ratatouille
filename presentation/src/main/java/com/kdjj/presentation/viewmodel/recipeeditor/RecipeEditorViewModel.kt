@@ -9,6 +9,7 @@ import com.kdjj.domain.request.SaveRecipeRequest
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.*
 import com.kdjj.presentation.model.RecipeEditorItem
+import com.kdjj.presentation.model.toDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -20,7 +21,6 @@ class RecipeEditorViewModel @Inject constructor(
     private val recipeStepValidator: RecipeStepValidator,
     private val recipeSaveUseCase: UseCase<SaveRecipeRequest, Boolean>,
     private val recipeTypesUseCase: UseCase<EmptyRequest, List<RecipeType>>,
-    private val recipeMapper: RecipeMapper,
     private val idGenerator: IdGenerator
 ) : ViewModel() {
 
@@ -159,16 +159,25 @@ class RecipeEditorViewModel @Inject constructor(
 
     fun saveRecipe() {
         _liveRegisterHasPressed.value = true
-//        viewModelScope.launch {
-//            liveRecipeItemList.value?.let {
-//                val res = recipeSaveUseCase.invoke( RecipeRequest(recipeMapper.recipeItemListToRecipe(it)))
-//                res.onSuccess { /*화면 이동*/ }
-//                res.onFailure {  }
-//            }
-//        }
+        if (isRecipeValid()) {
+            viewModelScope.launch {
+                liveRecipeItemList.value?.let { list ->
+                    recipeSaveUseCase(
+                        RecipeRequest(
+                            (list[0] as RecipeEditorItem.RecipeMetaModel).toDomain(
+                                list.subList(
+                                    1,
+                                    list.size - 1
+                                ).map { it as RecipeEditorItem.RecipeStepModel })
+                        )
+                    ).onSuccess { /*화면 이동*/ }
+                        .onFailure {  }
+                }
+            }
+        }
     }
 
-    private fun checkAllValidate(): Boolean {
+    private fun isRecipeValid(): Boolean {
         // check recipe meta
         _liveRecipeItemList.value?.forEach {
             when (it) {
