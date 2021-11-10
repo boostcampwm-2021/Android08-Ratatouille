@@ -118,7 +118,7 @@ class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewModel) :
 
     companion object {
         private const val TYPE_META = 0
-        private const val TYPE_STEP = 1
+        const val TYPE_STEP = 1
         private const val TYPE_ADD = 2
     }
 }

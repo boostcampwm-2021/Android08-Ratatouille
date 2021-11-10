@@ -10,7 +10,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
+import androidx.core.view.size
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.kdjj.presentation.R
 import com.kdjj.presentation.databinding.ActivityRecipeEditorBinding
 import com.kdjj.presentation.model.RecipeEditorItem
@@ -47,6 +50,44 @@ class RecipeEditorActivity : AppCompatActivity() {
         }
     }
 
+    private val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(
+        ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+        ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+    ) {
+
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            val fromPos = viewHolder.absoluteAdapterPosition
+            val toPos = target.absoluteAdapterPosition
+            if (target.itemViewType != RecipeEditorListAdapter.TYPE_STEP) return false
+            viewModel.changeRecipeStepPosition(fromPos, toPos)
+            return true
+        }
+
+        override fun getMovementFlags(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder
+        ): Int {
+            return if (viewHolder.itemViewType != RecipeEditorListAdapter.TYPE_STEP ||
+                recyclerView.adapter?.itemCount == 3
+            ) {
+                makeMovementFlags(0, 0)
+            } else {
+                makeMovementFlags(
+                    ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                    ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                )
+            }
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            viewModel.removeRecipeStep(viewHolder.absoluteAdapterPosition)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_recipe_editor)
@@ -59,6 +100,7 @@ class RecipeEditorActivity : AppCompatActivity() {
 
         val adapter = RecipeEditorListAdapter(viewModel)
         binding.recyclerViewEditor.adapter = adapter
+        ItemTouchHelper(itemTouchCallback).attachToRecyclerView(binding.recyclerViewEditor)
 
         setupObservers()
     }

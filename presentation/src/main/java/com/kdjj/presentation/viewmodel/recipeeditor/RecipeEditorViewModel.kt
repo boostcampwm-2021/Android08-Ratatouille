@@ -149,7 +149,7 @@ class RecipeEditorViewModel @Inject constructor(
         _liveRecipeItemList.value?.let {
             if (it.isNotEmpty()) {
                 Collections.swap(it, from, to)
-                _liveRecipeItemList.value = it
+                _liveRecipeItemList.value = it.toList()
             }
         }
     }
