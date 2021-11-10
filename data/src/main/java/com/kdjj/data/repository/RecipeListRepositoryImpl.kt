@@ -29,4 +29,11 @@ internal class RecipeListRepositoryImpl @Inject constructor(
     override suspend fun fetchLocalFavoriteRecipeListAfter(index: Int): Result<List<Recipe>> =
         recipeListLocalDataSource.fetchFavoriteRecipeListAfter(index)
 
+    override suspend fun fetchLocalSearchRecipeListAfter(
+        keyword: String,
+        index: Int
+    ): Result<List<Recipe>> =
+        recipeListLocalDataSource.fetchSearchRecipeListAfter(keyword, index)
+
+
 }
