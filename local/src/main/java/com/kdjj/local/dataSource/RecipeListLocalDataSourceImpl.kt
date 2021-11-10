@@ -37,7 +37,7 @@ internal class RecipeListLocalDataSourceImpl @Inject constructor(
         index: Int
     ): Result<List<Recipe>> =
         runCatching {
-            recipeListDao.fetchSearchRecipeList(PAGE_SIZE, keyword, index)
+            recipeListDao.fetchSearchRecipeList(PAGE_SIZE, "%$keyword%", index)
                 .map { it.toDomain() }
         }.errorMap { throwable ->
             throwable?.let {
