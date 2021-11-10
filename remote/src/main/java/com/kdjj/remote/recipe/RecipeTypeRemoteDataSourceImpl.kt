@@ -12,6 +12,7 @@ class RecipeTypeRemoteDataSourceImpl @Inject constructor(
 	override suspend fun fetchRecipeTypes(): Result<List<RecipeType>> =
 		try {
 			val recipeTypeList = fireStoreDao.fetchRecipeTypes()
+			if(recipeTypeList.isEmpty()) throw Exception("Can't fetch recipe type.")
 			Result.success(recipeTypeList)
 		} catch (e: Exception) {
 			Result.failure(e)
