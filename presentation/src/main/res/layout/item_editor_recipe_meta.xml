@@ -26,6 +26,7 @@
             android:background="@drawable/bg_editor_image"
             android:contentDescription="@string/recipeImage"
             android:onClick="@{() -> editorViewModel.startSelectImage(model)}"
+            android:scaleType="centerCrop"
             app:loadImage="@{model.liveRecipeImgPath}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
