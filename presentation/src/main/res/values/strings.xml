@@ -13,10 +13,12 @@
     <string name="addStepButton">단계 추가 버튼</string>
     <string name="registerRecipe">레시피 등록</string>
 
-    <string name="myRecipeTitle">내 레시피</string>
     <string name="myRecipe">내 레시피</string>
     <string name="searchRecipe">검색</string>
     <string name="othersRecipe">힐끔보기</string>
-    <string name="search_menu_title">search</string>
+    <string name="searchMenuTitle">search</string>
+    <string name="orderByDate">최신순</string>
+    <string name="orderByFavorite">즐겨찾기순</string>
+    <string name="orderByName">이름순</string>
 
 </resources>
