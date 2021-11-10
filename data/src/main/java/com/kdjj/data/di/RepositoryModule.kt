@@ -8,6 +8,7 @@ import javax.inject.Singleton
 
 @Module
 abstract class RepositoryModule {
+    
     @Binds
     @Singleton
     internal abstract fun bindRecipeListRepository(recipeListRepositoryImpl: RecipeListRepositoryImpl): RecipeListRepository
