@@ -13,6 +13,7 @@ class RecipeLocalDataSourceImpl(
 	override suspend fun saveRecipe(recipe: Recipe): Result<Boolean> =
 		withContext(Dispatchers.IO) {
 			try {
+				recipeDao.deleteStepList(recipe.recipeId)
 				recipeDao.insertRecipe(recipe)
 				Result.success(true)
 			} catch (e: Exception) {
