@@ -29,4 +29,10 @@ abstract class UseCaseModule {
 
     @Binds
     internal abstract fun bindFetchRemoteSearchRecipeListUseCase(fetchRemoteSearchRecipeListUseCase: FetchRemoteSearchRecipeListUseCase): UseCase<FetchRemoteSearchRecipeListRequest, List<Recipe>>
+
+    @Binds
+    internal abstract fun bindFetchLocalFavoriteRecipeListUseCase(fetchLocalFavoriteRecipeListUseCase: FetchLocalFavoriteRecipeListUseCase): UseCase<FetchLocalFavoriteRecipeListRequest, List<Recipe>>
+
+    @Binds
+    internal abstract fun bindFetchLocalSearchRecipeListUseCase(fetchLocalSearchRecipeListUseCase: FetchLocalSearchRecipeListUseCase): UseCase<FetchLocalSearchRecipeListRequest, List<Recipe>>
 }
