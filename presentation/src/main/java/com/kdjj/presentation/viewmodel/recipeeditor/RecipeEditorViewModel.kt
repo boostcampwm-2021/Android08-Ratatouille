@@ -35,6 +35,9 @@ class RecipeEditorViewModel @Inject constructor(
     private val _liveImgTarget = MutableLiveData<RecipeEditorItem?>()
     val liveImgTarget: LiveData<RecipeEditorItem?> get() = _liveImgTarget
 
+    private val _liveRegisterHasPressed = MutableLiveData(false)
+    val liveRegisterHasPressed: LiveData<Boolean> get() = _liveRegisterHasPressed
+
     init {
         _liveRecipeItemList.value = listOf(
             createEmptyRecipeMetaModel(),
@@ -155,13 +158,14 @@ class RecipeEditorViewModel @Inject constructor(
     }
 
     fun saveRecipe() {
-        viewModelScope.launch {
-            liveRecipeItemList.value?.let {
-                val res = recipeSaveUseCase.invoke( SaveRecipeRequest(recipeMapper.recipeItemListToRecipe(it)))
-                res.onSuccess { /*화면 이동*/ }
-                res.onFailure {  }
-            }
-        }
+        _liveRegisterHasPressed.value = true
+//        viewModelScope.launch {
+//            liveRecipeItemList.value?.let {
+//                val res = recipeSaveUseCase.invoke( RecipeRequest(recipeMapper.recipeItemListToRecipe(it)))
+//                res.onSuccess { /*화면 이동*/ }
+//                res.onFailure {  }
+//            }
+//        }
     }
 
     private fun checkAllValidate(): Boolean {

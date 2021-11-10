@@ -5,12 +5,10 @@ import javax.inject.Inject
 class RecipeValidator @Inject constructor() {
 
     fun validateTitle(title: String): Boolean {
-        // to-do
-        return true
+        return title.isNotBlank()
     }
 
     fun validateStuff(stuff: String): Boolean {
-        // to-do
-        return true
+        return stuff.isNotBlank()
     }
 }
