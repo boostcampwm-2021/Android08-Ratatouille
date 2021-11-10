@@ -120,8 +120,8 @@ class RecipeEditorViewModel @Inject constructor(
     private fun createEmptyRecipeStepModel(): RecipeEditorItem.RecipeStepModel {
         val liveName =  MutableLiveData("")
         val liveDescription = MutableLiveData("")
-        val liveTimerMin = MutableLiveData(0)
-        val liveTimerSec = MutableLiveData(0)
+        val liveTimerMin = MutableLiveData<Int?>(0)
+        val liveTimerSec = MutableLiveData<Int?>(0)
         val liveTypeInt = MutableLiveData(0)
         return RecipeEditorItem.RecipeStepModel(
             liveName = liveName,

@@ -6,7 +6,7 @@ import androidx.databinding.InverseMethod
 object BindingConverter {
 
     @InverseMethod("stringToInt")
-    @JvmStatic fun intToString(value: Int) = value.toString()
+    @JvmStatic fun intToString(value: Int?) = value?.toString() ?: ""
 
-    @JvmStatic fun stringToInt(value: String) = value.toInt()
+    @JvmStatic fun stringToInt(value: String) = if (value.isNotEmpty()) value.toInt() else null
 }
