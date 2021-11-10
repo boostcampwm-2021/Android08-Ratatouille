@@ -5,22 +5,18 @@ import javax.inject.Inject
 class RecipeStepValidator @Inject constructor() {
 
     fun validateName(name: String): Boolean {
-        // to-do
-        return true
+        return name.isNotBlank()
     }
 
     fun validateDescription(description: String): Boolean {
-        // to-do
+        return description.isNotBlank()
+    }
+
+    fun validateMinutes(min: Int?): Boolean {
         return true
     }
 
-    fun validateMinutes(min: Int): Boolean {
-        // to-do
-        return true
-    }
-
-    fun validateSeconds(sec: Int): Boolean {
-        // to-do
-        return true
+    fun validateSeconds(sec: Int?): Boolean {
+        return sec?.let { it in 0..59 } ?: true
     }
 }
