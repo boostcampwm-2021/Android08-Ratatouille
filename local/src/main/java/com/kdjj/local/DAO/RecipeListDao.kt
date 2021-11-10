@@ -15,4 +15,8 @@ interface RecipeListDao {
     @Transaction
     @Query("SELECT * FROM RecipeMeta WHERE isFavorite = :favorite ORDER BY createTime LIMIT :pageSize OFFSET :index")
     suspend fun fetchFavoriteRecipeList(pageSize: Int, index: Int, favorite:Boolean = true): List<RecipeEntity>
+
+    @Transaction
+    @Query("SELECT * FROM RecipeMeta WHERE title LIKE :keyword LIMIT :pageSize OFFSET :index")
+    suspend fun fetchSearchRecipeList(pageSize: Int, keyword: String, index: Int): List<RecipeEntity>
 }
