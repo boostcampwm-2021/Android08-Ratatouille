@@ -32,4 +32,14 @@ class RecipeLocalDataSourceImpl @Inject constructor(
 				Result.failure(Exception(e.message))
 			}
 		}
+	
+	override suspend fun deleteRecipe(recipe: Recipe): Result<Boolean> =
+		withContext(Dispatchers.IO) {
+			try {
+				recipeDao.deleteRecipe(recipe.toEntity())
+				Result.success(true)
+			} catch (e: Exception) {
+				Result.failure(Exception(e.message))
+			}
+		}
 }

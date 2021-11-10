@@ -15,4 +15,8 @@ class RecipeRepositoryImpl @Inject constructor(
 	override suspend fun updateRecipe(recipe: Recipe): Result<Boolean> {
 		return recipeLocalDataSource.updateRecipe(recipe)
 	}
+	
+	override suspend fun deleteRecipe(recipe: Recipe): Result<Boolean> {
+		return recipeLocalDataSource.deleteRecipe(recipe)
+	}
 }
