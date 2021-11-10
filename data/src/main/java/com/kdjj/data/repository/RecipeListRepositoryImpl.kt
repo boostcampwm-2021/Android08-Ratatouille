@@ -25,5 +25,4 @@ class RecipeListRepositoryImpl @Inject constructor(
 
     override suspend fun fetchLocalLatestRecipeListAfter(page: Int): Result<List<Recipe>> =
         recipeListLocalDataSource.fetchLatestRecipeListAfter(page)
-
 }

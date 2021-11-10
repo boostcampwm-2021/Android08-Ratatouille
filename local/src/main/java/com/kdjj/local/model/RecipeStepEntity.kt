@@ -3,8 +3,8 @@ package com.kdjj.local.model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.kdjj.domain.model.RecipeStep
 import com.kdjj.domain.model.RecipeStepType
-import com.kdjj.local.model.RecipeMetaEntity
 
 @Entity(
     tableName = "RecipeStep",
@@ -28,3 +28,8 @@ data class RecipeStepEntity(
     val seconds: Int,
     val parentRecipeId: String,
 )
+
+fun RecipeStepEntity.toDomain() =
+    RecipeStep(
+        stepId, name, type, description, imgPath, seconds
+    )
