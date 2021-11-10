@@ -9,6 +9,6 @@ internal class FetchLocalFavoriteRecipeListUseCase(
 ) : UseCase<FetchLocalFavoriteRecipeListRequest, @JvmSuppressWildcards List<Recipe>>{
 
     override suspend fun invoke(request: FetchLocalFavoriteRecipeListRequest): Result<List<Recipe>> =
-        recipeListRepository.fetchLocalFavoriteRecipeListAfter(request.page)
+        recipeListRepository.fetchLocalFavoriteRecipeListAfter(request.index)
 
 }
