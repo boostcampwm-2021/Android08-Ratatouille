@@ -10,7 +10,7 @@ import com.kdjj.domain.model.RecipeState
             entity = RecipeTypeEntity::class,
             parentColumns = arrayOf("recipeTypeId"),
             childColumns = arrayOf("recipeTypeId"),
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.RESTRICT
         )
     ]
 )
@@ -24,6 +24,7 @@ data class RecipeMetaEntity(
     val isFavorite:  Boolean,
     val createTime: Long,
     val state: RecipeState,
+    @ColumnInfo(defaultValue = "1")
     val recipeTypeId: Long
 )
 
