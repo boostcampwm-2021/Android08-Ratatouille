@@ -35,6 +35,9 @@ class RecipeEditorViewModel @Inject constructor(
         MutableLiveData(list.map { it.title })
     }
 
+    private val _liveImgTarget = MutableLiveData<RecipeEditorItem?>()
+    val liveImgTarget: LiveData<RecipeEditorItem?> get() = _liveImgTarget
+
     init {
         _liveRecipeItemList.value = listOf(
             createEmptyRecipeMetaModel(),
@@ -60,6 +63,32 @@ class RecipeEditorViewModel @Inject constructor(
         _liveRecipeItemList.value?.let {
             (it[0] as RecipeEditorItem.RecipeMetaModel).liveRecipeImgPath.value = uri.path
         }
+    }
+
+    fun startSelectImage(model: RecipeEditorItem) {
+        _liveImgTarget.value = model
+    }
+
+    fun setImage(uri: String?) {
+        liveImgTarget.value?.let { model ->
+            when (model) {
+                is RecipeEditorItem.RecipeMetaModel ->
+                    model.liveRecipeImgPath.value = uri ?: return@let
+                is RecipeEditorItem.RecipeStepModel ->
+                    model.liveImgPath.value = uri ?: return@let
+            }
+        }
+        _liveImgTarget.value = null
+    }
+
+    fun setImageEmpty() {
+        liveImgTarget.value?.let { model ->
+            when (model) {
+                is RecipeEditorItem.RecipeMetaModel -> model.liveRecipeImgPath.value = null
+                is RecipeEditorItem.RecipeStepModel -> model.liveImgPath.value = null
+            }
+        }
+        _liveImgTarget.value = null
     }
 
     fun addRecipeStep() {
