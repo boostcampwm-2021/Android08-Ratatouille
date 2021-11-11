@@ -25,7 +25,7 @@ class OthersRecipeListAdapter(
     }
 
     override fun bind(
-        holder: BaseViewHolder<ItemOthersRecipeBinding>,
+        holder: BaseViewHolder<Recipe, ItemOthersRecipeBinding>,
         item: Recipe,
         viewType: Int
     ) {
