@@ -1,10 +1,10 @@
-package com.kdjj.remote
+package com.kdjj.remote.dao
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
 import com.kdjj.domain.model.RecipeType
-import com.kdjj.remote.entity.RecipeTypeEntity
-import com.kdjj.remote.entity.toDomain
+import com.kdjj.remote.dto.RecipeTypeEntity
+import com.kdjj.remote.dto.toDomain
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext

@@ -1,8 +1,8 @@
-package com.kdjj.remote.recipe
+package com.kdjj.remote.datasource
 
-import com.kdjj.data.recipetype.RecipeTypeRemoteDataSource
+import com.kdjj.data.datasource.RecipeTypeRemoteDataSource
 import com.kdjj.domain.model.RecipeType
-import com.kdjj.remote.FirestoreDao
+import com.kdjj.remote.dao.FirestoreDao
 import javax.inject.Inject
 
 internal class RecipeTypeRemoteDataSourceImpl @Inject constructor(

@@ -4,8 +4,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
 import com.kdjj.domain.model.Recipe
-import com.kdjj.remote.entity.RecipeEntity
-import com.kdjj.remote.entity.toDomain
+import com.kdjj.remote.dto.RecipeEntity
+import com.kdjj.remote.dto.toDomain
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext

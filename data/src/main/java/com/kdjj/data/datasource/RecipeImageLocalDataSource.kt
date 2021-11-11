@@ -1,4 +1,4 @@
-package com.kdjj.data.recipeimage
+package com.kdjj.data.datasource
 
 interface RecipeImageLocalDataSource {
 

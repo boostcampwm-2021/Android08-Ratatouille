@@ -1,9 +1,9 @@
 package com.kdjj.remote.di
 
-import com.kdjj.data.recipetype.RecipeTypeRemoteDataSource
-import com.kdjj.remote.FirestoreDao
-import com.kdjj.remote.FirestoreDaoImpl
-import com.kdjj.remote.recipe.RecipeTypeRemoteDataSourceImpl
+import com.kdjj.data.datasource.RecipeTypeRemoteDataSource
+import com.kdjj.remote.dao.FirestoreDao
+import com.kdjj.remote.dao.FirestoreDaoImpl
+import com.kdjj.remote.datasource.RecipeTypeRemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,11 +1,13 @@
-package com.kdjj.data.recipeimage
+package com.kdjj.data.repository
 
+import com.kdjj.data.datasource.RecipeImageLocalDataSource
+import com.kdjj.data.datasource.RecipeImageRemoteDataSource
 import com.kdjj.domain.repository.RecipeImageRepository
 import javax.inject.Inject
 
 internal class RecipeImageRepositoryImpl @Inject constructor(
-    private val recipeImageLocalDataSource: RecipeImageLocalDataSource,
-    private val recipeImageRemoteDataSource: RecipeImageRemoteDataSource
+	private val recipeImageLocalDataSource: RecipeImageLocalDataSource,
+	private val recipeImageRemoteDataSource: RecipeImageRemoteDataSource
 ): RecipeImageRepository {
 
     override suspend fun convertToByteArrayRemote(uri: String): Result<ByteArray> {

@@ -1,6 +1,6 @@
 package com.kdjj.local.di
 
-import com.kdjj.data.recipe.RecipeLocalDataSource
+import com.kdjj.data.datasource.RecipeLocalDataSource
 import com.kdjj.local.dataSource.RecipeLocalDataSourceImpl
 import com.kdjj.local.database.RecipeDatabase
 import dagger.Binds

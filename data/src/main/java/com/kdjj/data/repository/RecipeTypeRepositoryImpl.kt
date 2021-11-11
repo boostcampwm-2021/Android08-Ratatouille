@@ -1,5 +1,7 @@
-package com.kdjj.data.recipetype
+package com.kdjj.data.repository
 
+import com.kdjj.data.datasource.RecipeTypeLocalDataSource
+import com.kdjj.data.datasource.RecipeTypeRemoteDataSource
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.repository.RecipeTypeRepository
 import javax.inject.Inject
