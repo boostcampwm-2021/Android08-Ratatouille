@@ -1,4 +1,4 @@
-package com.kdjj.local.DAO
+package com.kdjj.local.dao
 
 import androidx.room.Dao
 import androidx.room.Query

@@ -126,7 +126,7 @@ internal class RecipeEditorViewModel @Inject constructor(
         if (isRecipeValid()) {
             viewModelScope.launch {
                 recipeSaveUseCase(
-                    RecipeRequest(recipeMetaModel.toDomain(recipeStepModelList, liveRecipeTypes.value ?: emptyList()))
+                    SaveRecipeRequest(recipeMetaModel.toDomain(recipeStepModelList, liveRecipeTypes.value ?: emptyList()))
                 ).onSuccess { /*화면 이동*/ }
                     .onFailure {  }
             }

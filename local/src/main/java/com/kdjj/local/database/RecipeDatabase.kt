@@ -2,7 +2,7 @@ package com.kdjj.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.kdjj.local.DAO.RecipeListDao
+import com.kdjj.local.dao.RecipeListDao
 import com.kdjj.local.dao.RecipeDao
 import com.kdjj.local.dao.RecipeTypeDao
 import com.kdjj.local.model.RecipeMetaEntity
