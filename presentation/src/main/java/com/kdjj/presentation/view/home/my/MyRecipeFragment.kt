@@ -63,5 +63,10 @@ class MyRecipeFragment : Fragment() {
                 GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
             adapter = testAdapter
         }
+
+        val testList = listOf<MyRecipeItem>(
+            MyRecipeItem.PlusButton,
+        )
+        testAdapter.submitList(testList)
     }
 }
