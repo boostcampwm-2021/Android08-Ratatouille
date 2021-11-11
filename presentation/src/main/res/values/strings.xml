@@ -12,4 +12,25 @@
     <string name="second">초</string>
     <string name="addStepButton">단계 추가 버튼</string>
     <string name="registerRecipe">레시피 등록</string>
+    <string name="selectPhoto">사진 선택</string>
+    <string name="confirm">확인</string>
+    <string-array name="photoSourceSelection">
+        <item>카메라</item>
+        <item>갤러리</item>
+        <item>기본 이미지</item>
+    </string-array>
+
+    <string name="myRecipe">내 레시피</string>
+    <string name="searchRecipe">검색</string>
+    <string name="othersRecipe">힐끔보기</string>
+    <string name="searchMenuTitle">search</string>
+    <string name="orderByDate">최신순</string>
+    <string name="orderByFavorite">즐겨찾기순</string>
+    <string name="orderByName">이름순</string>
+    <string name="addRecipeButton">레시피 추가 버튼</string>
+
+    <string name="others_orderByDate">최신순</string>
+    <string name="others_orderByPopular">인기순</string>
+    <string name="others">힐끔보기</string>
+
 </resources>

@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,6 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             tools:listitem="@layout/item_editor_recipe_step"
+            app:submitList="@{viewModel.liveRecipeItemList}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/toolbar_editor"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -49,6 +52,7 @@
                 android:focusable="true"
                 android:gravity="center"
                 android:padding="@dimen/bottomButton_padding"
+                android:onClick="@{() -> viewModel.saveRecipe()}"
                 android:text="@string/registerRecipe"
                 android:textColor="@color/light_100"
                 android:textSize="@dimen/bottomButton_textSize" />

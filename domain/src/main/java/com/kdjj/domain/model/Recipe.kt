@@ -7,8 +7,9 @@ data class Recipe(
 	val stuff: String,
 	val imgPath: String,
 	val stepList: List<RecipeStep>,
-	val uploaderId: String?,
+	val authorId: String,
 	val viewCount: Int,
 	val isFavorite: Boolean,
-	val createTime: Long
+	val createTime: Long,
+	val state: RecipeState
 )

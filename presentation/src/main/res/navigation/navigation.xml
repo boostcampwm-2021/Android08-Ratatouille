@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/myRecipeFragment">
+
+    <fragment
+        android:id="@+id/myRecipeFragment"
+        android:name="com.kdjj.presentation.view.home.my.MyRecipeFragment"
+        android:label="fragment_my_recipe"
+        tools:layout="@layout/fragment_my_recipe" >
+        <action
+            android:id="@+id/action_myRecipeFragment_to_recipeEditorActivity"
+            app:destination="@id/recipeEditorActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchRecipeFragment"
+        android:name="com.kdjj.presentation.view.home.search.SearchRecipeFragment"
+        android:label="fragment_search_recipe"
+        tools:layout="@layout/fragment_search_recipe" />
+    <fragment
+        android:id="@+id/othersRecipeFragment"
+        android:name="com.kdjj.presentation.view.home.others.OthersRecipeFragment"
+        android:label="fragment_others_recipe"
+        tools:layout="@layout/fragment_others_recipe" />
+    <activity
+        android:id="@+id/recipeEditorActivity"
+        android:name="com.kdjj.presentation.view.recipeeditor.RecipeEditorActivity"
+        android:label="RecipeEditorActivity" />
+</navigation>

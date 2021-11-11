@@ -4,7 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="editorViewModel"
+            type="com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel" />
 
+        <variable
+            name="model"
+            type="com.kdjj.presentation.model.RecipeEditorItem.RecipeMetaModel" />
+
+        <import type="android.widget.ImageView" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,9 +27,12 @@
             android:layout_marginTop="@dimen/editor_recipeImage_marginTop"
             android:background="@drawable/bg_editor_image"
             android:contentDescription="@string/recipeImage"
+            android:onClick="@{() -> editorViewModel.startSelectImage(model)}"
+            android:scaleType="@{model.liveRecipeImgPath.empty ? ImageView.ScaleType.CENTER : ImageView.ScaleType.CENTER_CROP }"
+            app:loadImage="@{model.liveRecipeImgPath}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_baseline_fastfood_24" />
+            tools:src="@drawable/ic_my_recipe_24dp" />
 
         <TextView
             android:id="@+id/textView_editor_recipeTitle"
@@ -41,6 +52,8 @@
             android:layout_height="wrap_content"
             android:importantForAutofill="no"
             android:inputType="text"
+            android:text="@={model.liveTitle}"
+            android:background="@{!model.liveTitleState &amp;&amp; editorViewModel.liveRegisterHasPressed ? @drawable/bg_editor_input_field_error : @drawable/bg_editor_input_field }"
             app:layout_constraintBottom_toTopOf="@id/spinner_editor_recipeType"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/textView_editor_recipeTitle"
@@ -64,6 +77,7 @@
             android:layout_marginStart="@dimen/editor_inputField_marginStart"
             android:layout_marginEnd="@dimen/editor_inputField_marginEnd"
             android:background="@drawable/bg_editor_input_field"
+            android:selectedItemPosition="@={model.liveRecipeTypeInt}"
             app:layout_constraintBottom_toBottomOf="@id/imageView_editor_recipe"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/textView_editor_recipeTitle"
@@ -89,8 +103,10 @@
             android:layout_marginStart="0dp"
             android:layout_marginTop="@dimen/editor_stuffInput_marginTop"
             android:gravity="top"
+            android:background="@{!model.liveStuffState &amp;&amp; editorViewModel.liveRegisterHasPressed ? @drawable/bg_editor_input_field_error : @drawable/bg_editor_input_field }"
             android:importantForAutofill="no"
             android:inputType="textMultiLine"
+            android:text="@={model.liveStuff}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/textView_editor_recipeStuff"
             app:layout_constraintTop_toBottomOf="@id/textView_editor_recipeStuff"
