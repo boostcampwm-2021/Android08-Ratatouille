@@ -4,13 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.kdjj.domain.model.Recipe
+import com.kdjj.presentation.common.calculateTotalTime
+import com.kdjj.presentation.common.calculateUpdateTime
 import com.kdjj.presentation.databinding.ItemOthersRecipeBinding
 
 class OthersRecipeListAdapter(
 ) : BaseListAdapter<Recipe, ItemOthersRecipeBinding>(RecipeDiffCallback()) {
 
     override fun createBinding(parent: ViewGroup, viewType: Int): ItemOthersRecipeBinding =
-        ItemOthersRecipeBinding.inflate(LayoutInflater.from(parent.context))
+        ItemOthersRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
     override fun initViewHolder(
         binding: ItemOthersRecipeBinding,
@@ -28,7 +30,11 @@ class OthersRecipeListAdapter(
         viewType: Int
     ) {
        with(holder.binding) {
-            //todo : binding
+           textViewOthersItemTitle.text = item.title
+           textViewOthersItemStuffValue.text = item.stuff
+           textViewOthersItemViewCount.text = item.viewCount.toString()
+           textViewOthersItemTimeValue.text = calculateTotalTime(item)
+           textViewOthersItemUpdateTime.text = calculateUpdateTime(item)
        }
     }
 }
