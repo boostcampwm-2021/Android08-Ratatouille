@@ -13,7 +13,7 @@ import com.kdjj.presentation.databinding.ItemEditorRecipeStepBinding
 import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel
 
-class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewModel) :
+internal class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewModel) :
     ListAdapter<RecipeEditorItem, RecyclerView.ViewHolder>(RecipeEditorItemCallback()) {
 
     class RecipeMetaViewHolder(

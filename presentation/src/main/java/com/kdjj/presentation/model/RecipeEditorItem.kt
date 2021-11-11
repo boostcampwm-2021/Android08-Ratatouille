@@ -10,7 +10,7 @@ import com.kdjj.presentation.common.RecipeValidator
 import com.kdjj.presentation.common.calculateSeconds
 import java.lang.Exception
 
-sealed class RecipeEditorItem {
+internal sealed class RecipeEditorItem {
 
     data class RecipeMetaModel(
         val liveTitle: MutableLiveData<String>,

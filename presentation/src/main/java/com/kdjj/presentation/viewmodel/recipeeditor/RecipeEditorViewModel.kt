@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RecipeEditorViewModel @Inject constructor(
+internal class RecipeEditorViewModel @Inject constructor(
     private val recipeValidator: RecipeValidator,
     private val recipeStepValidator: RecipeStepValidator,
     private val recipeSaveUseCase: UseCase<SaveRecipeRequest, Boolean>,

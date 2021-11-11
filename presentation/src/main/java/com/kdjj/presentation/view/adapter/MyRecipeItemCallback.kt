@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.kdjj.presentation.model.MyRecipeItem
 import com.kdjj.presentation.model.RecipeEditorItem
 
-class MyRecipeItemCallback : DiffUtil.ItemCallback<MyRecipeItem>() {
+internal class MyRecipeItemCallback : DiffUtil.ItemCallback<MyRecipeItem>() {
     override fun areItemsTheSame(oldItem: MyRecipeItem, newItem: MyRecipeItem): Boolean {
         return when {
             oldItem is MyRecipeItem.MyRecipe && newItem is MyRecipeItem.MyRecipe -> {

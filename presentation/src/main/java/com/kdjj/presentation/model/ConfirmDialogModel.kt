@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.kdjj.presentation.view.dialog.OnDialogConfirmListener
 
-class ConfirmDialogModel(
+internal class ConfirmDialogModel(
     private val dialog: AlertDialog,
     title: String,
     content: String,

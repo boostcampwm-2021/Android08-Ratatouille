@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import com.kdjj.presentation.databinding.DialogConfirmBinding
 import com.kdjj.presentation.model.ConfirmDialogModel
 
-object ConfirmDialogBuilder {
+internal object ConfirmDialogBuilder {
 
     fun create(context: Context, title: String, content: String, listener: OnDialogConfirmListener) {
         val binding = DialogConfirmBinding.inflate(LayoutInflater.from(context))

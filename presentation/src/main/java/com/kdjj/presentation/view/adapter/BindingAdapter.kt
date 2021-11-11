@@ -1,9 +1,6 @@
 package com.kdjj.presentation.view.adapter
 
-import android.widget.ArrayAdapter
 import android.widget.ImageView
-import android.widget.Spinner
-import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
