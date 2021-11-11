@@ -4,7 +4,7 @@ import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.repository.RecipeTypeRepository
 import javax.inject.Inject
 
-class RecipeTypeRepositoryImpl @Inject constructor(
+internal class RecipeTypeRepositoryImpl @Inject constructor(
 	private val localDataSource: RecipeTypeLocalDataSource,
 	private val remoteDataSource: RecipeTypeRemoteDataSource
 ) : RecipeTypeRepository {

@@ -2,11 +2,11 @@ package com.kdjj.remote.datasource
 
 import com.kdjj.data.datasource.RecipeListRemoteDataSource
 import com.kdjj.domain.model.Recipe
-import com.kdjj.remote.dao.RecipeListDao
+import com.kdjj.remote.dao.RemoteRecipeListDao
 import javax.inject.Inject
 
 internal class RecipeListRemoteDataSourceImpl @Inject constructor(
-    private val recipeListDao: RecipeListDao,
+	private val recipeListDao: RemoteRecipeListDao,
 ) : RecipeListRemoteDataSource {
 
     override suspend fun fetchLatestRecipeListAfter(lastVisibleCreateTime: Long): Result<List<Recipe>> =

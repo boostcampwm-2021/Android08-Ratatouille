@@ -4,7 +4,7 @@ import com.kdjj.domain.repository.RecipeRepository
 import com.kdjj.domain.request.UpdateRecipeFavoriteRequest
 import javax.inject.Inject
 
-class UpdateRecipeFavoriteUseCase @Inject constructor(
+internal class UpdateRecipeFavoriteUseCase @Inject constructor(
 	private val recipeRepository: RecipeRepository
 ) : UseCase<UpdateRecipeFavoriteRequest, Boolean> {
 	

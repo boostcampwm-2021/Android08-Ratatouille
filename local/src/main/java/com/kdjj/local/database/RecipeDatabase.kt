@@ -14,11 +14,11 @@ import com.kdjj.local.model.RecipeTypeEntity
 	version = 1,
 	exportSchema = false
 )
-abstract class RecipeDatabase : RoomDatabase() {
+internal abstract class RecipeDatabase : RoomDatabase() {
 	
-	abstract fun getRecipeDao(): RecipeDao
-	abstract fun getRecipeListDao(): RecipeListDao
-	abstract fun getRecipeTypeDao(): RecipeTypeDao
+	internal abstract fun getRecipeDao(): RecipeDao
+	internal abstract fun getRecipeListDao(): RecipeListDao
+	internal abstract fun getRecipeTypeDao(): RecipeTypeDao
 	
 	companion object {
 		

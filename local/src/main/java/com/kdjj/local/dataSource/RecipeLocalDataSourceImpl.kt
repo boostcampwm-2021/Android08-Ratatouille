@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class RecipeLocalDataSourceImpl @Inject constructor(
+internal class RecipeLocalDataSourceImpl @Inject constructor(
 	private val recipeDao: RecipeDao
 ) : RecipeLocalDataSource {
 	

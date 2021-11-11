@@ -7,7 +7,7 @@ import androidx.room.Query
 import com.kdjj.local.model.RecipeTypeEntity
 
 @Dao
-interface RecipeTypeDao {
+internal interface RecipeTypeDao {
 	
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	suspend fun insertRecipeType(recipeType: RecipeTypeEntity)
