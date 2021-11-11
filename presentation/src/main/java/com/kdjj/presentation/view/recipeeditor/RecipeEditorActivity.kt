@@ -18,6 +18,7 @@ import com.kdjj.presentation.R
 import com.kdjj.presentation.databinding.ActivityRecipeEditorBinding
 import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.view.adapter.RecipeEditorListAdapter
+import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -114,6 +115,28 @@ class RecipeEditorActivity : AppCompatActivity() {
     private fun setupObservers() {
         viewModel.liveImgTarget.observe(this) { model ->
             model?.let { showSelectImageDialog() }
+        }
+
+        viewModel.liveSaveResult.observe(this) { isSuccess ->
+            isSuccess ?: return@observe
+            viewModel.resetResultState()
+            if (isSuccess) {
+                ConfirmDialogBuilder.create(
+                    this,
+                    "저장 완료",
+                    "레시피가 정상적으로 저장되었습니다.",
+                ) {
+                    finish()
+                }
+            } else {
+                ConfirmDialogBuilder.create(
+                    this,
+                    "저장 실패",
+                    "레시피를 저장하지 못했습니다.",
+                ) {
+
+                }
+            }
         }
     }
 
