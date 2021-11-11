@@ -3,7 +3,7 @@ package com.kdjj.data.recipeimage
 import com.kdjj.domain.repository.RecipeImageRepository
 import javax.inject.Inject
 
-class RecipeImageRepositoryImpl @Inject constructor(
+internal class RecipeImageRepositoryImpl @Inject constructor(
     private val recipeImageLocalDataSource: RecipeImageLocalDataSource,
     private val recipeImageRemoteDataSource: RecipeImageRemoteDataSource
 ): RecipeImageRepository {

@@ -1,5 +1,6 @@
-package com.kdjj.ratatouille.di.data
+package com.kdjj.local.di
 
+import android.content.ContentResolver
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -14,15 +15,16 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DataBaseModule {
+object LocalModule {
 	
 	@Provides
 	@Singleton
-	fun provideRecipeDataBase(@ApplicationContext context: Context): RecipeDatabase {
+	internal fun provideRecipeDataBase(@ApplicationContext context: Context): RecipeDatabase {
 		return Room.databaseBuilder(
 			context.applicationContext,
 			RecipeDatabase::class.java,
@@ -41,9 +43,10 @@ object DataBaseModule {
 	
 	@Provides
 	@Singleton
-	fun provideRecipeDao(recipeDatabase: RecipeDatabase) = recipeDatabase.getRecipeDao()
+	fun provideFileDir(@ApplicationContext context: Context): File = context.filesDir
 	
 	@Provides
 	@Singleton
-	fun provideRecipeTypeDao(recipeDatabase: RecipeDatabase) = recipeDatabase.getRecipeTypeDao()
+	fun provideContentResolver(@ApplicationContext context: Context): ContentResolver =
+		context.contentResolver
 }

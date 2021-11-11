@@ -9,7 +9,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class FirestoreDaoImpl @Inject constructor(
+internal class FirestoreDaoImpl @Inject constructor(
 	private val firestore: FirebaseFirestore
 ) : FirestoreDao {
 	

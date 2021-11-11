@@ -10,7 +10,7 @@ import java.io.File
 import java.lang.Exception
 import javax.inject.Inject
 
-class FirebaseStorageDaoImpl @Inject constructor(
+internal class FirebaseStorageDaoImpl @Inject constructor(
     private val storageRef: StorageReference
 ) : FirebaseStorageDao {
 

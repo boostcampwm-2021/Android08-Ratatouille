@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 internal class RecipeListDaoImpl @Inject constructor(
     private val firestore: FirebaseFirestore
-) : RecipeListDao {
+) : RemoteRecipeListDao {
 
     override suspend fun fetchLatestRecipeListAfter(lastVisibleCreateTime: Long): List<Recipe> =
         withContext(Dispatchers.IO) {

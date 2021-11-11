@@ -6,7 +6,7 @@ import androidx.room.Transaction
 import com.kdjj.local.model.RecipeEntity
 
 @Dao
-interface RecipeListDao {
+internal interface RecipeListDao {
 
     @Transaction
     @Query("SELECT * FROM RecipeMeta ORDER BY createTime LIMIT :pageSize OFFSET :page")

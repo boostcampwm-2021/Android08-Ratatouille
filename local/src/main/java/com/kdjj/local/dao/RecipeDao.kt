@@ -8,7 +8,7 @@ import com.kdjj.local.model.RecipeStepEntity
 import com.kdjj.local.toEntity
 
 @Dao
-interface RecipeDao {
+internal interface RecipeDao {
 	
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	suspend fun insertRecipeMeta(recipeMeta: RecipeMetaEntity)

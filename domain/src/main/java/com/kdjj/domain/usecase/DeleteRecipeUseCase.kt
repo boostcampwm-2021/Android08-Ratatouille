@@ -4,7 +4,7 @@ import com.kdjj.domain.repository.RecipeRepository
 import com.kdjj.domain.request.DeleteRecipeRequest
 import javax.inject.Inject
 
-class DeleteRecipeUseCase @Inject constructor(
+internal class DeleteRecipeUseCase @Inject constructor(
 	private val recipeRepository: RecipeRepository
 ) : UseCase<DeleteRecipeRequest, Boolean> {
 	

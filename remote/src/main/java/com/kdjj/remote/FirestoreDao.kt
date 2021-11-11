@@ -2,7 +2,7 @@ package com.kdjj.remote
 
 import com.kdjj.domain.model.RecipeType
 
-interface FirestoreDao {
+internal interface FirestoreDao {
 
 	suspend fun fetchRecipeTypes(): List<RecipeType>
 }
