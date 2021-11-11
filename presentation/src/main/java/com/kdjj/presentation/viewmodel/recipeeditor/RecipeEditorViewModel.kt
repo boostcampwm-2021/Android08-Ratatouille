@@ -11,6 +11,7 @@ import com.kdjj.presentation.common.*
 import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.model.toDomain
 import com.kdjj.presentation.model.toPresentation
+import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,7 +22,7 @@ internal class RecipeEditorViewModel @Inject constructor(
     private val recipeStepValidator: RecipeStepValidator,
     private val recipeSaveUseCase: UseCase<SaveRecipeRequest, Boolean>,
     private val recipeTypesUseCase: UseCase<EmptyRequest, List<RecipeType>>,
-    private val idGenerator: IdGenerator
+    private val idGenerator: IdGenerator,
 ) : ViewModel() {
 
     private lateinit var recipeMetaModel: RecipeEditorItem.RecipeMetaModel
@@ -40,6 +41,9 @@ internal class RecipeEditorViewModel @Inject constructor(
 
     private val _liveRegisterHasPressed = MutableLiveData(false)
     val liveRegisterHasPressed: LiveData<Boolean> get() = _liveRegisterHasPressed
+
+    private val _liveSaveResult = MutableLiveData<Boolean?>()
+    val liveSaveResult: LiveData<Boolean?> get() = _liveSaveResult
 
     fun initializeWith(recipe: Recipe?) {
         viewModelScope.launch {
@@ -127,10 +131,19 @@ internal class RecipeEditorViewModel @Inject constructor(
             viewModelScope.launch {
                 recipeSaveUseCase(
                     SaveRecipeRequest(recipeMetaModel.toDomain(recipeStepModelList, liveRecipeTypes.value ?: emptyList()))
-                ).onSuccess { /*화면 이동*/ }
-                    .onFailure {  }
+                ).onSuccess {
+                    println(1)
+                    _liveSaveResult.value = true
+                }.onFailure {
+                    println(2)
+                    _liveSaveResult.value = false
+                }
             }
         }
+    }
+
+    fun resetResultState() {
+        _liveSaveResult.value = null
     }
 
     private fun isRecipeValid(): Boolean {
@@ -138,6 +151,7 @@ internal class RecipeEditorViewModel @Inject constructor(
             recipeMetaModel.liveTitleState.value != true ||
             recipeMetaModel.liveStuffState.value != true
         ) {
+            println("meta false")
             return false
         }
 
@@ -147,6 +161,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                 stepModel.liveTimerMinState.value != true ||
                 stepModel.liveTimerSecState.value != true
             ) {
+                println("step false")
                 return false
             }
         }
