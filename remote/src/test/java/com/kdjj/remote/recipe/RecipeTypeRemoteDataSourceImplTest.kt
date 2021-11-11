@@ -11,9 +11,9 @@ import org.mockito.Mockito.mock
 
 class RecipeTypeRemoteDataSourceImplTest {
 	
-	lateinit var mockFireStoreDaoImpl: FirestoreDaoImpl
-	lateinit var recipeRemoteDataSourceImpl: RecipeTypeRemoteDataSourceImpl
-	val testRecipeTypeList = listOf(
+	private lateinit var mockFireStoreDaoImpl: FirestoreDaoImpl
+	private lateinit var recipeRemoteDataSourceImpl: RecipeTypeRemoteDataSourceImpl
+	private val testRecipeTypeList = listOf(
 		RecipeType(1, "한식"),
 		RecipeType(1, "중식"),
 		RecipeType(1, "양식")
