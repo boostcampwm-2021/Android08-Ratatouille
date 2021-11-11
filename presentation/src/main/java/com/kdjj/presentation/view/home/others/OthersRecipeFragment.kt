@@ -1,6 +1,7 @@
 package com.kdjj.presentation.view.home.others
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -56,14 +57,15 @@ class OthersRecipeFragment : Fragment() {
     }
 
     private fun setAdapter() {
+        Log.d("Test", System.currentTimeMillis().toString())
         val adapter = OthersRecipeListAdapter()
         binding.recyclerViewOthersRecipe.adapter = adapter
-//        adapter.submitList(
-//            listOf(
-//                getDummyData("adsfsd"),
-//                getDummyData("sdfsd2"),
-//            )
-//        )
+        adapter.submitList(
+            listOf(
+                getDummyData("adsfsd"),
+                getDummyData("sdfsd2"),
+            )
+        )
     }
     fun getDummyData(id: String): Recipe =
         Recipe(
@@ -75,7 +77,7 @@ class OthersRecipeFragment : Fragment() {
             stepList =listOf(
                 RecipeStep(
                     stepId = "xcvbb1",
-                    seconds = 123,
+                    seconds = 60,
                     description = "다져 다져 댜져 ",
                     type = RecipeStepType.FRY,
                     name = "끓여 끓여 끓여 ",
@@ -93,7 +95,7 @@ class OthersRecipeFragment : Fragment() {
             viewCount = 0,
             title = "백종원의 김치가 가가가!!",
             type = RecipeType(1, "한식"),
-            createTime = System.currentTimeMillis(),
+            createTime = 1636622783455,
             imgPath = "https://avatars.githubusercontent.com/u/46339857?v=4",
         )
 }
