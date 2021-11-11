@@ -78,15 +78,19 @@ class RecipeEditorViewModel @Inject constructor(
         _liveImgTarget.value = model
     }
 
-    fun setImage(uri: String?) {
+    fun setImage(uri: String) {
         liveImgTarget.value?.let { model ->
             when (model) {
                 is RecipeEditorItem.RecipeMetaModel ->
-                    model.liveRecipeImgPath.value = uri ?: return@let
+                    model.liveRecipeImgPath.value = uri
                 is RecipeEditorItem.RecipeStepModel ->
-                    model.liveImgPath.value = uri ?: return@let
+                    model.liveImgPath.value = uri
             }
         }
+        _liveImgTarget.value = null
+    }
+
+    fun cancelSelectImage() {
         _liveImgTarget.value = null
     }
 

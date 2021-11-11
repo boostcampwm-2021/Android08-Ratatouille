@@ -34,9 +34,11 @@ class RecipeEditorActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            viewModel.setImage(lastCameraFileUri)
+            lastCameraFileUri?.let { uri ->
+                viewModel.setImage(uri)
+            } ?: viewModel.cancelSelectImage()
         } else {
-            viewModel.setImage(null)
+            viewModel.cancelSelectImage()
         }
     }
 
@@ -44,9 +46,11 @@ class RecipeEditorActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            viewModel.setImage(result?.data?.dataString)
+            result?.data?.dataString?.let { uri ->
+                viewModel.setImage(uri)
+            } ?: viewModel.cancelSelectImage()
         } else {
-            viewModel.setImage(null)
+            viewModel.cancelSelectImage()
         }
     }
 
@@ -128,6 +132,9 @@ class RecipeEditorActivity : AppCompatActivity() {
                         viewModel.setImageEmpty()
                     }
                 }
+            }
+            .setOnCancelListener {
+                viewModel.cancelSelectImage()
             }
             .show()
     }
