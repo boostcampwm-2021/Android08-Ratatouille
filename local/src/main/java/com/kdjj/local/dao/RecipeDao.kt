@@ -2,10 +2,10 @@ package com.kdjj.local.dao
 
 import androidx.room.*
 import com.kdjj.domain.model.Recipe
-import com.kdjj.local.model.RecipeEntity
-import com.kdjj.local.model.RecipeMetaEntity
-import com.kdjj.local.model.RecipeStepEntity
-import com.kdjj.local.model.toEntity
+import com.kdjj.local.dto.RecipeEntity
+import com.kdjj.local.dto.RecipeMetaEntity
+import com.kdjj.local.dto.RecipeStepEntity
+import com.kdjj.local.dto.toEntity
 
 @Dao
 internal interface RecipeDao {

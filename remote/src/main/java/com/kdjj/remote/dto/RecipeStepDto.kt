@@ -1,4 +1,4 @@
-package com.kdjj.remote.entity
+package com.kdjj.remote.dto
 
 import com.kdjj.domain.model.RecipeStep
 import com.kdjj.domain.model.RecipeStepType

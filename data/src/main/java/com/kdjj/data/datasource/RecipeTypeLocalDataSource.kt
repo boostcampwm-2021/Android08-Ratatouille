@@ -1,4 +1,4 @@
-package com.kdjj.data.recipetype
+package com.kdjj.data.datasource
 
 import com.kdjj.domain.model.RecipeType
 

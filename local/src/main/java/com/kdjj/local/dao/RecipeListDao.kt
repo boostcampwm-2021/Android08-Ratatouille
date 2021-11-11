@@ -3,7 +3,7 @@ package com.kdjj.local.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import com.kdjj.local.model.RecipeEntity
+import com.kdjj.local.dto.RecipeEntity
 
 @Dao
 internal interface RecipeListDao {

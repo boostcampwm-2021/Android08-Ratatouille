@@ -1,9 +1,9 @@
 package com.kdjj.local.dataSource
 
-import com.kdjj.data.recipe.RecipeLocalDataSource
+import com.kdjj.data.datasource.RecipeLocalDataSource
 import com.kdjj.domain.model.Recipe
 import com.kdjj.local.dao.RecipeDao
-import com.kdjj.local.model.toEntity
+import com.kdjj.local.dto.toEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

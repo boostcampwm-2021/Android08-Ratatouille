@@ -1,6 +1,7 @@
 package com.kdjj.remote.recipe
 
-import com.kdjj.remote.FirebaseStorageDaoImpl
+import com.kdjj.remote.dao.FirebaseStorageDaoImpl
+import com.kdjj.remote.datasource.RecipeImageRemoteDataSourceImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
