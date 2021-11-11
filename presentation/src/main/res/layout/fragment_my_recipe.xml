@@ -25,8 +25,8 @@
             android:id="@+id/radioGroup_myRecipe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:checkedButton="@id/radioButton_orderByDate"
+            android:orientation="horizontal"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_myRecipe">
@@ -35,40 +35,38 @@
                 android:id="@+id/radioButton_orderByDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/orderByDate"
-                android:button="@android:color/transparent"
-                android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"/>
+                android:button="@null"
+                android:minWidth="0dp"
+                android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"
+                android:text="@string/orderByDate" />
 
             <com.kdjj.presentation.view.home.my.TextRadioButton
                 android:id="@+id/radioButton_orderByFavorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/orderByFavorite"
-                android:button="@android:color/transparent"
-                android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"/>
+                android:button="@null"
+                android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"
+                android:text="@string/orderByFavorite" />
 
             <com.kdjj.presentation.view.home.my.TextRadioButton
                 android:id="@+id/radioButton_orderByName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/orderByName"
-                android:button="@android:color/transparent"
-                android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"/>
+                android:button="@null"
+                android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"
+                android:text="@string/orderByName" />
         </RadioGroup>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_myRecipe"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="15dp"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/radioGroup_myRecipe"
             app:layout_constraintVertical_bias="1.0"
-            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteX="12dp"
             tools:listitem="@layout/item_myrecipe_add_recipe" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
