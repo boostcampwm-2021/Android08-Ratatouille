@@ -5,15 +5,14 @@ import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.kdjj.presentation.R
-import com.kdjj.presentation.databinding.ItemMyrecipeAddRecipeBinding
-import com.kdjj.presentation.databinding.ItemMyrecipeRecipeBinding
+import com.kdjj.presentation.databinding.ItemMyRecipeAddRecipeBinding
+import com.kdjj.presentation.databinding.ItemMyRecipeBinding
 import com.kdjj.presentation.model.MyRecipeItem
 
 class MyRecipeListAdapter(private val navigation: NavController) :
     ListAdapter<MyRecipeItem, RecyclerView.ViewHolder>(MyRecipeItemCallback()) {
 
-    inner class MyRecipeViewHolder(private val binding: ItemMyrecipeRecipeBinding) :
+    inner class MyRecipeViewHolder(private val binding: ItemMyRecipeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: MyRecipeItem.MyRecipe) {
@@ -21,7 +20,7 @@ class MyRecipeListAdapter(private val navigation: NavController) :
         }
     }
 
-    inner class AddRecipeViewHolder(private val binding: ItemMyrecipeAddRecipeBinding) :
+    inner class AddRecipeViewHolder(private val binding: ItemMyRecipeAddRecipeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
     }
@@ -35,7 +34,7 @@ class MyRecipeListAdapter(private val navigation: NavController) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_RECIPE -> {
-                val binding = ItemMyrecipeRecipeBinding.inflate(
+                val binding = ItemMyRecipeBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
@@ -43,7 +42,7 @@ class MyRecipeListAdapter(private val navigation: NavController) :
                 MyRecipeViewHolder(binding)
             }
             else -> {
-                val binding = ItemMyrecipeAddRecipeBinding.inflate(
+                val binding = ItemMyRecipeAddRecipeBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false

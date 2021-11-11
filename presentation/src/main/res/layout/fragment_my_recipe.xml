@@ -67,7 +67,7 @@
             app:layout_constraintTop_toBottomOf="@id/radioGroup_myRecipe"
             app:layout_constraintVertical_bias="1.0"
             tools:layout_editor_absoluteX="12dp"
-            tools:listitem="@layout/item_myrecipe_add_recipe" />
+            tools:listitem="@layout/item_my_recipe_add_recipe" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
