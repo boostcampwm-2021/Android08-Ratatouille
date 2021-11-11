@@ -21,7 +21,7 @@ class MyRecipeFragment : Fragment() {
 
     private var _binding: FragmentMyRecipeBinding? = null
     private val binding get() = _binding!!
-    private val testAdapter by lazy { MyRecipeListAdapter(navigation) }
+    private val testAdapter by lazy { MyRecipeListAdapter() }
     private val navigation by lazy { Navigation.findNavController(binding.root) }
 
     override fun onCreateView(
