@@ -9,7 +9,7 @@ import com.kdjj.presentation.databinding.ItemMyRecipeAddRecipeBinding
 import com.kdjj.presentation.databinding.ItemMyRecipeBinding
 import com.kdjj.presentation.model.MyRecipeItem
 
-class MyRecipeListAdapter(private val navigation: NavController) :
+class MyRecipeListAdapter :
     ListAdapter<MyRecipeItem, RecyclerView.ViewHolder>(MyRecipeItemCallback()) {
 
     inner class MyRecipeViewHolder(private val binding: ItemMyRecipeBinding) :
