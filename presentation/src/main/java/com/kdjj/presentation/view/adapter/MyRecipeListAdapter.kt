@@ -59,8 +59,8 @@ class MyRecipeListAdapter(private val navigation: NavController) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val item = getItem(position)
-        when (item) {
+
+        when (val item = getItem(position)) {
             is MyRecipeItem.MyRecipe -> (holder as MyRecipeViewHolder).bind(item)
         }
     }
