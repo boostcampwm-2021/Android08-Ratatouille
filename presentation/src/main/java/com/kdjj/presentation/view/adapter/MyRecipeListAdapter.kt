@@ -5,11 +5,12 @@ import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.kdjj.presentation.R
 import com.kdjj.presentation.databinding.ItemMyRecipeAddRecipeBinding
 import com.kdjj.presentation.databinding.ItemMyRecipeBinding
 import com.kdjj.presentation.model.MyRecipeItem
 
-class MyRecipeListAdapter :
+class MyRecipeListAdapter(private val navigation: NavController) :
     ListAdapter<MyRecipeItem, RecyclerView.ViewHolder>(MyRecipeItemCallback()) {
 
     inner class MyRecipeViewHolder(private val binding: ItemMyRecipeBinding) :
@@ -22,7 +23,12 @@ class MyRecipeListAdapter :
 
     inner class AddRecipeViewHolder(private val binding: ItemMyRecipeAddRecipeBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
+        init {
+            // Demo를 위해 추가한 코드 추후 수정 예정
+            binding.imageViewMyRecipeAdd.setOnClickListener {
+                navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
+            }
+        }
     }
 
     override fun getItemViewType(position: Int): Int =
