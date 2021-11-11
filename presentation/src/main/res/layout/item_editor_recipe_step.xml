@@ -51,6 +51,7 @@
                 android:layout_marginTop="@dimen/editor_stepImage_marginTop"
                 android:contentDescription="@string/stepImage"
                 tools:src="@drawable/bg_editor_input_field"
+                android:onClick="@{() -> editorViewModel.startSelectImage(model)}"
                 app:glideSrc="@{model.liveImgPath}"
                 app:layout_constraintTop_toBottomOf="@id/editText_editor_stepTitle"
                 app:layout_constraintStart_toStartOf="parent" />
