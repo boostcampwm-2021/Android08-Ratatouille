@@ -1,6 +1,5 @@
 package com.kdjj.presentation.viewmodel.recipeeditor
 
-import android.net.Uri
 import androidx.lifecycle.*
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeStepType
@@ -14,7 +13,6 @@ import com.kdjj.presentation.model.toDomain
 import com.kdjj.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -128,7 +126,7 @@ class RecipeEditorViewModel @Inject constructor(
         if (isRecipeValid()) {
             viewModelScope.launch {
                 recipeSaveUseCase(
-                    RecipeRequest(recipeMetaModel.toDomain(recipeStepModelList))
+                    RecipeRequest(recipeMetaModel.toDomain(recipeStepModelList, liveRecipeTypes.value ?: emptyList()))
                 ).onSuccess { /*화면 이동*/ }
                     .onFailure {  }
             }
