@@ -37,4 +37,13 @@
     <dimen name="myRecipe_cardView_marginStart">16dp</dimen>
     <dimen name="myRecipe_cardView_corner">15dp</dimen>
     <dimen name="myRecipe_cardView_marginBottom">12dp</dimen>
+
+    <dimen name="dialog_title_textSize">18sp</dimen>
+    <dimen name="dialog_content_textSize">14sp</dimen>
+    <dimen name="dialog_title_marginTop">24dp</dimen>
+    <dimen name="dialog_content_marginHorizontal">32dp</dimen>
+    <dimen name="dialog_content_marginTop">24dp</dimen>
+    <dimen name="dialog_button_marginTop">32dp</dimen>
+    <dimen name="dialog_button_padding">16dp</dimen>
+    <dimen name="dialog_corner">16dp</dimen>
 </resources>

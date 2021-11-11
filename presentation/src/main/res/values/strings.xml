@@ -13,6 +13,7 @@
     <string name="addStepButton">단계 추가 버튼</string>
     <string name="registerRecipe">레시피 등록</string>
     <string name="selectPhoto">사진 선택</string>
+    <string name="confirm">확인</string>
     <string-array name="photoSourceSelection">
         <item>카메라</item>
         <item>갤러리</item>
