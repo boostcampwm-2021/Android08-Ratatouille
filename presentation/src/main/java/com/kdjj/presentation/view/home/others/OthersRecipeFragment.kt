@@ -32,12 +32,20 @@ class OthersRecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setBinding()
+        initToolBar()
         setAdapter()
     }
 
     private fun setBinding() {
         with(binding) {
             lifecycleOwner = this@OthersRecipeFragment.viewLifecycleOwner
+        }
+    }
+
+    private fun initToolBar() {
+        binding.toolbarOthers.apply {
+            title = getString(R.string.others)
+            inflateMenu(R.menu.toolbar_menu_search_item)
         }
     }
 
