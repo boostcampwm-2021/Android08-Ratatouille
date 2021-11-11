@@ -6,15 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import com.kdjj.domain.model.*
 import com.kdjj.presentation.R
 import com.kdjj.presentation.databinding.FragmentOthersRecipeBinding
 import com.kdjj.presentation.view.adapter.OthersRecipeListAdapter
+import com.kdjj.presentation.viewmodel.others.OthersViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class OthersRecipeFragment : Fragment() {
 
     private var _binding: FragmentOthersRecipeBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: OthersViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +44,7 @@ class OthersRecipeFragment : Fragment() {
     private fun setBinding() {
         with(binding) {
             lifecycleOwner = this@OthersRecipeFragment.viewLifecycleOwner
+            viewModel = this@OthersRecipeFragment.viewModel
         }
     }
 
