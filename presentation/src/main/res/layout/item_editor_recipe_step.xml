@@ -13,6 +13,7 @@
             type="com.kdjj.presentation.model.RecipeEditorItem.RecipeStepModel" />
 
         <import type="com.kdjj.presentation.view.adapter.BindingConverter" />
+        <import type="android.widget.ImageView" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -52,7 +53,7 @@
                 android:layout_marginTop="@dimen/editor_stepImage_marginTop"
                 android:contentDescription="@string/stepImage"
                 android:onClick="@{() -> editorViewModel.startSelectImage(model)}"
-                android:scaleType="centerCrop"
+                android:scaleType="@{model.liveImgPath.empty ? ImageView.ScaleType.CENTER : ImageView.ScaleType.CENTER_CROP }"
                 tools:src="@drawable/bg_editor_input_field"
                 app:loadImage="@{model.liveImgPath}"
                 app:layout_constraintTop_toBottomOf="@id/editText_editor_stepTitle"

@@ -11,6 +11,8 @@
         <variable
             name="model"
             type="com.kdjj.presentation.model.RecipeEditorItem.RecipeMetaModel" />
+
+        <import type="android.widget.ImageView" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,11 +28,11 @@
             android:background="@drawable/bg_editor_image"
             android:contentDescription="@string/recipeImage"
             android:onClick="@{() -> editorViewModel.startSelectImage(model)}"
-            android:scaleType="centerCrop"
+            android:scaleType="@{model.liveRecipeImgPath.empty ? ImageView.ScaleType.CENTER : ImageView.ScaleType.CENTER_CROP }"
             app:loadImage="@{model.liveRecipeImgPath}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_baseline_fastfood_24" />
+            tools:src="@drawable/ic_my_recipe_24dp" />
 
         <TextView
             android:id="@+id/textView_editor_recipeTitle"
