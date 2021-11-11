@@ -3,9 +3,8 @@ package com.kdjj.local.model
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.kdjj.domain.model.Recipe
-import com.kdjj.local.toDomain
 
-data class RecipeEntity(
+internal data class RecipeEntity(
     @Embedded val recipeMeta: RecipeMetaEntity,
 
     @Relation(
@@ -21,7 +20,7 @@ data class RecipeEntity(
     val steps: List<RecipeStepEntity>
 )
 
-fun RecipeEntity.toDomain(): Recipe =
+internal fun RecipeEntity.toDomain(): Recipe =
     Recipe(
         recipeId = recipeMeta.recipeMetaId,
         title = recipeMeta.title,
@@ -35,3 +34,4 @@ fun RecipeEntity.toDomain(): Recipe =
         createTime = recipeMeta.createTime,
         state = recipeMeta.state
     )
+
