@@ -5,7 +5,7 @@ import com.kdjj.domain.model.Recipe
 import com.kdjj.local.model.RecipeEntity
 import com.kdjj.local.model.RecipeMetaEntity
 import com.kdjj.local.model.RecipeStepEntity
-import com.kdjj.local.toEntity
+import com.kdjj.local.model.toEntity
 
 @Dao
 internal interface RecipeDao {

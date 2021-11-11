@@ -2,6 +2,7 @@ package com.kdjj.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.kdjj.domain.model.RecipeType
 
 @Entity(tableName = "RecipeType")
 data class RecipeTypeEntity(
@@ -21,3 +22,15 @@ data class RecipeTypeEntity(
 		)
 	}
 }
+
+internal fun RecipeTypeEntity.toDomain(): RecipeType =
+	RecipeType(
+		recipeTypeId.toInt(),
+		title
+	)
+
+internal fun RecipeType.toEntity(): RecipeTypeEntity =
+	RecipeTypeEntity(
+		id.toLong(),
+		title
+	)
