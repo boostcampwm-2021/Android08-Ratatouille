@@ -42,4 +42,8 @@ object DataBaseModule {
 	@Provides
 	@Singleton
 	fun provideRecipeDao(recipeDatabase: RecipeDatabase) = recipeDatabase.getRecipeDao()
+	
+	@Provides
+	@Singleton
+	fun provideRecipeTypeDao(recipeDatabase: RecipeDatabase) = recipeDatabase.getRecipeTypeDao()
 }
