@@ -6,17 +6,22 @@ import com.kdjj.presentation.model.RecipeEditorItem
 
 class MyRecipeItemCallback : DiffUtil.ItemCallback<MyRecipeItem>() {
     override fun areItemsTheSame(oldItem: MyRecipeItem, newItem: MyRecipeItem): Boolean {
-       return when {
+        return when {
             oldItem is MyRecipeItem.MyRecipe && newItem is MyRecipeItem.MyRecipe -> {
                 oldItem.recipe.recipeId == newItem.recipe.recipeId
             }
-           oldItem is MyRecipeItem.PlusButton && newItem is MyRecipeItem.PlusButton -> true
-           else -> false
+            oldItem is MyRecipeItem.PlusButton && newItem is MyRecipeItem.PlusButton -> true
+            else -> false
         }
     }
 
     override fun areContentsTheSame(oldItem: MyRecipeItem, newItem: MyRecipeItem): Boolean {
-        TODO("Not yet implemented")
+        return when {
+            oldItem is MyRecipeItem.MyRecipe && newItem is MyRecipeItem.MyRecipe -> {
+                oldItem.recipe.createTime == newItem.recipe.createTime
+            }
+            oldItem is MyRecipeItem.PlusButton && newItem is MyRecipeItem.PlusButton -> true
+            else -> false
+        }
     }
-
 }
