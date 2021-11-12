@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.kdjj.domain.model.Recipe
@@ -16,12 +17,14 @@ import com.kdjj.presentation.R
 import com.kdjj.presentation.databinding.FragmentMyRecipeBinding
 import com.kdjj.presentation.model.MyRecipeItem
 import com.kdjj.presentation.view.adapter.MyRecipeListAdapter
+import com.kdjj.presentation.viewmodel.my.MyRecipeViewModel
 
 class MyRecipeFragment : Fragment() {
 
     private var _binding: FragmentMyRecipeBinding? = null
     private val binding get() = _binding!!
-    private val testAdapter by lazy { MyRecipeListAdapter(navigation) }
+    private val myRecipeAdapter by lazy { MyRecipeListAdapter() }
+    private val viewModel: MyRecipeViewModel by viewModels()
     private val navigation by lazy { Navigation.findNavController(binding.root) }
 
     override fun onCreateView(
@@ -30,6 +33,8 @@ class MyRecipeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_recipe, container, false)
+        binding.lifecycleOwner = this
+        binding.myViewModel = viewModel
         return binding.root
     }
 
@@ -60,60 +65,9 @@ class MyRecipeFragment : Fragment() {
     private fun initRecyclerView() {
         binding.recyclerViewMyRecipe.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
-            adapter = testAdapter
+            adapter = myRecipeAdapter
         }
-
-        val testList = listOf<MyRecipeItem>(
-            MyRecipeItem.PlusButton,
-            MyRecipeItem.MyRecipe(test1),
-            MyRecipeItem.MyRecipe(test2),
-            MyRecipeItem.MyRecipe(test3)
-        )
-        testAdapter.submitList(testList)
     }
-
-    // Demo를 위한 테스트 코드 추후 삭제 예정
-    val test1 = Recipe(
-        "id1",
-        "title 1",
-        RecipeType(1, "aaa"),
-        "a",
-        "a",
-        listOf(),
-        "a",
-        1,
-        false,
-        1,
-        RecipeState.CREATE,
-    )
-
-    val test2 = Recipe(
-        "id2",
-        "title 2",
-        RecipeType(1, "aaa"),
-        "a",
-        "a",
-        listOf(),
-        "a",
-        1,
-        false,
-        1,
-        RecipeState.CREATE,
-    )
-
-    val test3 = Recipe(
-        "id3",
-        "title 3",
-        RecipeType(1, "aaa"),
-        "a",
-        "a",
-        listOf(),
-        "a",
-        1,
-        false,
-        1,
-        RecipeState.CREATE,
-    )
 
     override fun onDestroyView() {
         super.onDestroyView()
