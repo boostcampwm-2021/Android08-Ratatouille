@@ -10,7 +10,7 @@ import com.kdjj.presentation.databinding.ItemMyRecipeAddRecipeBinding
 import com.kdjj.presentation.databinding.ItemMyRecipeBinding
 import com.kdjj.presentation.model.MyRecipeItem
 
-internal class MyRecipeListAdapter(private val navigation: NavController) :
+internal class MyRecipeListAdapter :
     ListAdapter<MyRecipeItem, RecyclerView.ViewHolder>(MyRecipeItemCallback()) {
 
     inner class MyRecipeViewHolder(private val binding: ItemMyRecipeBinding) :
@@ -23,12 +23,6 @@ internal class MyRecipeListAdapter(private val navigation: NavController) :
 
     inner class AddRecipeViewHolder(private val binding: ItemMyRecipeAddRecipeBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        init {
-            // Demo를 위해 추가한 코드 추후 수정 예정
-            binding.imageViewMyRecipeAdd.setOnClickListener {
-                navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
-            }
-        }
     }
 
     override fun getItemViewType(position: Int): Int =
