@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.kdjj.presentation.view.home.my.SortType" />
 
         <variable
             name="myViewModel"
@@ -28,7 +29,6 @@
             android:id="@+id/radioGroup_myRecipe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checkedButton="@id/radioButton_orderByDate"
             android:orientation="horizontal"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -40,6 +40,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"
                 android:button="@null"
+                android:checked="@{myViewModel.liveSortType.equals(SortType.SORT_BY_TIME)}"
+                android:onClick="@{()->myViewModel.setSortType(SortType.SORT_BY_TIME)}"
                 android:minWidth="0dp"
                 android:text="@string/orderByDate" />
 
@@ -48,6 +50,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"
+                android:checked="@{myViewModel.liveSortType.equals(SortType.SORT_BY_FAVORITE)}"
+                android:onClick="@{()->myViewModel.setSortType(SortType.SORT_BY_FAVORITE)}"
                 android:button="@null"
                 android:text="@string/orderByFavorite" />
 
@@ -56,6 +60,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"
+                android:checked="@{myViewModel.liveSortType.equals(SortType.SORT_BY_NAME)}"
+                android:onClick="@{()->myViewModel.setSortType(SortType.SORT_BY_NAME)}"
                 android:button="@null"
                 android:text="@string/orderByName" />
         </RadioGroup>

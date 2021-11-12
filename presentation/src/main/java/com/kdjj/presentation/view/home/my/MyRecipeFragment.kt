@@ -1,7 +1,6 @@
 package com.kdjj.presentation.view.home.my
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +9,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
-import com.kdjj.domain.model.Recipe
-import com.kdjj.domain.model.RecipeState
-import com.kdjj.domain.model.RecipeType
 import com.kdjj.presentation.R
 import com.kdjj.presentation.databinding.FragmentMyRecipeBinding
-import com.kdjj.presentation.model.MyRecipeItem
 import com.kdjj.presentation.view.adapter.MyRecipeListAdapter
 import com.kdjj.presentation.viewmodel.my.MyRecipeViewModel
 
@@ -41,7 +36,7 @@ class MyRecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolBar()
-        initRadioButtons()
+        setObservers()
         initRecyclerView()
     }
 
@@ -52,12 +47,11 @@ class MyRecipeFragment : Fragment() {
         }
     }
 
-    private fun initRadioButtons() {
-        binding.radioGroupMyRecipe.setOnCheckedChangeListener { group, _ ->
-            when (group.checkedRadioButtonId) {
-                R.id.radioButton_orderByDate -> Log.d("selected radio button", "최신순")
-                R.id.radioButton_orderByFavorite -> Log.d("selected radio button", "즐겨찾기순")
-                R.id.radioButton_orderByName -> Log.d("selected radio button", "이름순")
+    private fun setObservers() {
+        viewModel.liveSortType.observe(viewLifecycleOwner) { sortType ->
+            when(sortType){
+                SortType.SORT_BY_TIME -> viewModel.fetchLocalLatestRecipeList()
+                SortType.SORT_BY_FAVORITE -> viewModel.fetchLocalFavoriteRecipeList()
             }
         }
     }
