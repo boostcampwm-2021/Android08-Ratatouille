@@ -2,13 +2,13 @@ package com.kdjj.domain.repository
 
 interface RecipeImageRepository {
 
-    suspend fun convertToByteArrayRemote(uri: String): Result<ByteArray>
+    suspend fun convertRemoteUriToByteArray(uri: String): Result<ByteArray>
 
-    suspend fun convertToByteArrayLocal(uri: String): Result<ByteArray>
+    suspend fun convertLocalUriToByteArray(uri: String): Result<ByteArray>
 
-    suspend fun convertToRemoteStorageUri(uri: String): Result<String>
+    suspend fun convertLocalUriToRemoteStorageUri(uri: String): Result<String>
 
-    suspend fun convertToLocalStorageUri(
+    suspend fun convertByteArrayToLocalStorageUri(
         byteArray: ByteArray,
         fileName: String
     ): Result<String>

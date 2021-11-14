@@ -37,7 +37,7 @@ class RecipeImageRepositoryImplTest {
 			)
 		)
 		//when
-		val byteArrayResult = recipeImageRepositoryImpl.convertToByteArrayRemote(testUri)
+		val byteArrayResult = recipeImageRepositoryImpl.convertRemoteUriToByteArray(testUri)
 		//then
 		assertEquals(testByteArray, byteArrayResult.getOrNull())
 	}
@@ -51,7 +51,7 @@ class RecipeImageRepositoryImplTest {
 			)
 		)
 		//when
-		val byteArrayResult = recipeImageRepositoryImpl.convertToByteArrayLocal(testUri)
+		val byteArrayResult = recipeImageRepositoryImpl.convertLocalUriToByteArray(testUri)
 		//then
 		assertEquals(testByteArray, byteArrayResult.getOrNull())
 	}
@@ -65,7 +65,7 @@ class RecipeImageRepositoryImplTest {
 			)
 		)
 		//when
-		val newImagePathResult = recipeImageRepositoryImpl.convertToRemoteStorageUri(testUri)
+		val newImagePathResult = recipeImageRepositoryImpl.convertLocalUriToRemoteStorageUri(testUri)
 		//then
 		assertEquals(testUri, newImagePathResult.getOrNull())
 	}
@@ -81,7 +81,7 @@ class RecipeImageRepositoryImplTest {
 		).thenReturn(Result.success(testUri))
 		//when
 		val newImagePathResult =
-			recipeImageRepositoryImpl.convertToLocalStorageUri(testByteArray, "fileName")
+			recipeImageRepositoryImpl.convertByteArrayToLocalStorageUri(testByteArray, "fileName")
 		//then
 		assertEquals(testUri, newImagePathResult.getOrNull())
 	}
