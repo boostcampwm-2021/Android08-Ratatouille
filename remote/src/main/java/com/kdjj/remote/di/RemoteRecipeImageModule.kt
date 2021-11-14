@@ -13,12 +13,16 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RemoteRecipeImageModule {
-	
-	@Binds
-	@Singleton
-	internal abstract fun bindRecipeImageRemoteDataSource(recipeImageRemoteDataSourceImpl: RecipeImageRemoteDataSourceImpl): RecipeImageRemoteDataSource
-	
-	@Binds
-	@Singleton
-	internal abstract fun bindFireStorageDao(firebaseStorageDaoImpl: FirebaseStorageDaoImpl): FirebaseStorageDao
+    
+    @Binds
+    @Singleton
+    internal abstract fun bindRecipeImageRemoteDataSource(
+        recipeImageRemoteDataSourceImpl: RecipeImageRemoteDataSourceImpl
+    ): RecipeImageRemoteDataSource
+    
+    @Binds
+    @Singleton
+    internal abstract fun bindFireStorageDao(
+        firebaseStorageDaoImpl: FirebaseStorageDaoImpl
+    ): FirebaseStorageDao
 }

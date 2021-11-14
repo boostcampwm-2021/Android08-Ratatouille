@@ -13,16 +13,20 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class LocalRecipeModule {
-	
-	@Binds
-	@Singleton
-	internal abstract fun bindRecipeLocalDataSource(recipeLocalDataSourceImpl: RecipeLocalDataSourceImpl): RecipeLocalDataSource
-	
-	companion object {
-		
-		@Provides
-		@Singleton
-		internal fun provideRecipeDao(recipeDatabase: RecipeDatabase) =
-			recipeDatabase.getRecipeDao()
-	}
+    
+    @Binds
+    @Singleton
+    internal abstract fun bindRecipeLocalDataSource(
+        recipeLocalDataSourceImpl: RecipeLocalDataSourceImpl
+    ): RecipeLocalDataSource
+    
+    companion object {
+        
+        @Provides
+        @Singleton
+        internal fun provideRecipeDao(
+            recipeDatabase: RecipeDatabase
+        ) =
+            recipeDatabase.getRecipeDao()
+    }
 }

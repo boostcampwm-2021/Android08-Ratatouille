@@ -10,15 +10,21 @@ internal class RecipeImageRepositoryImpl @Inject constructor(
     private val recipeImageRemoteDataSource: RecipeImageRemoteDataSource
 ) : RecipeImageRepository {
     
-    override suspend fun convertRemoteUriToByteArray(uri: String): Result<ByteArray> {
+    override suspend fun convertRemoteUriToByteArray(
+        uri: String
+    ): Result<ByteArray> {
         return recipeImageRemoteDataSource.fetchRecipeImage(uri)
     }
     
-    override suspend fun convertLocalUriToByteArray(uri: String): Result<ByteArray> {
+    override suspend fun convertLocalUriToByteArray(
+        uri: String
+    ): Result<ByteArray> {
         return recipeImageLocalDataSource.convertToByteArray(uri)
     }
     
-    override suspend fun convertLocalUriToRemoteStorageUri(uri: String): Result<String> {
+    override suspend fun convertLocalUriToRemoteStorageUri(
+        uri: String
+    ): Result<String> {
         return recipeImageRemoteDataSource.uploadRecipeImage(uri)
     }
     

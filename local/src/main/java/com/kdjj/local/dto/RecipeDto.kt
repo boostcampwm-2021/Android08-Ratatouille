@@ -6,13 +6,11 @@ import com.kdjj.domain.model.Recipe
 
 internal data class RecipeEntity(
     @Embedded val recipeMeta: RecipeMetaEntity,
-
     @Relation(
         parentColumn = "recipeTypeId",
         entityColumn = "recipeTypeId"
     )
     val recipeType: RecipeTypeEntity,
-
     @Relation(
         parentColumn = "recipeMetaId",
         entityColumn = "parentRecipeId"

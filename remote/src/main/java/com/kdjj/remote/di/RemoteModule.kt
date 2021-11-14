@@ -13,12 +13,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RemoteModule {
-	
-	@Provides
-	@Singleton
-	fun provideFireStore() = Firebase.firestore
-	
-	@Provides
-	@Singleton
-	fun provideFirebaseStorage(): StorageReference = Firebase.storage.reference
+    
+    @Provides
+    @Singleton
+    fun provideFireStore() = Firebase.firestore
+    
+    @Provides
+    @Singleton
+    fun provideFirebaseStorage(): StorageReference = Firebase.storage.reference
 }

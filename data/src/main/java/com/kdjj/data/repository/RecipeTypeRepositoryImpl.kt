@@ -7,19 +7,21 @@ import com.kdjj.domain.repository.RecipeTypeRepository
 import javax.inject.Inject
 
 internal class RecipeTypeRepositoryImpl @Inject constructor(
-	private val localDataSource: RecipeTypeLocalDataSource,
-	private val remoteDataSource: RecipeTypeRemoteDataSource
+    private val localDataSource: RecipeTypeLocalDataSource,
+    private val remoteDataSource: RecipeTypeRemoteDataSource
 ) : RecipeTypeRepository {
-	
-	override suspend fun fetchRemoteRecipeTypeList(): Result<List<RecipeType>> {
-		return remoteDataSource.fetchRecipeTypeList()
-	}
-	
-	override suspend fun fetchLocalRecipeTypeList(): Result<List<RecipeType>> {
-		return localDataSource.fetchRecipeTypeList()
-	}
-	
-	override suspend fun saveRecipeTypeList(recipeTypeList: List<RecipeType>): Result<Boolean> {
-		return localDataSource.saveRecipeTypeList(recipeTypeList)
-	}
+    
+    override suspend fun fetchRemoteRecipeTypeList(): Result<List<RecipeType>> {
+        return remoteDataSource.fetchRecipeTypeList()
+    }
+    
+    override suspend fun fetchLocalRecipeTypeList(): Result<List<RecipeType>> {
+        return localDataSource.fetchRecipeTypeList()
+    }
+    
+    override suspend fun saveRecipeTypeList(
+        recipeTypeList: List<RecipeType>
+    ): Result<Boolean> {
+        return localDataSource.saveRecipeTypeList(recipeTypeList)
+    }
 }
