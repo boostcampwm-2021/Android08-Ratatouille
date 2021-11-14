@@ -9,8 +9,9 @@ import com.kdjj.presentation.R
 import com.kdjj.presentation.databinding.ItemMyRecipeAddRecipeBinding
 import com.kdjj.presentation.databinding.ItemMyRecipeBinding
 import com.kdjj.presentation.model.MyRecipeItem
+import com.kdjj.presentation.viewmodel.my.MyRecipeViewModel
 
-internal class MyRecipeListAdapter :
+internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
     ListAdapter<MyRecipeItem, RecyclerView.ViewHolder>(MyRecipeItemCallback()) {
 
     inner class MyRecipeViewHolder(private val binding: ItemMyRecipeBinding) :
@@ -23,6 +24,9 @@ internal class MyRecipeListAdapter :
 
     inner class AddRecipeViewHolder(private val binding: ItemMyRecipeAddRecipeBinding) :
         RecyclerView.ViewHolder(binding.root) {
+            init {
+                binding.myRecipeViewModel = viewModel
+            }
     }
 
     override fun getItemViewType(position: Int): Int =
