@@ -1,14 +1,14 @@
 package com.kdjj.domain.usecase
 
 import com.kdjj.domain.repository.RecipeRepository
-import com.kdjj.domain.request.UpdateRecipeFavoriteRequest
+import com.kdjj.domain.request.UpdateLocalRecipeFavoriteRequest
 import javax.inject.Inject
 
-internal class UpdateRecipeFavoriteUseCase @Inject constructor(
+internal class UpdateLocalRecipeFavoriteUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository
-) : UseCase<UpdateRecipeFavoriteRequest, Boolean> {
+) : UseCase<UpdateLocalRecipeFavoriteRequest, Boolean> {
     
-    override suspend fun invoke(request: UpdateRecipeFavoriteRequest): Result<Boolean> {
+    override suspend fun invoke(request: UpdateLocalRecipeFavoriteRequest): Result<Boolean> {
         val recipe = request.recipe
         return recipeRepository.updateRecipe(recipe.copy(isFavorite = !recipe.isFavorite))
     }

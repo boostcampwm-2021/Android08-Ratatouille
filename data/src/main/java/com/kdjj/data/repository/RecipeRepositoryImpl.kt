@@ -23,7 +23,7 @@ internal class RecipeRepositoryImpl @Inject constructor(
         return recipeLocalDataSource.updateRecipe(recipe)
     }
     
-    override suspend fun deleteRecipe(
+    override suspend fun deleteLocalRecipe(
         recipe: Recipe
     ): Result<Boolean> {
         return recipeLocalDataSource.deleteRecipe(recipe)
