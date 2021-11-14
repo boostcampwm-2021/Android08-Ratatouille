@@ -19,6 +19,7 @@ import com.kdjj.presentation.databinding.ActivityRecipeEditorBinding
 import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.view.adapter.RecipeEditorListAdapter
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
+import com.kdjj.presentation.view.dialog.CustomProgressDialog
 import com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -29,6 +30,8 @@ import java.util.*
 class RecipeEditorActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRecipeEditorBinding
     private val viewModel: RecipeEditorViewModel by viewModels()
+
+    private lateinit var loadingDialog: CustomProgressDialog
 
     private var lastCameraFileUri: String? = null
     private val cameraLauncher = registerForActivityResult(
@@ -100,6 +103,8 @@ class RecipeEditorActivity : AppCompatActivity() {
 
         binding.viewModel = viewModel
 
+        loadingDialog = CustomProgressDialog(this)
+
         setSupportActionBar(binding.toolbarEditor)
         setTitle(R.string.addRecipe)
 
@@ -136,6 +141,14 @@ class RecipeEditorActivity : AppCompatActivity() {
                 ) {
 
                 }
+            }
+        }
+
+        viewModel.liveLoading.observe(this) { doLoading ->
+            if (doLoading) {
+                loadingDialog.show()
+            } else {
+                loadingDialog.dismiss()
             }
         }
     }
