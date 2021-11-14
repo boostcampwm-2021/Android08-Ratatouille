@@ -23,4 +23,8 @@ interface RecipeRepository {
     suspend fun increaseRemoteRecipeViewCount(
         recipe: Recipe
     ): Result<Unit>
+    
+    suspend fun deleteRemoteRecipe(
+        recipe: Recipe
+    ): Result<Unit>
 }
