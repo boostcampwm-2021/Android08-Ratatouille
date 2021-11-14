@@ -49,6 +49,9 @@ internal class RecipeEditorViewModel @Inject constructor(
 
     private var isInitialized = false
 
+    private val _liveMoveToPosition = MutableLiveData<Int>()
+    val liveMoveToPosition: LiveData<Int> get() = _liveMoveToPosition
+
     fun initializeWith(recipe: Recipe?) {
         if (isInitialized) return
 
@@ -119,6 +122,7 @@ internal class RecipeEditorViewModel @Inject constructor(
         recipeStepModelList = recipeStepModelList +
                 RecipeEditorItem.RecipeStepModel.create(idGenerator, recipeStepValidator)
         notifyStepListChange()
+        _liveMoveToPosition.value = recipeStepModelList.size + 2
     }
 
     fun removeRecipeStep(position: Int) {
@@ -141,10 +145,8 @@ internal class RecipeEditorViewModel @Inject constructor(
                 saveRecipeUseCase(
                     SaveRecipeRequest(recipeMetaModel.toDomain(recipeStepModelList, liveRecipeTypes.value ?: emptyList()))
                 ).onSuccess {
-                    println(1)
                     _liveSaveResult.value = true
                 }.onFailure {
-                    println(2)
                     _liveSaveResult.value = false
                 }
             }
@@ -160,17 +162,17 @@ internal class RecipeEditorViewModel @Inject constructor(
             recipeMetaModel.liveTitleState.value != true ||
             recipeMetaModel.liveStuffState.value != true
         ) {
-            println("meta false")
+            _liveMoveToPosition.value = 0
             return false
         }
 
-        recipeStepModelList.forEach { stepModel ->
+        recipeStepModelList.forEachIndexed { i, stepModel ->
             if (stepModel.liveNameState.value != true ||
                 stepModel.liveDescriptionState.value != true ||
                 stepModel.liveTimerMinState.value != true ||
                 stepModel.liveTimerSecState.value != true
             ) {
-                println("step false")
+                _liveMoveToPosition.value = i + 1
                 return false
             }
         }
