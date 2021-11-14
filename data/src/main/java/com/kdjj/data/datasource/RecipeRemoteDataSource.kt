@@ -11,4 +11,8 @@ interface RecipeRemoteDataSource {
     suspend fun increaseViewCount(
         recipe: Recipe
     ): Result<Unit>
+    
+    suspend fun deleteRecipe(
+        recipe: Recipe
+    ): Result<Unit>
 }
