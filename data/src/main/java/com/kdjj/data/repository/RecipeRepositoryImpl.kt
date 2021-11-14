@@ -11,13 +11,13 @@ internal class RecipeRepositoryImpl @Inject constructor(
     private val recipeRemoteDataSource: RecipeRemoteDataSource
 ) : RecipeRepository {
     
-    override suspend fun saveRecipe(
+    override suspend fun saveLocalRecipe(
         recipe: Recipe
     ): Result<Boolean> {
         return recipeLocalDataSource.saveRecipe(recipe)
     }
     
-    override suspend fun updateRecipe(
+    override suspend fun updateLocalRecipe(
         recipe: Recipe
     ): Result<Boolean> {
         return recipeLocalDataSource.updateRecipe(recipe)
@@ -33,5 +33,11 @@ internal class RecipeRepositoryImpl @Inject constructor(
         recipe: Recipe
     ): Result<Unit> {
         return recipeRemoteDataSource.uploadRecipe(recipe)
+    }
+    
+    override suspend fun increaseRemoteRecipeViewCount(
+        recipe: Recipe
+    ): Result<Unit> {
+        return recipeRemoteDataSource.increaseViewCount(recipe)
     }
 }

@@ -4,11 +4,11 @@ import com.kdjj.domain.model.Recipe
 
 interface RecipeRepository {
     
-    suspend fun saveRecipe(
+    suspend fun saveLocalRecipe(
         recipe: Recipe
     ): Result<Boolean>
     
-    suspend fun updateRecipe(
+    suspend fun updateLocalRecipe(
         recipe: Recipe
     ): Result<Boolean>
     
@@ -17,6 +17,10 @@ interface RecipeRepository {
     ): Result<Boolean>
     
     suspend fun uploadRecipe(
+        recipe: Recipe
+    ): Result<Unit>
+    
+    suspend fun increaseRemoteRecipeViewCount(
         recipe: Recipe
     ): Result<Unit>
 }
