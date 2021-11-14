@@ -12,3 +12,9 @@ internal fun RecipeTypeEntity.toDomain(): RecipeType =
         id,
         title
     )
+
+internal fun RecipeType.toEntity(): RecipeTypeEntity =
+    RecipeTypeEntity(
+        id,
+        title
+    )

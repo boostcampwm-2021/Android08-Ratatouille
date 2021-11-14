@@ -21,3 +21,13 @@ internal fun RecipeStepEntity.toDomain(): RecipeStep =
         imgPath,
         seconds
     )
+
+internal fun RecipeStep.toEntity(): RecipeStepEntity =
+    RecipeStepEntity(
+        stepId,
+        name,
+        type,
+        description,
+        imgPath,
+        seconds
+    )
