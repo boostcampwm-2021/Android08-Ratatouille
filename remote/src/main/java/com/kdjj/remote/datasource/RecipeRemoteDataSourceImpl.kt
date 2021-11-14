@@ -18,8 +18,16 @@ internal class RecipeRemoteDataSourceImpl @Inject constructor(
         }
     
     override suspend fun increaseViewCount(recipe: Recipe): Result<Unit> =
-        try{
+        try {
             recipeDao.increaseViewCount(recipe)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    
+    override suspend fun deleteRecipe(recipe: Recipe): Result<Unit> =
+        try {
+            recipeDao.deleteRecipe(recipe)
             Result.success(Unit)
         }catch(e: Exception){
             Result.failure(e)
