@@ -11,7 +11,6 @@ import com.kdjj.presentation.common.*
 import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.model.toDomain
 import com.kdjj.presentation.model.toPresentation
-import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,8 +19,8 @@ import javax.inject.Inject
 internal class RecipeEditorViewModel @Inject constructor(
     private val recipeValidator: RecipeValidator,
     private val recipeStepValidator: RecipeStepValidator,
-    private val recipeSaveUseCase: UseCase<SaveRecipeRequest, Boolean>,
-    private val recipeTypesUseCase: UseCase<EmptyRequest, List<RecipeType>>,
+    private val saveRecipeUseCase: UseCase<SaveRecipeRequest, Boolean>,
+    private val fetchRecipeTypesUseCase: UseCase<EmptyRequest, List<RecipeType>>,
     private val idGenerator: IdGenerator,
 ) : ViewModel() {
 
@@ -47,7 +46,7 @@ internal class RecipeEditorViewModel @Inject constructor(
 
     fun initializeWith(recipe: Recipe?) {
         viewModelScope.launch {
-            recipeTypesUseCase(EmptyRequest)
+            fetchRecipeTypesUseCase(EmptyRequest)
                 .onSuccess { recipeTypes ->
                     _liveRecipeTypes.value = recipeTypes
                     recipe?.let {
@@ -129,7 +128,7 @@ internal class RecipeEditorViewModel @Inject constructor(
         _liveRegisterHasPressed.value = true
         if (isRecipeValid()) {
             viewModelScope.launch {
-                recipeSaveUseCase(
+                saveRecipeUseCase(
                     SaveRecipeRequest(recipeMetaModel.toDomain(recipeStepModelList, liveRecipeTypes.value ?: emptyList()))
                 ).onSuccess {
                     println(1)
