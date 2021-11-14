@@ -10,6 +10,6 @@ internal class UpdateLocalRecipeFavoriteUseCase @Inject constructor(
     
     override suspend fun invoke(request: UpdateLocalRecipeFavoriteRequest): Result<Boolean> {
         val recipe = request.recipe
-        return recipeRepository.updateRecipe(recipe.copy(isFavorite = !recipe.isFavorite))
+        return recipeRepository.updateLocalRecipe(recipe.copy(isFavorite = !recipe.isFavorite))
     }
 }
