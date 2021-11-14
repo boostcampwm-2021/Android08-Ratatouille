@@ -47,7 +47,7 @@ internal class RecipeEditorViewModel @Inject constructor(
 
     fun initializeWith(recipe: Recipe?) {
         viewModelScope.launch {
-            recipeTypesUseCase(EmptyRequest())
+            recipeTypesUseCase(EmptyRequest)
                 .onSuccess { recipeTypes ->
                     _liveRecipeTypes.value = recipeTypes
                     recipe?.let {
