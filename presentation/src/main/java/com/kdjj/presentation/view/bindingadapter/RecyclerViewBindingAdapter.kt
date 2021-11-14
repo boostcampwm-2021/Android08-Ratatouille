@@ -9,3 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 fun <T, VH : RecyclerView.ViewHolder> RecyclerView.submitList(list: List<T>?) {
     (adapter as? ListAdapter<T, VH>)?.submitList(list)
 }
+
+@BindingAdapter("app:moveTo")
+fun <T, VH : RecyclerView.ViewHolder> RecyclerView.moveTo(i: Int?) {
+    smoothScrollToPosition(i ?: return)
+}
