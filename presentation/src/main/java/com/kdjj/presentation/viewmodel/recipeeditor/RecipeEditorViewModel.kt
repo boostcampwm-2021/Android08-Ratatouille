@@ -44,7 +44,10 @@ internal class RecipeEditorViewModel @Inject constructor(
     private val _liveSaveResult = MutableLiveData<Boolean?>()
     val liveSaveResult: LiveData<Boolean?> get() = _liveSaveResult
 
+    private var isInitialized = false
+
     fun initializeWith(recipe: Recipe?) {
+        if (isInitialized) return
         viewModelScope.launch {
             fetchRecipeTypesUseCase(EmptyRequest)
                 .onSuccess { recipeTypes ->
@@ -68,6 +71,7 @@ internal class RecipeEditorViewModel @Inject constructor(
 
                 }
         }
+        isInitialized = true
     }
 
     private fun notifyStepListChange() {
