@@ -1,4 +1,4 @@
-package com.kdjj.presentation.view.adapter
+package com.kdjj.presentation.view.bindingadapter
 
 import androidx.databinding.InverseMethod
 
