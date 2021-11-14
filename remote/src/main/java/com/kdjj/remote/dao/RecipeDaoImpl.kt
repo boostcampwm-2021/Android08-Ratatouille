@@ -22,10 +22,13 @@ internal class RecipeDaoImpl @Inject constructor(
     
     override suspend fun increaseViewCount(recipe: Recipe): Unit =
         withContext(Dispatchers.IO) {
-            firestore.collection(RECIPE_COLLECTION_ID)
+            val documentRefer = firestore.collection(RECIPE_COLLECTION_ID)
                 .document(recipe.recipeId)
-                .update("viewCount", recipe.viewCount + 1)
-                .await()
+            firestore.runTransaction { transaction ->
+                val snapshot = transaction.get(documentRefer)
+                val newRecipeViewCount = snapshot.getLong("viewCount")!! + 1
+                transaction.update(documentRefer, "viewCount", newRecipeViewCount)
+            }.await()
         }
     
     companion object {
