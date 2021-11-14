@@ -40,4 +40,10 @@ internal class RecipeRepositoryImpl @Inject constructor(
     ): Result<Unit> {
         return recipeRemoteDataSource.increaseViewCount(recipe)
     }
+    
+    override suspend fun deleteRemoteRecipe(
+        recipe: Recipe
+    ): Result<Unit> {
+        return recipeRemoteDataSource.deleteRecipe(recipe)
+    }
 }
