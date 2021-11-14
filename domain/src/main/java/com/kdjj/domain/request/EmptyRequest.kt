@@ -1,3 +1,3 @@
 package com.kdjj.domain.request
 
-class EmptyRequest : Request
+object EmptyRequest : Request
