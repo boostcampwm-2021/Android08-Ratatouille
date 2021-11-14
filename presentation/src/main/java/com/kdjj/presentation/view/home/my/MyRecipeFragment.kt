@@ -1,6 +1,7 @@
 package com.kdjj.presentation.view.home.my
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.kdjj.presentation.R
 import com.kdjj.presentation.databinding.FragmentMyRecipeBinding
 import com.kdjj.presentation.model.MyRecipeItem
@@ -22,7 +24,7 @@ class MyRecipeFragment : Fragment() {
 
     private var _binding: FragmentMyRecipeBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: MyRecipeViewModel by  activityViewModels()
+    private val viewModel: MyRecipeViewModel by activityViewModels()
     private val myRecipeAdapter by lazy { MyRecipeListAdapter(viewModel) }
     private val navigation by lazy { Navigation.findNavController(binding.root) }
 
@@ -53,14 +55,18 @@ class MyRecipeFragment : Fragment() {
 
     private fun setObservers() {
         viewModel.liveSortType.observe(viewLifecycleOwner) { sortType ->
+            Log.d("aaa", "sortType")
             when (sortType) {
-                SortType.SORT_BY_TIME -> viewModel.fetchLocalLatestRecipeList()
+                SortType.SORT_BY_TIME -> viewModel.fetchLocalLatestRecipeList(0)
                 SortType.SORT_BY_FAVORITE -> viewModel.fetchLocalFavoriteRecipeList()
             }
         }
 
-        viewModel.liveAddRecipeHasPressed.observe(viewLifecycleOwner){
-            navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
+        viewModel.liveAddRecipeHasPressed.observe(viewLifecycleOwner) {
+            if (it) {
+                navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
+                viewModel.clearAddRecipeHasPressed()
+            }
         }
     }
 
@@ -68,6 +74,23 @@ class MyRecipeFragment : Fragment() {
         binding.recyclerViewMyRecipe.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = myRecipeAdapter
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    val lastVisibleItemPosition =
+                        (layoutManager as GridLayoutManager).findLastVisibleItemPosition()
+                    val itemCount = myRecipeAdapter.itemCount
+                    Log.d("aaa", lastVisibleItemPosition.toString())
+                    Log.d("aaa", itemCount.toString())
+
+                    if (!canScrollVertically(1) && lastVisibleItemPosition + 1 == itemCount) {
+                        viewModel.fetchMoreRecipeData(lastVisibleItemPosition)
+                        Log.d("aaa", "${canScrollVertically(1)}")
+                        Log.d("aaa", "끝에 도달")
+                    }
+                }
+            })
         }
     }
 

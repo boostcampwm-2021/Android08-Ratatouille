@@ -27,16 +27,26 @@ internal class MyRecipeViewModel @Inject constructor(
     private val _liveAddRecipeHasPressed = MutableLiveData<Boolean>()
     val liveAddRecipeHasPressed: LiveData<Boolean> get() = _liveAddRecipeHasPressed
 
-    private val _liveRecipeItemList = MutableLiveData<List<MyRecipeItem>>()
+    private val _liveRecipeItemList = MutableLiveData<List<MyRecipeItem>>(listOf())
     val liveRecipeItemList: LiveData<List<MyRecipeItem>> get() = _liveRecipeItemList
 
-    fun fetchLocalLatestRecipeList() {
+    fun fetchMoreRecipeData(page: Int){
+        when(_liveSortType.value){
+            SortType.SORT_BY_TIME -> fetchLocalLatestRecipeList(page)
+        }
+    }
+
+    fun fetchLocalLatestRecipeList(page: Int) {
         viewModelScope.launch {
-            latestRecipeUseCase(FetchLocalLatestRecipeListRequest(0))
+            latestRecipeUseCase(FetchLocalLatestRecipeListRequest(page))
                 .onSuccess { latestRecipeList ->
-                    Log.d("aaa", latestRecipeList.toString())
-                    val myRecipeList = latestRecipeList.map { MyRecipeItem.MyRecipe(it) }
-                    _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + myRecipeList
+                    if(_liveRecipeItemList.value?.isEmpty() == true){
+                        val myRecipeList = latestRecipeList.map {  MyRecipeItem.MyRecipe(it) }
+                        _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + myRecipeList
+                    } else {
+                        val myRecipeList = latestRecipeList.map {  MyRecipeItem.MyRecipe(it) }
+                        _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
+                    }
                 }
                 .onFailure {
                     //TODO 데이터 로드에 실패했을 경우 처리
@@ -45,7 +55,7 @@ internal class MyRecipeViewModel @Inject constructor(
     }
 
     fun fetchLocalFavoriteRecipeList() {
-
+        //TODO: Fetch Local Favorite Recipe List
     }
 
     fun moveToRecipeEditorActivity() {
@@ -56,5 +66,9 @@ internal class MyRecipeViewModel @Inject constructor(
         if (_liveSortType.value != sortType) {
             _liveSortType.value = sortType
         }
+    }
+
+    fun clearAddRecipeHasPressed() {
+        _liveAddRecipeHasPressed.value = false
     }
 }
