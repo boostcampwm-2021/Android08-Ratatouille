@@ -31,6 +31,14 @@ internal class RecipeDaoImpl @Inject constructor(
             }.await()
         }
     
+    override suspend fun deleteRecipe(recipe: Recipe): Unit =
+        withContext(Dispatchers.IO){
+            firestore.collection(RECIPE_COLLECTION_ID)
+                .document(recipe.recipeId)
+                .delete()
+                .await()
+        }
+    
     companion object {
         
         const val RECIPE_COLLECTION_ID = "recipe"

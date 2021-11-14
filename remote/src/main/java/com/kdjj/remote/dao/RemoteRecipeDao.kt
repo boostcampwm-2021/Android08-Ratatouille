@@ -11,4 +11,8 @@ internal interface RemoteRecipeDao {
     suspend fun increaseViewCount(
         recipe: Recipe
     )
+    
+    suspend fun deleteRecipe(
+        recipe: Recipe
+    )
 }
