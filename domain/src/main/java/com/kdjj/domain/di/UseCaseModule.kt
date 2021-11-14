@@ -64,4 +64,9 @@ abstract class UseCaseModule {
     internal abstract fun bindUploadRecipeUseCase(
         uploadRecipeUseCase: UploadRecipeUseCase
     ): UseCase<UploadRecipeRequest, Unit>
+    
+    @Binds
+    internal abstract fun bindUpdateRemoteRecipeUseCase(
+        updateRemoteRecipeUseCase: UpdateRemoteRecipeUseCase
+    ): UseCase<UpdateRemoteRecipeRequest, Unit>
 }
