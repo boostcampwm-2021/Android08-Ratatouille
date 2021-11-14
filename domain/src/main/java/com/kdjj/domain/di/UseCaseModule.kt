@@ -59,4 +59,9 @@ abstract class UseCaseModule {
     internal abstract fun bindUpdateRecipeFavoriteUseCase(
         updateRecipeFavoriteUseCase: UpdateRecipeFavoriteUseCase
     ): UseCase<UpdateRecipeFavoriteRequest, Boolean>
+    
+    @Binds
+    internal abstract fun bindUploadRecipeUseCase(
+        uploadRecipeUseCase: UploadRecipeUseCase
+    ): UseCase<UploadRecipeRequest, Unit>
 }
