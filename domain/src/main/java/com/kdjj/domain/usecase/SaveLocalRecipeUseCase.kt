@@ -37,7 +37,7 @@ internal class SaveLocalRecipeUseCase @Inject constructor(
                 step.copy(imgPath = stepImageUri)
             }
             
-            recipeRepository.saveRecipe(
+            recipeRepository.saveLocalRecipe(
                 recipe.copy(
                     imgPath = recipeImageUri,
                     stepList = recipeStepList
