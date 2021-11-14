@@ -4,5 +4,11 @@ import com.kdjj.domain.model.Recipe
 
 interface RecipeRemoteDataSource {
     
-    suspend fun uploadRecipe(recipe: Recipe): Result<Unit>
+    suspend fun uploadRecipe(
+        recipe: Recipe
+    ): Result<Unit>
+    
+    suspend fun increaseViewCount(
+        recipe: Recipe
+    ): Result<Unit>
 }
