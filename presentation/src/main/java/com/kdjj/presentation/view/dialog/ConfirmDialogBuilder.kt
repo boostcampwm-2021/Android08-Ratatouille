@@ -14,6 +14,7 @@ internal object ConfirmDialogBuilder {
             .setView(binding.root)
             .create()
         binding.model = ConfirmDialogModel(dialog, title, content, onConfirmListener)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialog.show()
     }
 }
