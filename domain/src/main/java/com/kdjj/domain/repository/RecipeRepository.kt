@@ -12,7 +12,7 @@ interface RecipeRepository {
         recipe: Recipe
     ): Result<Boolean>
     
-    suspend fun deleteRecipe(
+    suspend fun deleteLocalRecipe(
         recipe: Recipe
     ): Result<Boolean>
     

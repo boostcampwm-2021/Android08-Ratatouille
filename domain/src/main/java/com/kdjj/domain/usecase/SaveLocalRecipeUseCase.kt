@@ -2,15 +2,15 @@ package com.kdjj.domain.usecase
 
 import com.kdjj.domain.repository.RecipeImageRepository
 import com.kdjj.domain.repository.RecipeRepository
-import com.kdjj.domain.request.SaveRecipeRequest
+import com.kdjj.domain.request.SaveLocalRecipeRequest
 import javax.inject.Inject
 
-internal class SaveRecipeUseCase @Inject constructor(
+internal class SaveLocalRecipeUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository,
     private val imageRepository: RecipeImageRepository
-) : UseCase<SaveRecipeRequest, Boolean> {
+) : UseCase<SaveLocalRecipeRequest, Boolean> {
     
-    override suspend fun invoke(request: SaveRecipeRequest): Result<Boolean> =
+    override suspend fun invoke(request: SaveLocalRecipeRequest): Result<Boolean> =
         kotlin.runCatching {
             val recipe = request.recipe
             val recipeImageUri = when (recipe.imgPath.isNotEmpty()) {

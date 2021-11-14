@@ -12,8 +12,8 @@ abstract class UseCaseModule {
     
     @Binds
     internal abstract fun bindDeleteRecipeUseCase(
-        deleteRecipeUseCase: DeleteRecipeUseCase
-    ): UseCase<DeleteRecipeRequest, Boolean>
+        deleteLocalRecipeUseCase: DeleteLocalRecipeUseCase
+    ): UseCase<DeleteLocalRecipeRequest, Boolean>
     
     @Binds
     internal abstract fun bindFetchLocalFavoriteRecipeListUseCase(
@@ -52,13 +52,13 @@ abstract class UseCaseModule {
     
     @Binds
     internal abstract fun bindSaveRecipeUseCase(
-        saveRecipeUseCase: SaveRecipeUseCase
-    ): UseCase<SaveRecipeRequest, Boolean>
+        saveLocalRecipeUseCase: SaveLocalRecipeUseCase
+    ): UseCase<SaveLocalRecipeRequest, Boolean>
     
     @Binds
     internal abstract fun bindUpdateRecipeFavoriteUseCase(
-        updateRecipeFavoriteUseCase: UpdateRecipeFavoriteUseCase
-    ): UseCase<UpdateRecipeFavoriteRequest, Boolean>
+        updateLocalRecipeFavoriteUseCase: UpdateLocalRecipeFavoriteUseCase
+    ): UseCase<UpdateLocalRecipeFavoriteRequest, Boolean>
     
     @Binds
     internal abstract fun bindUploadRecipeUseCase(
