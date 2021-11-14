@@ -10,31 +10,33 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 internal class RecipeTypeLocalDataSourceImpl @Inject constructor(
-	private val recipeTypeDao: RecipeTypeDao
+    private val recipeTypeDao: RecipeTypeDao
 ) : RecipeTypeLocalDataSource {
-	
-	override suspend fun saveRecipeTypeList(recipeTypeList: List<RecipeType>): Result<Boolean> =
-		withContext(Dispatchers.IO) {
-			try {
-				recipeTypeList.map { recipeType ->
-					recipeType.toEntity()
-				}.forEach { recipeTypeEntity ->
-					recipeTypeDao.insertRecipeType(recipeTypeEntity)
-				}
-				Result.success(true)
-			} catch (e: Exception) {
-				Result.failure(Exception(e.message))
-			}
-		}
-	
-	override suspend fun fetchRecipeTypeList(): Result<List<RecipeType>> =
-		withContext(Dispatchers.IO) {
-			try {
-				val recipeTypeList = recipeTypeDao.getAllRecipeTypeList()
-					.map { it.toDomain() }
-				Result.success(recipeTypeList)
-			} catch (e: Exception) {
-				Result.failure(Exception(e.message))
-			}
-		}
+    
+    override suspend fun saveRecipeTypeList(
+        recipeTypeList: List<RecipeType>
+    ): Result<Boolean> =
+        withContext(Dispatchers.IO) {
+            try {
+                recipeTypeList.map { recipeType ->
+                    recipeType.toEntity()
+                }.forEach { recipeTypeEntity ->
+                    recipeTypeDao.insertRecipeType(recipeTypeEntity)
+                }
+                Result.success(true)
+            } catch (e: Exception) {
+                Result.failure(Exception(e.message))
+            }
+        }
+    
+    override suspend fun fetchRecipeTypeList(): Result<List<RecipeType>> =
+        withContext(Dispatchers.IO) {
+            try {
+                val recipeTypeList = recipeTypeDao.getAllRecipeTypeList()
+                    .map { it.toDomain() }
+                Result.success(recipeTypeList)
+            } catch (e: Exception) {
+                Result.failure(Exception(e.message))
+            }
+        }
 }

@@ -14,5 +14,7 @@ abstract class LocalRecipeImageModule {
 	
 	@Binds
 	@Singleton
-	internal abstract fun bindRecipeImageLocalDataSource(recipeImageLocalDataSourceImpl: RecipeImageLocalDataSourceImpl): RecipeImageLocalDataSource
+	internal abstract fun bindRecipeImageLocalDataSource(
+		recipeImageLocalDataSourceImpl: RecipeImageLocalDataSourceImpl
+	): RecipeImageLocalDataSource
 }

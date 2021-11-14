@@ -13,12 +13,16 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RemoteRecipeListModule {
-	
-	@Binds
-	@Singleton
-	internal abstract fun bindRecipeListRemoteDataSource(recipeListRemoteDataSourceImpl: RecipeListRemoteDataSourceImpl): RecipeListRemoteDataSource
-	
-	@Binds
-	@Singleton
-	internal abstract fun bindRecipeListDao(recipeListDaoImpl: RecipeListDaoImpl): RemoteRecipeListDao
+    
+    @Binds
+    @Singleton
+    internal abstract fun bindRecipeListRemoteDataSource(
+        recipeListRemoteDataSourceImpl: RecipeListRemoteDataSourceImpl
+    ): RecipeListRemoteDataSource
+    
+    @Binds
+    @Singleton
+    internal abstract fun bindRecipeListDao(
+        recipeListDaoImpl: RecipeListDaoImpl
+    ): RemoteRecipeListDao
 }

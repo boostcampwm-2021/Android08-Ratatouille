@@ -2,19 +2,19 @@ package com.kdjj.remote.dao
 
 import android.net.Uri
 import com.google.firebase.storage.StorageReference
-
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.lang.Exception
 import javax.inject.Inject
 
 internal class FirebaseStorageDaoImpl @Inject constructor(
     private val storageRef: StorageReference
 ) : FirebaseStorageDao {
-
-    override suspend fun fetchRecipeImage(uri: String): Result<ByteArray> {
+    
+    override suspend fun fetchRecipeImage(
+        uri: String
+    ): Result<ByteArray> {
         return withContext(Dispatchers.IO) {
             try {
                 val byteArray = storageRef.storage
@@ -26,22 +26,25 @@ internal class FirebaseStorageDaoImpl @Inject constructor(
             }
         }
     }
-
-    override suspend fun uploadRecipeImage(uri: String): Result<String>{
-        return withContext(Dispatchers.IO){
+    
+    override suspend fun uploadRecipeImage(
+        uri: String
+    ): Result<String> {
+        return withContext(Dispatchers.IO) {
             try {
                 val file = Uri.fromFile(File(uri))
                 val refer = storageRef.child("images/${file.lastPathSegment}")
                 refer.putFile(file).await()
                 val newUri = refer.downloadUrl.await()
                 Result.success(newUri.toString())
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 Result.failure(e)
             }
         }
     }
-
-    companion object{
+    
+    companion object {
+        
         val MAX_SIZE: Long = 10485760L
     }
 }
