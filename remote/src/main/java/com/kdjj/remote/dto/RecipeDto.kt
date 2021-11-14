@@ -30,3 +30,17 @@ internal fun RecipeEntity.toDomain(): Recipe =
         createTime,
         state
     )
+
+internal fun Recipe.toEntity(): RecipeEntity =
+    RecipeEntity(
+        recipeId,
+        title,
+        type.toEntity(),
+        stuff,
+        imgPath,
+        stepList.map { it.toEntity() },
+        authorId,
+        viewCount,
+        createTime,
+        state
+    )
