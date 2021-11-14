@@ -74,4 +74,9 @@ abstract class UseCaseModule {
     internal abstract fun bindIncreaseRemoteRecipeViewCountUseCase(
         increaseRemoteRecipeViewCountUseCase: IncreaseRemoteRecipeViewCountUseCase
     ): UseCase<IncreaseRemoteRecipeViewCountRequest, Unit>
+    
+    @Binds
+    internal abstract fun bindDeleteRemoteRecipeUseCase(
+        deleteRemoteRecipeUseCase: DeleteRemoteRecipeUseCase
+    ): UseCase<DeleteRemoteRecipeRequest, Unit>
 }
