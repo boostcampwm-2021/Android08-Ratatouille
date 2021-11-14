@@ -15,4 +15,8 @@ interface RecipeRepository {
     suspend fun deleteRecipe(
         recipe: Recipe
     ): Result<Boolean>
+    
+    suspend fun uploadRecipe(
+        recipe: Recipe
+    ): Result<Unit>
 }
