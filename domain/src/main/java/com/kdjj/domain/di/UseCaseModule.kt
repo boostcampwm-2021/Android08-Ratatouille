@@ -11,7 +11,7 @@ import dagger.Module
 abstract class UseCaseModule {
     
     @Binds
-    internal abstract fun bindDeleteRecipeUseCase(
+    internal abstract fun bindDeleteLocalRecipeUseCase(
         deleteLocalRecipeUseCase: DeleteLocalRecipeUseCase
     ): UseCase<DeleteLocalRecipeRequest, Boolean>
     
@@ -51,12 +51,12 @@ abstract class UseCaseModule {
     ): UseCase<FetchRemoteSearchRecipeListRequest, List<Recipe>>
     
     @Binds
-    internal abstract fun bindSaveRecipeUseCase(
+    internal abstract fun bindSaveLocalRecipeUseCase(
         saveLocalRecipeUseCase: SaveLocalRecipeUseCase
     ): UseCase<SaveLocalRecipeRequest, Boolean>
     
     @Binds
-    internal abstract fun bindUpdateRecipeFavoriteUseCase(
+    internal abstract fun bindUpdateLocalRecipeFavoriteUseCase(
         updateLocalRecipeFavoriteUseCase: UpdateLocalRecipeFavoriteUseCase
     ): UseCase<UpdateLocalRecipeFavoriteRequest, Boolean>
     
@@ -69,4 +69,9 @@ abstract class UseCaseModule {
     internal abstract fun bindUpdateRemoteRecipeUseCase(
         updateRemoteRecipeUseCase: UpdateRemoteRecipeUseCase
     ): UseCase<UpdateRemoteRecipeRequest, Unit>
+    
+    @Binds
+    internal abstract fun bindIncreaseRemoteRecipeViewCountUseCase(
+        increaseRemoteRecipeViewCountUseCase: IncreaseRemoteRecipeViewCountUseCase
+    ): UseCase<IncreaseRemoteRecipeViewCountRequest, Unit>
 }
