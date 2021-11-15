@@ -24,9 +24,9 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
 
     inner class AddRecipeViewHolder(val binding: ItemMyRecipeAddRecipeBinding) :
         RecyclerView.ViewHolder(binding.root) {
-            init {
-                binding.myRecipeViewModel = viewModel
-            }
+        init {
+            binding.myRecipeViewModel = viewModel
+        }
     }
 
     override fun getItemViewType(position: Int): Int =
@@ -43,6 +43,7 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
                     parent,
                     false
                 )
+                binding.lifecycleOwner = parent.findViewTreeLifecycleOwner()
                 MyRecipeViewHolder(binding)
             }
             else -> {
@@ -51,6 +52,7 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
                     parent,
                     false
                 )
+                binding.lifecycleOwner = parent.findViewTreeLifecycleOwner()
                 AddRecipeViewHolder(binding)
             }
         }
