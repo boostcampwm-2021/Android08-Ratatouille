@@ -11,6 +11,10 @@
             name="myRecipeItem"
             type="com.kdjj.presentation.model.MyRecipeItem.MyRecipe" />
 
+        <variable
+            name="util"
+            type="com.kdjj.presentation.common.UtilsKt" />
+
         <import type="android.widget.ImageView" />
         <import type="android.view.View" />
     </data>
@@ -83,9 +87,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/myRecipe_textView_title_marginTop"
-                    android:text="소요시간: 120분"
                     android:textColor="@color/light_300"
                     android:textSize="@dimen/myRecipe_textView_timeSize"
+                    calculateTotalTime="@{myRecipeItem.recipe}"
                     app:layout_constraintBottom_toTopOf="@id/textView_myRecipe_description"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -95,7 +99,7 @@
                     android:id="@+id/textView_myRecipe_descriptionTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="재료:"
+                    android:text="@string/recipeStuff"
                     android:textColor="@color/light_300"
                     android:textSize="@dimen/myRecipe_textView_descriptionTitle"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -109,7 +113,7 @@
                     android:layout_marginTop="@dimen/myRecipe_textView_description_marginTop"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:text="이것 저것 요것 겨자 나는 짱이다!!!!!!"
+                    android:text="@{myRecipeItem.recipe.stuff}"
                     android:textColor="@color/light_300"
                     android:textSize="@dimen/myRecipe_textView_description"
                     app:layout_constraintBottom_toBottomOf="parent"
