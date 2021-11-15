@@ -1,5 +1,6 @@
 package com.kdjj.presentation.view.home
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.findNavController
@@ -7,6 +8,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.kdjj.presentation.R
 import com.kdjj.presentation.databinding.ActivityHomeBinding
+import com.kdjj.presentation.view.recipedetail.RecipeDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
