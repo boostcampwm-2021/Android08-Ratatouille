@@ -10,6 +10,8 @@
             type="com.kdjj.presentation.viewmodel.recipedetail.RecipeDetailViewModel" />
 
         <import type="android.view.View" />
+
+        <import type="android.widget.ImageView" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -51,8 +53,9 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/detail_imageView_height"
                     android:contentDescription="@string/stepImage"
-                    android:scaleType="centerCrop"
                     tools:src="@color/dark_100"
+                    app:loadImage="@{viewModel.liveSelectedStep.imgPath}"
+                    android:scaleType="@{viewModel.liveSelectedStep.imgPath.empty ? ImageView.ScaleType.CENTER : ImageView.ScaleType.CENTER_CROP }"
                     app:layout_constraintTop_toBottomOf="@id/recyclerView_detail_timer"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
