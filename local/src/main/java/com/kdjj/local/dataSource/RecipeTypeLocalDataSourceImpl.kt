@@ -1,5 +1,6 @@
 package com.kdjj.local.dataSource
 
+import com.kdjj.data.common.errorMap
 import com.kdjj.data.datasource.RecipeTypeLocalDataSource
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.local.dao.RecipeTypeDao
@@ -17,26 +18,25 @@ internal class RecipeTypeLocalDataSourceImpl @Inject constructor(
         recipeTypeList: List<RecipeType>
     ): Result<Boolean> =
         withContext(Dispatchers.IO) {
-            try {
+            runCatching {
                 recipeTypeList.map { recipeType ->
                     recipeType.toDto()
                 }.forEach { recipeTypeEntity ->
                     recipeTypeDao.insertRecipeType(recipeTypeEntity)
                 }
-                Result.success(true)
-            } catch (e: Exception) {
-                Result.failure(Exception(e.message))
+                true
+            }.errorMap {
+                Exception(it.message)
             }
         }
     
     override suspend fun fetchRecipeTypeList(): Result<List<RecipeType>> =
         withContext(Dispatchers.IO) {
-            try {
-                val recipeTypeList = recipeTypeDao.getAllRecipeTypeList()
+            runCatching {
+                recipeTypeDao.getAllRecipeTypeList()
                     .map { it.toDomain() }
-                Result.success(recipeTypeList)
-            } catch (e: Exception) {
-                Result.failure(Exception(e.message))
+            }.errorMap {
+                Exception(it.message)
             }
         }
 }

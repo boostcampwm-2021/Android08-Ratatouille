@@ -2,6 +2,7 @@ package com.kdjj.remote.dao
 
 import android.net.Uri
 import com.google.firebase.storage.StorageReference
+import com.kdjj.data.common.errorMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -16,13 +17,12 @@ internal class FirebaseStorageServiceImpl @Inject constructor(
         uri: String
     ): Result<ByteArray> {
         return withContext(Dispatchers.IO) {
-            try {
-                val byteArray = storageRef.storage
+            runCatching {
+                storageRef.storage
                     .getReferenceFromUrl(uri)
                     .getBytes(MAX_SIZE).await()
-                Result.success(byteArray)
-            } catch (e: Exception) {
-                Result.failure(e)
+            }.errorMap {
+                Exception(it.message)
             }
         }
     }
@@ -31,14 +31,14 @@ internal class FirebaseStorageServiceImpl @Inject constructor(
         uri: String
     ): Result<String> {
         return withContext(Dispatchers.IO) {
-            try {
+            runCatching {
                 val file = Uri.fromFile(File(uri))
                 val refer = storageRef.child("images/${file.lastPathSegment}")
                 refer.putFile(file).await()
                 val newUri = refer.downloadUrl.await()
-                Result.success(newUri.toString())
-            } catch (e: Exception) {
-                Result.failure(e)
+                newUri.toString()
+            }.errorMap {
+                Exception(it.message)
             }
         }
     }

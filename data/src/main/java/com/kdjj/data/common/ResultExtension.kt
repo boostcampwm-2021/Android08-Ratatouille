@@ -4,10 +4,10 @@ import java.lang.Exception
 
 
 inline fun <T> Result<T>.errorMap(
-    transform: (Throwable?) -> Exception
+    transform: (Throwable) -> Exception
 ): Result<T> {
-    return when {
-        isSuccess -> this
-        else -> { Result.failure(transform.invoke(exceptionOrNull()))}
+    return when (val exception = exceptionOrNull()){
+        null -> this
+        else -> { Result.failure(transform.invoke(exception))}
     }
 }

@@ -1,5 +1,6 @@
 package com.kdjj.local.dataSource
 
+import com.kdjj.data.common.errorMap
 import com.kdjj.data.datasource.RecipeLocalDataSource
 import com.kdjj.domain.model.Recipe
 import com.kdjj.local.dao.RecipeDao
@@ -16,12 +17,12 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
         recipe: Recipe
     ): Result<Boolean> =
         withContext(Dispatchers.IO) {
-            try {
+            runCatching {
                 recipeDao.deleteStepList(recipe.recipeId)
                 recipeDao.insertRecipe(recipe)
-                Result.success(true)
-            } catch (e: Exception) {
-                Result.failure(Exception(e.message))
+                true
+            }.errorMap {
+                Exception(it.message)
             }
         }
     
@@ -29,11 +30,11 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
         recipe: Recipe
     ): Result<Boolean> =
         withContext(Dispatchers.IO) {
-            try {
+            runCatching {
                 recipeDao.updateRecipeMeta(recipe.toDto())
-                Result.success(true)
-            } catch (e: Exception) {
-                Result.failure(Exception(e.message))
+                true
+            }.errorMap {
+                Exception(it.message)
             }
         }
     
@@ -41,11 +42,11 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
         recipe: Recipe
     ): Result<Boolean> =
         withContext(Dispatchers.IO) {
-            try {
+            runCatching {
                 recipeDao.deleteRecipe(recipe.toDto())
-                Result.success(true)
-            } catch (e: Exception) {
-                Result.failure(Exception(e.message))
+                true
+            }.errorMap {
+                Exception(it.message)
             }
         }
 }

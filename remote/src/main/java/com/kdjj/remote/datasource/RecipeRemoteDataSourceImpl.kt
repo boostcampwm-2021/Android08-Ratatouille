@@ -1,5 +1,6 @@
 package com.kdjj.remote.datasource
 
+import com.kdjj.data.common.errorMap
 import com.kdjj.data.datasource.RecipeRemoteDataSource
 import com.kdjj.domain.model.Recipe
 import com.kdjj.remote.dao.RemoteRecipeService
@@ -10,26 +11,23 @@ internal class RecipeRemoteDataSourceImpl @Inject constructor(
 ) : RecipeRemoteDataSource {
     
     override suspend fun uploadRecipe(recipe: Recipe): Result<Unit> =
-        try {
+        runCatching {
             recipeService.uploadRecipe(recipe)
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
+        }.errorMap {
+            Exception(it.message)
         }
     
     override suspend fun increaseViewCount(recipe: Recipe): Result<Unit> =
-        try {
+        runCatching {
             recipeService.increaseViewCount(recipe)
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
+        }.errorMap {
+            Exception(it.message)
         }
     
     override suspend fun deleteRecipe(recipe: Recipe): Result<Unit> =
-        try {
+        runCatching {
             recipeService.deleteRecipe(recipe)
-            Result.success(Unit)
-        }catch(e: Exception){
-            Result.failure(e)
+        }.errorMap {
+            Exception(it.message)
         }
 }

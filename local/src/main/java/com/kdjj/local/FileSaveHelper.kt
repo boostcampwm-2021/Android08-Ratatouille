@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.FileUtils
 import android.util.Log
+import com.kdjj.data.common.errorMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.BufferedInputStream
@@ -21,12 +22,11 @@ class FileSaveHelper @Inject constructor(
 ) {
 
     suspend fun convertToByteArray(uri: String): Result<ByteArray> = withContext(Dispatchers.IO) {
-        try {
+        runCatching {
             val inputStream = contentResolver.openInputStream(Uri.parse(uri))
-            val byteArray = inputStream?.readBytes() ?: throw Exception()
-            Result.success(byteArray)
-        } catch (e: Exception) {
-            Result.failure(e)
+            inputStream?.readBytes() ?: throw Exception()
+        }.errorMap {
+            Exception(it.message)
         }
     }
 
@@ -35,15 +35,14 @@ class FileSaveHelper @Inject constructor(
         fileName: String
     ): Result<String> = withContext(Dispatchers.IO) {
         var fos: FileOutputStream? = null
-        try {
+        runCatching {
             val filePath = "$fileDir/${fileName}.png"
             fos = FileOutputStream(filePath)
             val bitmap = convertByteArrayToBitmap(byteArray)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
-            Result.success(filePath)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Result.failure(e)
+            filePath
+        }.errorMap {
+            Exception(it.message)
         }
     }
 
