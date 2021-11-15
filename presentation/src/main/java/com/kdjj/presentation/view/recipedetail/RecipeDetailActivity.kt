@@ -29,9 +29,9 @@ class RecipeDetailActivity : AppCompatActivity() {
         stepListAdapter = RecipeDetailStepListAdapter(viewModel)
         binding.recyclerViewDetailStep.adapter = stepListAdapter
 
-        viewModel.initializeWith(Recipe(
+        val recipe = Recipe(
             "",
-            "",
+            "레시피 제목",
             RecipeType(1, "기타"),
             "",
             "",
@@ -46,6 +46,11 @@ class RecipeDetailActivity : AppCompatActivity() {
             false,
             0,
             RecipeState.CREATE
-        ))
+        )
+
+        setSupportActionBar(binding.toolbarDetail)
+        title = recipe.title
+
+        viewModel.initializeWith(recipe)
     }
 }
