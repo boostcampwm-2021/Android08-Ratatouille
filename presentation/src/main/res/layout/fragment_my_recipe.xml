@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.kdjj.presentation.view.home.my.SortType" />
+        <import type="com.kdjj.presentation.model.SortType" />
 
         <variable
             name="myViewModel"
