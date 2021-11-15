@@ -13,7 +13,6 @@ internal data class RecipeEntity(
     val authorId: String = "",
     val viewCount: Int = 0,
     val createTime: Long = 0L,
-    val state: RecipeState = RecipeState.CREATE
 )
 
 internal fun RecipeEntity.toDomain(): Recipe =
@@ -28,7 +27,7 @@ internal fun RecipeEntity.toDomain(): Recipe =
         viewCount,
         false,
         createTime,
-        state
+        RecipeState.UPLOAD
     )
 
 internal fun Recipe.toEntity(): RecipeEntity =
@@ -42,5 +41,4 @@ internal fun Recipe.toEntity(): RecipeEntity =
         authorId,
         viewCount,
         createTime,
-        state
     )
