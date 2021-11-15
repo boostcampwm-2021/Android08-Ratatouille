@@ -21,6 +21,11 @@ class RecipeDetailViewModel @Inject constructor(
 
     fun initializeWith(recipe: Recipe) {
         _liveStepList.value = recipe.stepList
-        _liveSelectedStep.value = recipe.stepList[0]
+        selectStep(recipe.stepList[0])
+    }
+
+    fun selectStep(step: RecipeStep) {
+        _liveSelectedStep.value = step
+        println(step)
     }
 }

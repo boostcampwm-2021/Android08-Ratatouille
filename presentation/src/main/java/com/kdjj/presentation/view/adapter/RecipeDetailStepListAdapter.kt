@@ -1,7 +1,9 @@
 package com.kdjj.presentation.view.adapter
 
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import com.kdjj.domain.model.RecipeStep
@@ -31,7 +33,7 @@ class RecipeDetailStepListAdapter(
             }
 
     override fun initViewHolder(binding: ItemDetailStepBinding, getItemPosition: () -> Int) {
-
+        binding.viewModel = viewModel
     }
 
     override fun bind(
@@ -39,5 +41,11 @@ class RecipeDetailStepListAdapter(
         item: RecipeStep
     ) {
         holder.binding.step = item
+        holder.binding.lifecycleOwner?.let { owner ->
+            viewModel.liveSelectedStep.observe(owner) { step ->
+                holder.binding.textViewDetailStepTitle.paintFlags =
+                    if (step == item) Paint.UNDERLINE_TEXT_FLAG else 0
+            }
+        }
     }
 }

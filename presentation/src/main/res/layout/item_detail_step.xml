@@ -6,9 +6,16 @@
         <variable
             name="step"
             type="com.kdjj.domain.model.RecipeStep" />
+
+        <variable
+            name="viewModel"
+            type="com.kdjj.presentation.viewmodel.recipedetail.RecipeDetailViewModel" />
+
+        <import type="android.graphics.Typeface" />
     </data>
 
     <TextView
+        android:id="@+id/textView_detail_stepTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="1"
@@ -20,6 +27,8 @@
         android:text="@{step.name}"
         android:textSize="@dimen/detail_stepList_textSize"
         android:textColor="@color/light_100"
+        android:typeface="@{Typeface.defaultFromStyle(viewModel.liveSelectedStep == step ? Typeface.BOLD : Typeface.NORMAL)}"
+        android:onClick="@{() -> viewModel.selectStep(step)}"
         tools:text="재료 준비"
         tools:background="@color/dark_500" />
 </layout>
