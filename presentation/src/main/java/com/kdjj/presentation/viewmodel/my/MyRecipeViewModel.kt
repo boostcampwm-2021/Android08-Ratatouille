@@ -33,8 +33,8 @@ internal class MyRecipeViewModel @Inject constructor(
     private val _liveRecipeItemList = MutableLiveData<List<MyRecipeItem>>(listOf())
     val liveRecipeItemList: LiveData<List<MyRecipeItem>> get() = _liveRecipeItemList
 
-    private val _liveRecipeItemSelected = MutableLiveData<MyRecipeItem.MyRecipe>()
-    val liveRecipeItemSelected: LiveData<MyRecipeItem.MyRecipe> get() = _liveRecipeItemSelected
+    private val _liveRecipeItemSelected = MutableLiveData<MyRecipeItem.MyRecipe?>()
+    val liveRecipeItemSelected: LiveData<MyRecipeItem.MyRecipe?> get() = _liveRecipeItemSelected
 
     private val _liveItemDoubleClicked = MutableLiveData<Event<MyRecipeItem.MyRecipe>>()
     val liveItemDoubleClicked: LiveData<Event<MyRecipeItem.MyRecipe>> get() = _liveItemDoubleClicked
@@ -70,6 +70,7 @@ internal class MyRecipeViewModel @Inject constructor(
                         val myRecipeList = latestRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + myRecipeList
                         _liveSortType.value = SortType.SORT_BY_TIME
+                        _liveRecipeItemSelected.value = null
                     }
                 }
                 .onFailure {
@@ -89,6 +90,7 @@ internal class MyRecipeViewModel @Inject constructor(
                         val myRecipeList = favoriteRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + myRecipeList
                         _liveSortType.value = SortType.SORT_BY_FAVORITE
+                        _liveRecipeItemSelected.value = null
                     }
                 }
                 .onFailure {
@@ -108,6 +110,7 @@ internal class MyRecipeViewModel @Inject constructor(
                         val myRecipeList = titleRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + myRecipeList
                         _liveSortType.value = SortType.SORT_BY_NAME
+                        _liveRecipeItemSelected.value = null
                     }
                 }
                 .onFailure {
