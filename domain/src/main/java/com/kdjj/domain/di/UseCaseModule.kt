@@ -2,7 +2,7 @@ package com.kdjj.domain.di
 
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeType
-import com.kdjj.domain.request.*
+import com.kdjj.domain.model.request.*
 import com.kdjj.domain.usecase.*
 import dagger.Binds
 import dagger.Module

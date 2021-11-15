@@ -2,7 +2,7 @@ package com.kdjj.domain.usecase
 
 import com.kdjj.domain.repository.RecipeImageRepository
 import com.kdjj.domain.repository.RecipeRepository
-import com.kdjj.domain.request.SaveLocalRecipeRequest
+import com.kdjj.domain.model.request.SaveLocalRecipeRequest
 import javax.inject.Inject
 
 internal class SaveLocalRecipeUseCase @Inject constructor(

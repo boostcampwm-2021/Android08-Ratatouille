@@ -1,7 +1,7 @@
 package com.kdjj.domain.usecase
 
 import com.kdjj.domain.repository.RecipeRepository
-import com.kdjj.domain.request.UpdateLocalRecipeFavoriteRequest
+import com.kdjj.domain.model.request.UpdateLocalRecipeFavoriteRequest
 import javax.inject.Inject
 
 internal class UpdateLocalRecipeFavoriteUseCase @Inject constructor(

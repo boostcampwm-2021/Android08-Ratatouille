@@ -5,7 +5,7 @@
 //import androidx.lifecycle.LiveData
 //import androidx.lifecycle.Observer
 //import com.kdjj.domain.model.RecipeType
-//import com.kdjj.domain.request.EmptyRequest
+//import com.kdjj.domain.model.request.EmptyRequest
 //import com.kdjj.domain.request.RecipeRequest
 //import com.kdjj.domain.usecase.FetchRecipeTypesUseCase
 //import com.kdjj.domain.usecase.UseCase

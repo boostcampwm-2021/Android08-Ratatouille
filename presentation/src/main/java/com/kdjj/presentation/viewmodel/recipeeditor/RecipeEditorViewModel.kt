@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeStepType
 import com.kdjj.domain.model.RecipeType
-import com.kdjj.domain.request.EmptyRequest
-import com.kdjj.domain.request.SaveLocalRecipeRequest
+import com.kdjj.domain.model.request.EmptyRequest
+import com.kdjj.domain.model.request.SaveLocalRecipeRequest
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.IdGenerator
 import com.kdjj.presentation.common.RecipeStepValidator

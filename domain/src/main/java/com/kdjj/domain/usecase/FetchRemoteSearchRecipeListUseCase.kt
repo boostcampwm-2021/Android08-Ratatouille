@@ -2,7 +2,7 @@ package com.kdjj.domain.usecase
 
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.repository.RecipeListRepository
-import com.kdjj.domain.request.FetchRemoteSearchRecipeListRequest
+import com.kdjj.domain.model.request.FetchRemoteSearchRecipeListRequest
 import javax.inject.Inject
 
 internal class FetchRemoteSearchRecipeListUseCase @Inject constructor(

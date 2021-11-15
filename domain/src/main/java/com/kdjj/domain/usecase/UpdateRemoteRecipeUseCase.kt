@@ -1,7 +1,7 @@
 package com.kdjj.domain.usecase
 
 import com.kdjj.domain.repository.RecipeRepository
-import com.kdjj.domain.request.UpdateRemoteRecipeRequest
+import com.kdjj.domain.model.request.UpdateRemoteRecipeRequest
 import javax.inject.Inject
 
 class UpdateRemoteRecipeUseCase @Inject constructor(
