@@ -84,7 +84,22 @@ internal class MyRecipeViewModel @Inject constructor(
     }
 
     private fun fetchLocalTitleRecipeList(page: Int) {
-        //TODO: Fetch Local Title Recipe List
+        viewModelScope.launch {
+            titleRecipeUseCase(FetchLocalTitleRecipeListRequest(page))
+                .onSuccess { titleRecipeList ->
+                    if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_NAME) {
+                        val myRecipeList = titleRecipeList.map { MyRecipeItem.MyRecipe(it) }
+                        _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
+                    } else {
+                        val myRecipeList = titleRecipeList.map { MyRecipeItem.MyRecipe(it) }
+                        _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + myRecipeList
+                        _liveSortType.value = SortType.SORT_BY_NAME
+                    }
+                }
+                .onFailure {
+                    //TODO 데이터 로드에 실패했을 경우 처리
+                }
+        }
     }
 
     fun moveToRecipeEditorActivity() {
