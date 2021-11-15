@@ -9,7 +9,7 @@ import com.kdjj.presentation.common.calculateUpdateTime
 import com.kdjj.presentation.databinding.ItemOthersRecipeBinding
 
 class OthersRecipeListAdapter(
-) : BaseListAdapter<Recipe, ItemOthersRecipeBinding>(RecipeDiffCallback()) {
+) : SingleViewTypeListAdapter<Recipe, ItemOthersRecipeBinding>(RecipeDiffCallback()) {
 
     override fun createBinding(parent: ViewGroup): ItemOthersRecipeBinding =
         ItemOthersRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -24,7 +24,7 @@ class OthersRecipeListAdapter(
     }
 
     override fun bind(
-        holder: BaseViewHolder<Recipe, ItemOthersRecipeBinding>,
+        holder: SingleViewTypeViewHolder<Recipe, ItemOthersRecipeBinding>,
         item: Recipe,
     ) {
        with(holder.binding) {
