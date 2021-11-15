@@ -1,7 +1,6 @@
 package com.kdjj.presentation.view.home.others
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -57,7 +56,6 @@ class OthersRecipeFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        Log.d("Test", System.currentTimeMillis().toString())
         val adapter = OthersRecipeListAdapter()
         binding.recyclerViewOthersRecipe.adapter = adapter
         adapter.submitList(
