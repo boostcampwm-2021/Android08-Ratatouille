@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.kdjj.presentation.viewmodel.recipedetail.RecipeDetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,6 +70,8 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     tools:listitem="@layout/item_detail_step"
+                    app:submitList="@{viewModel.liveStepList}"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintWidth_default="percent"
                     app:layout_constraintWidth_min="150dp"
                     app:layout_constraintWidth_max="300dp"
