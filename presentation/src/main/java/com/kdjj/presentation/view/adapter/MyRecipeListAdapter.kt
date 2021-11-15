@@ -2,6 +2,7 @@ package com.kdjj.presentation.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,7 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: MyRecipeItem.MyRecipe) {
+            binding.myRecipeViewModel = viewModel
             binding.myRecipeItem = item
         }
     }
@@ -43,6 +45,7 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
                     parent,
                     false
                 )
+                binding.lifecycleOwner = parent.findViewTreeLifecycleOwner()
                 MyRecipeViewHolder(binding)
             }
             else -> {
@@ -51,6 +54,7 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
                     parent,
                     false
                 )
+                binding.lifecycleOwner = parent.findViewTreeLifecycleOwner()
                 AddRecipeViewHolder(binding)
             }
         }

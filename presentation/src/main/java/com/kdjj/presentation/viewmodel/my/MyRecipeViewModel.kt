@@ -1,5 +1,6 @@
 package com.kdjj.presentation.viewmodel.my
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,8 +33,16 @@ internal class MyRecipeViewModel @Inject constructor(
     private val _liveRecipeItemList = MutableLiveData<List<MyRecipeItem>>(listOf())
     val liveRecipeItemList: LiveData<List<MyRecipeItem>> get() = _liveRecipeItemList
 
+    private val _liveRecipeItemSelected = MutableLiveData<MyRecipeItem.MyRecipe>()
+    val liveRecipeItemSelected: LiveData<MyRecipeItem.MyRecipe> get() = _liveRecipeItemSelected
+
     init {
         setSortType(SortType.SORT_BY_TIME)
+    }
+
+    fun recipeItemSelected(selectedRecipe: MyRecipeItem.MyRecipe){
+        Log.d("aaa", selectedRecipe.toString())
+        _liveRecipeItemSelected.value = selectedRecipe
     }
 
     fun fetchMoreRecipeData(page: Int) {

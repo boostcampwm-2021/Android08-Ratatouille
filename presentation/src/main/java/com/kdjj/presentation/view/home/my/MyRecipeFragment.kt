@@ -35,7 +35,7 @@ class MyRecipeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_recipe, container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.myViewModel = viewModel
         return binding.root
     }
