@@ -3,12 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <variable
+            name="myRecipeViewModel"
+            type="com.kdjj.presentation.viewmodel.my.MyRecipeViewModel" />
 
         <variable
             name="myRecipeItem"
             type="com.kdjj.presentation.model.MyRecipeItem.MyRecipe" />
 
         <import type="android.widget.ImageView" />
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,6 +27,9 @@
             android:layout_marginBottom="@dimen/myRecipe_cardView_marginBottom"
             app:cardBackgroundColor="@color/light_500"
             app:cardCornerRadius="@dimen/myRecipe_cardView_corner"
+            android:onClick="@{ ()-> myRecipeViewModel.recipeItemSelected(myRecipeItem)}"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -37,9 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:clickable="true"
                     android:contentDescription="@string/addRecipeButton"
-                    android:focusable="true"
                     android:scaleType="@{myRecipeItem.recipe.imgPath.empty ? ImageView.ScaleType.CENTER : ImageView.ScaleType.CENTER_CROP}"
                     app:loadImage="@{myRecipeItem.recipe.imgPath}" />
 
@@ -70,7 +75,7 @@
                     android:id="@+id/group_myRecipe"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
+                    android:visibility="@{myRecipeViewModel.liveRecipeItemSelected == myRecipeItem ? View.VISIBLE : View.GONE}"
                     app:constraint_referenced_ids="textView_myRecipe_time, textView_myRecipe_descriptionTitle, textView_myRecipe_description" />
 
                 <TextView
