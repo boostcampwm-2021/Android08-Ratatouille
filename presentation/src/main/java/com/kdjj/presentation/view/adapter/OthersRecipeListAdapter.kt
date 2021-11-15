@@ -11,13 +11,12 @@ import com.kdjj.presentation.databinding.ItemOthersRecipeBinding
 class OthersRecipeListAdapter(
 ) : BaseListAdapter<Recipe, ItemOthersRecipeBinding>(RecipeDiffCallback()) {
 
-    override fun createBinding(parent: ViewGroup, viewType: Int): ItemOthersRecipeBinding =
+    override fun createBinding(parent: ViewGroup): ItemOthersRecipeBinding =
         ItemOthersRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
     override fun initViewHolder(
         binding: ItemOthersRecipeBinding,
         getItemPosition: () -> Int,
-        viewType: Int
     ) {
         binding.root.setOnClickListener {
             //todo: clicklisntener
@@ -27,7 +26,6 @@ class OthersRecipeListAdapter(
     override fun bind(
         holder: BaseViewHolder<Recipe, ItemOthersRecipeBinding>,
         item: Recipe,
-        viewType: Int
     ) {
        with(holder.binding) {
            textViewOthersItemTitle.text = item.title
