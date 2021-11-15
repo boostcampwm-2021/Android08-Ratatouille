@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
-        
+
+        <variable
+            name="myRecipeItem"
+            type="com.kdjj.presentation.model.MyRecipeItem.MyRecipe" />
+
+        <import type="android.widget.ImageView" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView_myRecipe"
             android:layout_width="@dimen/myRecipe_cardView_width"
@@ -33,30 +40,77 @@
                     android:clickable="true"
                     android:contentDescription="@string/addRecipeButton"
                     android:focusable="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/sample" />
+                    android:scaleType="@{myRecipeItem.recipe.imgPath.empty ? ImageView.ScaleType.CENTER : ImageView.ScaleType.CENTER_CROP}"
+                    app:loadImage="@{myRecipeItem.recipe.imgPath}" />
 
                 <TextView
                     android:layout_width="@dimen/myRecipe_cardView_width"
                     android:layout_height="@dimen/myRecipe_cardView_height"
+                    android:background="@color/dark_500_tp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:background="@color/dark_500_tp"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/textView_myRecipe_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="레시피 제목"
+                    android:text="@{myRecipeItem.recipe.title}"
                     android:textColor="@color/light_300"
+                    android:textSize="@dimen/myRecipe_textView_titleSize"
                     android:textStyle="bold"
-                    android:textSize="14dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/textView_myRecipe_time"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/group_myRecipe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:constraint_referenced_ids="textView_myRecipe_time, textView_myRecipe_descriptionTitle, textView_myRecipe_description" />
+
+                <TextView
+                    android:id="@+id/textView_myRecipe_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/myRecipe_textView_title_marginTop"
+                    android:text="소요시간: 120분"
+                    android:textColor="@color/light_300"
+                    android:textSize="@dimen/myRecipe_textView_timeSize"
+                    app:layout_constraintBottom_toTopOf="@id/textView_myRecipe_description"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textView_myRecipe_title" />
+
+                <TextView
+                    android:id="@+id/textView_myRecipe_descriptionTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="재료:"
+                    android:textColor="@color/light_300"
+                    android:textSize="@dimen/myRecipe_textView_descriptionTitle"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/textView_myRecipe_description"
+                    app:layout_constraintTop_toTopOf="@id/textView_myRecipe_description" />
+
+                <TextView
+                    android:id="@+id/textView_myRecipe_description"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/myRecipe_textView_description_marginTop"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="이것 저것 요것 겨자 나는 짱이다!!!!!!"
+                    android:textColor="@color/light_300"
+                    android:textSize="@dimen/myRecipe_textView_description"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/textView_myRecipe_descriptionTitle"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textView_myRecipe_time" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>

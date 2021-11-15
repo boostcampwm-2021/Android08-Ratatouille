@@ -39,6 +39,12 @@
     <dimen name="myRecipe_cardView_marginStart">16dp</dimen>
     <dimen name="myRecipe_cardView_corner">15dp</dimen>
     <dimen name="myRecipe_cardView_marginBottom">12dp</dimen>
+    <dimen name="myRecipe_textView_titleSize">14sp</dimen>
+    <dimen name="myRecipe_textView_timeSize">12sp</dimen>
+    <dimen name="myRecipe_textView_descriptionTitle">14sp</dimen>
+    <dimen name="myRecipe_textView_description">14sp</dimen>
+    <dimen name="myRecipe_textView_title_marginTop">8dp</dimen>
+    <dimen name="myRecipe_textView_description_marginTop">12dp</dimen>
 
     <dimen name="dialog_title_textSize">18sp</dimen>
     <dimen name="dialog_content_textSize">14sp</dimen>
@@ -48,6 +54,7 @@
     <dimen name="dialog_button_marginTop">32dp</dimen>
     <dimen name="dialog_button_padding">16dp</dimen>
     <dimen name="dialog_corner">16dp</dimen>
+
     <dimen name="detail_timer_size">80dp</dimen>
     <dimen name="detail_timer_corner">12dp</dimen>
     <dimen name="detail_timerTitle_textSize">12sp</dimen>
@@ -69,4 +76,5 @@
     <dimen name="detail_stepList_textSize">14sp</dimen>
     <dimen name="detail_stepItem_paddingVertical">8dp</dimen>
     <dimen name="detail_stepItem_paddingHorizontal">16dp</dimen>
+
 </resources>
