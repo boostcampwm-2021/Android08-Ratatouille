@@ -18,7 +18,7 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: MyRecipeItem.MyRecipe) {
-            binding.textViewMyRecipeTitle.text = item.recipe.title
+            binding.myRecipeItem = item
         }
     }
 
