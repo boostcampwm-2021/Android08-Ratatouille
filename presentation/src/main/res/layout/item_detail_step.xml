@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:maxLines="1"
+    android:ellipsize="end"
+    android:paddingTop="@dimen/detail_stepItem_paddingVertical"
+    android:paddingBottom="@dimen/detail_stepItem_paddingVertical"
+    android:paddingStart="@dimen/detail_stepItem_paddingHorizontal"
+    android:paddingEnd="@dimen/detail_stepItem_paddingHorizontal"
+    android:textSize="@dimen/detail_stepList_textSize"
+    android:textColor="@color/light_100"
+    tools:text="재료 준비"
+    tools:background="@color/dark_500" />
