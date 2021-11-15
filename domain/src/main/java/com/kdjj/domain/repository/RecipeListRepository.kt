@@ -18,7 +18,7 @@ interface RecipeListRepository {
     ): Result<List<Recipe>>
     
     suspend fun fetchLocalLatestRecipeListAfter(
-        page: Int
+        index: Int
     ): Result<List<Recipe>>
     
     suspend fun fetchLocalFavoriteRecipeListAfter(
@@ -27,6 +27,10 @@ interface RecipeListRepository {
     
     suspend fun fetchLocalSearchRecipeListAfter(
         keyword: String,
+        index: Int
+    ): Result<List<Recipe>>
+
+    suspend fun fetchLocalTitleRecipeListAfter(
         index: Int
     ): Result<List<Recipe>>
 }

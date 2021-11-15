@@ -28,9 +28,9 @@ internal class RecipeListRepositoryImpl @Inject constructor(
         recipeListRemoteDataSource.fetchSearchRecipeListAfter(keyword, lastVisibleTitle)
     
     override suspend fun fetchLocalLatestRecipeListAfter(
-        page: Int
+        index: Int
     ): Result<List<Recipe>> =
-        recipeListLocalDataSource.fetchLatestRecipeListAfter(page)
+        recipeListLocalDataSource.fetchLatestRecipeListAfter(index)
     
     override suspend fun fetchLocalFavoriteRecipeListAfter(
         index: Int
@@ -42,4 +42,10 @@ internal class RecipeListRepositoryImpl @Inject constructor(
         index: Int
     ): Result<List<Recipe>> =
         recipeListLocalDataSource.fetchSearchRecipeListAfter(keyword, index)
+
+    override suspend fun fetchLocalTitleRecipeListAfter(
+        index: Int
+    ): Result<List<Recipe>> =
+        recipeListLocalDataSource.fetchTitleListAfter(index)
+
 }

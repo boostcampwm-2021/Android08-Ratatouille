@@ -10,6 +10,6 @@ internal class FetchLocalLatestRecipeListUseCase @Inject constructor(
 ) : UseCase<FetchLocalLatestRecipeListRequest, @JvmSuppressWildcards List<Recipe>> {
 
     override suspend fun invoke(request: FetchLocalLatestRecipeListRequest): Result<List<Recipe>> =
-        recipeListRepository.fetchLocalLatestRecipeListAfter(request.page)
+        recipeListRepository.fetchLocalLatestRecipeListAfter(request.index)
 
 }
