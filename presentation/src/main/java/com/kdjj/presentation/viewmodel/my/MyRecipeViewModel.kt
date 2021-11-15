@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class MyRecipeViewModel @Inject constructor(
     private val latestRecipeUseCase: UseCase<FetchLocalLatestRecipeListRequest, List<Recipe>>,
-    private val favoriteRecipeUseCase: UseCase<FetchLocalFavoriteRecipeListRequest, List<Recipe>>
+    private val favoriteRecipeUseCase: UseCase<FetchLocalFavoriteRecipeListRequest, List<Recipe>>,
 ) : ViewModel() {
 
     private val _liveSortType = MutableLiveData<SortType>()
@@ -38,22 +38,22 @@ internal class MyRecipeViewModel @Inject constructor(
     fun fetchMoreRecipeData(page: Int) {
         when (_liveSortType.value) {
             SortType.SORT_BY_TIME -> fetchLocalLatestRecipeList(page)
+            SortType.SORT_BY_FAVORITE -> fetchLocalFavoriteRecipeList(page)
+            else -> fetchLocalTitleRecipeList(page)
         }
     }
 
     private fun fetchLocalLatestRecipeList(page: Int) {
         viewModelScope.launch {
-            Log.d("aaa", "fetch Locla latest")
             latestRecipeUseCase(FetchLocalLatestRecipeListRequest(page))
                 .onSuccess { latestRecipeList ->
                     if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_TIME) {
-                        Log.d("aaa", "after")
                         val myRecipeList = latestRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
                     } else {
-                        Log.d("aaa", "first")
                         val myRecipeList = latestRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + myRecipeList
+                        _liveSortType.value = SortType.SORT_BY_TIME
                     }
                 }
                 .onFailure {
@@ -63,13 +63,26 @@ internal class MyRecipeViewModel @Inject constructor(
     }
 
     private fun fetchLocalFavoriteRecipeList(page: Int) {
-        //TODO: Fetch Local Favorite Recipe List
-        Log.d("aaa", "favorite")
+        viewModelScope.launch {
+            favoriteRecipeUseCase(FetchLocalFavoriteRecipeListRequest(page))
+                .onSuccess { favoriteRecipeList ->
+                    if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_FAVORITE) {
+                        val myRecipeList = favoriteRecipeList.map { MyRecipeItem.MyRecipe(it) }
+                        _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
+                    } else {
+                        val myRecipeList = favoriteRecipeList.map { MyRecipeItem.MyRecipe(it) }
+                        _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + myRecipeList
+                        _liveSortType.value = SortType.SORT_BY_FAVORITE
+                    }
+                }
+                .onFailure {
+                    //TODO 데이터 로드에 실패했을 경우 처리
+                }
+        }
     }
 
     private fun fetchLocalTitleRecipeList(page: Int) {
         //TODO: Fetch Local Title Recipe List
-        Log.d("aaa", "title")
     }
 
     fun moveToRecipeEditorActivity() {
@@ -83,7 +96,6 @@ internal class MyRecipeViewModel @Inject constructor(
                 SortType.SORT_BY_FAVORITE -> fetchLocalFavoriteRecipeList(0)
                 else -> fetchLocalTitleRecipeList(0)
             }
-            _liveSortType.value = sortType
         }
     }
 }

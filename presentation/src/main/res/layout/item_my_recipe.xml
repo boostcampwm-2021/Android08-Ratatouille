@@ -46,7 +46,7 @@
                     android:background="@color/dark_500_tp"/>
 
                 <TextView
-                    android:id="@+id/textview_myRecipe_title"
+                    android:id="@+id/textView_myRecipe_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="레시피 제목"
