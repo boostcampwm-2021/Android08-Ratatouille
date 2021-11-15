@@ -42,7 +42,6 @@ internal class SaveLocalRecipeUseCase @Inject constructor(
                     imgPath = recipeImageUri,
                     stepList = recipeStepList
                 )
-            )
-            true
+            ).getOrThrow()
         }
 }

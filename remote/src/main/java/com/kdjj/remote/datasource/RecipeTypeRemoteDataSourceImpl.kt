@@ -1,5 +1,6 @@
 package com.kdjj.remote.datasource
 
+import com.kdjj.data.common.errorMap
 import com.kdjj.data.datasource.RecipeTypeRemoteDataSource
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.remote.dao.FirestoreService
@@ -10,11 +11,11 @@ internal class RecipeTypeRemoteDataSourceImpl @Inject constructor(
 ) : RecipeTypeRemoteDataSource {
     
     override suspend fun fetchRecipeTypeList(): Result<List<RecipeType>> =
-        try {
+        runCatching {
             val recipeTypeList = fireStoreService.fetchRecipeTypes()
             if (recipeTypeList.isEmpty()) throw Exception("Can't fetch recipe type.")
-            Result.success(recipeTypeList)
-        } catch (e: Exception) {
-            Result.failure(e)
+            recipeTypeList
+        }.errorMap {
+            Exception(it.message)
         }
 }
