@@ -11,14 +11,14 @@ import com.kdjj.domain.model.RecipeState
     tableName = "RecipeMeta",
     foreignKeys = [
         ForeignKey(
-            entity = RecipeTypeEntity::class,
+            entity = RecipeTypeDto::class,
             parentColumns = arrayOf("recipeTypeId"),
             childColumns = arrayOf("recipeTypeId"),
             onDelete = ForeignKey.RESTRICT
         )
     ]
 )
-internal data class RecipeMetaEntity(
+internal data class RecipeMetaDto(
     @PrimaryKey
     val recipeMetaId: String,
     val title: String,
@@ -32,8 +32,8 @@ internal data class RecipeMetaEntity(
     val recipeTypeId: Long
 )
 
-internal fun Recipe.toEntity(): RecipeMetaEntity =
-    RecipeMetaEntity(
+internal fun Recipe.toDto(): RecipeMetaDto =
+    RecipeMetaDto(
         recipeId,
         title,
         stuff,

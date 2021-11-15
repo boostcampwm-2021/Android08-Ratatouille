@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.kdjj.local.database.RecipeDatabase
-import com.kdjj.local.dto.RecipeTypeEntity
+import com.kdjj.local.dto.RecipeTypeDto
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,7 +35,7 @@ object LocalModule {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
                 CoroutineScope(Dispatchers.IO).launch {
-                    RecipeTypeEntity.defaultTypes.forEach { recipeType ->
+                    RecipeTypeDto.defaultTypes.forEach { recipeType ->
                         db.execSQL("INSERT INTO RecipeType VALUES (${recipeType.recipeTypeId}, '${recipeType.title}');")
                     }
                 }

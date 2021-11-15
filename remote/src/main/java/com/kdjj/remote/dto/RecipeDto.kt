@@ -3,19 +3,19 @@ package com.kdjj.remote.dto
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeState
 
-internal data class RecipeEntity(
+internal data class RecipeDto(
     val recipeId: String = "",
     val title: String = "",
-    val type: RecipeTypeEntity = RecipeTypeEntity(0, ""),
+    val type: RecipeTypeDto = RecipeTypeDto(0, ""),
     val stuff: String = "",
     val imgPath: String = "",
-    val stepList: List<RecipeStepEntity> = listOf(),
+    val stepList: List<RecipeStepDto> = listOf(),
     val authorId: String = "",
     val viewCount: Int = 0,
     val createTime: Long = 0L,
 )
 
-internal fun RecipeEntity.toDomain(): Recipe =
+internal fun RecipeDto.toDomain(): Recipe =
     Recipe(
         recipeId,
         title,
@@ -30,14 +30,14 @@ internal fun RecipeEntity.toDomain(): Recipe =
         RecipeState.UPLOAD
     )
 
-internal fun Recipe.toEntity(): RecipeEntity =
-    RecipeEntity(
+internal fun Recipe.toDto(): RecipeDto =
+    RecipeDto(
         recipeId,
         title,
-        type.toEntity(),
+        type.toDto(),
         stuff,
         imgPath,
-        stepList.map { it.toEntity() },
+        stepList.map { it.toDto() },
         authorId,
         viewCount,
         createTime,

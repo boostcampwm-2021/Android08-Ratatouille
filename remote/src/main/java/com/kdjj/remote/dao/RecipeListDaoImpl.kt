@@ -4,7 +4,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
 import com.kdjj.domain.model.Recipe
-import com.kdjj.remote.dto.RecipeEntity
+import com.kdjj.remote.dto.RecipeDto
 import com.kdjj.remote.dto.toDomain
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -26,7 +26,7 @@ internal class RecipeListDaoImpl @Inject constructor(
                 .get()
                 .await()
                 .map { queryDocumentSnapshot ->
-                    queryDocumentSnapshot.toObject<RecipeEntity>().toDomain()
+                    queryDocumentSnapshot.toObject<RecipeDto>().toDomain()
                 }
         }
     
@@ -41,7 +41,7 @@ internal class RecipeListDaoImpl @Inject constructor(
                 .get()
                 .await()
                 .map { queryDocumentSnapshot ->
-                    queryDocumentSnapshot.toObject<RecipeEntity>().toDomain()
+                    queryDocumentSnapshot.toObject<RecipeDto>().toDomain()
                 }
         }
     
@@ -59,7 +59,7 @@ internal class RecipeListDaoImpl @Inject constructor(
                 .get()
                 .await()
                 .map { queryDocumentSnapshot ->
-                    queryDocumentSnapshot.toObject<RecipeEntity>().toDomain()
+                    queryDocumentSnapshot.toObject<RecipeDto>().toDomain()
                 }
         }
     

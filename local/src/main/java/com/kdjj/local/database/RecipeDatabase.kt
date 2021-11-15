@@ -5,12 +5,12 @@ import androidx.room.RoomDatabase
 import com.kdjj.local.dao.RecipeDao
 import com.kdjj.local.dao.RecipeListDao
 import com.kdjj.local.dao.RecipeTypeDao
-import com.kdjj.local.dto.RecipeMetaEntity
-import com.kdjj.local.dto.RecipeStepEntity
-import com.kdjj.local.dto.RecipeTypeEntity
+import com.kdjj.local.dto.RecipeMetaDto
+import com.kdjj.local.dto.RecipeStepDto
+import com.kdjj.local.dto.RecipeTypeDto
 
 @Database(
-    entities = [RecipeMetaEntity::class, RecipeTypeEntity::class, RecipeStepEntity::class],
+    entities = [RecipeMetaDto::class, RecipeTypeDto::class, RecipeStepDto::class],
     version = 1,
     exportSchema = false
 )

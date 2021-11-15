@@ -10,14 +10,14 @@ import com.kdjj.domain.model.RecipeStepType
     tableName = "RecipeStep",
     foreignKeys = [
         ForeignKey(
-            entity = RecipeMetaEntity::class,
+            entity = RecipeMetaDto::class,
             parentColumns = arrayOf("recipeMetaId"),
             childColumns = arrayOf("parentRecipeId"),
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
-internal data class RecipeStepEntity(
+internal data class RecipeStepDto(
     @PrimaryKey
     val stepId: String,
     val name: String,
@@ -29,7 +29,7 @@ internal data class RecipeStepEntity(
     val parentRecipeId: String,
 )
 
-internal fun RecipeStepEntity.toDomain() =
+internal fun RecipeStepDto.toDomain() =
     RecipeStep(
         stepId,
         name,
@@ -39,8 +39,8 @@ internal fun RecipeStepEntity.toDomain() =
         seconds
     )
 
-internal fun RecipeStep.toEntity(recipeMetaID: String, order: Int): RecipeStepEntity =
-    RecipeStepEntity(
+internal fun RecipeStep.toDto(recipeMetaID: String, order: Int): RecipeStepDto =
+    RecipeStepDto(
         stepId,
         name,
         order,
