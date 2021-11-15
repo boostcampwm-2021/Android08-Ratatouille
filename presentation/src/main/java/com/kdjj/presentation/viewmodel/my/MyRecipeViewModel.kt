@@ -1,14 +1,14 @@
 package com.kdjj.presentation.viewmodel.my
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kdjj.domain.model.Recipe
-import com.kdjj.domain.request.FetchLocalFavoriteRecipeListRequest
-import com.kdjj.domain.request.FetchLocalLatestRecipeListRequest
+import com.kdjj.domain.model.request.FetchLocalFavoriteRecipeListRequest
+import com.kdjj.domain.model.request.FetchLocalLatestRecipeListRequest
 import com.kdjj.domain.usecase.UseCase
+import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.MyRecipeItem
 import com.kdjj.presentation.view.home.my.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,14 +24,14 @@ internal class MyRecipeViewModel @Inject constructor(
     private val _liveSortType = MutableLiveData(SortType.SORT_BY_TIME)
     val liveSortType: LiveData<SortType> get() = _liveSortType
 
-    private val _liveAddRecipeHasPressed = MutableLiveData<Boolean>()
-    val liveAddRecipeHasPressed: LiveData<Boolean> get() = _liveAddRecipeHasPressed
+    private val _liveAddRecipeHasPressed = MutableLiveData<Event<Unit>>()
+    val liveAddRecipeHasPressed: LiveData<Event<Unit>> get() = _liveAddRecipeHasPressed
 
     private val _liveRecipeItemList = MutableLiveData<List<MyRecipeItem>>(listOf())
     val liveRecipeItemList: LiveData<List<MyRecipeItem>> get() = _liveRecipeItemList
 
-    fun fetchMoreRecipeData(page: Int){
-        when(_liveSortType.value){
+    fun fetchMoreRecipeData(page: Int) {
+        when (_liveSortType.value) {
             SortType.SORT_BY_TIME -> fetchLocalLatestRecipeList(page)
         }
     }
@@ -40,11 +40,11 @@ internal class MyRecipeViewModel @Inject constructor(
         viewModelScope.launch {
             latestRecipeUseCase(FetchLocalLatestRecipeListRequest(page))
                 .onSuccess { latestRecipeList ->
-                    if(_liveRecipeItemList.value?.isEmpty() == true){
-                        val myRecipeList = latestRecipeList.map {  MyRecipeItem.MyRecipe(it) }
+                    if (_liveRecipeItemList.value?.isEmpty() == true) {
+                        val myRecipeList = latestRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + myRecipeList
                     } else {
-                        val myRecipeList = latestRecipeList.map {  MyRecipeItem.MyRecipe(it) }
+                        val myRecipeList = latestRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
                     }
                 }
@@ -54,12 +54,12 @@ internal class MyRecipeViewModel @Inject constructor(
         }
     }
 
-    fun fetchLocalFavoriteRecipeList() {
+    fun fetchLocalFavoriteRecipeList(page: Int) {
         //TODO: Fetch Local Favorite Recipe List
     }
 
     fun moveToRecipeEditorActivity() {
-        _liveAddRecipeHasPressed.value = true
+        _liveAddRecipeHasPressed.value = Event(Unit)
     }
 
     fun setSortType(sortType: SortType) {
@@ -68,7 +68,7 @@ internal class MyRecipeViewModel @Inject constructor(
         }
     }
 
-    fun clearAddRecipeHasPressed() {
-        _liveAddRecipeHasPressed.value = false
-    }
+//    fun clearAddRecipeHasPressed() {
+//        _liveAddRecipeHasPressed.value = false
+//    }
 }
