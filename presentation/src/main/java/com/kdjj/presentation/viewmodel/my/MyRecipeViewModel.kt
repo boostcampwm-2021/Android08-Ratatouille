@@ -36,13 +36,19 @@ internal class MyRecipeViewModel @Inject constructor(
     private val _liveRecipeItemSelected = MutableLiveData<MyRecipeItem.MyRecipe>()
     val liveRecipeItemSelected: LiveData<MyRecipeItem.MyRecipe> get() = _liveRecipeItemSelected
 
+    private val _liveItemDoubleClicked = MutableLiveData<Event<MyRecipeItem.MyRecipe>>()
+    val liveItemDoubleClicked: LiveData<Event<MyRecipeItem.MyRecipe>> get() = _liveItemDoubleClicked
+
     init {
         setSortType(SortType.SORT_BY_TIME)
     }
 
     fun recipeItemSelected(selectedRecipe: MyRecipeItem.MyRecipe){
-        Log.d("aaa", selectedRecipe.toString())
-        _liveRecipeItemSelected.value = selectedRecipe
+        if(_liveRecipeItemSelected.value != selectedRecipe){
+            _liveRecipeItemSelected.value = selectedRecipe
+        } else {
+            _liveItemDoubleClicked.value = Event(selectedRecipe)
+        }
     }
 
     fun fetchMoreRecipeData(page: Int) {

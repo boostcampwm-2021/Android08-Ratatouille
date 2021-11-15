@@ -58,6 +58,10 @@ class MyRecipeFragment : Fragment() {
         viewModel.liveAddRecipeHasPressed.observe(viewLifecycleOwner, EventObserver {
             navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
         })
+
+        viewModel.liveItemDoubleClicked.observe(viewLifecycleOwner, EventObserver {
+            Log.d("aaa", it.toString() )
+        })
     }
 
     private fun initRecyclerView() {
