@@ -11,33 +11,27 @@ abstract class BaseListAdapter<T, VDB : ViewDataBinding> constructor(
 ) : ListAdapter<T, BaseViewHolder<T, VDB>>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<T, VDB> {
-        val binding = createBinding(parent, viewType)
-        return BaseViewHolder(binding, { b, getItemPosition, itemViewType -> initViewHolder(b, getItemPosition, itemViewType)} )
+        val binding = createBinding(parent)
+        return BaseViewHolder(binding, { b, getItemPosition -> initViewHolder(b, getItemPosition)} )
     }
 
-    protected abstract fun createBinding(parent: ViewGroup, viewType: Int): VDB
+    protected abstract fun createBinding(parent: ViewGroup): VDB
 
-    protected open fun initViewHolder(binding: VDB, getItemPosition: () -> Int, viewType: Int) {}
+    protected open fun initViewHolder(binding: VDB, getItemPosition: () -> Int) {}
 
     override fun onBindViewHolder(holder: BaseViewHolder<T, VDB>, position: Int) {
-        bind(holder, getItem(position), holder.itemViewType)
+        bind(holder, getItem(position))
     }
 
-    protected abstract fun bind(holder: BaseViewHolder<T, VDB>, item: T, viewType: Int)
+    protected abstract fun bind(holder: BaseViewHolder<T, VDB>, item: T)
 }
 
-open class BaseViewHolder<T, VDB : ViewDataBinding> constructor(
+class BaseViewHolder<T, VDB : ViewDataBinding> constructor(
     val binding: VDB,
-    onViewHolderInit: (VDB, getAdapterPosition: () -> Int, viewType: Int) -> Unit,
+    onViewHolderInit: (VDB, getAdapterPosition: () -> Int) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        onViewHolderInit.invoke(binding, { bindingAdapterPosition }, itemViewType)
-    }
-
-    open fun bind(item: T) {
-    }
-
-    open fun onViewRecycled() {
+        onViewHolderInit.invoke(binding, { bindingAdapterPosition })
     }
 }
