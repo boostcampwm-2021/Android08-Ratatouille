@@ -8,6 +8,8 @@
         <variable
             name="viewModel"
             type="com.kdjj.presentation.viewmodel.recipedetail.RecipeDetailViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -85,6 +87,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:text="@{viewModel.liveSelectedStep.name}"
                     android:textSize="@dimen/detail_step_textSize"
                     android:textColor="@color/dark_500"
                     android:textStyle="bold"
@@ -98,6 +101,7 @@
                     android:id="@+id/textView_detail_stepContent"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:text="@{viewModel.liveSelectedStep.description}"
                     android:textSize="@dimen/detail_step_textSize"
                     android:textColor="@color/dark_500"
                     android:layout_margin="@dimen/detail_step_margin"
@@ -113,6 +117,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/detail_btnAddTimer_margin"
+            android:visibility="@{viewModel.liveSelectedStep.seconds == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -127,7 +132,7 @@
                     android:id="@+id/textView_detail_timerDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/expectedTime"
+                    android:text="@{@string/expectedTime(viewModel.liveSelectedStep.seconds / 60, viewModel.liveSelectedStep.seconds % 60)}"
                     android:textSize="@dimen/detail_timerDescription_textSize"
                     android:textColor="@color/light_100"
                     android:layout_margin="@dimen/detail_timerDescription_margin"
