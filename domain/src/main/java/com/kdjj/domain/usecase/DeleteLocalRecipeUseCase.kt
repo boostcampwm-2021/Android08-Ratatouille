@@ -1,7 +1,7 @@
 package com.kdjj.domain.usecase
 
 import com.kdjj.domain.repository.RecipeRepository
-import com.kdjj.domain.request.DeleteLocalRecipeRequest
+import com.kdjj.domain.model.request.DeleteLocalRecipeRequest
 import javax.inject.Inject
 
 internal class DeleteLocalRecipeUseCase @Inject constructor(

@@ -1,7 +1,7 @@
 package com.kdjj.domain.usecase
 
 import com.kdjj.domain.repository.RecipeRepository
-import com.kdjj.domain.request.IncreaseRemoteRecipeViewCountRequest
+import com.kdjj.domain.model.request.IncreaseRemoteRecipeViewCountRequest
 import javax.inject.Inject
 
 class IncreaseRemoteRecipeViewCountUseCase @Inject constructor(

@@ -1,4 +1,4 @@
-package com.kdjj.domain.request
+package com.kdjj.domain.model.request
 
 import com.kdjj.domain.model.Recipe
 
