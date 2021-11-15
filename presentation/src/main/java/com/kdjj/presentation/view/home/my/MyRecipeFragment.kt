@@ -55,13 +55,6 @@ class MyRecipeFragment : Fragment() {
     }
 
     private fun setObservers() {
-        viewModel.liveSortType.observe(viewLifecycleOwner) { sortType ->
-            when (sortType) {
-                SortType.SORT_BY_TIME -> viewModel.fetchLocalLatestRecipeList(0)
-                SortType.SORT_BY_FAVORITE -> viewModel.fetchLocalFavoriteRecipeList(0)
-            }
-        }
-
         viewModel.liveAddRecipeHasPressed.observe(viewLifecycleOwner, EventObserver {
             navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
         })
