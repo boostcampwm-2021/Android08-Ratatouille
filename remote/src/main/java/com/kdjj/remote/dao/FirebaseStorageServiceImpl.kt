@@ -8,9 +8,9 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 
-internal class FirebaseStorageDaoImpl @Inject constructor(
+internal class FirebaseStorageServiceImpl @Inject constructor(
     private val storageRef: StorageReference
-) : FirebaseStorageDao {
+) : FirebaseStorageService {
     
     override suspend fun fetchRecipeImage(
         uri: String

@@ -1,7 +1,7 @@
 package com.kdjj.remote.recipe
 
 import com.kdjj.domain.model.RecipeType
-import com.kdjj.remote.dao.FirestoreDaoImpl
+import com.kdjj.remote.dao.FirestoreServiceImpl
 import com.kdjj.remote.datasource.RecipeTypeRemoteDataSourceImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -12,7 +12,7 @@ import org.mockito.Mockito.mock
 
 class RecipeTypeRemoteDataSourceImplTest {
 	
-	private lateinit var mockFireStoreDaoImpl: FirestoreDaoImpl
+	private lateinit var mockFireStoreDaoImpl: FirestoreServiceImpl
 	private lateinit var recipeRemoteDataSourceImpl: RecipeTypeRemoteDataSourceImpl
 	private val testRecipeTypeList = listOf(
 		RecipeType(1, "한식"),
@@ -23,7 +23,7 @@ class RecipeTypeRemoteDataSourceImplTest {
 	@Before
 	fun setup() {
 		// given
-		mockFireStoreDaoImpl = mock(FirestoreDaoImpl::class.java)
+		mockFireStoreDaoImpl = mock(FirestoreServiceImpl::class.java)
 		recipeRemoteDataSourceImpl = RecipeTypeRemoteDataSourceImpl(mockFireStoreDaoImpl)
 	}
 	

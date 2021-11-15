@@ -2,18 +2,18 @@ package com.kdjj.remote.datasource
 
 import com.kdjj.data.datasource.RecipeListRemoteDataSource
 import com.kdjj.domain.model.Recipe
-import com.kdjj.remote.dao.RemoteRecipeListDao
+import com.kdjj.remote.dao.RemoteRecipeListService
 import javax.inject.Inject
 
 internal class RecipeListRemoteDataSourceImpl @Inject constructor(
-    private val recipeListDao: RemoteRecipeListDao,
+    private val recipeListService: RemoteRecipeListService,
 ) : RecipeListRemoteDataSource {
     
     override suspend fun fetchLatestRecipeListAfter(
         lastVisibleCreateTime: Long
     ): Result<List<Recipe>> =
         try {
-            val recipeList = recipeListDao.fetchLatestRecipeListAfter(lastVisibleCreateTime)
+            val recipeList = recipeListService.fetchLatestRecipeListAfter(lastVisibleCreateTime)
             Result.success(recipeList)
         } catch (e: Exception) {
             Result.failure(e)
@@ -23,7 +23,7 @@ internal class RecipeListRemoteDataSourceImpl @Inject constructor(
         lastVisibleViewCount: Int
     ): Result<List<Recipe>> =
         try {
-            val recipeList = recipeListDao.fetchPopularRecipeListAfter(lastVisibleViewCount)
+            val recipeList = recipeListService.fetchPopularRecipeListAfter(lastVisibleViewCount)
             Result.success(recipeList)
         } catch (e: Exception) {
             Result.failure(e)
@@ -34,7 +34,7 @@ internal class RecipeListRemoteDataSourceImpl @Inject constructor(
         lastVisibleTitle: String
     ): Result<List<Recipe>> =
         try {
-            val recipeList = recipeListDao.fetchSearchRecipeListAfter(keyword, lastVisibleTitle)
+            val recipeList = recipeListService.fetchSearchRecipeListAfter(keyword, lastVisibleTitle)
             Result.success(recipeList)
         } catch (e: Exception) {
             Result.failure(e)

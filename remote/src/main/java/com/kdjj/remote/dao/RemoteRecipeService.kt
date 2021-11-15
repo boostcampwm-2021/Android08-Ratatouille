@@ -2,7 +2,7 @@ package com.kdjj.remote.dao
 
 import com.kdjj.domain.model.Recipe
 
-internal interface RemoteRecipeDao {
+internal interface RemoteRecipeService {
     
     suspend fun uploadRecipe(
         recipe: Recipe

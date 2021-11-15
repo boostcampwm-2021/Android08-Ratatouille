@@ -1,8 +1,8 @@
 package com.kdjj.remote.di
 
 import com.kdjj.data.datasource.RecipeListRemoteDataSource
-import com.kdjj.remote.dao.RecipeListDaoImpl
-import com.kdjj.remote.dao.RemoteRecipeListDao
+import com.kdjj.remote.dao.RecipeListServiceImpl
+import com.kdjj.remote.dao.RemoteRecipeListService
 import com.kdjj.remote.datasource.RecipeListRemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module
@@ -23,6 +23,6 @@ abstract class RemoteRecipeListModule {
     @Binds
     @Singleton
     internal abstract fun bindRecipeListDao(
-        recipeListDaoImpl: RecipeListDaoImpl
-    ): RemoteRecipeListDao
+        recipeListDaoImpl: RecipeListServiceImpl
+    ): RemoteRecipeListService
 }

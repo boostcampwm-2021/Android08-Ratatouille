@@ -1,6 +1,6 @@
 package com.kdjj.remote.recipe
 
-import com.kdjj.remote.dao.FirebaseStorageDaoImpl
+import com.kdjj.remote.dao.FirebaseStorageServiceImpl
 import com.kdjj.remote.datasource.RecipeImageRemoteDataSourceImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -11,14 +11,14 @@ import org.mockito.Mockito.mock
 
 class RecipeImageRemoteDataSourceImplTest {
 	
-	private lateinit var mockFireStorageDaoImpl: FirebaseStorageDaoImpl
+	private lateinit var mockFireStorageDaoImpl: FirebaseStorageServiceImpl
 	private lateinit var recipeImageRemoteDataSourceImpl: RecipeImageRemoteDataSourceImpl
 	private val testUri = "this is test uri"
 	private val testByteArray = testUri.toByteArray()
 	
 	@Before
 	fun setup() {
-		mockFireStorageDaoImpl = mock(FirebaseStorageDaoImpl::class.java)
+		mockFireStorageDaoImpl = mock(FirebaseStorageServiceImpl::class.java)
 		recipeImageRemoteDataSourceImpl = RecipeImageRemoteDataSourceImpl(mockFireStorageDaoImpl)
 	}
 	
