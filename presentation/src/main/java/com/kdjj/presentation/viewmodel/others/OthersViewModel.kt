@@ -103,11 +103,14 @@ class OthersViewModel @Inject constructor(
 
     private fun onRecipeListFetched(result: Result<List<Recipe>>) {
         result.onSuccess { list ->
-            _liveRecipeList.value?.plus(list) ?: run {
-                _liveRecipeList.value = list
+            Log.d("Test", "onRecipeListFetched success")
+            _liveRecipeList.value?.let {
+                if (it.isEmpty()) _liveRecipeList.value = list
+                else _liveRecipeList.value = it.plus(list)
             }
         }.onFailure {
             // view 에게 알리기
+            Log.d("Test", "onRecipeListFetched fail")
             _liveFetchLock.value = false
         }
     }
