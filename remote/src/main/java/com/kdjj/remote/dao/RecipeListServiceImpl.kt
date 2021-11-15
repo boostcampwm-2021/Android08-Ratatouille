@@ -11,9 +11,9 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-internal class RecipeListDaoImpl @Inject constructor(
+internal class RecipeListServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore
-) : RemoteRecipeListDao {
+) : RemoteRecipeListService {
     
     override suspend fun fetchLatestRecipeListAfter(
         lastVisibleCreateTime: Long

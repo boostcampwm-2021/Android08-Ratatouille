@@ -10,9 +10,9 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-internal class FirestoreDaoImpl @Inject constructor(
+internal class FirestoreServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore
-) : FirestoreDao {
+) : FirestoreService {
     
     override suspend fun fetchRecipeTypes(): List<RecipeType> =
         withContext(Dispatchers.IO) {

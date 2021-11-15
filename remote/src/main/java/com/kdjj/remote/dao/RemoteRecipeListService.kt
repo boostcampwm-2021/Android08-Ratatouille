@@ -2,7 +2,7 @@ package com.kdjj.remote.dao
 
 import com.kdjj.domain.model.Recipe
 
-internal interface RemoteRecipeListDao {
+internal interface RemoteRecipeListService {
     
     suspend fun fetchLatestRecipeListAfter(
         lastVisibleCreateTime: Long

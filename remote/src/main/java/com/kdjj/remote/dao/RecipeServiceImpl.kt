@@ -8,9 +8,9 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-internal class RecipeDaoImpl @Inject constructor(
+internal class RecipeServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore
-) : RemoteRecipeDao {
+) : RemoteRecipeService {
     
     override suspend fun uploadRecipe(recipe: Recipe): Unit =
         withContext(Dispatchers.IO) {
