@@ -9,8 +9,8 @@ import com.kdjj.local.dto.RecipeDto
 internal interface RecipeListDao {
 
     @Transaction
-    @Query("SELECT * FROM RecipeMeta ORDER BY createTime ASC LIMIT :pageSize OFFSET :page")
-    suspend fun fetchLatestRecipeList(pageSize: Int, page: Int): List<RecipeDto>
+    @Query("SELECT * FROM RecipeMeta ORDER BY createTime ASC LIMIT :pageSize OFFSET :index")
+    suspend fun fetchLatestRecipeList(pageSize: Int, index: Int): List<RecipeDto>
 
     @Transaction
     @Query("SELECT * FROM RecipeMeta WHERE isFavorite = :favorite ORDER BY createTime ASC LIMIT :pageSize OFFSET :index")
@@ -19,4 +19,8 @@ internal interface RecipeListDao {
     @Transaction
     @Query("SELECT * FROM RecipeMeta WHERE title LIKE :keyword LIMIT :pageSize OFFSET :index")
     suspend fun fetchSearchRecipeList(pageSize: Int, keyword: String, index: Int): List<RecipeDto>
+
+    @Transaction
+    @Query("SELECT * FROM RecipeMeta ORDER BY title LIMIT :pageSize OFFSET :index")
+    suspend fun fetchTitleRecipeList(pageSize: Int, index: Int): List<RecipeDto>
 }
