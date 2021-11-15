@@ -1,4 +1,4 @@
-package com.kdjj.presentation.view.home.my
+package com.kdjj.presentation.model
 
 enum class SortType {
     SORT_BY_TIME,

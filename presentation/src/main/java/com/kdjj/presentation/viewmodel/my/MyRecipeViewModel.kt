@@ -1,6 +1,5 @@
 package com.kdjj.presentation.viewmodel.my
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +11,7 @@ import com.kdjj.domain.model.request.FetchLocalTitleRecipeListRequest
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.MyRecipeItem
-import com.kdjj.presentation.view.home.my.SortType
+import com.kdjj.presentation.model.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
