@@ -20,7 +20,8 @@ internal class FirebaseStorageServiceImpl @Inject constructor(
             runCatching {
                 storageRef.storage
                     .getReferenceFromUrl(uri)
-                    .getBytes(MAX_SIZE).await()
+                    .getBytes(MAX_SIZE)
+                    .await()
             }.errorMap {
                 Exception(it.message)
             }
