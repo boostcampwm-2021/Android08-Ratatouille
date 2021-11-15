@@ -2,10 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kdjj.presentation">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18"/>
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
 
     <application>
+        <activity
+            android:name=".view.recipedetail.RecipeDetailActivity"
+            android:exported="false" />
         <activity
             android:name=".view.home.HomeActivity"
             android:exported="false" />
@@ -21,7 +25,6 @@
             android:authorities="com.kdjj.ratatouille.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
-
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/fileprovider" />
