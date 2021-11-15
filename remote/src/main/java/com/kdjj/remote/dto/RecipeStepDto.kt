@@ -3,7 +3,7 @@ package com.kdjj.remote.dto
 import com.kdjj.domain.model.RecipeStep
 import com.kdjj.domain.model.RecipeStepType
 
-internal data class RecipeStepEntity(
+internal data class RecipeStepDto(
     val stepId: String = "",
     val name: String = "",
     val type: RecipeStepType = RecipeStepType.FRY,
@@ -12,7 +12,7 @@ internal data class RecipeStepEntity(
     val seconds: Int = 0
 )
 
-internal fun RecipeStepEntity.toDomain(): RecipeStep =
+internal fun RecipeStepDto.toDomain(): RecipeStep =
     RecipeStep(
         stepId,
         name,
@@ -22,8 +22,8 @@ internal fun RecipeStepEntity.toDomain(): RecipeStep =
         seconds
     )
 
-internal fun RecipeStep.toEntity(): RecipeStepEntity =
-    RecipeStepEntity(
+internal fun RecipeStep.toDto(): RecipeStepDto =
+    RecipeStepDto(
         stepId,
         name,
         type,

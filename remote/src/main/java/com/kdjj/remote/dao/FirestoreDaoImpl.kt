@@ -3,7 +3,7 @@ package com.kdjj.remote.dao
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
 import com.kdjj.domain.model.RecipeType
-import com.kdjj.remote.dto.RecipeTypeEntity
+import com.kdjj.remote.dto.RecipeTypeDto
 import com.kdjj.remote.dto.toDomain
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -20,7 +20,7 @@ internal class FirestoreDaoImpl @Inject constructor(
                 .get()
                 .await()
                 .map { queryDocumentSnapshot ->
-                    queryDocumentSnapshot.toObject<RecipeTypeEntity>().toDomain()
+                    queryDocumentSnapshot.toObject<RecipeTypeDto>().toDomain()
                 }
         }
     

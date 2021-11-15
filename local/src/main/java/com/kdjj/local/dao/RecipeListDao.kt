@@ -3,20 +3,20 @@ package com.kdjj.local.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import com.kdjj.local.dto.RecipeEntity
+import com.kdjj.local.dto.RecipeDto
 
 @Dao
 internal interface RecipeListDao {
 
     @Transaction
     @Query("SELECT * FROM RecipeMeta ORDER BY createTime LIMIT :pageSize OFFSET :page")
-    suspend fun fetchLatestRecipeList(pageSize: Int, page: Int): List<RecipeEntity>
+    suspend fun fetchLatestRecipeList(pageSize: Int, page: Int): List<RecipeDto>
 
     @Transaction
     @Query("SELECT * FROM RecipeMeta WHERE isFavorite = :favorite ORDER BY createTime LIMIT :pageSize OFFSET :index")
-    suspend fun fetchFavoriteRecipeList(pageSize: Int, index: Int, favorite:Boolean = true): List<RecipeEntity>
+    suspend fun fetchFavoriteRecipeList(pageSize: Int, index: Int, favorite:Boolean = true): List<RecipeDto>
 
     @Transaction
     @Query("SELECT * FROM RecipeMeta WHERE title LIKE :keyword LIMIT :pageSize OFFSET :index")
-    suspend fun fetchSearchRecipeList(pageSize: Int, keyword: String, index: Int): List<RecipeEntity>
+    suspend fun fetchSearchRecipeList(pageSize: Int, keyword: String, index: Int): List<RecipeDto>
 }
