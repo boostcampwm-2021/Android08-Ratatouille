@@ -28,11 +28,8 @@ class OthersRecipeListAdapter(
         item: Recipe,
     ) {
        with(holder.binding) {
-           textViewOthersItemTitle.text = item.title
-           textViewOthersItemStuffValue.text = item.stuff
-           textViewOthersItemViewCount.text = item.viewCount.toString()
-           textViewOthersItemTimeValue.text = calculateTotalTime(item)
-           textViewOthersItemUpdateTime.text = calculateUpdateTime(item)
+           recipe = item
+           executePendingBindings()
        }
     }
 }

@@ -37,5 +37,5 @@
     <string name="expectedTime">예상 소요 시간: %s분 %s초</string>
     <string name="timerMinSec">%02d:%02d</string>
 
-
+    <string name="total_time">소요시간</string>
 </resources>
