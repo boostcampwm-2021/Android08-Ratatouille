@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.kdjj.domain.model.*
 import com.kdjj.presentation.R
 import com.kdjj.presentation.databinding.ActivityRecipeDetailBinding
 import com.kdjj.presentation.view.adapter.RecipeDetailStepListAdapter
 import com.kdjj.presentation.view.adapter.RecipeDetailTimerListAdapter
+import com.kdjj.presentation.view.adapter.RecipeEditorListAdapter
 import com.kdjj.presentation.viewmodel.recipedetail.RecipeDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -22,6 +25,27 @@ class RecipeDetailActivity : AppCompatActivity() {
     private lateinit var stepListAdapter: RecipeDetailStepListAdapter
     private lateinit var timerListAdapter: RecipeDetailTimerListAdapter
 
+    private val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(
+        ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT,
+        ItemTouchHelper.UP
+    ) {
+
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            val fromPos = viewHolder.absoluteAdapterPosition
+            val toPos = target.absoluteAdapterPosition
+            viewModel.moveTimer(fromPos, toPos)
+            return true
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            viewModel.removeTimerAt(viewHolder.absoluteAdapterPosition)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_recipe_detail)
@@ -33,6 +57,7 @@ class RecipeDetailActivity : AppCompatActivity() {
 
         timerListAdapter = RecipeDetailTimerListAdapter(viewModel)
         binding.recyclerViewDetailTimer.adapter = timerListAdapter
+        ItemTouchHelper(itemTouchCallback).attachToRecyclerView(binding.recyclerViewDetailTimer)
 
         val recipe = Recipe(
             "",
