@@ -6,13 +6,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kdjj.domain.model.Recipe
+import com.kdjj.domain.model.exception.NetworkException
 import com.kdjj.domain.model.request.FetchRemoteLatestRecipeListRequest
 import com.kdjj.domain.model.request.FetchRemotePopularRecipeListRequest
 import com.kdjj.domain.usecase.UseCase
+import com.kdjj.presentation.common.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,6 +39,9 @@ class OthersViewModel @Inject constructor(
         _liveFetchLock.value = false
     }
 
+    private var _eventException = MutableLiveData<Event<Throwable>>()
+    val eventException: LiveData<Event<Throwable>> get() = _eventException
+
     init {
         Log.d("Test", "OthersViewModel init")
         setChecked(OthersSortType.LATEST)
@@ -56,6 +62,12 @@ class OthersViewModel @Inject constructor(
         fetchingJob?.cancel()
         _liveFetchLock.value = false
         _liveRecipeList.value = listOf()
+    }
+
+    fun refreshList() {
+        Log.d("Test", "OthersViewModel refreshList")
+        initFetching()
+        fetchNextRecipeListPage()
     }
 
     fun fetchNextRecipeListPage() {
@@ -115,6 +127,7 @@ class OthersViewModel @Inject constructor(
         }.onFailure {
             // view 에게 알리기
             _liveFetchLock.value = false
+            _eventException.value = Event(it)
             Log.d("Test", "onRecipeListFetched fail")
         }
     }
