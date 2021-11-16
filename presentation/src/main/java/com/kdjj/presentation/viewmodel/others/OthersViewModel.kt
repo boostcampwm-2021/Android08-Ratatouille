@@ -11,6 +11,8 @@ import com.kdjj.domain.model.request.FetchRemoteLatestRecipeListRequest
 import com.kdjj.domain.model.request.FetchRemotePopularRecipeListRequest
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.Event
+import com.kdjj.presentation.model.OthersRecipeModel
+import com.kdjj.presentation.model.toOthersRecipeModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -30,8 +32,8 @@ class OthersViewModel @Inject constructor(
     private var _liveFetchLock = MutableLiveData(false)
     val liveFetchLock: LiveData<Boolean> get() = _liveFetchLock
 
-    private var _liveRecipeList = MutableLiveData<List<Recipe>>()
-    val liveRecipeList: LiveData<List<Recipe>> get() = _liveRecipeList
+    private var _liveRecipeList = MutableLiveData<List<OthersRecipeModel>>()
+    val liveRecipeList: LiveData<List<OthersRecipeModel>> get() = _liveRecipeList
 
     private var fetchingJob: Job? = null
 
@@ -124,8 +126,9 @@ class OthersViewModel @Inject constructor(
                     _liveFetchLock.value = false
                     return
                 }
-                if (it.isEmpty()) _liveRecipeList.value = list
-                else _liveRecipeList.value = it.plus(list)
+                val othersRecipeModelList = list.map { recipe -> recipe.toOthersRecipeModel() }
+                if (it.isEmpty()) _liveRecipeList.value = othersRecipeModelList
+                else _liveRecipeList.value = it.plus(othersRecipeModelList)
             }
         }.onFailure {
             // view 에게 알리기

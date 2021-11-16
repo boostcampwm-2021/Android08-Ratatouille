@@ -7,9 +7,10 @@ import com.kdjj.domain.model.Recipe
 import com.kdjj.presentation.common.calculateTotalTime
 import com.kdjj.presentation.common.calculateUpdateTime
 import com.kdjj.presentation.databinding.ItemOthersRecipeBinding
+import com.kdjj.presentation.model.OthersRecipeModel
 
 class OthersRecipeListAdapter(
-) : SingleViewTypeListAdapter<Recipe, ItemOthersRecipeBinding>(RecipeDiffCallback()) {
+) : SingleViewTypeListAdapter<OthersRecipeModel, ItemOthersRecipeBinding>(OthersRecipeModelDiffCallback()) {
 
     override fun createBinding(parent: ViewGroup): ItemOthersRecipeBinding =
         ItemOthersRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -24,8 +25,8 @@ class OthersRecipeListAdapter(
     }
 
     override fun bind(
-        holder: SingleViewTypeViewHolder<Recipe, ItemOthersRecipeBinding>,
-        item: Recipe,
+        holder: SingleViewTypeViewHolder<OthersRecipeModel, ItemOthersRecipeBinding>,
+        item: OthersRecipeModel,
     ) {
        with(holder.binding) {
            recipe = item
@@ -34,11 +35,11 @@ class OthersRecipeListAdapter(
     }
 }
 
-class RecipeDiffCallback : DiffUtil.ItemCallback<Recipe>() {
+class OthersRecipeModelDiffCallback : DiffUtil.ItemCallback<OthersRecipeModel>() {
 
-    override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe): Boolean =
+    override fun areItemsTheSame(oldItem: OthersRecipeModel, newItem: OthersRecipeModel): Boolean =
         oldItem.recipeId == newItem.recipeId
 
-    override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean =
+    override fun areContentsTheSame(oldItem: OthersRecipeModel, newItem: OthersRecipeModel): Boolean =
         true
 }

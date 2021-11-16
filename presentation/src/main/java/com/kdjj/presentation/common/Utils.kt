@@ -1,7 +1,6 @@
 package com.kdjj.presentation.common
 
 import com.kdjj.domain.model.Recipe
-import com.kdjj.presentation.view.bindingadapter.calculateUpdateTime
 
 
 internal fun calculateSeconds(min: Int, sec: Int): Int{
