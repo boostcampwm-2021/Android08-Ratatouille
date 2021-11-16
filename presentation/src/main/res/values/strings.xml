@@ -33,7 +33,7 @@
     <string name="others_orderByDate">최신순</string>
     <string name="others_orderByPopular">인기순</string>
     <string name="others">힐끔보기</string>
-    <string name="addTimer">타이머 추가</string>
+    <string name="startTimer">타이머 시작</string>
     <string name="expectedTime">예상 소요 시간: %s분 %s초</string>
     <string name="timerMinSec">%02d:%02d</string>
 

@@ -149,7 +149,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:background="@drawable/bg_btn_bottom"
-                    android:text="@string/addTimer"
+                    android:text="@string/startTimer"
                     android:textSize="@dimen/detail_btnAddTimer_textSize"
                     android:textColor="@color/light_100"
                     android:gravity="center"
