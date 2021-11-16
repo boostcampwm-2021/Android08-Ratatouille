@@ -8,6 +8,7 @@ import com.kdjj.domain.model.*
 import com.kdjj.presentation.R
 import com.kdjj.presentation.databinding.ActivityRecipeDetailBinding
 import com.kdjj.presentation.view.adapter.RecipeDetailStepListAdapter
+import com.kdjj.presentation.view.adapter.RecipeDetailTimerListAdapter
 import com.kdjj.presentation.viewmodel.recipedetail.RecipeDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -19,6 +20,7 @@ class RecipeDetailActivity : AppCompatActivity() {
     private val viewModel: RecipeDetailViewModel by viewModels()
 
     private lateinit var stepListAdapter: RecipeDetailStepListAdapter
+    private lateinit var timerListAdapter: RecipeDetailTimerListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +30,9 @@ class RecipeDetailActivity : AppCompatActivity() {
 
         stepListAdapter = RecipeDetailStepListAdapter(viewModel)
         binding.recyclerViewDetailStep.adapter = stepListAdapter
+
+        timerListAdapter = RecipeDetailTimerListAdapter(viewModel)
+        binding.recyclerViewDetailTimer.adapter = timerListAdapter
 
         val recipe = Recipe(
             "",

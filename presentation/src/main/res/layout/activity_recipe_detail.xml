@@ -43,6 +43,7 @@
                     android:orientation="horizontal"
                     android:background="@color/blue_100"
                     tools:listitem="@layout/item_detail_timer"
+                    app:submitList="@{viewModel.liveTimerList}"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toBottomOf="@id/toolbar_detail"
                     app:layout_constraintStart_toStartOf="parent"
@@ -156,6 +157,7 @@
                     android:paddingEnd="@dimen/detail_textAddTimer_padding"
                     android:clickable="true"
                     android:focusable="true"
+                    android:onClick="@{() -> viewModel.addTimer(viewModel.liveSelectedStep)}"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
