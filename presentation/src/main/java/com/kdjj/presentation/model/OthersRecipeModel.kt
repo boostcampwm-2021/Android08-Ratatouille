@@ -12,6 +12,7 @@ data class OthersRecipeModel(
     val updateTime: String,
     val viewCount: Int,
     val imgPath: String,
+    val createTime: Long,
 )
 
 internal fun Recipe.toOthersRecipeModel() =
@@ -22,5 +23,6 @@ internal fun Recipe.toOthersRecipeModel() =
         this.stuff,
         calculateUpdateTime(this),
         this.viewCount,
-        this.imgPath
+        this.imgPath,
+        this.createTime
     )
