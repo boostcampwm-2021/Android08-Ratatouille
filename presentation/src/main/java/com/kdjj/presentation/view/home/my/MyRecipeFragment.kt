@@ -1,6 +1,7 @@
 package com.kdjj.presentation.view.home.my
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
@@ -15,6 +16,7 @@ import com.kdjj.presentation.databinding.FragmentMyRecipeBinding
 import com.kdjj.presentation.view.adapter.MyRecipeListAdapter
 import com.kdjj.presentation.viewmodel.my.MyRecipeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MyRecipeFragment : Fragment() {
@@ -25,6 +27,8 @@ class MyRecipeFragment : Fragment() {
     private val myRecipeAdapter by lazy { MyRecipeListAdapter(viewModel) }
     private val navigation by lazy { Navigation.findNavController(binding.root) }
 
+    @Inject lateinit var displayConverter: DisplayConverter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,7 +37,6 @@ class MyRecipeFragment : Fragment() {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_recipe, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.myViewModel = viewModel
-        DisplayConverter.setDensity(resources.displayMetrics.density)
         return binding.root
     }
 
@@ -77,7 +80,7 @@ class MyRecipeFragment : Fragment() {
     private fun initRecyclerView() {
         binding.recyclerViewMyRecipe.apply {
             val deviceWidth = resources.displayMetrics.widthPixels
-            val itemWidth = DisplayConverter.dpToPx(160).toInt()
+            val itemWidth = displayConverter.dpToPx(160).toInt()
             val spanCount = deviceWidth / itemWidth
             layoutManager = GridLayoutManager(requireContext(), spanCount)
             adapter = myRecipeAdapter
@@ -92,6 +95,7 @@ class MyRecipeFragment : Fragment() {
                     val itemCount = myRecipeAdapter.itemCount
 
                     if (!canScrollVertically(1) && lastVisibleItemPosition + 1 == itemCount) {
+                        Log.d("aaa", lastVisibleItemPosition.toString())
                         viewModel.fetchMoreRecipeData(lastVisibleItemPosition)
                     }
                 }

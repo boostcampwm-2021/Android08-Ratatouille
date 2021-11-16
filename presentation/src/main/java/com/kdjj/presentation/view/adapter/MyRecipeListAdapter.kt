@@ -1,6 +1,8 @@
 package com.kdjj.presentation.view.adapter
 
+import android.animation.ObjectAnimator
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
@@ -9,10 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kdjj.presentation.databinding.ItemMyRecipeAddRecipeBinding
 import com.kdjj.presentation.databinding.ItemMyRecipeBinding
 import com.kdjj.presentation.model.MyRecipeItem
+import com.kdjj.presentation.view.bindingadapter.setAnimatedText
 import com.kdjj.presentation.viewmodel.my.MyRecipeViewModel
 
 internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
-    ListAdapter<MyRecipeItem, RecyclerView.ViewHolder>(object : DiffUtil.ItemCallback<MyRecipeItem>(){
+    ListAdapter<MyRecipeItem, RecyclerView.ViewHolder>(object :
+        DiffUtil.ItemCallback<MyRecipeItem>() {
 
         override fun areItemsTheSame(oldItem: MyRecipeItem, newItem: MyRecipeItem): Boolean {
             return when {
@@ -41,6 +45,24 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
         fun bind(item: MyRecipeItem.MyRecipe) {
             binding.myRecipeViewModel = viewModel
             binding.myRecipeItem = item
+
+            binding.lifecycleOwner?.let { owner ->
+                viewModel.liveRecipeItemSelected.observe(owner) { myRecipe ->
+                    if(myRecipe == item){
+                        setAnimate(binding.textViewMyRecipeTitle)
+                        setAnimate(binding.textViewMyRecipeTime)
+                        setAnimate(binding.textViewMyRecipeDescriptionTitle)
+                        setAnimate(binding.textViewMyRecipeDescription)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setAnimate(view: View){
+        ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 100f, 0f).apply {
+            duration = 200
+            start()
         }
     }
 

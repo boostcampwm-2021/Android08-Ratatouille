@@ -11,10 +11,6 @@
             name="myRecipeItem"
             type="com.kdjj.presentation.model.MyRecipeItem.MyRecipe" />
 
-        <variable
-            name="util"
-            type="com.kdjj.presentation.common.UtilsKt" />
-
         <import type="android.widget.ImageView" />
         <import type="android.view.View" />
     </data>
@@ -68,7 +64,6 @@
                     android:text="@{myRecipeItem.recipe.title}"
                     android:textColor="@color/light_300"
                     android:textSize="@dimen/myRecipe_textView_titleSize"
-                    animatedText="@{myRecipeItem == myRecipeViewModel.liveRecipeItemSelected}"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@id/textView_myRecipe_time"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -91,7 +86,6 @@
                     android:textColor="@color/light_300"
                     android:textSize="@dimen/myRecipe_textView_timeSize"
                     calculateTotalTime="@{myRecipeItem.recipe}"
-                    animatedText="@{myRecipeItem == myRecipeViewModel.liveRecipeItemSelected}"
                     app:layout_constraintBottom_toTopOf="@id/textView_myRecipe_description"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -104,7 +98,6 @@
                     android:text="@string/recipeStuff"
                     android:textColor="@color/light_300"
                     android:textSize="@dimen/myRecipe_textView_descriptionTitle"
-                    animatedText="@{myRecipeItem == myRecipeViewModel.liveRecipeItemSelected}"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/textView_myRecipe_description"
                     app:layout_constraintTop_toTopOf="@id/textView_myRecipe_description" />
@@ -119,7 +112,6 @@
                     android:text="@{myRecipeItem.recipe.stuff}"
                     android:textColor="@color/light_300"
                     android:textSize="@dimen/myRecipe_textView_description"
-                    animatedText="@{myRecipeItem == myRecipeViewModel.liveRecipeItemSelected}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@id/textView_myRecipe_descriptionTitle"
                     app:layout_constraintRight_toRightOf="parent"
