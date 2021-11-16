@@ -65,9 +65,20 @@
             callback="@{viewModel.setFetchEnabled}"
             list="@{viewModel.liveRecipeList}"
             app:layout_constraintTop_toBottomOf="@id/radioGroup_others"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/progressBar_others"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <ProgressBar
+            android:id="@+id/progressBar_others"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            visibleProgressBar="@{viewModel.liveFetchLock}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recyclerView_others_recipe"
+            app:layout_constraintBottom_toBottomOf="parent"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

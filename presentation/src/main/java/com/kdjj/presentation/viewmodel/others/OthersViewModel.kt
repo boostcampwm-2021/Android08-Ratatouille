@@ -105,19 +105,18 @@ class OthersViewModel @Inject constructor(
         result.onSuccess { list ->
             Log.d("Test", "onRecipeListFetched success")
             _liveRecipeList.value?.let {
+                if (list.isEmpty()) {
+                    _liveFetchLock.value = false
+                    return
+                }
                 if (it.isEmpty()) _liveRecipeList.value = list
                 else _liveRecipeList.value = it.plus(list)
             }
         }.onFailure {
             // view 에게 알리기
-            Log.d("Test", "onRecipeListFetched fail")
             _liveFetchLock.value = false
+            Log.d("Test", "onRecipeListFetched fail")
         }
-    }
-
-    override fun onCleared() {
-        Log.d("Test", "OthersViewModel onCleared")
-        super.onCleared()
     }
 
     enum class OthersSortType {
