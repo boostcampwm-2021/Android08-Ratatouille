@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kdjj.presentation.databinding.ItemMyRecipeAddRecipeBinding
 import com.kdjj.presentation.databinding.ItemMyRecipeBinding
 import com.kdjj.presentation.model.MyRecipeItem
-import com.kdjj.presentation.view.bindingadapter.setAnimatedText
 import com.kdjj.presentation.viewmodel.my.MyRecipeViewModel
 
 internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
