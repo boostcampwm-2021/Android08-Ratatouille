@@ -4,6 +4,7 @@ import com.kdjj.data.datasource.RecipeLocalDataSource
 import com.kdjj.data.datasource.RecipeRemoteDataSource
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.repository.RecipeRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 internal class RecipeRepositoryImpl @Inject constructor(
@@ -45,5 +46,11 @@ internal class RecipeRepositoryImpl @Inject constructor(
         recipe: Recipe
     ): Result<Unit> {
         return recipeRemoteDataSource.deleteRecipe(recipe)
+    }
+    
+    override fun getLocalRecipeFlow(
+        recipeId: String
+    ): Result<Flow<Recipe>> {
+        return recipeLocalDataSource.getRecipeFlow(recipeId)
     }
 }

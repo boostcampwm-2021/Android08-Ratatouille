@@ -1,6 +1,8 @@
 package com.kdjj.domain.repository
 
 import com.kdjj.domain.model.Recipe
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 interface RecipeRepository {
     
@@ -27,4 +29,8 @@ interface RecipeRepository {
     suspend fun deleteRemoteRecipe(
         recipe: Recipe
     ): Result<Unit>
+    
+    fun getLocalRecipeFlow(
+        recipeId: String
+    ): Result<Flow<Recipe>>
 }
