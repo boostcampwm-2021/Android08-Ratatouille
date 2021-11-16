@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -27,6 +28,7 @@ class OthersRecipeFragment : Fragment() {
     private var _binding: FragmentOthersRecipeBinding? = null
     private val binding get() = _binding!!
     private val viewModel: OthersViewModel by viewModels()
+    private val navigation by lazy { Navigation.findNavController(binding.root) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +45,8 @@ class OthersRecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observeEvent()
+        observeNetworkEvent()
+        observeMoveToSearchEvent()
         setAdapter()
         setBinding()
         initToolBar()
@@ -60,6 +63,15 @@ class OthersRecipeFragment : Fragment() {
         binding.toolbarOthers.apply {
             title = getString(R.string.others)
             inflateMenu(R.menu.toolbar_menu_search_item)
+            setOnMenuItemClickListener{
+                when(it.itemId){
+                    R.id.item_search -> {
+                        viewModel.moveToRecipeSearchFragment()
+                        true
+                    }
+                    else -> false
+                }
+            }
         }
     }
 
@@ -90,7 +102,7 @@ class OthersRecipeFragment : Fragment() {
         }
     }
 
-    private fun observeEvent() {
+    private fun observeNetworkEvent() {
         viewModel.eventException.observe(viewLifecycleOwner, EventObserver {
             when (it) {
                 is NetworkException -> {
@@ -100,6 +112,12 @@ class OthersRecipeFragment : Fragment() {
                     showSnackBar("서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.")
                 }
             }
+        })
+    }
+
+    private fun observeMoveToSearchEvent() {
+        viewModel.eventSearchIconClicked.observe(viewLifecycleOwner, EventObserver {
+            navigation.navigate(R.id.action_othersFragment_to_searchRecipeFragment)
         })
     }
 

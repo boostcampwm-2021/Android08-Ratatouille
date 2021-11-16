@@ -42,6 +42,9 @@ class OthersViewModel @Inject constructor(
     private var _eventException = MutableLiveData<Event<Throwable>>()
     val eventException: LiveData<Event<Throwable>> get() = _eventException
 
+    private var _eventSearchIconClicked = MutableLiveData<Event<Unit>>()
+    val eventSearchIconClicked: LiveData<Event<Unit>> get() = _eventSearchIconClicked
+
     init {
         Log.d("Test", "OthersViewModel init")
         setChecked(OthersSortType.LATEST)
@@ -128,8 +131,12 @@ class OthersViewModel @Inject constructor(
             // view 에게 알리기
             _liveFetchLock.value = false
             _eventException.value = Event(it)
-            Log.d("Test", "onRecipeListFetched fail")
+            Log.d("Test", "onRecipeListFetched fail ${it.message}")
         }
+    }
+
+    fun moveToRecipeSearchFragment() {
+        _eventSearchIconClicked.value = Event(Unit)
     }
 
     enum class OthersSortType {
