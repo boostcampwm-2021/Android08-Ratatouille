@@ -41,9 +41,25 @@ class RecipeDetailViewModel @Inject constructor(
         }
     }
 
-    fun removeTimer(timerModel: StepTimerModel) {
+    fun moveTimer(from: Int, to: Int) {
+        _liveTimerList.value?.let { timerList ->
+            _liveTimerList.value = timerList.toMutableList().apply {
+                set(from, set(to, get(from)))
+            }
+        }
+    }
+
+    fun removeTimerAt(position: Int) {
+        _liveTimerList.value?.getOrNull(position)?.let { model ->
+            model.pause()
+            removeTimer(model)
+        }
+    }
+
+    private fun removeTimer(timerModel: StepTimerModel) {
         _liveTimerList.value?.let { modelList ->
             _liveTimerList.value = modelList.toMutableList().apply {
+                timerModel.pause()
                 remove(timerModel)
             }
         }

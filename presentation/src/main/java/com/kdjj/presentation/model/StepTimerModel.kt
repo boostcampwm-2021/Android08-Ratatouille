@@ -17,7 +17,7 @@ class StepTimerModel(
     private val _liveLeftSeconds = MutableLiveData((leftMillis / 1000).toInt())
     val liveLeftSeconds: LiveData<Int> get() = _liveLeftSeconds
 
-    private val _liveRunning = MutableLiveData(true)
+    private val _liveRunning = MutableLiveData(false)
     val liveRunning: LiveData<Boolean> get() = _liveRunning
 
     private lateinit var timer: CountDownTimer
@@ -27,11 +27,13 @@ class StepTimerModel(
     }
 
     fun pause() {
+        if (_liveRunning.value != true) return
         timer.cancel()
         _liveRunning.value = false
     }
 
     fun resume() {
+        if (_liveRunning.value != false) return
         timer = StepTimer(leftMillis, {
             leftMillis = it
         }, {
