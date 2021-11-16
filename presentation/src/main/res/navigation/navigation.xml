@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_myRecipeFragment_to_recipeEditorActivity"
             app:destination="@id/recipeEditorActivity" />
+        <action
+            android:id="@+id/action_myRecipeFragment_to_searchRecipeFragment"
+            app:destination="@id/searchRecipeFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchRecipeFragment"

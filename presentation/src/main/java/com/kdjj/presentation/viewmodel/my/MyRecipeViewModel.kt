@@ -39,6 +39,9 @@ internal class MyRecipeViewModel @Inject constructor(
     private val _liveItemDoubleClicked = MutableLiveData<Event<MyRecipeItem.MyRecipe>>()
     val liveItemDoubleClicked: LiveData<Event<MyRecipeItem.MyRecipe>> get() = _liveItemDoubleClicked
 
+    private val _liveSearchIconClicked = MutableLiveData<Event<Unit>>()
+    val liveSearchIconClicked:LiveData<Event<Unit>> get() = _liveSearchIconClicked
+
     init {
         setSortType(SortType.SORT_BY_TIME)
     }
@@ -121,6 +124,10 @@ internal class MyRecipeViewModel @Inject constructor(
 
     fun moveToRecipeEditorActivity() {
         _liveAddRecipeHasPressed.value = Event(Unit)
+    }
+
+    fun moveToRecipeSearchFragment(){
+        _liveSearchIconClicked.value = Event(Unit)
     }
 
     fun setSortType(sortType: SortType) {
