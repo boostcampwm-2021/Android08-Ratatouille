@@ -49,6 +49,15 @@ class MyRecipeFragment : Fragment() {
         binding.toolbarMyRecipe.apply {
             setTitle(R.string.myRecipe)
             inflateMenu(R.menu.toolbar_menu_search_item)
+            setOnMenuItemClickListener{
+                when(it.itemId){
+                    R.id.item_search -> {
+                        viewModel.moveToRecipeSearchFragment()
+                        true
+                    }
+                    else -> false
+                }
+            }
         }
     }
 
@@ -57,8 +66,12 @@ class MyRecipeFragment : Fragment() {
             navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
         })
 
+        viewModel.liveSearchIconClicked.observe(viewLifecycleOwner, EventObserver{
+            navigation.navigate(R.id.action_myRecipeFragment_to_searchRecipeFragment)
+        })
+
         viewModel.liveItemDoubleClicked.observe(viewLifecycleOwner, EventObserver {
-            Log.d("aaa", it.toString())
+            //TODO: 레시피 개요 페이지로 이동
         })
     }
 
