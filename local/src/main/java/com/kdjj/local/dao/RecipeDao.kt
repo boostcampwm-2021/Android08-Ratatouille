@@ -6,6 +6,7 @@ import com.kdjj.local.dto.RecipeDto
 import com.kdjj.local.dto.RecipeMetaDto
 import com.kdjj.local.dto.RecipeStepDto
 import com.kdjj.local.dto.toDto
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface RecipeDao {
@@ -36,4 +37,7 @@ internal interface RecipeDao {
     
     @Update
     suspend fun updateRecipeMeta(recipeMeta: RecipeMetaDto)
+    
+    @Query("SELECT * FROM RecipeMeta WHERE recipeMetaId = :recipeId")
+    fun getRecipe(recipeId: String): Flow<RecipeDto>
 }

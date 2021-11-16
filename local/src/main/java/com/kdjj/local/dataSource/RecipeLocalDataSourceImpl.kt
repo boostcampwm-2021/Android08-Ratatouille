@@ -4,8 +4,11 @@ import com.kdjj.data.common.errorMap
 import com.kdjj.data.datasource.RecipeLocalDataSource
 import com.kdjj.domain.model.Recipe
 import com.kdjj.local.dao.RecipeDao
+import com.kdjj.local.dto.toDomain
 import com.kdjj.local.dto.toDto
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -48,5 +51,15 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
             }.errorMap {
                 Exception(it.message)
             }
+        }
+    
+    override fun getRecipeFlow(
+        recipeId: String
+    ): Result<Flow<Recipe>> =
+        runCatching {
+            recipeDao.getRecipe(recipeId)
+                .map { it.toDomain() }
+        }.errorMap {
+            Exception(it.message)
         }
 }
