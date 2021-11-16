@@ -38,4 +38,12 @@
     <string name="timerMinSec">%02d:%02d</string>
 
     <string name="total_time">소요시간</string>
+    <string name="total_time_seconds">%s 초</string>
+    <string name="total_time_min_seconds">%s 분 %s 초</string>
+    <string name="update_time_year">%s년 전</string>
+    <string name="update_time_month">%s달 전</string>
+    <string name="update_time_day">%s일 전</string>
+    <string name="update_time_hours">%s시간 전</string>
+    <string name="update_time_minutes">%s분 전</string>
+    <string name="update_time_seconds">%s초 전</string>
 </resources>
