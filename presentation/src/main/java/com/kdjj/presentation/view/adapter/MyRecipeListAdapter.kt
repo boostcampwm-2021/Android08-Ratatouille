@@ -3,6 +3,7 @@ package com.kdjj.presentation.view.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.kdjj.presentation.databinding.ItemMyRecipeAddRecipeBinding
@@ -11,7 +12,28 @@ import com.kdjj.presentation.model.MyRecipeItem
 import com.kdjj.presentation.viewmodel.my.MyRecipeViewModel
 
 internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
-    ListAdapter<MyRecipeItem, RecyclerView.ViewHolder>(MyRecipeItemCallback()) {
+    ListAdapter<MyRecipeItem, RecyclerView.ViewHolder>(object : DiffUtil.ItemCallback<MyRecipeItem>(){
+
+        override fun areItemsTheSame(oldItem: MyRecipeItem, newItem: MyRecipeItem): Boolean {
+            return when {
+                oldItem is MyRecipeItem.MyRecipe && newItem is MyRecipeItem.MyRecipe -> {
+                    oldItem.recipe.recipeId == newItem.recipe.recipeId
+                }
+                oldItem is MyRecipeItem.PlusButton && newItem is MyRecipeItem.PlusButton -> true
+                else -> false
+            }
+        }
+
+        override fun areContentsTheSame(oldItem: MyRecipeItem, newItem: MyRecipeItem): Boolean {
+            return when {
+                oldItem is MyRecipeItem.MyRecipe && newItem is MyRecipeItem.MyRecipe -> {
+                    oldItem.recipe.recipeId == newItem.recipe.recipeId
+                }
+                oldItem is MyRecipeItem.PlusButton && newItem is MyRecipeItem.PlusButton -> true
+                else -> false
+            }
+        }
+    }) {
 
     inner class MyRecipeViewHolder(val binding: ItemMyRecipeBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -61,18 +83,6 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = getItem(position)) {
             is MyRecipeItem.MyRecipe -> (holder as MyRecipeViewHolder).bind(item)
-        }
-    }
-
-    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
-        super.onViewAttachedToWindow(holder)
-        when (holder) {
-            is MyRecipeViewHolder -> {
-                holder.binding.lifecycleOwner = holder.itemView.findViewTreeLifecycleOwner()
-            }
-            is AddRecipeViewHolder -> {
-                holder.binding.lifecycleOwner = holder.itemView.findViewTreeLifecycleOwner()
-            }
         }
     }
 
