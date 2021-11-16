@@ -1,6 +1,5 @@
 package com.kdjj.presentation.viewmodel.my
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,20 +26,20 @@ internal class MyRecipeViewModel @Inject constructor(
     private val _liveSortType = MutableLiveData<SortType>()
     val liveSortType: LiveData<SortType> get() = _liveSortType
 
-    private val _liveAddRecipeHasPressed = MutableLiveData<Event<Unit>>()
-    val liveAddRecipeHasPressed: LiveData<Event<Unit>> get() = _liveAddRecipeHasPressed
-
     private val _liveRecipeItemList = MutableLiveData<List<MyRecipeItem>>(listOf())
     val liveRecipeItemList: LiveData<List<MyRecipeItem>> get() = _liveRecipeItemList
 
     private val _liveRecipeItemSelected = MutableLiveData<MyRecipeItem.MyRecipe?>()
     val liveRecipeItemSelected: LiveData<MyRecipeItem.MyRecipe?> get() = _liveRecipeItemSelected
 
-    private val _liveItemDoubleClicked = MutableLiveData<Event<MyRecipeItem.MyRecipe>>()
-    val liveItemDoubleClicked: LiveData<Event<MyRecipeItem.MyRecipe>> get() = _liveItemDoubleClicked
+    private val _eventItemDoubleClicked = MutableLiveData<Event<MyRecipeItem.MyRecipe>>()
+    val eventItemDoubleClicked: LiveData<Event<MyRecipeItem.MyRecipe>> get() = _eventItemDoubleClicked
 
-    private val _liveSearchIconClicked = MutableLiveData<Event<Unit>>()
-    val liveSearchIconClicked:LiveData<Event<Unit>> get() = _liveSearchIconClicked
+    private val _eventSearchIconClicked = MutableLiveData<Event<Unit>>()
+    val eventSearchIconClicked:LiveData<Event<Unit>> get() = _eventSearchIconClicked
+
+    private val _liveAddRecipeHasPressed = MutableLiveData<Event<Unit>>()
+    val eventAddRecipeHasPressed: LiveData<Event<Unit>> get() = _liveAddRecipeHasPressed
 
     init {
         setSortType(SortType.SORT_BY_TIME)
@@ -50,7 +49,7 @@ internal class MyRecipeViewModel @Inject constructor(
         if(_liveRecipeItemSelected.value != selectedRecipe){
             _liveRecipeItemSelected.value = selectedRecipe
         } else {
-            _liveItemDoubleClicked.value = Event(selectedRecipe)
+            _eventItemDoubleClicked.value = Event(selectedRecipe)
         }
     }
 
@@ -127,7 +126,7 @@ internal class MyRecipeViewModel @Inject constructor(
     }
 
     fun moveToRecipeSearchFragment(){
-        _liveSearchIconClicked.value = Event(Unit)
+        _eventSearchIconClicked.value = Event(Unit)
     }
 
     fun setSortType(sortType: SortType) {

@@ -1,7 +1,6 @@
 package com.kdjj.presentation.view.home.my
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
@@ -62,15 +61,15 @@ class MyRecipeFragment : Fragment() {
     }
 
     private fun setObservers() {
-        viewModel.liveAddRecipeHasPressed.observe(viewLifecycleOwner, EventObserver {
+        viewModel.eventAddRecipeHasPressed.observe(viewLifecycleOwner, EventObserver {
             navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
         })
 
-        viewModel.liveSearchIconClicked.observe(viewLifecycleOwner, EventObserver{
+        viewModel.eventSearchIconClicked.observe(viewLifecycleOwner, EventObserver{
             navigation.navigate(R.id.action_myRecipeFragment_to_searchRecipeFragment)
         })
 
-        viewModel.liveItemDoubleClicked.observe(viewLifecycleOwner, EventObserver {
+        viewModel.eventItemDoubleClicked.observe(viewLifecycleOwner, EventObserver {
             //TODO: 레시피 개요 페이지로 이동
         })
     }
