@@ -17,6 +17,9 @@
         android:layout_marginEnd="@dimen/detail_timer_marginHorizontal"
         android:layout_marginTop="@dimen/detail_timer_marginVertical"
         android:layout_marginBottom="@dimen/detail_timer_marginVertical"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="@{() -> model.liveRunning ? model.pause() : model.resume()}"
         app:cardBackgroundColor="@color/dark_100"
         app:cardCornerRadius="@dimen/detail_timer_corner">
 

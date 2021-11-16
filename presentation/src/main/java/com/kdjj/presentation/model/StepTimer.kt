@@ -3,10 +3,10 @@ package com.kdjj.presentation.model
 import android.os.CountDownTimer
 
 class StepTimer(
-    seconds: Int,
+    leftTimeInMillis: Long,
     private val onTickListener: (Long) -> Unit,
     private val onFinishListener: () -> Unit
-) : CountDownTimer(seconds * 1000L, 1000L) {
+) : CountDownTimer(leftTimeInMillis, 100L) {
 
     override fun onTick(millisUntilFinished: Long) {
         onTickListener(millisUntilFinished)
