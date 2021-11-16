@@ -2,20 +2,17 @@ package com.kdjj.presentation.view.home.my
 
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kdjj.presentation.R
+import com.kdjj.presentation.common.DisplayConverter
 import com.kdjj.presentation.common.EventObserver
 import com.kdjj.presentation.databinding.FragmentMyRecipeBinding
-import com.kdjj.presentation.model.MyRecipeItem
 import com.kdjj.presentation.view.adapter.MyRecipeListAdapter
 import com.kdjj.presentation.viewmodel.my.MyRecipeViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +34,7 @@ class MyRecipeFragment : Fragment() {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_recipe, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.myViewModel = viewModel
+        DisplayConverter.setDensity(resources.displayMetrics.density)
         return binding.root
     }
 
@@ -60,14 +58,20 @@ class MyRecipeFragment : Fragment() {
         })
 
         viewModel.liveItemDoubleClicked.observe(viewLifecycleOwner, EventObserver {
-            Log.d("aaa", it.toString() )
+            Log.d("aaa", it.toString())
         })
     }
 
     private fun initRecyclerView() {
         binding.recyclerViewMyRecipe.apply {
-            layoutManager = GridLayoutManager(requireContext(), 2)
+            val deviceWidth = resources.displayMetrics.widthPixels
+            val itemWidth = DisplayConverter.dpToPx(160).toInt()
+            val spanCount = deviceWidth / itemWidth
+            layoutManager = GridLayoutManager(requireContext(), spanCount)
             adapter = myRecipeAdapter
+
+            addItemDecoration(SpacesItemDecoration(spanCount, deviceWidth, itemWidth))
+
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
