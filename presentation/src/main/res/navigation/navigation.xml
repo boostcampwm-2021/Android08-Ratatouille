@@ -26,7 +26,11 @@
         android:id="@+id/othersRecipeFragment"
         android:name="com.kdjj.presentation.view.home.others.OthersRecipeFragment"
         android:label="fragment_others_recipe"
-        tools:layout="@layout/fragment_others_recipe" />
+        tools:layout="@layout/fragment_others_recipe">
+        <action
+            android:id="@+id/action_othersFragment_to_searchRecipeFragment"
+            app:destination="@id/searchRecipeFragment" />
+    </fragment>
     <activity
         android:id="@+id/recipeEditorActivity"
         android:name="com.kdjj.presentation.view.recipeeditor.RecipeEditorActivity"

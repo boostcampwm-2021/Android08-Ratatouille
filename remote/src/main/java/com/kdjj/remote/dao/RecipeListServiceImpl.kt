@@ -1,5 +1,6 @@
 package com.kdjj.remote.dao
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
@@ -20,6 +21,10 @@ internal class RecipeListServiceImpl @Inject constructor(
         lastVisibleCreateTime: Long
     ): List<Recipe> =
         suspendCancellableCoroutine {
+            it.invokeOnCancellation {
+                Log.d("Test", "invokeOnCancellation")
+            }
+            Log.d("Test", "fetchLatestRecipeListAfter")
             firestore.collection(RECIPE_COLLECTION_ID)
                 .orderBy(FIELD_CREATE_TIME, Query.Direction.DESCENDING)
                 .startAfter(lastVisibleCreateTime)
@@ -27,8 +32,10 @@ internal class RecipeListServiceImpl @Inject constructor(
                 .get()
                 .addOnSuccessListener { queryDocumentSnapshot ->
                     if (queryDocumentSnapshot.metadata.isFromCache) {
+                        Log.d("Test", "addOnSuccessListener NetworkException")
                         it.resumeWithException(NetworkException())
                     } else {
+                        Log.d("Test", "addOnSuccessListener Success")
                         it.resumeWith(
                             Result.success(
                                 queryDocumentSnapshot.map { item ->
@@ -39,7 +46,10 @@ internal class RecipeListServiceImpl @Inject constructor(
                     }
                 }
                 .addOnFailureListener { exception ->
+                    Log.d("Test", "addOnFailureListener")
                     it.resumeWithException(ApiException(exception.message))
+                }.addOnCanceledListener {
+                    Log.d("Test", "addOnCanceledListener")
                 }
         }
     
@@ -47,6 +57,9 @@ internal class RecipeListServiceImpl @Inject constructor(
         lastVisibleViewCount: Int
     ): List<Recipe> =
         suspendCancellableCoroutine {
+            it.invokeOnCancellation {
+                Log.d("Test", "invokeOnCancellation")
+            }
             firestore.collection(RECIPE_COLLECTION_ID)
                 .orderBy(FIELD_VIEW_COUNT, Query.Direction.DESCENDING)
                 .startAfter(lastVisibleViewCount)
@@ -67,6 +80,8 @@ internal class RecipeListServiceImpl @Inject constructor(
                 }
                 .addOnFailureListener { exception ->
                     it.resumeWithException(ApiException(exception.message))
+                }.addOnCanceledListener {
+                    Log.d("Test", "addOnCanceledListener")
                 }
         }
     
