@@ -1,6 +1,5 @@
 package com.kdjj.remote.datasource
 
-import com.kdjj.data.common.errorMap
 import com.kdjj.data.datasource.RecipeListRemoteDataSource
 import com.kdjj.domain.model.Recipe
 import com.kdjj.remote.dao.RemoteRecipeListService
@@ -15,8 +14,6 @@ internal class RecipeListRemoteDataSourceImpl @Inject constructor(
     ): Result<List<Recipe>> =
         runCatching {
             recipeListService.fetchLatestRecipeListAfter(lastVisibleCreateTime)
-        }.errorMap {
-            Exception(it.message)
         }
     
     override suspend fun fetchPopularRecipeListAfter(
@@ -24,8 +21,6 @@ internal class RecipeListRemoteDataSourceImpl @Inject constructor(
     ): Result<List<Recipe>> =
         runCatching {
             recipeListService.fetchPopularRecipeListAfter(lastVisibleViewCount)
-        }.errorMap {
-            Exception(it.message)
         }
     
     override suspend fun fetchSearchRecipeListAfter(
@@ -34,7 +29,5 @@ internal class RecipeListRemoteDataSourceImpl @Inject constructor(
     ): Result<List<Recipe>> =
         runCatching {
             recipeListService.fetchSearchRecipeListAfter(keyword, lastVisibleTitle)
-        }.errorMap {
-            Exception(it.message)
         }
 }
