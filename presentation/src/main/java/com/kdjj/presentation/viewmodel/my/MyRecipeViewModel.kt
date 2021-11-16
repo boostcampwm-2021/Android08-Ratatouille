@@ -1,5 +1,6 @@
 package com.kdjj.presentation.viewmodel.my
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -57,7 +58,7 @@ internal class MyRecipeViewModel @Inject constructor(
         when (_liveSortType.value) {
             SortType.SORT_BY_TIME -> fetchLocalLatestRecipeList(page)
             SortType.SORT_BY_FAVORITE -> fetchLocalFavoriteRecipeList(page)
-            else -> fetchLocalTitleRecipeList(page)
+            SortType.SORT_BY_NAME -> fetchLocalTitleRecipeList(page)
         }
     }
 
@@ -68,6 +69,7 @@ internal class MyRecipeViewModel @Inject constructor(
                     if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_TIME) {
                         val myRecipeList = latestRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
+                        Log.d("aaa", _liveRecipeItemList.value.toString())
                     } else {
                         val myRecipeList = latestRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + myRecipeList
@@ -134,7 +136,7 @@ internal class MyRecipeViewModel @Inject constructor(
             when (sortType) {
                 SortType.SORT_BY_TIME -> fetchLocalLatestRecipeList(0)
                 SortType.SORT_BY_FAVORITE -> fetchLocalFavoriteRecipeList(0)
-                else -> fetchLocalTitleRecipeList(0)
+                SortType.SORT_BY_NAME -> fetchLocalTitleRecipeList(0)
             }
         }
     }
