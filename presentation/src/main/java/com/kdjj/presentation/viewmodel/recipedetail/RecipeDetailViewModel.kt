@@ -1,8 +1,6 @@
 package com.kdjj.presentation.viewmodel.recipedetail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeStep
 import com.kdjj.presentation.model.StepTimerModel
@@ -21,6 +19,16 @@ class RecipeDetailViewModel @Inject constructor(
 
     private val _liveTimerList = MutableLiveData<List<StepTimerModel>>(listOf())
     val liveTimerList: LiveData<List<StepTimerModel>> get() = _liveTimerList
+
+    val liveSelectedTimer: LiveData<StepTimerModel?> = MediatorLiveData<StepTimerModel?>().apply {
+        addSource(_liveTimerList) { timerList ->
+            value = timerList.firstOrNull { it.recipeStep == liveSelectedStep.value }
+        }
+
+        addSource(_liveSelectedStep) { step ->
+            value = _liveTimerList.value?.firstOrNull { it.recipeStep == step }
+        }
+    }
 
     fun initializeWith(recipe: Recipe) {
         _liveStepList.value = recipe.stepList
