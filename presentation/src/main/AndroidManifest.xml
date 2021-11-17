@@ -8,6 +8,9 @@
 
     <application>
         <activity
+            android:name=".view.recipesummary.RecipeSummaryActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.recipedetail.RecipeDetailActivity"
             android:exported="false" />
         <activity
