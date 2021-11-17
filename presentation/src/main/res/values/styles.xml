@@ -39,6 +39,6 @@
         <item name="android:textSize">@dimen/summary_text_textSize</item>
         <item name="android:layout_marginStart">@dimen/summary_expectedTime_marginStart</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
     </style>
 </resources>
