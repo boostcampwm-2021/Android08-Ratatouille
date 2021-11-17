@@ -85,7 +85,6 @@
                     android:layout_marginTop="@dimen/myRecipe_textView_title_marginTop"
                     android:textColor="@color/light_300"
                     android:textSize="@dimen/myRecipe_textView_timeSize"
-                    calculateTotalTime="@{myRecipeItem.recipe}"
                     app:layout_constraintBottom_toTopOf="@id/textView_myRecipe_description"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
