@@ -136,7 +136,7 @@
                     android:id="@+id/textView_detail_timerDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/expectedTime(viewModel.liveSelectedStep.seconds / 60, viewModel.liveSelectedStep.seconds % 60)}"
+                    android:text="@{@string/expectedTimeMinSec(viewModel.liveSelectedStep.seconds / 60, viewModel.liveSelectedStep.seconds % 60)}"
                     android:textSize="@dimen/detail_timerDescription_textSize"
                     android:textColor="@color/light_100"
                     android:layout_margin="@dimen/detail_timerDescription_margin"
