@@ -4,11 +4,12 @@ interface RecipeImageLocalDataSource {
     
     suspend fun convertToByteArray(
         uri: String
-    ): Result<ByteArray>
+    ): Result<Pair<ByteArray, Float?>>
     
     suspend fun convertToInternalStorageUri(
         byteArray: ByteArray,
-        fileName: String
+        fileName: String,
+        degree: Float? = null
     ): Result<String>
 
     suspend fun copyExif(oldPath: String, newPath: String): Result<Unit>
