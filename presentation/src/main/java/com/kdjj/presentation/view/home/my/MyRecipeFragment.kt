@@ -95,7 +95,6 @@ class MyRecipeFragment : Fragment() {
                     val itemCount = myRecipeAdapter.itemCount
 
                     if (!canScrollVertically(1) && lastVisibleItemPosition + 1 == itemCount) {
-                        Log.d("aaa", lastVisibleItemPosition.toString())
                         viewModel.fetchMoreRecipeData(lastVisibleItemPosition)
                     }
                 }

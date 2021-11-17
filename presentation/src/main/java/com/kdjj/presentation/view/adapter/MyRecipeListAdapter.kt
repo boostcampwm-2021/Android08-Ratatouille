@@ -41,24 +41,30 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
     inner class MyRecipeViewHolder(val binding: ItemMyRecipeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: MyRecipeItem.MyRecipe) {
-            binding.myRecipeViewModel = viewModel
-            binding.myRecipeItem = item
-
+        init {
+            var count = 0
             binding.lifecycleOwner?.let { owner ->
+                println("init: ${this}")
                 viewModel.liveRecipeItemSelected.observe(owner) { myRecipe ->
-                    if(myRecipe == item){
-                        setAnimate(binding.textViewMyRecipeTitle)
-                        setAnimate(binding.textViewMyRecipeTime)
-                        setAnimate(binding.textViewMyRecipeDescriptionTitle)
-                        setAnimate(binding.textViewMyRecipeDescription)
+                    myRecipe?.let {
+                        if(myRecipe == getItem(absoluteAdapterPosition)){
+                            startAnimation(binding.textViewMyRecipeTitle)
+                            startAnimation(binding.textViewMyRecipeTime)
+                            startAnimation(binding.textViewMyRecipeDescriptionTitle)
+                            startAnimation(binding.textViewMyRecipeDescription)
+                        }
                     }
                 }
             }
         }
+
+        fun bind(item: MyRecipeItem.MyRecipe) {
+            binding.myRecipeViewModel = viewModel
+            binding.myRecipeItem = item
+        }
     }
 
-    private fun setAnimate(view: View){
+    private fun startAnimation(view: View){
         ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 100f, 0f).apply {
             duration = 200
             start()
