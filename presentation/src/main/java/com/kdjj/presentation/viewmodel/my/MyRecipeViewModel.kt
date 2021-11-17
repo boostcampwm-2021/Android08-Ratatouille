@@ -39,8 +39,11 @@ internal class MyRecipeViewModel @Inject constructor(
     private val _eventSearchIconClicked = MutableLiveData<Event<Unit>>()
     val eventSearchIconClicked: LiveData<Event<Unit>> get() = _eventSearchIconClicked
 
-    private val _liveAddRecipeHasPressed = MutableLiveData<Event<Unit>>()
-    val eventAddRecipeHasPressed: LiveData<Event<Unit>> get() = _liveAddRecipeHasPressed
+    private val _eventAddRecipeHasPressed = MutableLiveData<Event<Unit>>()
+    val eventAddRecipeHasPressed: LiveData<Event<Unit>> get() = _eventAddRecipeHasPressed
+
+    private val _eventDataLoadFailed = MutableLiveData<Event<Unit>>()
+    val eventDataLoadFailed: LiveData<Event<Unit>> get() = _eventDataLoadFailed
 
     init {
         setSortType(SortType.SORT_BY_TIME)
@@ -64,6 +67,7 @@ internal class MyRecipeViewModel @Inject constructor(
 
     private fun fetchLocalLatestRecipeList(page: Int) {
         viewModelScope.launch {
+            Log.d("aaa", liveSortType.value.toString())
             latestRecipeUseCase(FetchLocalLatestRecipeListRequest(page))
                 .onSuccess { latestRecipeList ->
                     if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_TIME && page > 0) {
@@ -77,7 +81,8 @@ internal class MyRecipeViewModel @Inject constructor(
                     }
                 }
                 .onFailure {
-                    //TODO 데이터 로드에 실패했을 경우 처리
+                    _liveSortType.value = SortType.SORT_BY_TIME
+                    _eventDataLoadFailed.value = Event(Unit)
                 }
         }
     }
@@ -97,7 +102,8 @@ internal class MyRecipeViewModel @Inject constructor(
                     }
                 }
                 .onFailure {
-                    //TODO 데이터 로드에 실패했을 경우 처리
+                    _liveSortType.value = SortType.SORT_BY_FAVORITE
+                    _eventDataLoadFailed.value = Event(Unit)
                 }
         }
     }
@@ -117,13 +123,14 @@ internal class MyRecipeViewModel @Inject constructor(
                     }
                 }
                 .onFailure {
-                    //TODO 데이터 로드에 실패했을 경우 처리
+                    _liveSortType.value = SortType.SORT_BY_NAME
+                    _eventDataLoadFailed.value = Event(Unit)
                 }
         }
     }
 
     fun moveToRecipeEditorActivity() {
-        _liveAddRecipeHasPressed.value = Event(Unit)
+        _eventAddRecipeHasPressed.value = Event(Unit)
     }
 
     fun moveToRecipeSearchFragment() {

@@ -9,11 +9,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.kdjj.presentation.R
-import com.kdjj.presentation.common.DisplayConverter
-import com.kdjj.presentation.common.EventObserver
-import com.kdjj.presentation.common.RECIPE_ID
-import com.kdjj.presentation.common.RECIPE_STATE
+import com.kdjj.presentation.common.*
 import com.kdjj.presentation.databinding.FragmentMyRecipeBinding
 import com.kdjj.presentation.view.adapter.MyRecipeListAdapter
 import com.kdjj.presentation.viewmodel.my.MyRecipeViewModel
@@ -82,6 +80,15 @@ class MyRecipeFragment : Fragment() {
                 RECIPE_STATE to it.recipe.state
             )
             navigation.navigate(R.id.action_myRecipeFragment_to_recipeSummaryActivity, bundle)
+        })
+
+        viewModel.eventDataLoadFailed.observe(viewLifecycleOwner, EventObserver {
+            Snackbar.make(binding.root, "데이터 로드에 실패하였습니다.", Snackbar.LENGTH_LONG)
+                .setAction("새로고침"){
+                     viewModel.refreshRecipeList()
+                }
+                .setActionTextColor(requireContext().getColor(R.color.blue_500))
+                .show()
         })
     }
 
