@@ -16,7 +16,7 @@ class RecipeDetailStepListAdapter(
     object : DiffUtil.ItemCallback<RecipeStep>() {
 
         override fun areItemsTheSame(oldItem: RecipeStep, newItem: RecipeStep): Boolean =
-            oldItem.stepId == newItem.stepId
+            oldItem == newItem
 
         override fun areContentsTheSame(oldItem: RecipeStep, newItem: RecipeStep): Boolean =
             oldItem.name == newItem.name &&
