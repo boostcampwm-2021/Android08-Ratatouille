@@ -17,8 +17,11 @@ class RecipeSummaryActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
         binding = DataBindingUtil.setContentView(this, R.layout.activity_recipe_summary)
         binding.viewModel = recipeSummaryViewModel
         binding.lifecycleOwner = this
+        
+        setSupportActionBar(binding.toolbarSummary)
     }
 }
