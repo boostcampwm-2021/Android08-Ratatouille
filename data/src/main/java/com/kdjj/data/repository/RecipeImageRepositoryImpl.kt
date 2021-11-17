@@ -35,8 +35,6 @@ internal class RecipeImageRepositoryImpl @Inject constructor(
             .getOrThrow()
         val newUri = recipeImageLocalDataSource.convertToInternalStorageUri(byteArray, fileName)
             .getOrThrow()
-        recipeImageLocalDataSource.copyExif(uri, newUri)
-            .getOrThrow()
         newUri
     }
 }

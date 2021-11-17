@@ -21,12 +21,5 @@ internal class RecipeImageLocalDataSourceImpl @Inject constructor(
     ): Result<String> {
         return fileSaveHelper.convertToInternalStorageUri(byteArray, fileName, degree)
     }
-
-    override suspend fun copyExif(
-        oldPath: String,
-        newPath: String
-    ): Result<Unit> {
-        return fileSaveHelper.copyExif(oldPath, newPath)
-    }
 }
 
