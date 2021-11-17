@@ -45,6 +45,7 @@
     <dimen name="myRecipe_textView_description">14sp</dimen>
     <dimen name="myRecipe_textView_title_marginTop">8dp</dimen>
     <dimen name="myRecipe_textView_description_marginTop">12dp</dimen>
+    <dimen name="myRecipe_time_marginLeft">8dp</dimen>
 
     <dimen name="dialog_title_textSize">18sp</dimen>
     <dimen name="dialog_content_textSize">14sp</dimen>
@@ -76,7 +77,6 @@
     <dimen name="detail_stepList_textSize">14sp</dimen>
     <dimen name="detail_stepItem_paddingVertical">8dp</dimen>
     <dimen name="detail_stepItem_paddingHorizontal">16dp</dimen>
-    <dimen name="myRecipe_time_marginLeft">8dp</dimen>
 
     <dimen name="summary_expectedTimeLabel_marginStart">16dp</dimen>
     <dimen name="summary_expectedTimeLabel_marginTop">24dp</dimen>
@@ -84,4 +84,5 @@
     <dimen name="summary_label_textSize">16sp</dimen>
     <dimen name="summary_text_textSize">14sp</dimen>
 
+    <dimen name="search_icSearch_insetRight">12dp</dimen>
 </resources>
