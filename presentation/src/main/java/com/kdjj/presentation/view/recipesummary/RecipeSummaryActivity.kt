@@ -37,6 +37,9 @@ class RecipeSummaryActivity : AppCompatActivity() {
         eventNoInfo.observe(this@RecipeSummaryActivity, EventObserver{
             showNoInfoDialog()
         })
+        liveRecipe.observe(this@RecipeSummaryActivity){ recipe ->
+            title = recipe.title
+        }
     }
     
     private fun initViewModel() {
