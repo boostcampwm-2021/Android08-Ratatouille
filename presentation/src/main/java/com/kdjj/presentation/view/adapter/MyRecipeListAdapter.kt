@@ -42,7 +42,6 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
-            var count = 0
             binding.lifecycleOwner?.let { owner ->
                 println("init: ${this}")
                 viewModel.liveRecipeItemSelected.observe(owner) { myRecipe ->
