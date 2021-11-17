@@ -94,5 +94,7 @@
     <dimen name="summary_text_textSize">14sp</dimen>
     <dimen name="summary_imageView_height">250dp</dimen>
     <dimen name="summary_lastItem_marginBottom">100dp</dimen>
-    
+    <dimen name="summary_floatingButton_marginBottom">100dp</dimen>
+    <dimen name="summary_floatingButton_marginEnd">16dp</dimen>
+
 </resources>
