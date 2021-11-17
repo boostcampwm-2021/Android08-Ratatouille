@@ -37,7 +37,7 @@ internal class MyRecipeViewModel @Inject constructor(
     val eventItemDoubleClicked: LiveData<Event<MyRecipeItem.MyRecipe>> get() = _eventItemDoubleClicked
 
     private val _eventSearchIconClicked = MutableLiveData<Event<Unit>>()
-    val eventSearchIconClicked:LiveData<Event<Unit>> get() = _eventSearchIconClicked
+    val eventSearchIconClicked: LiveData<Event<Unit>> get() = _eventSearchIconClicked
 
     private val _liveAddRecipeHasPressed = MutableLiveData<Event<Unit>>()
     val eventAddRecipeHasPressed: LiveData<Event<Unit>> get() = _liveAddRecipeHasPressed
@@ -46,8 +46,8 @@ internal class MyRecipeViewModel @Inject constructor(
         setSortType(SortType.SORT_BY_TIME)
     }
 
-    fun recipeItemSelected(selectedRecipe: MyRecipeItem.MyRecipe){
-        if(_liveRecipeItemSelected.value != selectedRecipe){
+    fun recipeItemSelected(selectedRecipe: MyRecipeItem.MyRecipe) {
+        if (_liveRecipeItemSelected.value != selectedRecipe) {
             _liveRecipeItemSelected.value = selectedRecipe
         } else {
             _eventItemDoubleClicked.value = Event(selectedRecipe)
@@ -66,7 +66,7 @@ internal class MyRecipeViewModel @Inject constructor(
         viewModelScope.launch {
             latestRecipeUseCase(FetchLocalLatestRecipeListRequest(page))
                 .onSuccess { latestRecipeList ->
-                    if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_TIME) {
+                    if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_TIME && page > 0) {
                         val myRecipeList = latestRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
                     } else {
@@ -86,7 +86,7 @@ internal class MyRecipeViewModel @Inject constructor(
         viewModelScope.launch {
             favoriteRecipeUseCase(FetchLocalFavoriteRecipeListRequest(page))
                 .onSuccess { favoriteRecipeList ->
-                    if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_FAVORITE) {
+                    if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_FAVORITE && page > 0) {
                         val myRecipeList = favoriteRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
                     } else {
@@ -106,7 +106,7 @@ internal class MyRecipeViewModel @Inject constructor(
         viewModelScope.launch {
             titleRecipeUseCase(FetchLocalTitleRecipeListRequest(page))
                 .onSuccess { titleRecipeList ->
-                    if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_NAME) {
+                    if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_NAME && page > 0) {
                         val myRecipeList = titleRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
                     } else {
@@ -126,8 +126,18 @@ internal class MyRecipeViewModel @Inject constructor(
         _liveAddRecipeHasPressed.value = Event(Unit)
     }
 
-    fun moveToRecipeSearchFragment(){
+    fun moveToRecipeSearchFragment() {
         _eventSearchIconClicked.value = Event(Unit)
+    }
+
+    fun refreshRecipeList() {
+        _liveSortType.value?.let {
+            when (it) {
+                SortType.SORT_BY_TIME -> fetchLocalLatestRecipeList(0)
+                SortType.SORT_BY_FAVORITE -> fetchLocalFavoriteRecipeList(0)
+                SortType.SORT_BY_NAME -> fetchLocalTitleRecipeList(0)
+            }
+        }
     }
 
     fun setSortType(sortType: SortType) {
