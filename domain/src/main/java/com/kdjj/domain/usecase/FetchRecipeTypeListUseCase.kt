@@ -5,7 +5,7 @@ import com.kdjj.domain.repository.RecipeTypeRepository
 import com.kdjj.domain.model.request.EmptyRequest
 import javax.inject.Inject
 
-class FetchRecipeTypesUseCase @Inject constructor(
+class FetchRecipeTypeListUseCase @Inject constructor(
 	private val recipeTypeRepository: RecipeTypeRepository
 ) : UseCase<EmptyRequest, @JvmSuppressWildcards List<RecipeType>> {
 	

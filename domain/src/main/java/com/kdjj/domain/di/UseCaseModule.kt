@@ -6,6 +6,7 @@ import com.kdjj.domain.model.request.*
 import com.kdjj.domain.usecase.*
 import dagger.Binds
 import dagger.Module
+import kotlinx.coroutines.flow.Flow
 
 @Module
 abstract class UseCaseModule {
@@ -24,7 +25,7 @@ abstract class UseCaseModule {
     internal abstract fun bindFetchLocalLatestRecipeListUseCase(
         fetchLocalLatestRecipeListUseCase: FetchLocalLatestRecipeListUseCase
     ): UseCase<FetchLocalLatestRecipeListRequest, List<Recipe>>
-
+    
     @Binds
     internal abstract fun bindFechLocalTitleRecipeListUseCase(
         fetchLocalTitleRecipeListUseCase: FetchLocalTitleRecipeListUseCase
@@ -37,7 +38,7 @@ abstract class UseCaseModule {
     
     @Binds
     internal abstract fun bindFetchRecipeTypesUseCase(
-        fetchRecipeTypesUseCase: FetchRecipeTypesUseCase
+        fetchRecipeTypeListUseCase: FetchRecipeTypeListUseCase
     ): UseCase<EmptyRequest, List<RecipeType>>
     
     @Binds
@@ -84,4 +85,9 @@ abstract class UseCaseModule {
     internal abstract fun bindDeleteRemoteRecipeUseCase(
         deleteRemoteRecipeUseCase: DeleteRemoteRecipeUseCase
     ): UseCase<DeleteRemoteRecipeRequest, Unit>
+    
+    @Binds
+    internal abstract fun bindGetLocalRecipeFlowUseCase(
+        getLocalRecipeFlowUseCase: GetLocalRecipeFlowUseCase
+    ): UseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>
 }
