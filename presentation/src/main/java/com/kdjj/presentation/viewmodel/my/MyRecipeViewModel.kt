@@ -69,7 +69,6 @@ internal class MyRecipeViewModel @Inject constructor(
                     if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_TIME) {
                         val myRecipeList = latestRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
-                        Log.d("aaa", _liveRecipeItemList.value.toString())
                     } else {
                         val myRecipeList = latestRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + myRecipeList
