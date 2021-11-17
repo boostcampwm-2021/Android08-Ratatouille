@@ -77,4 +77,10 @@
     <dimen name="detail_stepItem_paddingVertical">8dp</dimen>
     <dimen name="detail_stepItem_paddingHorizontal">16dp</dimen>
 
+    <dimen name="summary_expectedTimeLabel_marginStart">16dp</dimen>
+    <dimen name="summary_expectedTimeLabel_marginTop">24dp</dimen>
+    <dimen name="summary_expectedTime_marginStart">16dp</dimen>
+    <dimen name="summary_label_textSize">16sp</dimen>
+    <dimen name="summary_text_textSize">14sp</dimen>
+
 </resources>

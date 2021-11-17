@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">@color/blue_600</item>
         <item name="titleTextColor">@color/light_100</item>
@@ -21,5 +22,23 @@
         <item name="android:textColor">@color/dark_500</item>
         <item name="android:textSize">@dimen/editor_inputLabel_textSize</item>
         <item name="android:layout_marginStart">@dimen/editor_inputLabel_marginStart</item>
+    </style>
+
+    <style name="SummaryLabel" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/dark_500</item>
+        <item name="android:textSize">@dimen/summary_label_textSize</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/summary_expectedTimeLabel_marginTop</item>
+        <item name="android:layout_marginStart">@dimen/summary_expectedTimeLabel_marginStart</item>
+    </style>
+
+    <style name="SummaryText" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/dark_500</item>
+        <item name="android:textSize">@dimen/summary_text_textSize</item>
+        <item name="android:layout_marginStart">@dimen/summary_expectedTime_marginStart</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
     </style>
 </resources>

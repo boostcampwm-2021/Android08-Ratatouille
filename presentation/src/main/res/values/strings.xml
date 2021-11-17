@@ -46,4 +46,9 @@
     <string name="update_time_hours">%s시간 전</string>
     <string name="update_time_minutes">%s분 전</string>
     <string name="update_time_seconds">%s초 전</string>
+
+    <string name="showRecipe">레시피 보기</string>
+    <string name="expectedTime">예상 소요시간</string>
+    <string name="ingredient">재료</string>
+    <string name="stepSummary">한눈에 보기</string>
 </resources>
