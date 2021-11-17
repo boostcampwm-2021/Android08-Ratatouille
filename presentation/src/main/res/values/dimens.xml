@@ -85,11 +85,14 @@
     <dimen name="search_tab_textSize">16sp</dimen>
     <dimen name="search_resultLabel_textSize">14sp</dimen>
     <dimen name="search_resultLabel_margin">16dp</dimen>
+    <dimen name="search_keyword_textSize">14sp</dimen>
 
     <dimen name="summary_expectedTimeLabel_marginStart">16dp</dimen>
     <dimen name="summary_expectedTimeLabel_marginTop">24dp</dimen>
     <dimen name="summary_expectedTime_marginStart">16dp</dimen>
     <dimen name="summary_label_textSize">16sp</dimen>
     <dimen name="summary_text_textSize">14sp</dimen>
-    <dimen name="search_keyword_textSize">14sp</dimen>
+    <dimen name="summary_imageView_height">250dp</dimen>
+    <dimen name="summary_lastItem_marginBottom">100dp</dimen>
+    
 </resources>
