@@ -5,9 +5,10 @@ import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeStep
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.StepTimerModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-
+@HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
     // TODO("fetchLocalRecipeById")
 ) : ViewModel() {
