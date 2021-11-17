@@ -8,6 +8,8 @@
         <variable
             name="viewModel"
             type="com.kdjj.presentation.viewmodel.recipesummary.RecipeSummaryViewModel" />
+
+        <import type="com.kdjj.presentation.common.UtilsKt" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,8 +30,9 @@
             android:id="@+id/imageView_summary_recipeImage"
             android:layout_width="match_parent"
             android:layout_height="250dp"
+            app:loadImage="@{viewModel.liveRecipe.imgPath}"
+            android:scaleType="centerCrop"
             android:contentDescription="@string/recipeImage"
-            android:src="@drawable/ic_baseline_fastfood_24"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_summary"
             tools:src="@drawable/ic_baseline_fastfood_24" />
@@ -52,6 +55,7 @@
         <TextView
             android:id="@+id/textView_summary_expectedTime"
             style="@style/SummaryText"
+            formatTotalTime="@{UtilsKt.calculateTotalTime(viewModel.liveRecipe)}"
             app:layout_constraintStart_toEndOf="@id/textView_summary_expectedTimeLabel"
             app:layout_constraintTop_toTopOf="@id/textView_summary_expectedTimeLabel"
             tools:text="40분" />
@@ -73,6 +77,7 @@
         <TextView
             android:id="@+id/textView_summary_ingredient"
             style="@style/SummaryText"
+            android:text="@{viewModel.liveRecipe.stuff}"
             app:layout_constraintLeft_toRightOf="@id/textView_summary_ingredientLabel"
             app:layout_constraintTop_toTopOf="@id/textView_summary_ingredientLabel"
             tools:text="이것 저것 머시기\n이것 저것 머시기\n이것 저것 머시기\n이것 저것 머시기" />
@@ -94,6 +99,7 @@
         <TextView
             android:id="@+id/textView_summary_stepSummary"
             style="@style/SummaryText"
+            setStepSummary="@{viewModel.liveRecipe}"
             app:layout_constraintLeft_toRightOf="@id/textView_summary_stepSummaryLabel"
             app:layout_constraintTop_toTopOf="@id/textView_summary_stepSummaryLabel"
             tools:text="재료 준비\n면 삶기\n고기 볶기" />
