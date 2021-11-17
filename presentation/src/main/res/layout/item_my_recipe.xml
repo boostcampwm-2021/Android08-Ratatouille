@@ -14,13 +14,14 @@
         <import type="android.widget.ImageView" />
         <import type="android.view.View" />
         <import type="com.kdjj.presentation.common.UtilsKt"/>
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardView_myRecipe"
             android:layout_width="@dimen/myRecipe_cardView_width"
             android:layout_height="@dimen/myRecipe_cardView_height"
@@ -31,6 +32,8 @@
             android:onClick="@{ ()-> myRecipeViewModel.recipeItemSelected(myRecipeItem)}"
             android:clickable="true"
             android:focusable="true"
+            app:strokeColor="@color/blue_600"
+            app:strokeWidth="@{myRecipeViewModel.liveRecipeItemSelected == myRecipeItem ?6 : 0}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -132,7 +135,7 @@
                     app:layout_constraintTop_toBottomOf="@id/textView_myRecipe_time" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
