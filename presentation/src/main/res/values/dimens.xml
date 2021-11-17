@@ -96,5 +96,6 @@
     <dimen name="summary_lastItem_marginBottom">100dp</dimen>
     <dimen name="summary_floatingButton_marginBottom">100dp</dimen>
     <dimen name="summary_floatingButton_marginEnd">16dp</dimen>
+    <dimen name="summary_floatingButton_padding">8dp</dimen>
 
 </resources>
