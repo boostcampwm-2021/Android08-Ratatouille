@@ -148,17 +148,20 @@
         </androidx.cardview.widget.CardView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingButton_summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/summary_floatingButton_marginEnd"
-            android:layout_marginBottom="@dimen/summary_floatingButton_marginBottom"
-            android:contentDescription="@string/floatingButton"
-            android:src="@drawable/ic_dialpad_white_24dp"
+            android:layout_marginEnd="@dimen/summary_fab_marginEnd"
+            android:layout_marginBottom="@dimen/summary_fab_marginBottom"
             android:backgroundTint="@color/blue_500"
-            app:tint="@color/light_100"
-            android:padding="@dimen/summary_floatingButton_padding"
+            android:contentDescription="@string/floatingActionButton"
+            android:padding="@dimen/summary_fab_padding"
+            android:src="@drawable/ic_dialpad_white_24dp"
+            app:fabCustomSize="@dimen/summary_fab_size"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/light_100" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
