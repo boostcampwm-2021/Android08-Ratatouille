@@ -22,7 +22,6 @@
 
     <string name="myRecipe">내 레시피</string>
     <string name="searchRecipe">검색</string>
-    <string name="othersRecipe">힐끔보기</string>
     <string name="searchMenuTitle">search</string>
     <string name="orderByDate">최신순</string>
     <string name="orderByFavorite">즐겨찾기</string>
@@ -57,4 +56,5 @@
     <string name="dataLoadFailMessage">데이터 로드에 실패하였습니다.</string>
     <string name="refresh">새로고침</string>
 
+    <string name="othersRecipe">남의 레시피</string>
 </resources>
