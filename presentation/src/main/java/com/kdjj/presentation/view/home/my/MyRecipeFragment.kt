@@ -83,8 +83,8 @@ class MyRecipeFragment : Fragment() {
         })
 
         viewModel.eventDataLoadFailed.observe(viewLifecycleOwner, EventObserver {
-            Snackbar.make(binding.root, "데이터 로드에 실패하였습니다.", Snackbar.LENGTH_LONG)
-                .setAction("새로고침"){
+            Snackbar.make(binding.root, getString(R.string.dataLoadFailMessage), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.refresh)){
                      viewModel.refreshRecipeList()
                 }
                 .setActionTextColor(requireContext().getColor(R.color.blue_500))
