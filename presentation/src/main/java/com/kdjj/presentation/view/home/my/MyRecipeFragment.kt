@@ -28,7 +28,8 @@ class MyRecipeFragment : Fragment() {
     private val myRecipeAdapter by lazy { MyRecipeListAdapter(viewModel) }
     private val navigation by lazy { Navigation.findNavController(binding.root) }
 
-    @Inject lateinit var displayConverter: DisplayConverter
+    @Inject
+    lateinit var displayConverter: DisplayConverter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +46,7 @@ class MyRecipeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initToolBar()
         setObservers()
+        initSwipeRefreshLayout()
         initRecyclerView()
     }
 
@@ -52,8 +54,8 @@ class MyRecipeFragment : Fragment() {
         binding.toolbarMyRecipe.apply {
             setTitle(R.string.myRecipe)
             inflateMenu(R.menu.toolbar_menu_search_item)
-            setOnMenuItemClickListener{
-                when(it.itemId){
+            setOnMenuItemClickListener {
+                when (it.itemId) {
                     R.id.item_search -> {
                         viewModel.moveToRecipeSearchFragment()
                         true
@@ -69,13 +71,22 @@ class MyRecipeFragment : Fragment() {
             navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
         })
 
-        viewModel.eventSearchIconClicked.observe(viewLifecycleOwner, EventObserver{
+        viewModel.eventSearchIconClicked.observe(viewLifecycleOwner, EventObserver {
             navigation.navigate(R.id.action_myRecipeFragment_to_searchRecipeFragment)
         })
 
         viewModel.eventItemDoubleClicked.observe(viewLifecycleOwner, EventObserver {
             //TODO: 레시피 개요 페이지로 이동
         })
+    }
+
+    private fun initSwipeRefreshLayout() {
+        binding.swipeRefreshLayoutMy.apply {
+            setOnRefreshListener {
+                viewModel.refreshRecipeList()
+                isRefreshing = false
+            }
+        }
     }
 
     private fun initRecyclerView() {
