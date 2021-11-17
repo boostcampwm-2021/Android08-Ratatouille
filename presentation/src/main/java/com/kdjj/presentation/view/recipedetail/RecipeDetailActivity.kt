@@ -1,13 +1,19 @@
 package com.kdjj.presentation.view.recipedetail
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
+import androidx.core.animation.doOnEnd
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.kdjj.domain.model.*
 import com.kdjj.presentation.R
+import com.kdjj.presentation.common.DisplayConverter
+import com.kdjj.presentation.common.EventObserver
 import com.kdjj.presentation.databinding.ActivityRecipeDetailBinding
 import com.kdjj.presentation.view.adapter.RecipeDetailStepListAdapter
 import com.kdjj.presentation.view.adapter.RecipeDetailTimerListAdapter
@@ -24,6 +30,8 @@ class RecipeDetailActivity : AppCompatActivity() {
 
     private lateinit var stepListAdapter: RecipeDetailStepListAdapter
     private lateinit var timerListAdapter: RecipeDetailTimerListAdapter
+
+    @Inject lateinit var displayConverter: DisplayConverter
 
     private val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(
         ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT,
@@ -81,6 +89,43 @@ class RecipeDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbarDetail)
         title = recipe.title
 
+        setObservers()
+
         viewModel.initializeWith(recipe)
+    }
+
+    private fun setObservers() {
+        viewModel.eventOpenTimer.observe(this, EventObserver {
+            AnimatorSet().apply {
+                playTogether(
+                    ObjectAnimator.ofFloat(
+                        binding.recyclerViewDetailTimer, View.TRANSLATION_Y, displayConverter.dpToPx(-50), 0f
+                    ),
+                    ObjectAnimator.ofFloat(
+                        binding.recyclerViewDetailTimer, View.ALPHA, 0f, 1f
+                    )
+                )
+                duration = 500
+                start()
+            }
+        })
+
+        viewModel.eventCloseTimer.observe(this, EventObserver { onAnimationEnd ->
+            AnimatorSet().apply {
+                playTogether(
+                    ObjectAnimator.ofFloat(
+                        binding.recyclerViewDetailTimer, View.TRANSLATION_Y, 0f, displayConverter.dpToPx(-50)
+                    ),
+                    ObjectAnimator.ofFloat(
+                        binding.recyclerViewDetailTimer, View.ALPHA, 1f, 0f
+                    )
+                )
+                duration = 500
+                doOnEnd {
+                    onAnimationEnd()
+                }
+                start()
+            }
+        })
     }
 }

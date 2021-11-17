@@ -3,6 +3,7 @@ package com.kdjj.presentation.viewmodel.recipedetail
 import androidx.lifecycle.*
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeStep
+import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.StepTimerModel
 import javax.inject.Inject
 
@@ -30,7 +31,13 @@ class RecipeDetailViewModel @Inject constructor(
         }
     }
 
-    fun initializeWith(recipe: Recipe) {
+    private val _eventOpenTimer = MutableLiveData<Event<Unit>>()
+    val eventOpenTimer: LiveData<Event<Unit>> get() = _eventOpenTimer
+
+    private val _eventCloseTimer = MutableLiveData<Event<() -> Unit>>()
+    val eventCloseTimer: LiveData<Event<() -> Unit>> get() = _eventCloseTimer
+
+   fun initializeWith(recipe: Recipe) {
         _liveStepList.value = recipe.stepList
         selectStep(recipe.stepList[0])
     }
@@ -42,6 +49,9 @@ class RecipeDetailViewModel @Inject constructor(
     fun addTimer(step: RecipeStep) {
         _liveTimerList.value?.let { timerList ->
             if (!timerList.any { it.recipeStep == step }) {
+                if (timerList.isEmpty()) {
+                    _eventOpenTimer.value = Event(Unit)
+                }
                 _liveTimerList.value = timerList + StepTimerModel(step) {
                     removeTimer(it)
                 }
@@ -66,9 +76,17 @@ class RecipeDetailViewModel @Inject constructor(
 
     private fun removeTimer(timerModel: StepTimerModel) {
         _liveTimerList.value?.let { modelList ->
-            _liveTimerList.value = modelList.toMutableList().apply {
-                timerModel.pause()
-                remove(timerModel)
+            timerModel.pause()
+            if (modelList.size == 1) {
+                _eventCloseTimer.value = Event {
+                    _liveTimerList.value = modelList.toMutableList().apply {
+                        remove(timerModel)
+                    }
+                }
+            } else {
+                _liveTimerList.value = modelList.toMutableList().apply {
+                    remove(timerModel)
+                }
             }
         }
     }
