@@ -10,4 +10,6 @@ interface RecipeImageLocalDataSource {
         byteArray: ByteArray,
         fileName: String
     ): Result<String>
+
+    suspend fun copyExif(oldPath: String, newPath: String): Result<Unit>
 }
