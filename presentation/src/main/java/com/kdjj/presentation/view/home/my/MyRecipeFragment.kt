@@ -1,19 +1,19 @@
 package com.kdjj.presentation.view.home.my
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kdjj.presentation.R
 import com.kdjj.presentation.common.DisplayConverter
 import com.kdjj.presentation.common.EventObserver
+import com.kdjj.presentation.common.RECIPE_ID
+import com.kdjj.presentation.common.RECIPE_STATE
 import com.kdjj.presentation.databinding.FragmentMyRecipeBinding
 import com.kdjj.presentation.view.adapter.MyRecipeListAdapter
 import com.kdjj.presentation.viewmodel.my.MyRecipeViewModel
@@ -123,10 +123,4 @@ class MyRecipeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-    companion object{
-        const val RECIPE_ID = "recipeID"
-        const val RECIPE_STATE = "recipeState"
-    }
-
 }
