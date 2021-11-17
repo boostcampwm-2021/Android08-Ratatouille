@@ -3,9 +3,6 @@ package com.kdjj.presentation.view.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import com.kdjj.domain.model.Recipe
-import com.kdjj.presentation.common.calculateTotalTime
-import com.kdjj.presentation.common.calculateUpdateTime
 import com.kdjj.presentation.databinding.ItemOthersRecipeBinding
 import com.kdjj.presentation.model.OthersRecipeModel
 
