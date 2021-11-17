@@ -46,8 +46,9 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
                 println("init: ${this}")
                 viewModel.liveRecipeItemSelected.observe(owner) { myRecipe ->
                     myRecipe?.let {
-                        if(myRecipe == getItem(absoluteAdapterPosition)){
+                        if(absoluteAdapterPosition != -1 && myRecipe == getItem(absoluteAdapterPosition)){
                             startAnimation(binding.textViewMyRecipeTitle)
+                            startAnimation(binding.textViewTimeTitle)
                             startAnimation(binding.textViewMyRecipeTime)
                             startAnimation(binding.textViewMyRecipeDescriptionTitle)
                             startAnimation(binding.textViewMyRecipeDescription)

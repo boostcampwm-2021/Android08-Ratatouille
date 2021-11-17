@@ -13,6 +13,7 @@
 
         <import type="android.widget.ImageView" />
         <import type="android.view.View" />
+        <import type="com.kdjj.presentation.common.UtilsKt"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -76,7 +77,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="@{myRecipeViewModel.liveRecipeItemSelected == myRecipeItem ? View.VISIBLE : View.GONE}"
-                    app:constraint_referenced_ids="textView_myRecipe_time, textView_myRecipe_descriptionTitle, textView_myRecipe_description" />
+                    app:constraint_referenced_ids="textView_time_title, textView_myRecipe_time, textView_myRecipe_descriptionTitle, textView_myRecipe_description" />
+
+                <TextView
+                    android:id="@+id/textView_time_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total_time"
+                    android:textColor="@color/light_300"
+                    android:textSize="@dimen/myRecipe_textView_timeSize"
+                    app:layout_constraintTop_toTopOf="@id/textView_myRecipe_time"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintEnd_toStartOf="@id/textView_myRecipe_time"/>
 
                 <TextView
                     android:id="@+id/textView_myRecipe_time"
@@ -85,9 +98,11 @@
                     android:layout_marginTop="@dimen/myRecipe_textView_title_marginTop"
                     android:textColor="@color/light_300"
                     android:textSize="@dimen/myRecipe_textView_timeSize"
+                    android:layout_marginStart="@dimen/myRecipe_time_marginLeft"
+                    formatTotalTime="@{UtilsKt.calculateTotalTime(myRecipeItem.recipe)}"
                     app:layout_constraintBottom_toTopOf="@id/textView_myRecipe_description"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/textView_time_title"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textView_myRecipe_title" />
 
                 <TextView
