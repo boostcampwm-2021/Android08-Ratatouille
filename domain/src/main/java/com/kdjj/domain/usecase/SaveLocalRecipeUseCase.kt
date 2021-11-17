@@ -15,22 +15,16 @@ internal class SaveLocalRecipeUseCase @Inject constructor(
             val recipe = request.recipe
             val recipeImageUri = when (recipe.imgPath.isNotEmpty()) {
                 true -> {
-                    val recipeImageByteArray =
-                        imageRepository.convertLocalUriToByteArray(recipe.imgPath).getOrThrow()
-                    imageRepository.convertByteArrayToLocalStorageUri(
-                        recipeImageByteArray, recipe.recipeId
-                    ).getOrThrow()
+                    imageRepository.copyExternalImageToInternal(recipe.imgPath, recipe.recipeId)
+                        .getOrThrow()
                 }
                 false -> ""
             }
             val recipeStepList = recipe.stepList.map { step ->
                 val stepImageUri = when (step.imgPath.isNotEmpty()) {
                     true -> {
-                        val stepImageByteArray =
-                            imageRepository.convertLocalUriToByteArray(step.imgPath).getOrThrow()
-                        imageRepository.convertByteArrayToLocalStorageUri(
-                            stepImageByteArray, step.stepId
-                        ).getOrThrow()
+                        imageRepository.copyExternalImageToInternal(step.imgPath, step.stepId)
+                            .getOrThrow()
                     }
                     false -> ""
                 }
