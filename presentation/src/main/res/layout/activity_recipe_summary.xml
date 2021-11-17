@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -8,11 +10,116 @@
             type="com.kdjj.presentation.viewmodel.recipesummary.RecipeSummaryViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.recipesummary.RecipeSummaryActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_summary"
+            style="@style/Toolbar"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView_summary_recipeImage"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:contentDescription="@string/recipeImage"
+            android:src="@drawable/ic_baseline_fastfood_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_summary"
+            tools:src="@drawable/ic_baseline_fastfood_24" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_summary_recipeImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="imageView_summary_recipeImage" />
+
+        <TextView
+            android:id="@+id/textView_summary_expectedTimeLabel"
+            style="@style/SummaryLabel"
+            android:text="@string/expectedTime"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/barrier_summary_recipeImage" />
+
+
+        <TextView
+            android:id="@+id/textView_summary_expectedTime"
+            style="@style/SummaryText"
+            app:layout_constraintStart_toEndOf="@id/textView_summary_expectedTimeLabel"
+            app:layout_constraintTop_toTopOf="@id/textView_summary_expectedTimeLabel"
+            tools:text="40분" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_summary_expectedTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="textView_summary_expectedTime, textView_summary_expectedTimeLabel" />
+
+        <TextView
+            android:id="@+id/textView_summary_ingredientLabel"
+            style="@style/SummaryLabel"
+            android:text="@string/ingredient"
+            app:layout_constraintEnd_toEndOf="@id/textView_summary_expectedTimeLabel"
+            app:layout_constraintTop_toBottomOf="@id/barrier_summary_expectedTime" />
+
+        <TextView
+            android:id="@+id/textView_summary_ingredient"
+            style="@style/SummaryText"
+            app:layout_constraintLeft_toRightOf="@id/textView_summary_ingredientLabel"
+            app:layout_constraintTop_toTopOf="@id/textView_summary_ingredientLabel"
+            tools:text="이것 저것 머시기\n이것 저것 머시기\n이것 저것 머시기\n이것 저것 머시기" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_summary_ingredient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="textView_summary_ingredient, textView_summary_ingredientLabel" />
+
+        <TextView
+            android:id="@+id/textView_summary_stepSummaryLabel"
+            style="@style/SummaryLabel"
+            android:text="@string/stepSummary"
+            app:layout_constraintEnd_toEndOf="@id/textView_summary_ingredientLabel"
+            app:layout_constraintTop_toBottomOf="@id/barrier_summary_ingredient" />
+
+        <TextView
+            android:id="@+id/textView_summary_stepSummary"
+            style="@style/SummaryText"
+            app:layout_constraintLeft_toRightOf="@id/textView_summary_stepSummaryLabel"
+            app:layout_constraintTop_toTopOf="@id/textView_summary_stepSummaryLabel"
+            tools:text="재료 준비\n면 삶기\n고기 볶기" />
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/bottomButton_margin"
+            app:cardCornerRadius="@dimen/bottomButton_corner"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_btn_bottom"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:padding="@dimen/bottomButton_padding"
+                android:text="@string/showRecipe"
+                android:textColor="@color/light_100"
+                android:textSize="@dimen/bottomButton_textSize" />
+        </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
