@@ -26,10 +26,6 @@ class RecipeDetailTimerListAdapter(
                 lifecycleOwner = parent.findViewTreeLifecycleOwner()
             }
 
-    override fun initViewHolder(binding: ItemDetailTimerBinding, getItemPosition: () -> Int) {
-
-    }
-
     override fun bind(
         holder: SingleViewTypeViewHolder<StepTimerModel, ItemDetailTimerBinding>,
         item: StepTimerModel
