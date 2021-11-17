@@ -3,6 +3,7 @@ package com.kdjj.presentation.view.home.my
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
@@ -76,7 +77,11 @@ class MyRecipeFragment : Fragment() {
         })
 
         viewModel.eventItemDoubleClicked.observe(viewLifecycleOwner, EventObserver {
-            //TODO: 레시피 개요 페이지로 이동
+            val bundle = bundleOf(
+                RECIPE_ID to it.recipe.recipeId,
+                RECIPE_STATE to it.recipe.state
+            )
+            navigation.navigate(R.id.action_myRecipeFragment_to_recipeSummaryActivity, bundle)
         })
     }
 
@@ -118,4 +123,10 @@ class MyRecipeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    companion object{
+        const val RECIPE_ID = "recipeID"
+        const val RECIPE_STATE = "recipeState"
+    }
+
 }
