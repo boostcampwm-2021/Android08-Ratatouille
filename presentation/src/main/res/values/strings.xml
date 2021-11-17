@@ -25,7 +25,7 @@
     <string name="othersRecipe">힐끔보기</string>
     <string name="searchMenuTitle">search</string>
     <string name="orderByDate">최신순</string>
-    <string name="orderByFavorite">즐겨찾기순</string>
+    <string name="orderByFavorite">즐겨찾기</string>
     <string name="orderByName">이름순</string>
     <string name="addRecipeButton">레시피 추가 버튼</string>
     <string name="recipeStuff">재료:</string>

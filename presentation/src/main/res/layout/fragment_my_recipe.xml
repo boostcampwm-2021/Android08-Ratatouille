@@ -50,20 +50,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"
-                android:checked="@{myViewModel.liveSortType.equals(SortType.SORT_BY_FAVORITE)}"
-                android:onClick="@{()->myViewModel.setSortType(SortType.SORT_BY_FAVORITE)}"
+                android:checked="@{myViewModel.liveSortType.equals(SortType.SORT_BY_NAME)}"
+                android:onClick="@{()->myViewModel.setSortType(SortType.SORT_BY_NAME)}"
                 android:button="@null"
-                android:text="@string/orderByFavorite" />
+                android:text="@string/orderByName" />
 
             <com.kdjj.presentation.view.home.my.TextRadioButton
                 android:id="@+id/radioButton_orderByName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"
-                android:checked="@{myViewModel.liveSortType.equals(SortType.SORT_BY_NAME)}"
-                android:onClick="@{()->myViewModel.setSortType(SortType.SORT_BY_NAME)}"
+                android:checked="@{myViewModel.liveSortType.equals(SortType.SORT_BY_FAVORITE)}"
+                android:onClick="@{()->myViewModel.setSortType(SortType.SORT_BY_FAVORITE)}"
                 android:button="@null"
-                android:text="@string/orderByName" />
+                android:text="@string/orderByFavorite" />
         </RadioGroup>
 
         <androidx.recyclerview.widget.RecyclerView
