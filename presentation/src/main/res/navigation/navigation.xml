@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_myRecipeFragment_to_searchRecipeFragment"
             app:destination="@id/searchRecipeFragment" />
+        <action
+            android:id="@+id/action_myRecipeFragment_to_recipeSummaryActivity"
+            app:destination="@id/recipeSummaryActivity" />
     </fragment>
     <fragment
         android:id="@+id/searchRecipeFragment"
@@ -35,4 +38,9 @@
         android:id="@+id/recipeEditorActivity"
         android:name="com.kdjj.presentation.view.recipeeditor.RecipeEditorActivity"
         android:label="RecipeEditorActivity" />
+    <activity
+        android:id="@+id/recipeSummaryActivity"
+        android:name="com.kdjj.presentation.view.recipesummary.RecipeSummaryActivity"
+        android:label="RecipeSummaryActivity">
+    </activity>
 </navigation>
