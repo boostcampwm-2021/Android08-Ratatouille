@@ -76,6 +76,7 @@
     <dimen name="detail_stepList_textSize">14sp</dimen>
     <dimen name="detail_stepItem_paddingVertical">8dp</dimen>
     <dimen name="detail_stepItem_paddingHorizontal">16dp</dimen>
+    <dimen name="myRecipe_time_marginLeft">8dp</dimen>
 
     <dimen name="summary_expectedTimeLabel_marginStart">16dp</dimen>
     <dimen name="summary_expectedTimeLabel_marginTop">24dp</dimen>
