@@ -154,6 +154,9 @@
             android:layout_marginBottom="@dimen/summary_floatingButton_marginBottom"
             android:contentDescription="@string/floatingButton"
             android:src="@drawable/ic_dialpad_white_24dp"
+            android:backgroundTint="@color/blue_500"
+            app:tint="@color/light_100"
+            android:padding="@dimen/summary_floatingButton_padding"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
