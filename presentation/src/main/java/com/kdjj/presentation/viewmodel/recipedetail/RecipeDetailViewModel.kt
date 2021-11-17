@@ -1,5 +1,6 @@
 package com.kdjj.presentation.viewmodel.recipedetail
 
+import android.media.Ringtone
 import androidx.lifecycle.*
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeStep
@@ -11,6 +12,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
     // TODO("fetchLocalRecipeById")
+    private val ringtone: Ringtone
 ) : ViewModel() {
 
     private val _liveStepList = MutableLiveData<List<RecipeStep>>()
@@ -38,6 +40,9 @@ class RecipeDetailViewModel @Inject constructor(
     private val _eventCloseTimer = MutableLiveData<Event<() -> Unit>>()
     val eventCloseTimer: LiveData<Event<() -> Unit>> get() = _eventCloseTimer
 
+    private var _liveFinishedTimerPosition = MutableLiveData<Int>()
+    val liveFinishedTimerPosition: LiveData<Int> get () = _liveFinishedTimerPosition
+
    fun initializeWith(recipe: Recipe) {
         _liveStepList.value = recipe.stepList
         selectStep(recipe.stepList[0])
@@ -54,7 +59,9 @@ class RecipeDetailViewModel @Inject constructor(
                     _eventOpenTimer.value = Event(Unit)
                 }
                 _liveTimerList.value = timerList + StepTimerModel(step) {
-                    removeTimer(it)
+                    ringtone.play()
+                    _liveFinishedTimerPosition.value = _liveTimerList.value?.indexOf(it)
+                    it.startAnimation()
                 }
             }
         }

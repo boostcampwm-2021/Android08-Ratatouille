@@ -4,6 +4,7 @@ import android.os.CountDownTimer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.kdjj.domain.model.RecipeStep
+import com.kdjj.presentation.common.Event
 
 class StepTimerModel(
     val recipeStep: RecipeStep,
@@ -21,6 +22,9 @@ class StepTimerModel(
     val liveRunning: LiveData<Boolean> get() = _liveRunning
 
     private lateinit var timer: CountDownTimer
+
+    private val _eventAnimation = MutableLiveData<Event<Unit>>()
+    val eventAnimation: LiveData<Event<Unit>> get() = _eventAnimation
 
     init {
         resume()
@@ -40,5 +44,9 @@ class StepTimerModel(
             onFinishListener(this)
         }).start()
         _liveRunning.value = true
+    }
+
+    fun startAnimation() {
+        _eventAnimation.value = Event(Unit)
     }
 }

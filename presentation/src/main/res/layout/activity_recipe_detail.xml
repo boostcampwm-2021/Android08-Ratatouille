@@ -43,6 +43,7 @@
                     android:orientation="horizontal"
                     android:background="@color/blue_100"
                     tools:listitem="@layout/item_detail_timer"
+                    app:moveTo="@{viewModel.liveFinishedTimerPosition}"
                     app:submitList="@{viewModel.liveTimerList}"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toBottomOf="@id/toolbar_detail"
