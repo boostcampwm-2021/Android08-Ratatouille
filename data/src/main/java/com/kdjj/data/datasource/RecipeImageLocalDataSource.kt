@@ -11,6 +11,4 @@ interface RecipeImageLocalDataSource {
         fileName: String,
         degree: Float? = null
     ): Result<String>
-
-    suspend fun copyExif(oldPath: String, newPath: String): Result<Unit>
 }

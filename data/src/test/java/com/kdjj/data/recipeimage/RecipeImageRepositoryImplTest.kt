@@ -63,8 +63,6 @@ class RecipeImageRepositoryImplTest {
                 testFileName
             )
         ).thenReturn(Result.success(testUri))
-        `when`(mockRecipeImageLocalDataSource.copyExif(testUri, testUri))
-            .thenReturn(Result.success(Unit))
 
         //when
         val result = recipeImageRepositoryImpl.copyRemoteImageToInternal(testUri, testFileName)

@@ -87,28 +87,6 @@ class FileSaveHelper @Inject constructor(
         }
     }
 
-    suspend fun copyExif(
-        oldPath: String,
-        newPath: String
-    ): Result<Unit> =
-        withContext(Dispatchers.IO) {
-            runCatching {
-                val inputStream = contentResolver.openInputStream(Uri.parse(oldPath))
-                val oldExif = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    ExifInterface(inputStream ?: throw Exception())
-                } else {
-                    ExifInterface(oldPath)
-                }
-                val exifOrientation = oldExif.getAttribute(ExifInterface.TAG_ORIENTATION)
-                exifOrientation?.let {
-                    val newExif = ExifInterface(newPath)
-                    newExif.setAttribute(ExifInterface.TAG_ORIENTATION, exifOrientation)
-                    newExif.saveAttributes()
-                }
-                return@runCatching
-            }
-        }
-
     companion object{
         const val MAX_WIDTH_HEIGHT_SIZE = 300
     }
