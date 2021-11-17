@@ -48,6 +48,7 @@ class OthersRecipeFragment : Fragment() {
         observeNetworkEvent()
         observeMoveToSearchEvent()
         setAdapter()
+        setSwipeRefreshLayout()
         setBinding()
         initToolBar()
     }
@@ -89,16 +90,22 @@ class OthersRecipeFragment : Fragment() {
 
                     recyclerViewOthersRecipe.adapter?.let { adapter ->
                         val lastVisibleItemPosition = (recyclerViewOthersRecipe.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
-                        val firstVisibleItemPosition = (recyclerViewOthersRecipe.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
                         val lastItemPosition = adapter.itemCount - 1
                         if (lastVisibleItemPosition == lastItemPosition && adapter.itemCount != 0 && dy > 0) {
                             this@OthersRecipeFragment.viewModel.fetchNextRecipeListPage()
-                        } else if (firstVisibleItemPosition == 0 && adapter.itemCount != 0 && dy < 0) {
-                            this@OthersRecipeFragment.viewModel.refreshList()
                         }
                     }
                 }
             })
+        }
+    }
+
+    private fun setSwipeRefreshLayout() {
+        with(binding) {
+            swipeRefreshLayoutOthers.setOnRefreshListener {
+                this@OthersRecipeFragment.viewModel.refreshList()
+                swipeRefreshLayoutOthers.isRefreshing = false
+            }
         }
     }
 
