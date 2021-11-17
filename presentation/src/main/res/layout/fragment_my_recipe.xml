@@ -40,9 +40,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"
                 android:button="@null"
+                android:minWidth="0dp"
                 android:checked="@{myViewModel.liveSortType.equals(SortType.SORT_BY_TIME)}"
                 android:onClick="@{()->myViewModel.setSortType(SortType.SORT_BY_TIME)}"
-                android:minWidth="0dp"
                 android:text="@string/orderByDate" />
 
             <com.kdjj.presentation.view.home.my.TextRadioButton
@@ -53,6 +53,7 @@
                 android:checked="@{myViewModel.liveSortType.equals(SortType.SORT_BY_NAME)}"
                 android:onClick="@{()->myViewModel.setSortType(SortType.SORT_BY_NAME)}"
                 android:button="@null"
+                android:minWidth="0dp"
                 android:text="@string/orderByName" />
 
             <com.kdjj.presentation.view.home.my.TextRadioButton
