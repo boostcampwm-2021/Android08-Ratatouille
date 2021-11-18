@@ -123,7 +123,32 @@ class RecipeSummaryViewModel @Inject constructor(
                         )
                     )
                 )
-                // TODO : 성공 실패 피드
+                // TODO : 성공 실패 피드백
+            }
+        }
+    
+    fun saveRecipeToLocalWithFavorite() =
+        viewModelScope.launch {
+            liveRecipe.value?.let { recipe ->
+                val newRecipeId = idGenerator.generateId()
+                saveLocalRecipeUseCase(
+                    SaveLocalRecipeRequest(
+                        recipe.copy(
+                            recipeId = newRecipeId,
+                            state = RecipeState.DOWNLOAD
+                        )
+                    )
+                ).onSuccess {
+                    updateLocalRecipeFavoriteUseCase(
+                        UpdateLocalRecipeFavoriteRequest(
+                            recipe.copy(
+                                recipeId = newRecipeId,
+                                state = RecipeState.DOWNLOAD
+                            )
+                        )
+                    )
+                    // TODO : 성공 실패 피드백
+                }
             }
         }
     
@@ -131,6 +156,7 @@ class RecipeSummaryViewModel @Inject constructor(
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
                 uploadRecipeUseCase(UploadRecipeRequest(recipe))
+                // TODO : 성공 실패 피드백
             }
         }
     
