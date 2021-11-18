@@ -4,7 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <variable
+            name="viewModel"
+            type="com.kdjj.presentation.viewmodel.search.SearchViewModel" />
 
+        <import type="com.kdjj.presentation.model.SearchTabState" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,9 +42,12 @@
             android:layout_height="wrap_content"
             android:text="@string/othersRecipe"
             android:textSize="@dimen/search_tab_textSize"
-            android:textColor="@color/dark_500"
+            android:textColor="@{viewModel.liveTabState == SearchTabState.OTHERS_RECIPE ? @color/light_100 : @color/dark_500}"
+            android:background="@{viewModel.liveTabState == SearchTabState.OTHERS_RECIPE ? @drawable/bg_btn_bottom : null}"
+            android:onClick="@{() -> viewModel.setTabState(SearchTabState.OTHERS_RECIPE)}"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
-            android:background="@drawable/bg_btn_bottom"
             android:layout_marginTop="@dimen/search_tab_margin"
             android:layout_marginStart="@dimen/search_tab_margin"
             android:layout_marginEnd="@dimen/search_tab_space"
@@ -56,9 +63,12 @@
             android:layout_height="0dp"
             android:text="@string/myRecipe"
             android:textSize="@dimen/search_tab_textSize"
-            android:textColor="@color/dark_500"
+            android:textColor="@{viewModel.liveTabState == SearchTabState.MY_RECIPE ? @color/light_100 : @color/dark_500}"
+            android:background="@{viewModel.liveTabState == SearchTabState.MY_RECIPE ? @drawable/bg_btn_bottom : null}"
+            android:onClick="@{() -> viewModel.setTabState(SearchTabState.MY_RECIPE)}"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
-            android:background="@drawable/bg_btn_bottom"
             android:layout_marginStart="@dimen/search_tab_space"
             android:layout_marginEnd="@dimen/search_tab_margin"
             android:paddingTop="@dimen/search_tab_paddingVertical"
@@ -72,7 +82,7 @@
             android:id="@+id/textview_search_resultLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/myRecipeSearchResult"
+            android:text="@{viewModel.liveTabState == SearchTabState.MY_RECIPE ? @string/myRecipeSearchResult : @string/othersRecipeSearchResult}"
             android:textSize="@dimen/search_resultLabel_textSize"
             android:textColor="@color/dark_500"
             android:layout_margin="@dimen/search_resultLabel_margin"
