@@ -10,9 +10,9 @@ import com.kdjj.domain.model.request.FetchLocalSearchRecipeListRequest
 import com.kdjj.domain.model.request.FetchRemoteSearchRecipeListRequest
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.Event
-import com.kdjj.presentation.model.OthersRecipeModel
+import com.kdjj.presentation.model.RecipeListItemModel
 import com.kdjj.presentation.model.SearchTabState
-import com.kdjj.presentation.model.toOthersRecipeModel
+import com.kdjj.presentation.model.toRecipeListItemModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
@@ -30,16 +30,16 @@ class SearchViewModel @Inject constructor(
     private val _liveTabState = MutableLiveData(SearchTabState.OTHERS_RECIPE)
     val liveTabState: LiveData<SearchTabState> get() = _liveTabState
 
-    private val _liveResultList = MutableLiveData<List<OthersRecipeModel>>(listOf())
-    val liveResultList: LiveData<List<OthersRecipeModel>> get() = _liveResultList
+    private val _liveResultList = MutableLiveData<List<RecipeListItemModel>>(listOf())
+    val liveResultList: LiveData<List<RecipeListItemModel>> get() = _liveResultList
 
     private val _eventException = MutableLiveData<Event<Unit>>()
     val eventException: LiveData<Event<Unit>> get() = _eventException
 
     val liveKeyword = MutableLiveData("")
 
-    private var _eventSummary = MutableLiveData<Event<OthersRecipeModel>>()
-    val eventSummary: LiveData<Event<OthersRecipeModel>> get() = _eventSummary
+    private var _eventSummary = MutableLiveData<Event<RecipeListItemModel>>()
+    val eventSummary: LiveData<Event<RecipeListItemModel>> get() = _eventSummary
 
     private var fetchingJob: Job? = null
     private var isFetching = false
@@ -81,7 +81,7 @@ class SearchViewModel @Inject constructor(
                 SearchTabState.OTHERS_RECIPE -> {
                     fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value ?: "", ""))
                         .onSuccess {
-                            _liveResultList.value = it.map(Recipe::toOthersRecipeModel)
+                            _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
                         }
                         .onFailure {
                             if (it !is CancellationException) {
@@ -92,7 +92,7 @@ class SearchViewModel @Inject constructor(
                 SearchTabState.MY_RECIPE -> {
                     fetchLocalSearchUseCase(FetchLocalSearchRecipeListRequest(liveKeyword.value ?: "", 0))
                         .onSuccess {
-                            _liveResultList.value = it.map(Recipe::toOthersRecipeModel)
+                            _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
                         }
                         .onFailure {
                             if (it !is CancellationException) {
@@ -121,8 +121,8 @@ class SearchViewModel @Inject constructor(
                     fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value ?: "", _liveResultList.value?.lastOrNull()?.title ?: ""))
                         .onSuccess { recipeList ->
                             _liveResultList.value = _liveResultList.value
-                                ?.let { it + recipeList.map(Recipe::toOthersRecipeModel) }
-                                ?: recipeList.map(Recipe::toOthersRecipeModel)
+                                ?.let { it + recipeList.map(Recipe::toRecipeListItemModel) }
+                                ?: recipeList.map(Recipe::toRecipeListItemModel)
                         }
                         .onFailure {
                             if (it !is CancellationException) {
@@ -134,8 +134,8 @@ class SearchViewModel @Inject constructor(
                     fetchLocalSearchUseCase(FetchLocalSearchRecipeListRequest(liveKeyword.value ?: "", _liveResultList.value?.size ?: 0))
                         .onSuccess { recipeList ->
                             _liveResultList.value = _liveResultList.value
-                                ?.let { it + recipeList.map(Recipe::toOthersRecipeModel) }
-                                ?: recipeList.map(Recipe::toOthersRecipeModel)
+                                ?.let { it + recipeList.map(Recipe::toRecipeListItemModel) }
+                                ?: recipeList.map(Recipe::toRecipeListItemModel)
                         }
                         .onFailure {
                             if (it !is CancellationException) {
@@ -148,7 +148,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun moveToSummary(recipeModel: OthersRecipeModel) {
+    fun moveToSummary(recipeModel: RecipeListItemModel) {
         _eventSummary.value = Event(recipeModel)
     }
 }
