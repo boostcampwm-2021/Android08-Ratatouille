@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
@@ -17,6 +18,8 @@ import com.kdjj.domain.model.exception.ApiException
 import com.kdjj.domain.model.exception.NetworkException
 import com.kdjj.presentation.R
 import com.kdjj.presentation.common.EventObserver
+import com.kdjj.presentation.common.RECIPE_ID
+import com.kdjj.presentation.common.RECIPE_STATE
 import com.kdjj.presentation.databinding.FragmentOthersRecipeBinding
 import com.kdjj.presentation.view.adapter.OthersRecipeListAdapter
 import com.kdjj.presentation.viewmodel.others.OthersViewModel
@@ -47,6 +50,7 @@ class OthersRecipeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeNetworkEvent()
         observeMoveToSearchEvent()
+        observeRecipeItemClickEvent()
         setAdapter()
         setSwipeRefreshLayout()
         setBinding()
@@ -77,7 +81,7 @@ class OthersRecipeFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        val adapter = OthersRecipeListAdapter()
+        val adapter = OthersRecipeListAdapter(viewModel)
 
         with(binding) {
             recyclerViewOthersRecipe.adapter = adapter
@@ -128,7 +132,22 @@ class OthersRecipeFragment : Fragment() {
         })
     }
 
+    private fun observeRecipeItemClickEvent() {
+        viewModel.eventRecipeItemClicked.observe(viewLifecycleOwner, EventObserver {
+            val bundle = bundleOf(
+                RECIPE_ID to it.recipeId,
+                RECIPE_STATE to it.state
+            )
+            navigation.navigate(R.id.action_othersFragment_to_recipeSummaryActivity, bundle)
+        })
+    }
+
     private fun showSnackBar(msg: String) {
         Snackbar.make(binding.root, msg, Snackbar.LENGTH_LONG).show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -33,6 +33,9 @@
         <action
             android:id="@+id/action_othersFragment_to_searchRecipeFragment"
             app:destination="@id/searchRecipeFragment" />
+        <action
+            android:id="@+id/action_othersFragment_to_recipeSummaryActivity"
+            app:destination="@id/recipeSummaryActivity" />
     </fragment>
     <activity
         android:id="@+id/recipeEditorActivity"
