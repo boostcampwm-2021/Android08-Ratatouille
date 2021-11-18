@@ -29,8 +29,8 @@ class RecipeSummaryViewModel @Inject constructor(
     
     private val _liveRecipe = MutableLiveData<Recipe>()
     val liveRecipe: LiveData<Recipe> = _liveRecipe
-    private val _eventNoInfo = MutableLiveData<Event<Unit>>()
-    val eventNoInfo: LiveData<Event<Unit>> = _eventNoInfo
+    private val _eventLoadError = MutableLiveData<Event<Unit>>()
+    val eventLoadError: LiveData<Event<Unit>> = _eventLoadError
     private val _eventOpenRecipeDetail = MutableLiveData<Event<Recipe>>()
     val eventOpenRecipeDetail: LiveData<Event<Recipe>> = _eventOpenRecipeDetail
     private val _eventOpenRecipeEditor = MutableLiveData<Event<Recipe>>()
@@ -60,7 +60,10 @@ class RecipeSummaryViewModel @Inject constructor(
                         recipe.authorId != userId && recipe.state == RecipeState.NETWORK -> {
                             RecipeSummaryType.OTHER_SERVER_RECIPE
                         }
-                        else -> throw Exception("Unknown RecipeSummaryType")
+                        else -> {
+                            _eventLoadError.value = Event(Unit)
+                            RecipeSummaryType.MY_SAVE_RECIPE
+                        }
                     }
                 )
             )
@@ -175,6 +178,6 @@ class RecipeSummaryViewModel @Inject constructor(
     }
     
     private fun notifyNoInfo() {
-        _eventNoInfo.value = Event(Unit)
+        _eventLoadError.value = Event(Unit)
     }
 }

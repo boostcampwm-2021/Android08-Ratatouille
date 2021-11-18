@@ -66,7 +66,7 @@ class RecipeSummaryActivity : AppCompatActivity() {
     }
     
     private fun initObserver() = with(recipeSummaryViewModel) {
-        eventNoInfo.observe(this@RecipeSummaryActivity, EventObserver {
+        eventLoadError.observe(this@RecipeSummaryActivity, EventObserver {
             ConfirmDialogBuilder.create(
                 this@RecipeSummaryActivity,
                 "오류 발생",
