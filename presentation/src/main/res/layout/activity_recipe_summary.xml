@@ -187,6 +187,7 @@
             android:id="@+id/stealButton_summary"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_directions_walk_white_16dp"
+            android:onClick="@{() -> viewModel.saveRecipeToLocal()}"
             android:text="@string/steal"
             app:layout_constraintBottom_toTopOf="@id/floatingActionButton_summary"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
