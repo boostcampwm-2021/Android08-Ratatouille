@@ -157,7 +157,11 @@ class RecipeSummaryViewModel @Inject constructor(
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
                 val newRecipeId = idGenerator.generateId()
-                val newRecipe = recipe.copy(recipeId = newRecipeId, state = RecipeState.DOWNLOAD)
+                val newRecipe = recipe.copy(
+                    recipeId = newRecipeId,
+                    state = RecipeState.DOWNLOAD,
+                    stepList = recipe.stepList.map { it.copy(stepId = idGenerator.generateId()) }
+                )
                 val saveResult = saveLocalRecipeUseCase(SaveLocalRecipeRequest(newRecipe))
 
                 _eventSaveFinish.value = Event(saveResult.isSuccess)
@@ -174,7 +178,8 @@ class RecipeSummaryViewModel @Inject constructor(
                 val newRecipe = recipe.copy(
                     recipeId = newRecipeId,
                     state = RecipeState.DOWNLOAD,
-                    isFavorite = true
+                    isFavorite = true,
+                    stepList = recipe.stepList.map { it.copy(stepId = idGenerator.generateId()) }
                 )
                 val saveResult = saveLocalRecipeUseCase(SaveLocalRecipeRequest(newRecipe))
 
