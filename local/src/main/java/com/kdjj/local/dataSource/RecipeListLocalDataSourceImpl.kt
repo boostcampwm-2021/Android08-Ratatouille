@@ -16,16 +16,12 @@ internal class RecipeListLocalDataSourceImpl @Inject constructor(
         runCatching {
             recipeListDao.fetchLatestRecipeList(PAGE_SIZE, index)
                 .map { it.toDomain() }
-        }.errorMap {
-            Exception(it.message)
         }
 
     override suspend fun fetchFavoriteRecipeListAfter(index: Int): Result<List<Recipe>> =
         runCatching {
             recipeListDao.fetchFavoriteRecipeList(PAGE_SIZE, index)
                 .map { it.toDomain() }
-        }.errorMap {
-            Exception(it.message)
         }
 
     override suspend fun fetchSearchRecipeListAfter(
@@ -35,8 +31,6 @@ internal class RecipeListLocalDataSourceImpl @Inject constructor(
         runCatching {
             recipeListDao.fetchSearchRecipeList(PAGE_SIZE, "%$keyword%", index)
                 .map { it.toDomain() }
-        }.errorMap {
-            Exception(it.message)
         }
 
     override suspend fun fetchTitleListAfter(
@@ -45,8 +39,6 @@ internal class RecipeListLocalDataSourceImpl @Inject constructor(
         runCatching {
             recipeListDao.fetchTitleRecipeList(PAGE_SIZE, index)
                 .map { it.toDomain() }
-        }.errorMap {
-            Exception(it.message)
         }
 
     companion object {
