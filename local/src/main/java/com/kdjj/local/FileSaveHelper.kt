@@ -26,14 +26,15 @@ class FileSaveHelper @Inject constructor(
 
     suspend fun convertToByteArray(uri: String): Result<Pair<ByteArray, Float?>> = withContext(Dispatchers.IO) {
         runCatching {
-            val inputStream = contentResolver.openInputStream(Uri.parse(uri))
+            val changedUri = if (!uri.contains("://")) "file://${uri}" else uri
+            val inputStream = contentResolver.openInputStream(Uri.parse(changedUri))
             val byteArray = inputStream?.readBytes() ?: throw Exception()
 
-            val exifInputStream = contentResolver.openInputStream(Uri.parse(uri))
+            val exifInputStream = contentResolver.openInputStream(Uri.parse(changedUri))
             val oldExif = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 ExifInterface(exifInputStream ?: throw Exception())
             } else {
-                ExifInterface(uri)
+                ExifInterface(changedUri)
             }
             val degree = when (oldExif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
                 ExifInterface.ORIENTATION_ROTATE_90 -> 90f
