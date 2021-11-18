@@ -20,6 +20,7 @@ class RecipeSummaryViewModel @Inject constructor(
     private val getRecipeFlowUseCase: UseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>,
     private val updateLocalRecipeFavoriteUseCase: UseCase<UpdateLocalRecipeFavoriteRequest, Boolean>,
     private val deleteLocalRecipeUseCase: UseCase<DeleteLocalRecipeRequest, Boolean>,
+    private val deleteRemoteRecipeUseCase: UseCase<DeleteRemoteRecipeRequest, Unit>,
     private val fetchRemoteRecipeUseCase: UseCase<FetchRemoteRecipeRequest, Recipe>,
     private val saveLocalRecipeUseCase: UseCase<SaveLocalRecipeRequest, Boolean>,
     private val uploadRecipeUseCase: UseCase<UploadRecipeRequest, Unit>,
@@ -102,12 +103,24 @@ class RecipeSummaryViewModel @Inject constructor(
     fun deleteRecipe() =
         viewModelScope.launch {
             collectJob?.cancel()
+            val recipeState = liveRecipe.value?.state ?: return@launch
+            
             liveRecipe.value?.let { recipe ->
-                deleteLocalRecipeUseCase(DeleteLocalRecipeRequest(recipe))
-                    .onSuccess {
-                        _eventDeleteRecipeSuccess.value = Event(Unit)
+                when (recipeState) {
+                    RecipeState.CREATE,
+                    RecipeState.UPLOAD,
+                    RecipeState.DOWNLOAD -> {
+                        deleteLocalRecipeUseCase(DeleteLocalRecipeRequest(recipe))
+                            .onSuccess {
+                                _eventDeleteRecipeSuccess.value = Event(Unit)
+                            }
+                        // TODO : 실패 유저 피드백
                     }
-                // TODO : 실패 유저 피드백
+                    RecipeState.NETWORK -> {
+                        deleteRemoteRecipeUseCase(DeleteRemoteRecipeRequest(recipe))
+                        // TODO : 성공 실패 유저 피드백
+                    }
+                }
             }
         }
     
