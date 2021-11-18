@@ -11,5 +11,5 @@ internal fun calculateSeconds(min: Int, sec: Int): Int {
 }
 
 internal fun calculateTotalTime(recipe: Recipe?): Int {
-    return recipe?.let { it.stepList.map { it.seconds }.reduce { acc, i -> acc + i } } ?: 0
+    return recipe?.let { it.stepList.map { it.seconds }.fold(0) { acc, i -> acc + i } } ?: 0
 }
