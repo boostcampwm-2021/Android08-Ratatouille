@@ -24,6 +24,7 @@ class RecipeSummaryViewModel @Inject constructor(
     private val fetchRemoteRecipeUseCase: UseCase<FetchRemoteRecipeRequest, Recipe>,
     private val saveLocalRecipeUseCase: UseCase<SaveLocalRecipeRequest, Boolean>,
     private val uploadRecipeUseCase: UseCase<UploadRecipeRequest, Unit>,
+    private val increaseViewCountUseCase: UseCase<IncreaseRemoteRecipeViewCountRequest, Unit>,
     private val idGenerator: IdGenerator
 ) : ViewModel() {
     
@@ -105,6 +106,7 @@ class RecipeSummaryViewModel @Inject constructor(
                         fetchRemoteRecipeUseCase(FetchRemoteRecipeRequest(recipeId))
                             .onSuccess { recipe ->
                                 _liveRecipe.value = recipe
+                                increaseViewCountUseCase(IncreaseRemoteRecipeViewCountRequest(recipe))
                             }
                     }
                 }
