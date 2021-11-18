@@ -14,7 +14,7 @@ interface RecipeListRepository {
     
     suspend fun fetchRemoteSearchRecipeListAfter(
         keyword: String,
-        lastVisibleTitle: String
+        refresh: Boolean
     ): Result<List<Recipe>>
     
     suspend fun fetchLocalLatestRecipeListAfter(

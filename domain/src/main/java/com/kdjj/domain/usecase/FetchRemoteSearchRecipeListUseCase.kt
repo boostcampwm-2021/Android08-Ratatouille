@@ -10,5 +10,5 @@ internal class FetchRemoteSearchRecipeListUseCase @Inject constructor(
 ): UseCase<FetchRemoteSearchRecipeListRequest, @JvmSuppressWildcards List<Recipe>>{
 
     override suspend fun invoke(request: FetchRemoteSearchRecipeListRequest): Result<List<Recipe>> =
-        recipeListRepository.fetchRemoteSearchRecipeListAfter(request.keyword, request.lastVisibleTitle)
+        recipeListRepository.fetchRemoteSearchRecipeListAfter(request.keyword, request.refresh)
 }

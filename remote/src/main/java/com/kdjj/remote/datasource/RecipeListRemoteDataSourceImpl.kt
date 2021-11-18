@@ -25,9 +25,9 @@ internal class RecipeListRemoteDataSourceImpl @Inject constructor(
     
     override suspend fun fetchSearchRecipeListAfter(
         keyword: String,
-        lastVisibleTitle: String
+        refresh: Boolean
     ): Result<List<Recipe>> =
         runCatching {
-            recipeListService.fetchSearchRecipeListAfter(keyword, lastVisibleTitle)
+            recipeListService.fetchSearchRecipeListAfter(keyword, refresh)
         }
 }

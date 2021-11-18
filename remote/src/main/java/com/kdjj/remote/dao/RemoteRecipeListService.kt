@@ -14,6 +14,6 @@ internal interface RemoteRecipeListService {
     
     suspend fun fetchSearchRecipeListAfter(
         keyword: String,
-        lastVisibleTitle: String
+        refresh: Boolean
     ): List<Recipe>
 }
