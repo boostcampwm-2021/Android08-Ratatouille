@@ -55,8 +55,8 @@ internal class RecipeEditorViewModel @Inject constructor(
     private val _liveRegisterHasPressed = MutableLiveData(false)
     val liveRegisterHasPressed: LiveData<Boolean> get() = _liveRegisterHasPressed
 
-    private val _liveSaveResult = MutableLiveData<Boolean?>()
-    val liveSaveResult: LiveData<Boolean?> get() = _liveSaveResult
+    private val _eventSaveResult = MutableLiveData<Event<Boolean>>()
+    val eventSaveResult: LiveData<Event<Boolean>> get() = _eventSaveResult
 
     private val _liveLoading = MutableLiveData(false)
     val liveLoading: LiveData<Boolean> get() = _liveLoading
@@ -180,24 +180,20 @@ internal class RecipeEditorViewModel @Inject constructor(
                         if (isEditing) {
                             updateRemoteRecipeUseCase(UpdateRemoteRecipeRequest(recipe))
                                 .onSuccess {
-                                    _liveSaveResult.value = true
+                                    _eventSaveResult.value = Event(true)
                                 }
                                 .onFailure {
-                                    _liveSaveResult.value = false
+                                    _eventSaveResult.value = Event(false)
                                 }
                         } else {
-                            _liveSaveResult.value = true
+                            _eventSaveResult.value = Event(true)
                         }
                     }.onFailure {
                         it.printStackTrace()
-                        _liveSaveResult.value = false
+                        _eventSaveResult.value = Event(false)
                     }
             }
         }
-    }
-    
-    fun resetResultState() {
-        _liveSaveResult.value = null
     }
     
     private fun isRecipeValid(): Boolean {
