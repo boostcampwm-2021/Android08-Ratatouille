@@ -48,7 +48,7 @@ class RecipeSummaryActivity : AppCompatActivity() {
         )
     )
     private val allFloatingButtonList = floatingMenuIdListMap.values
-        .reduce { acc, list ->
+        .fold(listOf<Int>()) { acc, list ->
             acc + list
         }.distinct()
     private var isFloatingActionButtonOpen = false

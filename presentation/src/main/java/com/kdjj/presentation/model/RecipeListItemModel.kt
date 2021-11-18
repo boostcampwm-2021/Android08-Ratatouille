@@ -18,7 +18,7 @@ internal fun Recipe.toRecipeListItemModel() =
     RecipeListItemModel(
         recipeId,
         title,
-        stepList.map { it.seconds }.reduce { acc, i -> acc + i },
+        stepList.map { it.seconds }.fold(0) { acc, i -> acc + i },
         stuff,
         viewCount,
         imgPath,
