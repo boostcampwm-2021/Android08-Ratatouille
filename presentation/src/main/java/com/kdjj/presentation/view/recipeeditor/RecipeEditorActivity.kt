@@ -10,16 +10,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
-import androidx.core.view.size
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.kdjj.domain.model.RecipeState
 import com.kdjj.presentation.R
 import com.kdjj.presentation.common.RECIPE_ID
-import com.kdjj.presentation.common.RECIPE_STATE
 import com.kdjj.presentation.databinding.ActivityRecipeEditorBinding
-import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.view.adapter.RecipeEditorListAdapter
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.view.dialog.CustomProgressDialog

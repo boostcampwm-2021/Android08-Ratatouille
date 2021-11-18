@@ -91,11 +91,11 @@ internal class RecipeEditorViewModel @Inject constructor(
                         )
                     }
                     notifyStepListChange()
-                    _liveLoading.value = false
                 }
                 .onFailure {
                     // TODO(raise error)
                 }
+                _liveLoading.value = false
         }
         isInitialized = true
     }
