@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.request.DeleteLocalRecipeRequest
+import com.kdjj.domain.model.request.FetchRemoteRecipeRequest
 import com.kdjj.domain.model.request.GetLocalRecipeFlowRequest
 import com.kdjj.domain.model.request.UpdateLocalRecipeFavoriteRequest
 import com.kdjj.domain.usecase.UseCase
@@ -22,6 +23,7 @@ class RecipeSummaryViewModel @Inject constructor(
     private val getRecipeFlowUseCase: UseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>,
     private val updateLocalRecipeFavoriteUseCase: UseCase<UpdateLocalRecipeFavoriteRequest, Boolean>,
     private val deleteLocalRecipeUseCase: UseCase<DeleteLocalRecipeRequest, Boolean>,
+    private val fetchRemoteRecipeUseCase: UseCase<FetchRemoteRecipeRequest, Recipe>,
     idGenerator: IdGenerator
 ) : ViewModel() {
     
@@ -78,7 +80,10 @@ class RecipeSummaryViewModel @Inject constructor(
                             }
                     }
                     RecipeState.NETWORK -> {
-                        // TODO : Remote에서 레시피 가져오는 기능
+                        fetchRemoteRecipeUseCase(FetchRemoteRecipeRequest(recipeId))
+                            .onSuccess { recipe ->
+                                _liveRecipe.value = recipe
+                            }
                     }
                 }
             }
