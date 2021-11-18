@@ -57,4 +57,6 @@
     <string name="refresh">새로고침</string>
 
     <string name="othersRecipe">남의 레시피</string>
+    <string name="othersRecipeSearchResult">남의 레시피 검색 결과</string>
+    <string name="myRecipeSearchResult">내 레시피 검색 결과</string>
 </resources>
