@@ -171,6 +171,7 @@
             android:id="@+id/uploadButton_summary"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_upload_white_16dp"
+            android:onClick="@{() -> viewModel.uploadRecipe()}"
             android:text="@string/upload"
             app:layout_constraintBottom_toTopOf="@id/stealFavoriteButton_summary"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
