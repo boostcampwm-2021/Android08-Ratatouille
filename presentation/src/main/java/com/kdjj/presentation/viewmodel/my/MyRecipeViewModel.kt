@@ -179,7 +179,7 @@ internal class MyRecipeViewModel @Inject constructor(
 
     private fun hideProgress() {
         _liveRecipeItemList.value?.let {
-            if (it.isNotEmpty()) {
+            if (it.lastOrNull() == MyRecipeItem.Progress) {
                 _liveRecipeItemList.value = it.subList(0, it.size - 1)
             }
         }
