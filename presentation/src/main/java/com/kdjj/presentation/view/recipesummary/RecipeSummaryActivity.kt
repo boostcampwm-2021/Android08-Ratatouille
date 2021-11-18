@@ -66,7 +66,13 @@ class RecipeSummaryActivity : AppCompatActivity() {
     
     private fun initObserver() = with(recipeSummaryViewModel) {
         eventNoInfo.observe(this@RecipeSummaryActivity, EventObserver {
-            showNoInfoDialog()
+            ConfirmDialogBuilder.create(
+                this@RecipeSummaryActivity,
+                "오류 발생",
+                "레시피를 들고오던 라따뚜이가 넘어졌습니다..ㅠㅠ\n확인버튼을 누르면 이전 화면으로 돌아갑니다."
+            ) {
+                finish()
+            }
         })
         
         liveRecipe.observe(this@RecipeSummaryActivity) { recipe ->
@@ -80,7 +86,7 @@ class RecipeSummaryActivity : AppCompatActivity() {
             initFloatingMenuVisibility(menuButtonList)
         })
         
-        eventOpenRecipeDetail.observe(this@RecipeSummaryActivity) {
+        eventOpenRecipeDetail.observe(this@RecipeSummaryActivity, EventObserver {
             val intent = Intent(
                 this@RecipeSummaryActivity,
                 RecipeDetailActivity::class.java
@@ -91,9 +97,9 @@ class RecipeSummaryActivity : AppCompatActivity() {
                 }
             }
             startActivity(intent)
-        }
-    
-        eventOpenRecipeEditor.observe(this@RecipeSummaryActivity) {
+        })
+        
+        eventOpenRecipeEditor.observe(this@RecipeSummaryActivity, EventObserver {
             val intent = Intent(
                 this@RecipeSummaryActivity,
                 RecipeEditorActivity::class.java
@@ -104,7 +110,17 @@ class RecipeSummaryActivity : AppCompatActivity() {
                 }
             }
             startActivity(intent)
-        }
+        })
+        
+        eventDeleteRecipeSuccess.observe(this@RecipeSummaryActivity, EventObserver {
+            ConfirmDialogBuilder.create(
+                this@RecipeSummaryActivity,
+                "삭제 완료",
+                "레시피가 정상적으로 삭제되었습니다.\n확인을 눌러 이전화면으로 돌아가주세요."
+            ) {
+                finish()
+            }
+        })
     }
     
     private fun initFloatingMenuVisibility(buttonList: List<AppCompatButton>?) = with(binding) {
@@ -124,16 +140,6 @@ class RecipeSummaryActivity : AppCompatActivity() {
             val recipeId = bundle.getString(RECIPE_ID)
             val recipeState = bundle.getSerializable(RECIPE_STATE) as? RecipeState
             recipeSummaryViewModel.initViewModel(recipeId, recipeState)
-        }
-    }
-    
-    private fun showNoInfoDialog() {
-        ConfirmDialogBuilder.create(
-            this,
-            "오류 발생",
-            "레시피를 들고오던 라따뚜이가 넘어졌습니다..ㅠㅠ\n확인버튼을 누르면 이전 화면으로 돌아갑니다."
-        ) {
-            finish()
         }
     }
 }

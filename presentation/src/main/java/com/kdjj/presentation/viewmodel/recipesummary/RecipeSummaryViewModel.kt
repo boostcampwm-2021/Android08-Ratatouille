@@ -6,12 +6,12 @@ import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.request.DeleteLocalRecipeRequest
 import com.kdjj.domain.model.request.GetLocalRecipeFlowRequest
 import com.kdjj.domain.model.request.UpdateLocalRecipeFavoriteRequest
-import com.kdjj.domain.model.request.UploadRecipeRequest
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.common.IdGenerator
 import com.kdjj.presentation.model.RecipeSummaryType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -21,6 +21,7 @@ import javax.inject.Inject
 class RecipeSummaryViewModel @Inject constructor(
     private val getRecipeFlowUseCase: UseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>,
     private val updateLocalRecipeFavoriteUseCase: UseCase<UpdateLocalRecipeFavoriteRequest, Boolean>,
+    private val deleteLocalRecipeUseCase: UseCase<DeleteLocalRecipeRequest, Boolean>,
     idGenerator: IdGenerator
 ) : ViewModel() {
     
@@ -32,6 +33,8 @@ class RecipeSummaryViewModel @Inject constructor(
     val eventOpenRecipeDetail: LiveData<Event<Unit>> = _eventOpenRecipeDetail
     private val _eventOpenRecipeEditor = MutableLiveData<Event<Unit>>()
     val eventOpenRecipeEditor: LiveData<Event<Unit>> = _eventOpenRecipeEditor
+    private val _eventDeleteRecipeSuccess = MutableLiveData<Event<Unit>>()
+    val eventDeleteRecipeSuccess: LiveData<Event<Unit>> = _eventDeleteRecipeSuccess
     val eventInitView: LiveData<Event<RecipeSummaryType>> =
         _liveRecipe.switchMap { recipe ->
             MutableLiveData(
@@ -56,12 +59,13 @@ class RecipeSummaryViewModel @Inject constructor(
         }
     private var isInitialized = false
     private val userId = idGenerator.getDeviceId()
+    private var collectJob: Job? = null
     
     fun initViewModel(recipeId: String?, recipeState: RecipeState?) {
         if (isInitialized) return
         if (recipeId == null || recipeState == null) notifyNoInfo()
         else {
-            viewModelScope.launch {
+            collectJob = viewModelScope.launch {
                 when (recipeState) {
                     RecipeState.CREATE,
                     RecipeState.UPLOAD,
@@ -88,6 +92,18 @@ class RecipeSummaryViewModel @Inject constructor(
             liveRecipe.value?.let { recipe ->
                 updateLocalRecipeFavoriteUseCase(UpdateLocalRecipeFavoriteRequest(recipe))
                 // TODO : 성공 실패 유저 피드백
+            }
+        }
+    
+    fun deleteRecipe() =
+        viewModelScope.launch {
+            collectJob?.cancel()
+            liveRecipe.value?.let { recipe ->
+                deleteLocalRecipeUseCase(DeleteLocalRecipeRequest(recipe))
+                    .onSuccess {
+                        _eventDeleteRecipeSuccess.value = Event(Unit)
+                    }
+                // TODO : 실패 유저 피드백
             }
         }
     
