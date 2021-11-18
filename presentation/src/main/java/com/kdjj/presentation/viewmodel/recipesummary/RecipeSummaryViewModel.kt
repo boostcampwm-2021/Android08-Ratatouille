@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.request.GetLocalRecipeFlowRequest
+import com.kdjj.domain.model.request.UpdateLocalRecipeFavoriteRequest
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.common.IdGenerator
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RecipeSummaryViewModel @Inject constructor(
     private val getRecipeFlowUseCase: UseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>,
+    private val updateLocalRecipeFavoriteUseCase: UseCase<UpdateLocalRecipeFavoriteRequest, Boolean>,
     idGenerator: IdGenerator
 ) : ViewModel() {
     
@@ -74,6 +76,14 @@ class RecipeSummaryViewModel @Inject constructor(
         
         isInitialized = true
     }
+    
+    fun updateRecipeFavorite() =
+        viewModelScope.launch {
+            liveRecipe.value?.let { recipe ->
+                updateLocalRecipeFavoriteUseCase(UpdateLocalRecipeFavoriteRequest(recipe))
+                // TODO : 성공 실패 유저 피드백
+            }
+        }
     
     private fun notifyNoInfo() {
         _eventNoInfo.value = Event(Unit)

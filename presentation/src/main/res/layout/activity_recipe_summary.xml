@@ -166,6 +166,7 @@
             android:id="@+id/favoriteButton_summary"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_star_white_16dp"
+            android:onClick="@{() -> viewModel.updateRecipeFavorite()}"
             android:text="@string/registFavorite"
             app:layout_constraintBottom_toTopOf="@id/editButton_summary"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
