@@ -61,7 +61,7 @@ class SearchRecipeFragment : Fragment() {
                         .findLastCompletelyVisibleItemPosition()
                     val lastItemPosition = resultListAdapter.itemCount - 1
                     if (lastVisibleItemPosition == lastItemPosition && lastItemPosition >= 0 && dy > 0) {
-                        viewModel.loadMoreRecipe()
+                        viewModel.loadMoreRecipe(false)
                     }
                 }
             })
@@ -81,7 +81,7 @@ class SearchRecipeFragment : Fragment() {
             .subscribeOn(AndroidSchedulers.mainThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                viewModel.updateSearchKeyword()
+                viewModel.updateSearchKeyword(true)
             }, {
                 it.printStackTrace()
             })
@@ -95,7 +95,7 @@ class SearchRecipeFragment : Fragment() {
         })
 
         viewModel.liveTabState.observe(viewLifecycleOwner) {
-            viewModel.updateSearchKeyword()
+            viewModel.updateSearchKeyword(true)
         }
 
         viewModel.eventSummary.observe(viewLifecycleOwner, EventObserver {

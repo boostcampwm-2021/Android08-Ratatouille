@@ -65,7 +65,7 @@ class OthersRecipeFragment : Fragment() {
 
     private fun initToolBar() {
         binding.toolbarOthers.apply {
-            title = getString(R.string.othersRecipe)
+            title = getString(R.string.others)
             inflateMenu(R.menu.toolbar_menu_search_item)
             setOnMenuItemClickListener{
                 when(it.itemId){
