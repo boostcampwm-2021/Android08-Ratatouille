@@ -76,8 +76,10 @@ class SearchViewModel @Inject constructor(
             when (liveTabState.value) {
                 SearchTabState.OTHERS_RECIPE -> {
                     fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value ?: "", _liveResultList.value?.lastOrNull()?.title ?: ""))
-                        .onSuccess {
-                            _liveResultList.value = it.map(Recipe::toOthersRecipeModel)
+                        .onSuccess { recipeList ->
+                            _liveResultList.value = _liveResultList.value
+                                ?.let { it + recipeList.map(Recipe::toOthersRecipeModel) }
+                                ?: recipeList.map(Recipe::toOthersRecipeModel)
                         }
                         .onFailure {
                             _eventException.value = Event(Unit)
@@ -85,8 +87,10 @@ class SearchViewModel @Inject constructor(
                 }
                 SearchTabState.MY_RECIPE -> {
                     fetchLocalSearchUseCase(FetchLocalSearchRecipeListRequest(liveKeyword.value ?: "", _liveResultList.value?.size ?: 0))
-                        .onSuccess {
-                            _liveResultList.value = it.map(Recipe::toOthersRecipeModel)
+                        .onSuccess { recipeList ->
+                            _liveResultList.value = _liveResultList.value
+                                ?.let { it + recipeList.map(Recipe::toOthersRecipeModel) }
+                                ?: recipeList.map(Recipe::toOthersRecipeModel)
                         }
                         .onFailure {
                             _eventException.value = Event(Unit)

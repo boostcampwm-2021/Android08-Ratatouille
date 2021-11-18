@@ -9,9 +9,16 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.kdjj.domain.model.Recipe
+import com.kdjj.domain.model.request.SaveLocalRecipeRequest
+import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.R
 import com.kdjj.presentation.common.EventObserver
 import com.kdjj.presentation.databinding.FragmentSearchRecipeBinding
+import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.view.adapter.OthersRecipeListAdapter
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.viewmodel.search.SearchViewModel
@@ -19,7 +26,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchRecipeFragment : Fragment() {
@@ -44,7 +53,22 @@ class SearchRecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         resultListAdapter = OthersRecipeListAdapter()
-        binding.recyclerViewSearch.adapter = resultListAdapter
+
+        binding.recyclerViewSearch.apply {
+            adapter = resultListAdapter
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    val lastVisibleItemPosition = (layoutManager as LinearLayoutManager)
+                        .findLastCompletelyVisibleItemPosition()
+                    val lastItemPosition = resultListAdapter.itemCount - 1
+                    if (lastVisibleItemPosition == lastItemPosition && lastItemPosition >= 0 && dy > 0) {
+                        viewModel.loadMoreRecipe()
+                    }
+                }
+            })
+        }
 
         focusInput()
         setObservers()
