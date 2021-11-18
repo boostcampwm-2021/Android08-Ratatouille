@@ -13,6 +13,7 @@ import com.kdjj.presentation.model.OthersRecipeModel
 import com.kdjj.presentation.model.SearchTabState
 import com.kdjj.presentation.model.toOthersRecipeModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,18 +33,30 @@ class SearchViewModel @Inject constructor(
 
     val liveKeyword = MutableLiveData("")
 
+    private var _eventSummary = MutableLiveData<Event<OthersRecipeModel>>()
+    val eventSummary: LiveData<Event<OthersRecipeModel>> get() = _eventSummary
+
+    private var fetchingJob: Job? = null
+    private var isFetching = false
+
     fun setTabState(tabState: SearchTabState) {
         if (_liveTabState.value != tabState) {
             _liveTabState.value = tabState
+            fetchingJob?.cancel()
+            isFetching = false
         }
     }
 
     fun updateSearchKeyword() {
+        if (isFetching) return
+        isFetching = true
+
         if (liveKeyword.value?.isNotBlank() != true) {
             _liveResultList.value = listOf()
             return
         }
-        viewModelScope.launch {
+
+        fetchingJob = viewModelScope.launch {
             when (liveTabState.value) {
                 SearchTabState.OTHERS_RECIPE -> {
                     fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value ?: "", ""))
@@ -64,15 +77,20 @@ class SearchViewModel @Inject constructor(
                         }
                 }
             }
+            isFetching = false
         }
     }
 
     fun loadMoreRecipe() {
+        if (isFetching) return
+        isFetching = true
+
         if (liveKeyword.value?.isNotBlank() != true) {
             _liveResultList.value = listOf()
             return
         }
-        viewModelScope.launch {
+
+        fetchingJob = viewModelScope.launch {
             when (liveTabState.value) {
                 SearchTabState.OTHERS_RECIPE -> {
                     fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value ?: "", _liveResultList.value?.lastOrNull()?.title ?: ""))
@@ -97,6 +115,11 @@ class SearchViewModel @Inject constructor(
                         }
                 }
             }
+            isFetching = false
         }
+    }
+
+    fun moveToSummary(recipeModel: OthersRecipeModel) {
+        _eventSummary.value = Event(recipeModel)
     }
 }
