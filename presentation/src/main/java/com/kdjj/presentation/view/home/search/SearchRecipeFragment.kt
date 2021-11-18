@@ -12,9 +12,11 @@ import androidx.fragment.app.viewModels
 import com.kdjj.presentation.R
 import com.kdjj.presentation.common.EventObserver
 import com.kdjj.presentation.databinding.FragmentSearchRecipeBinding
+import com.kdjj.presentation.view.adapter.OthersRecipeListAdapter
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.viewmodel.search.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
@@ -26,6 +28,8 @@ class SearchRecipeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SearchViewModel by viewModels()
+
+    private lateinit var resultListAdapter: OthersRecipeListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +43,9 @@ class SearchRecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        resultListAdapter = OthersRecipeListAdapter()
+        binding.recyclerViewSearch.adapter = resultListAdapter
+
         focusInput()
         setObservers()
     }
@@ -50,6 +57,7 @@ class SearchRecipeFragment : Fragment() {
             }
         }
             .debounce(500, TimeUnit.MILLISECONDS)
+            .subscribeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 viewModel.updateSearchKeyword()
             }, {

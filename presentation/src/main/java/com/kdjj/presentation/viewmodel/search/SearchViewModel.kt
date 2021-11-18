@@ -9,7 +9,9 @@ import com.kdjj.domain.model.request.FetchLocalSearchRecipeListRequest
 import com.kdjj.domain.model.request.FetchRemoteSearchRecipeListRequest
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.Event
+import com.kdjj.presentation.model.OthersRecipeModel
 import com.kdjj.presentation.model.SearchTabState
+import com.kdjj.presentation.model.toOthersRecipeModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,8 +24,8 @@ class SearchViewModel @Inject constructor(
     private val _liveTabState = MutableLiveData(SearchTabState.OTHERS_RECIPE)
     val liveTabState: LiveData<SearchTabState> get() = _liveTabState
 
-    private val _liveResultList = MutableLiveData<List<Recipe>>(listOf())
-    val liveResultList: LiveData<List<Recipe>> get() = _liveResultList
+    private val _liveResultList = MutableLiveData<List<OthersRecipeModel>>(listOf())
+    val liveResultList: LiveData<List<OthersRecipeModel>> get() = _liveResultList
 
     private val _eventException = MutableLiveData<Event<Unit>>()
     val eventException: LiveData<Event<Unit>> get() = _eventException
@@ -37,13 +39,16 @@ class SearchViewModel @Inject constructor(
     }
 
     fun updateSearchKeyword() {
+        if (liveKeyword.value?.isNotBlank() != true) {
+            _liveResultList.value = listOf()
+            return
+        }
         viewModelScope.launch {
             when (liveTabState.value) {
                 SearchTabState.OTHERS_RECIPE -> {
                     fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value ?: "", ""))
                         .onSuccess {
-                            println("local ${it.size}")
-                            _liveResultList.value = it
+                            _liveResultList.value = it.map(Recipe::toOthersRecipeModel)
                         }
                         .onFailure {
                             _eventException.value = Event(Unit)
@@ -52,8 +57,7 @@ class SearchViewModel @Inject constructor(
                 SearchTabState.MY_RECIPE -> {
                     fetchLocalSearchUseCase(FetchLocalSearchRecipeListRequest(liveKeyword.value ?: "", 0))
                         .onSuccess {
-                            println("local ${it.size}")
-                            _liveResultList.value = it
+                            _liveResultList.value = it.map(Recipe::toOthersRecipeModel)
                         }
                         .onFailure {
                             _eventException.value = Event(Unit)
@@ -64,12 +68,16 @@ class SearchViewModel @Inject constructor(
     }
 
     fun loadMoreRecipe() {
+        if (liveKeyword.value?.isNotBlank() != true) {
+            _liveResultList.value = listOf()
+            return
+        }
         viewModelScope.launch {
             when (liveTabState.value) {
                 SearchTabState.OTHERS_RECIPE -> {
                     fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value ?: "", _liveResultList.value?.lastOrNull()?.title ?: ""))
                         .onSuccess {
-                            _liveResultList.value = it
+                            _liveResultList.value = it.map(Recipe::toOthersRecipeModel)
                         }
                         .onFailure {
                             _eventException.value = Event(Unit)
@@ -78,7 +86,7 @@ class SearchViewModel @Inject constructor(
                 SearchTabState.MY_RECIPE -> {
                     fetchLocalSearchUseCase(FetchLocalSearchRecipeListRequest(liveKeyword.value ?: "", _liveResultList.value?.size ?: 0))
                         .onSuccess {
-                            _liveResultList.value = it
+                            _liveResultList.value = it.map(Recipe::toOthersRecipeModel)
                         }
                         .onFailure {
                             _eventException.value = Event(Unit)
