@@ -136,6 +136,11 @@ class RecipeSummaryActivity : AppCompatActivity() {
             val message = if (isSuccess) "저장 성공" else "저장 실패"
             showSnackBar(message)
         })
+        
+        eventUpdateFavoriteFinish.observe(this@RecipeSummaryActivity, EventObserver{isSuccess ->
+            val message = if(isSuccess) "즐겨찾기 추가 / 제거 성공" else "즐겨찾기 추가 / 제거 실패"
+            showSnackBar(message)
+        })
     }
     
     private fun initFloatingMenuVisibility(buttonList: List<AppCompatButton>?) = with(binding) {
