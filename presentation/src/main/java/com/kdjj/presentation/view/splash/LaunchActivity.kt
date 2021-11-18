@@ -13,6 +13,6 @@ class LaunchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        startActivity(Intent(this, RecipeDetailActivity::class.java))
+        startActivity(Intent(this, HomeActivity::class.java))
     }
 }
