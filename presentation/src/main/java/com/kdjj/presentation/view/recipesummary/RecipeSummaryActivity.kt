@@ -137,8 +137,8 @@ class RecipeSummaryActivity : AppCompatActivity() {
             showSnackBar(message)
         })
         
-        eventUpdateFavoriteFinish.observe(this@RecipeSummaryActivity, EventObserver{isSuccess ->
-            val message = if(isSuccess) "즐겨찾기 추가 / 제거 성공" else "즐겨찾기 추가 / 제거 실패"
+        eventUpdateFavoriteFinish.observe(this@RecipeSummaryActivity, EventObserver { isSuccess ->
+            val message = if (isSuccess) "즐겨찾기 추가 / 제거 성공" else "즐겨찾기 추가 / 제거 실패"
             showSnackBar(message)
         })
     }
