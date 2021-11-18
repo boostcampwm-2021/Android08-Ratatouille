@@ -3,10 +3,7 @@ package com.kdjj.presentation.viewmodel.recipesummary
 import androidx.lifecycle.*
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeState
-import com.kdjj.domain.model.request.DeleteLocalRecipeRequest
-import com.kdjj.domain.model.request.FetchRemoteRecipeRequest
-import com.kdjj.domain.model.request.GetLocalRecipeFlowRequest
-import com.kdjj.domain.model.request.UpdateLocalRecipeFavoriteRequest
+import com.kdjj.domain.model.request.*
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.common.IdGenerator
@@ -24,7 +21,8 @@ class RecipeSummaryViewModel @Inject constructor(
     private val updateLocalRecipeFavoriteUseCase: UseCase<UpdateLocalRecipeFavoriteRequest, Boolean>,
     private val deleteLocalRecipeUseCase: UseCase<DeleteLocalRecipeRequest, Boolean>,
     private val fetchRemoteRecipeUseCase: UseCase<FetchRemoteRecipeRequest, Recipe>,
-    idGenerator: IdGenerator
+    private val saveLocalRecipeUseCase: UseCase<SaveLocalRecipeRequest, Boolean>,
+    private val idGenerator: IdGenerator
 ) : ViewModel() {
     
     private val _liveRecipe = MutableLiveData<Recipe>()
@@ -109,6 +107,15 @@ class RecipeSummaryViewModel @Inject constructor(
                         _eventDeleteRecipeSuccess.value = Event(Unit)
                     }
                 // TODO : 실패 유저 피드백
+            }
+        }
+    
+    fun saveRecipeToLocal() =
+        viewModelScope.launch {
+            liveRecipe.value?.let { recipe ->
+                val newRecipeId = idGenerator.generateId()
+                saveLocalRecipeUseCase(SaveLocalRecipeRequest(recipe.copy(recipeId = newRecipeId, state = RecipeState.DOWNLOAD)))
+                // TODO : 성공 실패 피드
             }
         }
     
