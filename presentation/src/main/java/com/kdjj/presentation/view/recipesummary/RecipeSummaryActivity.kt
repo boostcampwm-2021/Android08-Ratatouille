@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.DataBindingUtil
 import com.kdjj.domain.model.RecipeState
 import com.kdjj.presentation.R
@@ -21,6 +22,31 @@ class RecipeSummaryActivity : AppCompatActivity() {
     
     private lateinit var binding: ActivityRecipeSummaryBinding
     private val recipeSummaryViewModel: RecipeSummaryViewModel by viewModels()
+    private val floatingMenuIdListMap: Map<RecipeSummaryType, List<Int>> = mapOf(
+        RecipeSummaryType.MY_SAVE_RECIPE to listOf(
+            R.id.uploadButton_summary,
+            R.id.deleteButton_summary,
+            R.id.editButton_summary,
+            R.id.favoriteButton_summary,
+        ),
+        RecipeSummaryType.OTHER_SERVER_RECIPE to listOf(
+            R.id.stealButton_summary,
+            R.id.stealFavoriteButton_summary,
+        ),
+        RecipeSummaryType.MY_SERVER_RECIPE to listOf(
+            R.id.deleteButton_summary
+        ),
+        RecipeSummaryType.MY_SAVE_OTHER_RECIPE to listOf(
+            R.id.deleteButton_summary,
+            R.id.editButton_summary,
+            R.id.favoriteButton_summary,
+        )
+    )
+    private val allFloatingButtonList = floatingMenuIdListMap.values
+        .reduce { acc, list ->
+            acc + list
+        }.distinct()
+    private var isFloatingActionButtonOpen = false
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,31 +68,24 @@ class RecipeSummaryActivity : AppCompatActivity() {
         liveRecipe.observe(this@RecipeSummaryActivity) { recipe ->
             title = recipe.title
         }
-        liveRecipeSummaryType.observe(this@RecipeSummaryActivity) { recipeSummaryType ->
-            setFloatingMenuVisibility(recipeSummaryType)
-        }
+        
+        eventInitView.observe(this@RecipeSummaryActivity, EventObserver { recipeSummaryType ->
+            val menuButtonList = floatingMenuIdListMap[recipeSummaryType]?.map {
+                findViewById<AppCompatButton>(it)
+            }
+            initFloatingMenuVisibility(menuButtonList)
+        })
     }
     
-    private fun setFloatingMenuVisibility(recipeSummaryType: RecipeSummaryType?) = with(binding) {
-        when (recipeSummaryType) {
-            RecipeSummaryType.MY_SAVE_RECIPE -> {
-                editButtonSummary.visibility = View.VISIBLE
-                favoriteButtonSummary.visibility = View.VISIBLE
-                deleteButtonSummary.visibility = View.VISIBLE
-                uploadButtonSummary.visibility = View.VISIBLE
-            }
-            RecipeSummaryType.MY_SERVER_RECIPE -> {
-                deleteButtonSummary.visibility = View.VISIBLE
-            }
-            RecipeSummaryType.MY_SAVE_OTHER_RECIPE -> {
-                favoriteButtonSummary.visibility = View.VISIBLE
-                editButtonSummary.visibility = View.VISIBLE
-                deleteButtonSummary.visibility = View.VISIBLE
-            }
-            RecipeSummaryType.OTHER_SERVER_RECIPE -> {
-                stealFavoriteButtonSummary.visibility = View.VISIBLE
-                stealButtonSummary.visibility = View.VISIBLE
-            }
+    private fun initFloatingMenuVisibility(buttonList: List<AppCompatButton>?) = with(binding) {
+        allFloatingButtonList.map { buttonId ->
+            findViewById<AppCompatButton>(buttonId)
+        }.forEach { button ->
+            button.visibility = View.GONE
+        }
+        
+        buttonList?.forEach { button ->
+            button.visibility = View.VISIBLE
         }
     }
     
