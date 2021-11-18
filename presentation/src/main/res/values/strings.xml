@@ -51,4 +51,7 @@
     <string name="expectedTime">예상 소요시간</string>
     <string name="ingredient">재료</string>
     <string name="stepSummary">한눈에 보기</string>
+
+    <string name="networkErrorMessage">네트워크와 연결이 끊어졌습니다.</string>
+    <string name="severErrorMessage">서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.</string>
 </resources>
