@@ -180,6 +180,7 @@
             android:id="@+id/stealFavoriteButton_summary"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_star_white_16dp"
+            android:onClick="@{() -> viewModel.saveRecipeToLocalWithFavorite()}"
             android:text="@string/steal_favorite"
             app:layout_constraintBottom_toTopOf="@id/stealButton_summary"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
