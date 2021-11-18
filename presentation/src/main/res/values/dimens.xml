@@ -99,5 +99,11 @@
     <dimen name="summary_fab_marginEnd">16dp</dimen>
     <dimen name="summary_fab_padding">8dp</dimen>
     <dimen name="summary_fab_size">40dp</dimen>
+    <dimen name="summary_floatingButton_paddingVertical">4dp</dimen>
+    <dimen name="summary_floatingButton_paddingEnd">8dp</dimen>
+    <dimen name="summary_floatingButton_paddingStart">10dp</dimen>
+    <dimen name="summary_floatingButton_drawablePadding">8dp</dimen>
+    <dimen name="summary_floatingButton_textSize">12sp</dimen>
+    <dimen name="summary_floatingButton_marginBottom">8dp</dimen>
 
 </resources>

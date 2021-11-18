@@ -42,4 +42,22 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
     </style>
+
+    <style name="SummaryFloatingButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:textColor">@color/light_100</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">@dimen/summary_floatingButton_paddingVertical</item>
+        <item name="android:paddingBottom">@dimen/summary_floatingButton_paddingVertical</item>
+        <item name="android:paddingStart">@dimen/summary_floatingButton_paddingStart</item>
+        <item name="android:paddingEnd">@dimen/summary_floatingButton_paddingEnd</item>
+        <item name="android:drawablePadding">@dimen/summary_floatingButton_drawablePadding</item>
+        <item name="android:textSize">@dimen/summary_floatingButton_textSize</item>
+        <item name="backgroundTint">@color/blue_500</item>
+        <item name="android:background">@drawable/bg_summary_button_round</item>
+        <item name="android:layout_marginBottom">@dimen/summary_floatingButton_marginBottom</item>
+    </style>
 </resources>

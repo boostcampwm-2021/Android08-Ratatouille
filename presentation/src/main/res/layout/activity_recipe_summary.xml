@@ -162,6 +162,56 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:tint="@color/light_100" />
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/favoriteButton_summary"
+            style="@style/SummaryFloatingButton"
+            android:drawableEnd="@drawable/ic_star_white_16dp"
+            android:text="@string/registFavorite"
+            app:layout_constraintBottom_toTopOf="@id/editButton_summary"
+            app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/editButton_summary"
+            style="@style/SummaryFloatingButton"
+            android:drawableEnd="@drawable/ic_edit_white_16dp"
+            android:text="@string/edit"
+            app:layout_constraintBottom_toTopOf="@id/deleteButton_summary"
+            app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/deleteButton_summary"
+            style="@style/SummaryFloatingButton"
+            android:drawableEnd="@drawable/ic_trash_white_16dp"
+            android:elevation="8dp"
+            android:text="@string/delete"
+            app:layout_constraintBottom_toTopOf="@id/uploadButton_summary"
+            app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/uploadButton_summary"
+            style="@style/SummaryFloatingButton"
+            android:drawableEnd="@drawable/ic_upload_white_16dp"
+            android:text="@string/upload"
+            app:layout_constraintBottom_toTopOf="@id/stealFavoriteButton_summary"
+            app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/stealFavoriteButton_summary"
+            style="@style/SummaryFloatingButton"
+            android:drawableEnd="@drawable/ic_star_white_16dp"
+            android:text="@string/steal_favorite"
+            app:layout_constraintBottom_toTopOf="@id/stealButton_summary"
+            app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/stealButton_summary"
+            style="@style/SummaryFloatingButton"
+            android:drawableEnd="@drawable/ic_directions_walk_white_16dp"
+            android:text="@string/steal"
+            app:layout_constraintBottom_toTopOf="@id/floatingActionButton_summary"
+            app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
