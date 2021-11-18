@@ -31,7 +31,11 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
         override fun areContentsTheSame(oldItem: MyRecipeItem, newItem: MyRecipeItem): Boolean {
             return when {
                 oldItem is MyRecipeItem.MyRecipe && newItem is MyRecipeItem.MyRecipe -> {
-                    oldItem.recipe.recipeId == newItem.recipe.recipeId
+                    oldItem.recipe.recipeId == newItem.recipe.recipeId &&
+                            oldItem.recipe.title == newItem.recipe.title &&
+                            oldItem.recipe.stepList == newItem.recipe.stepList &&
+                            oldItem.recipe.stuff == newItem.recipe.stuff &&
+                            oldItem.recipe.imgPath == newItem.recipe.imgPath
                 }
                 oldItem is MyRecipeItem.PlusButton && newItem is MyRecipeItem.PlusButton -> true
                 else -> false
