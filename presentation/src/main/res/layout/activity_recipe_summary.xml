@@ -162,6 +162,7 @@
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_trash_white_16dp"
             android:elevation="8dp"
+            android:onClick="@{() -> viewModel.deleteRecipe()}"
             android:text="@string/delete"
             app:layout_constraintBottom_toTopOf="@id/uploadButton_summary"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
