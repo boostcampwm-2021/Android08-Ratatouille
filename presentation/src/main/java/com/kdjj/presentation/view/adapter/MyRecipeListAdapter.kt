@@ -75,9 +75,7 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
     }
 
     inner class ProgressViewHolder(private val binding: ItemMyRecipeProgressBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-    }
+        RecyclerView.ViewHolder(binding.root) { }
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
