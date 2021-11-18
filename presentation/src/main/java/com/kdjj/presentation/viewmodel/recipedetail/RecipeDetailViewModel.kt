@@ -3,16 +3,25 @@ package com.kdjj.presentation.viewmodel.recipedetail
 import android.media.Ringtone
 import androidx.lifecycle.*
 import com.kdjj.domain.model.Recipe
+import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.RecipeStep
+import com.kdjj.domain.model.request.FetchRemoteRecipeRequest
+import com.kdjj.domain.model.request.GetLocalRecipeFlowRequest
+import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.StepTimerModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
-    // TODO("fetchLocalRecipeById")
-    private val ringtone: Ringtone
+    private val ringtone: Ringtone,
+    private val getLocalRecipeFlowUseCase: UseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>,
+    private val fetchRemoteRecipeUseCase: UseCase<FetchRemoteRecipeRequest, Recipe>
 ) : ViewModel() {
 
     private val _liveStepList = MutableLiveData<List<RecipeStep>>()
@@ -43,9 +52,43 @@ class RecipeDetailViewModel @Inject constructor(
     private var _liveFinishedTimerPosition = MutableLiveData<Int>()
     val liveFinishedTimerPosition: LiveData<Int> get () = _liveFinishedTimerPosition
 
-   fun initializeWith(recipe: Recipe) {
-        _liveStepList.value = recipe.stepList
-        selectStep(recipe.stepList[0])
+    private var isInitialized = false
+
+    fun initializeWith(recipeId: String?, state: RecipeState?) {
+        if (isInitialized) return
+
+        if (recipeId == null || state == null) {
+            // TODO(raise error)
+            return
+        }
+
+        viewModelScope.launch {
+            when (state) {
+                RecipeState.NETWORK -> {
+                    fetchRemoteRecipeUseCase(FetchRemoteRecipeRequest(recipeId))
+                        .onSuccess { recipe ->
+                            _liveStepList.value = recipe.stepList
+                            selectStep(recipe.stepList[0])
+                        }
+                        .onFailure {
+                            // TODO(raise error)
+                        }
+                }
+                RecipeState.CREATE, RecipeState.DOWNLOAD, RecipeState.UPLOAD -> {
+                    getLocalRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
+                        .onSuccess {
+                            val recipe = it.first()
+                            _liveStepList.value = recipe.stepList
+                            selectStep(recipe.stepList[0])
+                        }
+                        .onFailure {
+                            // TODO(raise error)
+                        }
+                }
+            }
+        }
+
+        isInitialized = true
     }
 
     fun selectStep(step: RecipeStep) {
