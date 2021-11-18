@@ -44,7 +44,8 @@ internal class SaveLocalRecipeUseCase @Inject constructor(
             recipeRepository.saveLocalRecipe(
                 recipe.copy(
                     imgPath = recipeImageUri,
-                    stepList = recipeStepList
+                    stepList = recipeStepList,
+                    createTime = System.currentTimeMillis()
                 )
             ).getOrThrow()
         }
