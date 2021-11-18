@@ -8,7 +8,10 @@ import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeStepType
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.model.request.EmptyRequest
+import com.kdjj.domain.model.request.GetLocalRecipeFlowRequest
 import com.kdjj.domain.model.request.SaveLocalRecipeRequest
+import com.kdjj.domain.model.request.UpdateRemoteRecipeRequest
+import com.kdjj.domain.usecase.UpdateRemoteRecipeUseCase
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.IdGenerator
 import com.kdjj.presentation.common.RecipeStepValidator
@@ -17,6 +20,10 @@ import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.model.toDomain
 import com.kdjj.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,6 +33,8 @@ internal class RecipeEditorViewModel @Inject constructor(
     private val recipeStepValidator: RecipeStepValidator,
     private val saveRecipeUseCase: UseCase<SaveLocalRecipeRequest, Boolean>,
     private val fetchRecipeTypesUseCase: UseCase<EmptyRequest, List<RecipeType>>,
+    private val getLocalRecipeFlowUseCase: UseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>,
+    private val updateRemoteRecipeUseCase: UseCase<UpdateRemoteRecipeRequest, Unit>,
     private val idGenerator: IdGenerator,
 ) : ViewModel() {
     
@@ -47,8 +56,10 @@ internal class RecipeEditorViewModel @Inject constructor(
     private var isInitialized = false
     private val _liveMoveToPosition = MutableLiveData<Int>()
     val liveMoveToPosition: LiveData<Int> get() = _liveMoveToPosition
+
+    private var isEditing = false
     
-    fun initializeWith(recipe: Recipe?) {
+    fun initializeWith(recipeId: String?) {
         if (isInitialized) return
         
         _liveLoading.value = true
@@ -56,11 +67,19 @@ internal class RecipeEditorViewModel @Inject constructor(
             fetchRecipeTypesUseCase(EmptyRequest)
                 .onSuccess { recipeTypes ->
                     _liveRecipeTypes.value = recipeTypes
-                    recipe?.let {
-                        val (metaModel, stepList) =
-                            recipe.toPresentation(recipeValidator, recipeTypes, recipeStepValidator)
-                        recipeMetaModel = metaModel
-                        recipeStepModelList = stepList
+                    recipeId?.let {
+                        getLocalRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
+                            .onSuccess {
+                                val recipe = it.first()
+                                val (metaModel, stepList) =
+                                    recipe.toPresentation(recipeValidator, recipeTypes, recipeStepValidator)
+                                recipeMetaModel = metaModel
+                                recipeStepModelList = stepList
+                                isEditing = true
+                            }
+                            .onFailure {
+                                // TODO(raise error)
+                            }
                     } ?: run {
                         recipeMetaModel = RecipeEditorItem.RecipeMetaModel.create(
                             idGenerator, recipeTypes, recipeValidator
@@ -75,6 +94,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                     _liveLoading.value = false
                 }
                 .onFailure {
+                    // TODO(raise error)
                 }
         }
         isInitialized = true
@@ -139,18 +159,27 @@ internal class RecipeEditorViewModel @Inject constructor(
         _liveRegisterHasPressed.value = true
         if (isRecipeValid()) {
             viewModelScope.launch {
-                saveRecipeUseCase(
-                    SaveLocalRecipeRequest(
-                        recipeMetaModel.toDomain(
-                            recipeStepModelList,
-                            liveRecipeTypes.value ?: emptyList()
-                        )
-                    )
-                ).onSuccess {
-                    _liveSaveResult.value = true
-                }.onFailure {
-                    _liveSaveResult.value = false
-                }
+                val recipe = recipeMetaModel.toDomain(
+                    recipeStepModelList,
+                    liveRecipeTypes.value ?: emptyList()
+                )
+                saveRecipeUseCase(SaveLocalRecipeRequest(recipe))
+                    .onSuccess {
+                        if (isEditing) {
+                            updateRemoteRecipeUseCase(UpdateRemoteRecipeRequest(recipe))
+                                .onSuccess {
+                                    _liveSaveResult.value = true
+                                }
+                                .onFailure {
+                                    _liveSaveResult.value = false
+                                }
+                        } else {
+                            _liveSaveResult.value = true
+                        }
+                    }.onFailure {
+                        it.printStackTrace()
+                        _liveSaveResult.value = false
+                    }
             }
         }
     }

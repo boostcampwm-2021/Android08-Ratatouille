@@ -14,7 +14,10 @@ import androidx.core.view.size
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.kdjj.domain.model.RecipeState
 import com.kdjj.presentation.R
+import com.kdjj.presentation.common.RECIPE_ID
+import com.kdjj.presentation.common.RECIPE_STATE
 import com.kdjj.presentation.databinding.ActivityRecipeEditorBinding
 import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.view.adapter.RecipeEditorListAdapter
@@ -114,7 +117,12 @@ class RecipeEditorActivity : AppCompatActivity() {
 
         setupObservers()
 
-        viewModel.initializeWith(null)
+        loadRecipe()
+    }
+
+    private fun loadRecipe() {
+        val recipeId = intent.extras?.getString(RECIPE_ID)
+        viewModel.initializeWith(recipeId)
     }
 
     private fun setupObservers() {
@@ -158,15 +166,9 @@ class RecipeEditorActivity : AppCompatActivity() {
             .setTitle(R.string.selectPhoto)
             .setItems(R.array.photoSourceSelection) { _, i ->
                 when (i) {
-                    0 -> {
-                        startCamera()
-                    }
-                    1 -> {
-                        startGallery()
-                    }
-                    2 -> {
-                        viewModel.setImageEmpty()
-                    }
+                    0 -> startCamera()
+                    1 -> startGallery()
+                    2 -> viewModel.setImageEmpty()
                 }
             }
             .setOnCancelListener {
