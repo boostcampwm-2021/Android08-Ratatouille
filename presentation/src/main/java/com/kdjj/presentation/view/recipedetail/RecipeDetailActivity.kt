@@ -76,11 +76,8 @@ class RecipeDetailActivity : AppCompatActivity() {
         ItemTouchHelper(itemTouchCallback).attachToRecyclerView(binding.recyclerViewDetailTimer)
 
         setSupportActionBar(binding.toolbarDetail)
-        // TODO(set title)
-        //        title = recipe.title
 
         setObservers()
-
         loadRecipe()
     }
 
@@ -142,5 +139,9 @@ class RecipeDetailActivity : AppCompatActivity() {
                 finish()
             }
         })
+
+        viewModel.liveTitle.observe(this) {
+            title = it
+        }
     }
 }

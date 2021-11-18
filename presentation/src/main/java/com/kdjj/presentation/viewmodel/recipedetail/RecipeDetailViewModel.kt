@@ -58,6 +58,9 @@ class RecipeDetailViewModel @Inject constructor(
     private val _eventError = MutableLiveData<Event<Unit>>()
     val eventError: LiveData<Event<Unit>> get() = _eventError
 
+    private val _liveTitle = MutableLiveData<String>()
+    val liveTitle: LiveData<String> get() = _liveTitle
+
     private var isInitialized = false
 
     fun initializeWith(recipeId: String?, state: RecipeState?) {
@@ -76,6 +79,7 @@ class RecipeDetailViewModel @Inject constructor(
                         .onSuccess { recipe ->
                             _liveStepList.value = recipe.stepList
                             selectStep(recipe.stepList[0])
+                            _liveTitle.value = recipe.title
                         }
                         .onFailure {
                             _eventError.value = Event(Unit)
@@ -87,6 +91,7 @@ class RecipeDetailViewModel @Inject constructor(
                             val recipe = it.first()
                             _liveStepList.value = recipe.stepList
                             selectStep(recipe.stepList[0])
+                            _liveTitle.value = recipe.title
                         }
                         .onFailure {
                             _eventError.value = Event(Unit)
