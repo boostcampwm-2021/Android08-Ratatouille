@@ -31,6 +31,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:inputType="text"
+                android:text="@={viewModel.liveKeyword}"
+                android:textSize="@dimen/search_keyword_textSize"
+                android:textColor="@color/dark_500"
                 android:drawableStart="@drawable/ic_search_recipe_with_padding_24dp"
                 android:importantForAutofill="no"
                 tools:ignore="LabelFor" />
@@ -94,6 +97,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/search_resultLabel_margin"
+            app:submitList="@{viewModel.liveResultList}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/textview_search_resultLabel"
             app:layout_constraintBottom_toBottomOf="parent"

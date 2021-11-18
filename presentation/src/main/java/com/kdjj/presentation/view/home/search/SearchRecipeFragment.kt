@@ -10,9 +10,14 @@ import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import com.kdjj.presentation.R
+import com.kdjj.presentation.common.EventObserver
 import com.kdjj.presentation.databinding.FragmentSearchRecipeBinding
+import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.viewmodel.search.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class SearchRecipeFragment : Fragment() {
@@ -35,6 +40,33 @@ class SearchRecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         focusInput()
+        setObservers()
+    }
+
+    private fun setObservers() {
+        Observable.create<Unit> { emitter ->
+            viewModel.liveKeyword.observe(viewLifecycleOwner) {
+                emitter.onNext(Unit)
+            }
+        }
+            .debounce(500, TimeUnit.MILLISECONDS)
+            .subscribe({
+                viewModel.updateSearchKeyword()
+            }, {
+                it.printStackTrace()
+            })
+
+        viewModel.eventException.observe(viewLifecycleOwner, EventObserver {
+            ConfirmDialogBuilder.create(
+                context ?: return@EventObserver,
+                "오류",
+                "오류가 발생했습니다."
+            ) { }
+        })
+
+        viewModel.liveTabState.observe(viewLifecycleOwner) {
+            viewModel.updateSearchKeyword()
+        }
     }
 
     private fun focusInput() {
