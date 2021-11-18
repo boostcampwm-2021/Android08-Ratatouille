@@ -30,4 +30,11 @@ internal class RecipeRemoteDataSourceImpl @Inject constructor(
         }.errorMap {
             Exception(it.message)
         }
+
+    override suspend fun fetchRecipe(recipeID: String): Result<Recipe> =
+        runCatching {
+            recipeService.fetchRecipe(recipeID)
+        }.errorMap {
+            Exception(it.message)
+        }
 }

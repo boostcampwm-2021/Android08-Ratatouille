@@ -15,4 +15,8 @@ internal interface RemoteRecipeService {
     suspend fun deleteRecipe(
         recipe: Recipe
     )
+
+    suspend fun fetchRecipe(
+        recipeID: String
+    ): Recipe
 }

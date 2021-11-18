@@ -95,4 +95,9 @@ abstract class UseCaseModule {
     internal abstract fun bindGetRecipeUpdateStateUseCase(
         getRecipeUpdateStateUseCase: GetRecipeUpdateStateUseCase
     ): UseCase<EmptyRequest, Flow<Int>>
+
+    @Binds
+    internal abstract fun bindFetchRemoteRecipeUseCase(
+        fetchRemoteRecipeUseCase: FetchRemoteRecipeUseCase
+    ): UseCase<FetchRemoteRecipeRequest, Recipe>
 }
