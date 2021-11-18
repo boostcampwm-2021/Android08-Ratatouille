@@ -9,7 +9,7 @@ interface RecipeListRepository {
     ): Result<List<Recipe>>
     
     suspend fun fetchRemotePopularRecipeListAfter(
-        lastVisibleViewCount: Int
+        refresh: Boolean
     ): Result<List<Recipe>>
     
     suspend fun fetchRemoteSearchRecipeListAfter(

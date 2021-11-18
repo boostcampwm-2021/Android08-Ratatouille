@@ -1,8 +1,7 @@
 package com.kdjj.remote.dao
 
 import android.util.Log
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.toObject
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.exception.ApiException
@@ -14,8 +13,10 @@ import javax.inject.Inject
 import kotlin.coroutines.resumeWithException
 
 internal class RecipeListServiceImpl @Inject constructor(
-    private val firestore: FirebaseFirestore
+    private val fireStore: FirebaseFirestore
 ) : RemoteRecipeListService {
+
+    private var popularListQuery: Query? = null
 
     override suspend fun fetchLatestRecipeListAfter(
         lastVisibleCreateTime: Long
@@ -25,7 +26,7 @@ internal class RecipeListServiceImpl @Inject constructor(
                 Log.d("Test", "invokeOnCancellation")
             }
             Log.d("Test", "fetchLatestRecipeListAfter")
-            firestore.collection(RECIPE_COLLECTION_ID)
+            fireStore.collection(RECIPE_COLLECTION_ID)
                 .orderBy(FIELD_CREATE_TIME, Query.Direction.DESCENDING)
                 .startAfter(lastVisibleCreateTime)
                 .limit(PAGING_SIZE)
@@ -52,20 +53,34 @@ internal class RecipeListServiceImpl @Inject constructor(
                     Log.d("Test", "addOnCanceledListener")
                 }
         }
-    
+
     override suspend fun fetchPopularRecipeListAfter(
-        lastVisibleViewCount: Int
+        refresh: Boolean
     ): List<Recipe> =
         suspendCancellableCoroutine {
+
             it.invokeOnCancellation {
                 Log.d("Test", "invokeOnCancellation")
             }
-            firestore.collection(RECIPE_COLLECTION_ID)
+
+            if (refresh) {
+                popularListQuery = null
+            }
+
+            val query = popularListQuery ?: fireStore.collection(RECIPE_COLLECTION_ID)
                 .orderBy(FIELD_VIEW_COUNT, Query.Direction.DESCENDING)
-                .startAfter(lastVisibleViewCount)
                 .limit(PAGING_SIZE)
-                .get()
+
+            query.get()
                 .addOnSuccessListener { queryDocumentSnapshot ->
+
+                    if (queryDocumentSnapshot.documents.isNotEmpty()) {
+                        popularListQuery = fireStore.collection(RECIPE_COLLECTION_ID)
+                            .orderBy(FIELD_VIEW_COUNT, Query.Direction.DESCENDING)
+                            .startAfter(queryDocumentSnapshot.documents.last())
+                            .limit(PAGING_SIZE)
+                    }
+
                     if (queryDocumentSnapshot.metadata.isFromCache) {
                         it.resumeWithException(NetworkException())
                     } else {
@@ -90,7 +105,7 @@ internal class RecipeListServiceImpl @Inject constructor(
         lastVisibleTitle: String
     ): List<Recipe> =
         suspendCancellableCoroutine {
-            firestore.collection(RECIPE_COLLECTION_ID)
+            fireStore.collection(RECIPE_COLLECTION_ID)
                 .whereGreaterThanOrEqualTo(FIELD_TITLE, keyword)
                 .whereLessThan(FIELD_TITLE, keyword + HANGLE_MAX_VALUE)
                 .orderBy(FIELD_TITLE, Query.Direction.ASCENDING)

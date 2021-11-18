@@ -17,9 +17,9 @@ internal class RecipeListRepositoryImpl @Inject constructor(
         recipeListRemoteDataSource.fetchLatestRecipeListAfter(lastVisibleCreateTime)
     
     override suspend fun fetchRemotePopularRecipeListAfter(
-        lastVisibleViewCount: Int
+        refresh: Boolean
     ): Result<List<Recipe>> =
-        recipeListRemoteDataSource.fetchPopularRecipeListAfter(lastVisibleViewCount)
+        recipeListRemoteDataSource.fetchPopularRecipeListAfter(refresh)
     
     override suspend fun fetchRemoteSearchRecipeListAfter(
         keyword: String,

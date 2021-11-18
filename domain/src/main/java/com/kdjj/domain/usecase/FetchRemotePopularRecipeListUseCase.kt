@@ -10,5 +10,5 @@ internal class FetchRemotePopularRecipeListUseCase @Inject constructor(
 ) : UseCase<FetchRemotePopularRecipeListRequest, @JvmSuppressWildcards List<Recipe>>{
 
     override suspend fun invoke(request: FetchRemotePopularRecipeListRequest): Result<List<Recipe>> =
-        recipeListRepository.fetchRemotePopularRecipeListAfter(request.lastVisibleViewCount)
+        recipeListRepository.fetchRemotePopularRecipeListAfter(request.refresh)
 }
