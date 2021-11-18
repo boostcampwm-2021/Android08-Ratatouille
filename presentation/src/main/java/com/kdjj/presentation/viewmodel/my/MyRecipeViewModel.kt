@@ -61,6 +61,7 @@ internal class MyRecipeViewModel @Inject constructor(
             latestRecipeUseCase(FetchLocalLatestRecipeListRequest(page))
                 .onSuccess { latestRecipeList ->
                     if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_TIME && page > 0) {
+                        hideProgress()
                         val myRecipeList = latestRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
                     } else {
@@ -71,6 +72,7 @@ internal class MyRecipeViewModel @Inject constructor(
                     }
                 }
                 .onFailure {
+                    hideProgress()
                     _liveSortType.value = SortType.SORT_BY_TIME
                     _eventDataLoadFailed.value = Event(Unit)
                 }
@@ -82,6 +84,7 @@ internal class MyRecipeViewModel @Inject constructor(
             favoriteRecipeUseCase(FetchLocalFavoriteRecipeListRequest(page))
                 .onSuccess { favoriteRecipeList ->
                     if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_FAVORITE && page > 0) {
+                        hideProgress()
                         val myRecipeList = favoriteRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
                     } else {
@@ -92,6 +95,7 @@ internal class MyRecipeViewModel @Inject constructor(
                     }
                 }
                 .onFailure {
+                    hideProgress()
                     _liveSortType.value = SortType.SORT_BY_FAVORITE
                     _eventDataLoadFailed.value = Event(Unit)
                 }
@@ -103,6 +107,7 @@ internal class MyRecipeViewModel @Inject constructor(
             titleRecipeUseCase(FetchLocalTitleRecipeListRequest(page))
                 .onSuccess { titleRecipeList ->
                     if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_NAME && page > 0) {
+                        hideProgress()
                         val myRecipeList = titleRecipeList.map { MyRecipeItem.MyRecipe(it) }
                         _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
                     } else {
@@ -113,6 +118,7 @@ internal class MyRecipeViewModel @Inject constructor(
                     }
                 }
                 .onFailure {
+                    hideProgress()
                     _liveSortType.value = SortType.SORT_BY_NAME
                     _eventDataLoadFailed.value = Event(Unit)
                 }
@@ -128,6 +134,7 @@ internal class MyRecipeViewModel @Inject constructor(
     }
 
     fun fetchMoreRecipeData(page: Int) {
+        showProgress()
         when (_liveSortType.value) {
             SortType.SORT_BY_TIME -> fetchLocalLatestRecipeList(page)
             SortType.SORT_BY_FAVORITE -> fetchLocalFavoriteRecipeList(page)
@@ -151,6 +158,18 @@ internal class MyRecipeViewModel @Inject constructor(
                 SortType.SORT_BY_TIME -> fetchLocalLatestRecipeList(0)
                 SortType.SORT_BY_FAVORITE -> fetchLocalFavoriteRecipeList(0)
                 SortType.SORT_BY_NAME -> fetchLocalTitleRecipeList(0)
+            }
+        }
+    }
+
+    private fun showProgress(){
+        _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(MyRecipeItem.Progress)
+    }
+
+    private fun hideProgress(){
+        _liveRecipeItemList.value?.let{
+            if(it.isNotEmpty()){
+                _liveRecipeItemList.value = it.subList(0, it.size - 1)
             }
         }
     }
