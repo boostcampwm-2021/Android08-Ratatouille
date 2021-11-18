@@ -1,6 +1,7 @@
 package com.kdjj.presentation.view.recipesummary
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -10,6 +11,7 @@ import com.kdjj.presentation.common.EventObserver
 import com.kdjj.presentation.common.RECIPE_ID
 import com.kdjj.presentation.common.RECIPE_STATE
 import com.kdjj.presentation.databinding.ActivityRecipeSummaryBinding
+import com.kdjj.presentation.model.RecipeSummaryType
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.viewmodel.recipesummary.RecipeSummaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,6 +41,32 @@ class RecipeSummaryActivity : AppCompatActivity() {
         })
         liveRecipe.observe(this@RecipeSummaryActivity) { recipe ->
             title = recipe.title
+        }
+        liveRecipeSummaryType.observe(this@RecipeSummaryActivity) { recipeSummaryType ->
+            setFloatingMenuVisibility(recipeSummaryType)
+        }
+    }
+    
+    private fun setFloatingMenuVisibility(recipeSummaryType: RecipeSummaryType?) = with(binding) {
+        when (recipeSummaryType) {
+            RecipeSummaryType.MY_SAVE_RECIPE -> {
+                editButtonSummary.visibility = View.VISIBLE
+                favoriteButtonSummary.visibility = View.VISIBLE
+                deleteButtonSummary.visibility = View.VISIBLE
+                uploadButtonSummary.visibility = View.VISIBLE
+            }
+            RecipeSummaryType.MY_SERVER_RECIPE -> {
+                deleteButtonSummary.visibility = View.VISIBLE
+            }
+            RecipeSummaryType.MY_SAVE_OTHER_RECIPE -> {
+                favoriteButtonSummary.visibility = View.VISIBLE
+                editButtonSummary.visibility = View.VISIBLE
+                deleteButtonSummary.visibility = View.VISIBLE
+            }
+            RecipeSummaryType.OTHER_SERVER_RECIPE -> {
+                stealFavoriteButtonSummary.visibility = View.VISIBLE
+                stealButtonSummary.visibility = View.VISIBLE
+            }
         }
     }
     
