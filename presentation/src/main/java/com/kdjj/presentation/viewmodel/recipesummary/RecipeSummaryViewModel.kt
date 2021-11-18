@@ -30,6 +30,8 @@ class RecipeSummaryViewModel @Inject constructor(
     val eventNoInfo: LiveData<Event<Unit>> = _eventNoInfo
     private val _eventOpenRecipeDetail = MutableLiveData<Event<Unit>>()
     val eventOpenRecipeDetail: LiveData<Event<Unit>> = _eventOpenRecipeDetail
+    private val _eventOpenRecipeEditor = MutableLiveData<Event<Unit>>()
+    val eventOpenRecipeEditor: LiveData<Event<Unit>> = _eventOpenRecipeEditor
     val eventInitView: LiveData<Event<RecipeSummaryType>> =
         _liveRecipe.switchMap { recipe ->
             MutableLiveData(
@@ -91,6 +93,10 @@ class RecipeSummaryViewModel @Inject constructor(
     
     fun openRecipeDetail() {
         _eventOpenRecipeDetail.value = Event(Unit)
+    }
+    
+    fun openRecipeEditor() {
+        _eventOpenRecipeEditor.value = Event(Unit)
     }
     
     private fun notifyNoInfo() {
