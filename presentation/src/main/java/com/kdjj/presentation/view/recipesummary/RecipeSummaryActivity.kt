@@ -33,29 +33,29 @@ class RecipeSummaryActivity : AppCompatActivity() {
         initObserver()
     }
     
-    private fun initObserver() = with(recipeSummaryViewModel){
-        eventNoInfo.observe(this@RecipeSummaryActivity, EventObserver{
+    private fun initObserver() = with(recipeSummaryViewModel) {
+        eventNoInfo.observe(this@RecipeSummaryActivity, EventObserver {
             showNoInfoDialog()
         })
-        liveRecipe.observe(this@RecipeSummaryActivity){ recipe ->
+        liveRecipe.observe(this@RecipeSummaryActivity) { recipe ->
             title = recipe.title
         }
     }
     
     private fun initViewModel() {
-        intent.extras?.let{ bundle ->
+        intent.extras?.let { bundle ->
             val recipeId = bundle.getString(RECIPE_ID)
             val recipeState = bundle.getSerializable(RECIPE_STATE) as? RecipeState
             recipeSummaryViewModel.initViewModel(recipeId, recipeState)
         }
     }
     
-    private fun showNoInfoDialog(){
+    private fun showNoInfoDialog() {
         ConfirmDialogBuilder.create(
             this,
-            "정보 에러",
-            "전달되지 않은 정보가 존재합니다.\n확인을 눌러 이전화면으로 돌아갑니다."
-        ){
+            "오류 발생",
+            "레시피를 들고오던 라따뚜이가 넘어졌습니다..ㅠㅠ\n확인버튼을 누르면 이전 화면으로 돌아갑니다."
+        ) {
             finish()
         }
     }
