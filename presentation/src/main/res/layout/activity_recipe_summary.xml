@@ -124,29 +124,6 @@
 
         </ScrollView>
 
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/bottomButton_margin"
-            app:cardCornerRadius="@dimen/bottomButton_corner"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_btn_bottom"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:padding="@dimen/bottomButton_padding"
-                android:text="@string/showRecipe"
-                android:textColor="@color/light_100"
-                android:textSize="@dimen/bottomButton_textSize" />
-        </androidx.cardview.widget.CardView>
-
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton_summary"
             android:layout_width="wrap_content"
@@ -212,6 +189,28 @@
             app:layout_constraintBottom_toTopOf="@id/floatingActionButton_summary"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
 
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/bottomButton_margin"
+            app:cardCornerRadius="@dimen/bottomButton_corner"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_btn_bottom"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:onClick="@{() -> viewModel.openRecipeDetail()}"
+                android:padding="@dimen/bottomButton_padding"
+                android:text="@string/showRecipe"
+                android:textColor="@color/light_100"
+                android:textSize="@dimen/bottomButton_textSize" />
+        </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

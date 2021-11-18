@@ -1,5 +1,6 @@
 package com.kdjj.presentation.view.recipesummary
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -14,6 +15,7 @@ import com.kdjj.presentation.common.RECIPE_STATE
 import com.kdjj.presentation.databinding.ActivityRecipeSummaryBinding
 import com.kdjj.presentation.model.RecipeSummaryType
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
+import com.kdjj.presentation.view.recipedetail.RecipeDetailActivity
 import com.kdjj.presentation.viewmodel.recipesummary.RecipeSummaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -65,6 +67,7 @@ class RecipeSummaryActivity : AppCompatActivity() {
         eventNoInfo.observe(this@RecipeSummaryActivity, EventObserver {
             showNoInfoDialog()
         })
+        
         liveRecipe.observe(this@RecipeSummaryActivity) { recipe ->
             title = recipe.title
         }
@@ -75,6 +78,19 @@ class RecipeSummaryActivity : AppCompatActivity() {
             }
             initFloatingMenuVisibility(menuButtonList)
         })
+        
+        eventOpenRecipeDetail.observe(this@RecipeSummaryActivity) {
+            val intent = Intent(
+                this@RecipeSummaryActivity,
+                RecipeDetailActivity::class.java
+            ).apply {
+                recipeSummaryViewModel.liveRecipe.value?.let { recipe ->
+                    putExtra(RECIPE_ID, recipe.recipeId)
+                    putExtra(RECIPE_STATE, recipe.state)
+                }
+            }
+            startActivity(intent)
+        }
     }
     
     private fun initFloatingMenuVisibility(buttonList: List<AppCompatButton>?) = with(binding) {
