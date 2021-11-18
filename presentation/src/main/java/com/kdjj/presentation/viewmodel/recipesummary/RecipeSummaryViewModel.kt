@@ -32,7 +32,9 @@ class RecipeSummaryViewModel @Inject constructor(
         else {
             viewModelScope.launch {
                 when (recipeState) {
-                    RecipeState.CREATE, RecipeState.UPLOAD -> {
+                    RecipeState.CREATE,
+                    RecipeState.UPLOAD,
+                    RecipeState.DOWNLOAD -> {
                         getRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
                             .onSuccess { recipeFlow ->
                                 recipeFlow.collect { recipe ->
@@ -40,7 +42,7 @@ class RecipeSummaryViewModel @Inject constructor(
                                 }
                             }
                     }
-                    RecipeState.DOWNLOAD -> {
+                    RecipeState.NETWORK -> {
                         // TODO : Remote에서 레시피 가져오는 기능
                     }
                 }
