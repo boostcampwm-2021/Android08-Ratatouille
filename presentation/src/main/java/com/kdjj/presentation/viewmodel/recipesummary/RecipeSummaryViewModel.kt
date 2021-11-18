@@ -143,16 +143,14 @@ class RecipeSummaryViewModel @Inject constructor(
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
                 val newRecipeId = idGenerator.generateId()
-                val newRecipe = recipe.copy(recipeId = newRecipeId, state = RecipeState.DOWNLOAD)
-                saveLocalRecipeUseCase(SaveLocalRecipeRequest(newRecipe))
-                    .onSuccess {
-                        val result=  updateLocalRecipeFavoriteUseCase(
-                            UpdateLocalRecipeFavoriteRequest(newRecipe)
-                        )
-                        _eventSaveFinish.value = Event(result.isSuccess)
-                    }.onFailure {
-                        _eventSaveFinish.value = Event(false)
-                    }
+                val newRecipe = recipe.copy(
+                    recipeId = newRecipeId,
+                    state = RecipeState.DOWNLOAD,
+                    isFavorite = true
+                )
+                val saveResult = saveLocalRecipeUseCase(SaveLocalRecipeRequest(newRecipe))
+                
+                _eventSaveFinish.value = Event(saveResult.isSuccess)
             }
         }
     
