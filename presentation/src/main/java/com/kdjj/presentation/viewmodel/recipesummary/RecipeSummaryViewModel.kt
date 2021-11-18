@@ -37,6 +37,8 @@ class RecipeSummaryViewModel @Inject constructor(
     val eventOpenRecipeEditor: LiveData<Event<Unit>> = _eventOpenRecipeEditor
     private val _eventDeleteRecipeSuccess = MutableLiveData<Event<Unit>>()
     val eventDeleteRecipeSuccess: LiveData<Event<Unit>> = _eventDeleteRecipeSuccess
+    private val _eventUploadFinish = MutableLiveData<Event<Boolean>>()
+    val eventUploadFinish: LiveData<Event<Boolean>> = _eventUploadFinish
     val eventInitView: LiveData<Event<RecipeSummaryType>> =
         _liveRecipe.switchMap { recipe ->
             MutableLiveData(
@@ -168,8 +170,8 @@ class RecipeSummaryViewModel @Inject constructor(
     fun uploadRecipe() =
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
-                uploadRecipeUseCase(UploadRecipeRequest(recipe))
-                // TODO : 성공 실패 피드백
+                val uploadResult = uploadRecipeUseCase(UploadRecipeRequest(recipe))
+                _eventUploadFinish.value = Event(uploadResult.isSuccess)
             }
         }
     
