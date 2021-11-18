@@ -27,7 +27,7 @@ internal fun RecipeDto.toDomain(): Recipe =
         viewCount,
         false,
         createTime,
-        RecipeState.UPLOAD
+        RecipeState.NETWORK
     )
 
 internal fun Recipe.toDto(): RecipeDto =
