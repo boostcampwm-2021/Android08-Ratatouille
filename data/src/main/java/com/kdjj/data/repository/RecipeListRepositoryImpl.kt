@@ -12,9 +12,9 @@ internal class RecipeListRepositoryImpl @Inject constructor(
 ) : RecipeListRepository {
     
     override suspend fun fetchRemoteLatestRecipeListAfter(
-        lastVisibleCreateTime: Long
+        refresh: Boolean
     ): Result<List<Recipe>> =
-        recipeListRemoteDataSource.fetchLatestRecipeListAfter(lastVisibleCreateTime)
+        recipeListRemoteDataSource.fetchLatestRecipeListAfter(refresh)
     
     override suspend fun fetchRemotePopularRecipeListAfter(
         refresh: Boolean
