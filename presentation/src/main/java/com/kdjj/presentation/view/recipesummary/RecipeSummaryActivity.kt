@@ -16,6 +16,7 @@ import com.kdjj.presentation.databinding.ActivityRecipeSummaryBinding
 import com.kdjj.presentation.model.RecipeSummaryType
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.view.recipedetail.RecipeDetailActivity
+import com.kdjj.presentation.view.recipeeditor.RecipeEditorActivity
 import com.kdjj.presentation.viewmodel.recipesummary.RecipeSummaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -83,6 +84,19 @@ class RecipeSummaryActivity : AppCompatActivity() {
             val intent = Intent(
                 this@RecipeSummaryActivity,
                 RecipeDetailActivity::class.java
+            ).apply {
+                recipeSummaryViewModel.liveRecipe.value?.let { recipe ->
+                    putExtra(RECIPE_ID, recipe.recipeId)
+                    putExtra(RECIPE_STATE, recipe.state)
+                }
+            }
+            startActivity(intent)
+        }
+    
+        eventOpenRecipeEditor.observe(this@RecipeSummaryActivity) {
+            val intent = Intent(
+                this@RecipeSummaryActivity,
+                RecipeEditorActivity::class.java
             ).apply {
                 recipeSummaryViewModel.liveRecipe.value?.let { recipe ->
                     putExtra(RECIPE_ID, recipe.recipeId)

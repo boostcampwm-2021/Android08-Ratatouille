@@ -152,6 +152,7 @@
             android:id="@+id/editButton_summary"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_edit_white_16dp"
+            android:onClick="@{() -> viewModel.openRecipeEditor()}"
             android:text="@string/edit"
             app:layout_constraintBottom_toTopOf="@id/deleteButton_summary"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
