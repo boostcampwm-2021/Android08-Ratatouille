@@ -13,6 +13,7 @@ import com.kdjj.domain.model.request.SaveLocalRecipeRequest
 import com.kdjj.domain.model.request.UpdateRemoteRecipeRequest
 import com.kdjj.domain.usecase.UpdateRemoteRecipeUseCase
 import com.kdjj.domain.usecase.UseCase
+import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.common.IdGenerator
 import com.kdjj.presentation.common.RecipeStepValidator
 import com.kdjj.presentation.common.RecipeValidator
@@ -40,24 +41,35 @@ internal class RecipeEditorViewModel @Inject constructor(
     
     private lateinit var recipeMetaModel: RecipeEditorItem.RecipeMetaModel
     private var recipeStepModelList = listOf<RecipeEditorItem.RecipeStepModel>()
+
     private val _liveRecipeItemList = MutableLiveData<List<RecipeEditorItem>>()
     val liveRecipeItemList: LiveData<List<RecipeEditorItem>> get() = _liveRecipeItemList
+
     val stepTypes = RecipeStepType.values()
     private val _liveRecipeTypes = MutableLiveData<List<RecipeType>>()
     val liveRecipeTypes: LiveData<List<RecipeType>> get() = _liveRecipeTypes
+
     private val _liveImgTarget = MutableLiveData<RecipeEditorItem?>()
     val liveImgTarget: LiveData<RecipeEditorItem?> get() = _liveImgTarget
+
     private val _liveRegisterHasPressed = MutableLiveData(false)
     val liveRegisterHasPressed: LiveData<Boolean> get() = _liveRegisterHasPressed
+
     private val _liveSaveResult = MutableLiveData<Boolean?>()
     val liveSaveResult: LiveData<Boolean?> get() = _liveSaveResult
+
     private val _liveLoading = MutableLiveData(false)
     val liveLoading: LiveData<Boolean> get() = _liveLoading
+
     private var isInitialized = false
+
     private val _liveMoveToPosition = MutableLiveData<Int>()
     val liveMoveToPosition: LiveData<Int> get() = _liveMoveToPosition
 
     private var isEditing = false
+
+    private val _eventError = MutableLiveData<Event<Unit>>()
+    val eventError: LiveData<Event<Unit>> get() = _eventError
     
     fun initializeWith(recipeId: String?) {
         if (isInitialized) return
@@ -78,7 +90,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                                 isEditing = true
                             }
                             .onFailure {
-                                // TODO(raise error)
+                                _eventError.value = Event(Unit)
                             }
                     } ?: run {
                         recipeMetaModel = RecipeEditorItem.RecipeMetaModel.create(
@@ -93,7 +105,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                     notifyStepListChange()
                 }
                 .onFailure {
-                    // TODO(raise error)
+                    _eventError.value = Event(Unit)
                 }
                 _liveLoading.value = false
         }

@@ -14,6 +14,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.kdjj.presentation.R
+import com.kdjj.presentation.common.EventObserver
 import com.kdjj.presentation.common.RECIPE_ID
 import com.kdjj.presentation.databinding.ActivityRecipeEditorBinding
 import com.kdjj.presentation.view.adapter.RecipeEditorListAdapter
@@ -155,6 +156,16 @@ class RecipeEditorActivity : AppCompatActivity() {
                 loadingDialog.dismiss()
             }
         }
+
+        viewModel.eventError.observe(this, EventObserver {
+            ConfirmDialogBuilder.create(
+                this,
+                "오류 발생",
+                "레시피를 들고오던 라따뚜이가 넘어졌습니다..ㅠㅠ\n확인버튼을 누르면 이전 화면으로 돌아갑니다."
+            ) {
+                finish()
+            }
+        })
     }
 
     private fun showSelectImageDialog() {
