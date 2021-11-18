@@ -171,6 +171,7 @@ internal class RecipeEditorViewModel @Inject constructor(
     fun saveRecipe() {
         _liveRegisterHasPressed.value = true
         if (isRecipeValid()) {
+            _liveLoading.value = true
             viewModelScope.launch {
                 val recipe = recipeMetaModel.toDomain(
                     recipeStepModelList,
@@ -193,6 +194,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                         it.printStackTrace()
                         _eventSaveResult.value = Event(false)
                     }
+                _liveLoading.value = false
             }
         }
     }
