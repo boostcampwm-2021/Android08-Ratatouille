@@ -24,19 +24,19 @@ internal sealed class RecipeEditorItem {
 
         val liveTitleState: LiveData<Boolean>,
         val liveStuffState: LiveData<Boolean>,
+        val state: RecipeState
     ) : RecipeEditorItem() {
 
         companion object {
 
             fun create(
                 idGenerator: IdGenerator,
-                recipeTypes: List<RecipeType>,
                 recipeValidator: RecipeValidator
             ): RecipeMetaModel {
-                val liveTitle = MutableLiveData<String>("")
-                val liveStuff = MutableLiveData<String>("")
-                val liveRecipeImgPath = MutableLiveData<String>("")
-                val liveCategoryPosition = MutableLiveData<Int>(0)
+                val liveTitle = MutableLiveData("")
+                val liveStuff = MutableLiveData("")
+                val liveRecipeImgPath = MutableLiveData("")
+                val liveCategoryPosition = MutableLiveData(0)
                 return RecipeMetaModel(
                     liveTitle = liveTitle,
                     liveStuff = liveStuff,
@@ -47,7 +47,8 @@ internal sealed class RecipeEditorItem {
                     liveTitleState = liveTitle.switchMap { MutableLiveData(recipeValidator.validateTitle(it)) },
 
                     recipeId = idGenerator.generateId(),
-                    uploadId = idGenerator.getDeviceId()
+                    uploadId = idGenerator.getDeviceId(),
+                    state = RecipeState.CREATE
                 )
             }
         }
@@ -57,7 +58,7 @@ internal sealed class RecipeEditorItem {
         val liveName: MutableLiveData<String>,
         val liveTypeInt: MutableLiveData<Int>,
         val liveDescription: MutableLiveData<String>,
-        val liveImgPath: MutableLiveData<String> = MutableLiveData(""),
+        val liveImgPath: MutableLiveData<String>,
         val liveTimerMin: MutableLiveData<Int?>,
         val liveTimerSec: MutableLiveData<Int?>,
 
@@ -94,7 +95,8 @@ internal sealed class RecipeEditorItem {
                     liveTimerMinState = liveTimerMin.switchMap { MutableLiveData(recipeStepValidator.validateMinutes(it)) },
                     liveTimerSecState = liveTimerSec.switchMap { MutableLiveData(recipeStepValidator.validateSeconds(it)) },
 
-                    stepId = idGenerator.generateId()
+                    stepId = idGenerator.generateId(),
+                    liveImgPath = MutableLiveData("")
                 )
             }
         }
@@ -117,7 +119,7 @@ internal fun RecipeEditorItem.RecipeMetaModel.toDomain(
         viewCount = viewCount,
         isFavorite = isFavorite,
         createTime = System.currentTimeMillis(),
-        state = RecipeState.CREATE
+        state = state
     )
 
 internal fun RecipeEditorItem.RecipeStepModel.toDomain() = RecipeStep(
@@ -137,10 +139,10 @@ internal fun Recipe.toPresentation(
     recipeTypes: List<RecipeType>,
     recipeStepValidator: RecipeStepValidator
 ): Pair<RecipeEditorItem.RecipeMetaModel, List<RecipeEditorItem.RecipeStepModel>> {
-    val liveTitle = MutableLiveData<String>(title)
-    val liveStuff = MutableLiveData<String>(stuff)
-    val liveRecipeImgPath = MutableLiveData<String>(imgPath)
-    val liveCategoryPosition = MutableLiveData<Int>(recipeTypes.indexOfFirst { it.id == type.id })
+    val liveTitle = MutableLiveData(title)
+    val liveStuff = MutableLiveData(stuff)
+    val liveRecipeImgPath = MutableLiveData(imgPath)
+    val liveCategoryPosition = MutableLiveData(recipeTypes.indexOfFirst { it.id == type.id })
     return RecipeEditorItem.RecipeMetaModel(
         liveTitle = liveTitle,
         liveStuff = liveStuff,
@@ -151,20 +153,19 @@ internal fun Recipe.toPresentation(
         liveTitleState = liveTitle.switchMap { MutableLiveData(recipeValidator.validateTitle(it)) },
 
         recipeId = recipeId,
-        uploadId = authorId
+        uploadId = authorId,
+        state = state
     ) to stepList.map { it.toPresentation(recipeStepValidator) }
 }
 
 internal fun RecipeStep.toPresentation(
     recipeStepValidator: RecipeStepValidator
 ): RecipeEditorItem.RecipeStepModel {
-    val stepTypes = RecipeStepType.values()
-
     val liveName =  MutableLiveData(name)
     val liveDescription = MutableLiveData(description)
-    val liveTimerMin = MutableLiveData<Int?>(seconds / 60)
-    val liveTimerSec = MutableLiveData<Int?>(seconds % 60)
-    val liveTypeInt = MutableLiveData<Int>(type.ordinal)
+    val liveTimerMin = MutableLiveData(seconds / 60)
+    val liveTimerSec = MutableLiveData(seconds % 60)
+    val liveTypeInt = MutableLiveData(type.ordinal)
     return RecipeEditorItem.RecipeStepModel(
         liveName = liveName,
         liveDescription = liveDescription,
@@ -185,6 +186,7 @@ internal fun RecipeStep.toPresentation(
             MutableLiveData(recipeStepValidator.validateSeconds(it))
         },
 
-        stepId = stepId
+        stepId = stepId,
+        liveImgPath = MutableLiveData(imgPath)
     )
 }
