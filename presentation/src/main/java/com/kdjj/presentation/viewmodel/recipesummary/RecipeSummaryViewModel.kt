@@ -35,8 +35,8 @@ class RecipeSummaryViewModel @Inject constructor(
     val eventOpenRecipeDetail: LiveData<Event<Unit>> = _eventOpenRecipeDetail
     private val _eventOpenRecipeEditor = MutableLiveData<Event<Unit>>()
     val eventOpenRecipeEditor: LiveData<Event<Unit>> = _eventOpenRecipeEditor
-    private val _eventDeleteRecipeSuccess = MutableLiveData<Event<Unit>>()
-    val eventDeleteRecipeSuccess: LiveData<Event<Unit>> = _eventDeleteRecipeSuccess
+    private val _eventDeleteFinish = MutableLiveData<Event<Boolean>>()
+    val eventDeleteFinish: LiveData<Event<Boolean>> = _eventDeleteFinish
     private val _eventUploadFinish = MutableLiveData<Event<Boolean>>()
     val eventUploadFinish: LiveData<Event<Boolean>> = _eventUploadFinish
     private val _eventSaveFinish = MutableLiveData<Event<Boolean>>()
@@ -110,21 +110,17 @@ class RecipeSummaryViewModel @Inject constructor(
             val recipeState = liveRecipe.value?.state ?: return@launch
             
             liveRecipe.value?.let { recipe ->
-                when (recipeState) {
+                val deleteResult = when (recipeState) {
                     RecipeState.CREATE,
                     RecipeState.UPLOAD,
                     RecipeState.DOWNLOAD -> {
                         deleteLocalRecipeUseCase(DeleteLocalRecipeRequest(recipe))
-                            .onSuccess {
-                                _eventDeleteRecipeSuccess.value = Event(Unit)
-                            }
-                        // TODO : 실패 유저 피드백
                     }
                     RecipeState.NETWORK -> {
                         deleteRemoteRecipeUseCase(DeleteRemoteRecipeRequest(recipe))
-                        // TODO : 성공 실패 유저 피드백
                     }
                 }
+                _eventDeleteFinish.value = Event(deleteResult.isSuccess)
             }
         }
     
