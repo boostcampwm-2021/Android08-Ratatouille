@@ -156,7 +156,7 @@
             android:backgroundTint="@color/blue_500"
             android:contentDescription="@string/floatingActionButton"
             android:padding="@dimen/summary_fab_padding"
-            android:src="@drawable/ic_dialpad_white_24dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
             app:fabCustomSize="@dimen/summary_fab_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
