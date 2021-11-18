@@ -113,23 +113,27 @@ class RecipeSummaryActivity : AppCompatActivity() {
             startActivity(intent)
         })
         
-        eventDeleteRecipeSuccess.observe(this@RecipeSummaryActivity, EventObserver {
-            ConfirmDialogBuilder.create(
-                this@RecipeSummaryActivity,
-                "삭제 완료",
-                "레시피가 정상적으로 삭제되었습니다.\n확인을 눌러 이전화면으로 돌아가주세요."
-            ) {
-                finish()
+        eventDeleteFinish.observe(this@RecipeSummaryActivity, EventObserver { isSuccess ->
+            if (isSuccess) {
+                ConfirmDialogBuilder.create(
+                    this@RecipeSummaryActivity,
+                    "삭제 완료",
+                    "레시피가 정상적으로 삭제되었습니다.\n확인을 눌러 이전화면으로 돌아가주세요."
+                ) {
+                    finish()
+                }
+            } else {
+                showSnackBar("삭제 실패")
             }
         })
         
-        eventUploadFinish.observe(this@RecipeSummaryActivity, EventObserver{ isSuccess ->
-            val message = if(isSuccess) "업로드 성공" else "업로드 실패"
+        eventUploadFinish.observe(this@RecipeSummaryActivity, EventObserver { isSuccess ->
+            val message = if (isSuccess) "업로드 성공" else "업로드 실패"
             showSnackBar(message)
         })
         
-        eventSaveFinish.observe(this@RecipeSummaryActivity, EventObserver{ isSuccess ->
-            val message = if(isSuccess) "저장 성공" else "저장 실패"
+        eventSaveFinish.observe(this@RecipeSummaryActivity, EventObserver { isSuccess ->
+            val message = if (isSuccess) "저장 성공" else "저장 실패"
             showSnackBar(message)
         })
     }
