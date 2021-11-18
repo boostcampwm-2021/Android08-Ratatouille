@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="divider_size">1dp</dimen>
+
     <dimen name="editor_imageView_stroke">1dp</dimen>
     <dimen name="editor_imageView_corner">8dp</dimen>
     <dimen name="editor_imageView_size">100dp</dimen>
@@ -37,6 +39,13 @@
     <dimen name="myRecipe_cardView_marginStart">16dp</dimen>
     <dimen name="myRecipe_cardView_corner">15dp</dimen>
     <dimen name="myRecipe_cardView_marginBottom">12dp</dimen>
+    <dimen name="myRecipe_textView_titleSize">14sp</dimen>
+    <dimen name="myRecipe_textView_timeSize">12sp</dimen>
+    <dimen name="myRecipe_textView_descriptionTitle">14sp</dimen>
+    <dimen name="myRecipe_textView_description">14sp</dimen>
+    <dimen name="myRecipe_textView_title_marginTop">8dp</dimen>
+    <dimen name="myRecipe_textView_description_marginTop">12dp</dimen>
+    <dimen name="myRecipe_time_marginLeft">8dp</dimen>
 
     <dimen name="dialog_title_textSize">18sp</dimen>
     <dimen name="dialog_content_textSize">14sp</dimen>
@@ -46,4 +55,55 @@
     <dimen name="dialog_button_marginTop">32dp</dimen>
     <dimen name="dialog_button_padding">16dp</dimen>
     <dimen name="dialog_corner">16dp</dimen>
+
+    <dimen name="detail_timer_size">80dp</dimen>
+    <dimen name="detail_timer_corner">12dp</dimen>
+    <dimen name="detail_timerTitle_textSize">12sp</dimen>
+    <dimen name="detail_timerTime_marginTop">8dp</dimen>
+    <dimen name="detail_timerTime_textSize">16sp</dimen>
+    <dimen name="detail_timer_marginHorizontal">8dp</dimen>
+    <dimen name="detail_timer_marginVertical">16dp</dimen>
+    <dimen name="detail_imageView_height">200dp</dimen>
+    <dimen name="detail_step_textSize">24sp</dimen>
+    <dimen name="detail_step_margin">32dp</dimen>
+    <dimen name="detail_btnAddTimer_textSize">16sp</dimen>
+    <dimen name="detail_btnAddTimer_margin">16dp</dimen>
+    <dimen name="detail_btnAddTimer_corner">8dp</dimen>
+    <dimen name="detail_timerDescription_margin">16dp</dimen>
+    <dimen name="detail_timerDescription_textSize">14sp</dimen>
+    <dimen name="detail_textAddTimer_padding">16dp</dimen>
+    <dimen name="detail_addTimerDivider_marginVertical">8dp</dimen>
+    <dimen name="detail_stepList_width">200dp</dimen>
+    <dimen name="detail_stepList_textSize">14sp</dimen>
+    <dimen name="detail_stepItem_paddingVertical">8dp</dimen>
+    <dimen name="detail_stepItem_paddingHorizontal">16dp</dimen>
+
+    <dimen name="search_icSearch_insetRight">12dp</dimen>
+    <dimen name="search_tab_paddingVertical">16dp</dimen>
+    <dimen name="search_tab_margin">8dp</dimen>
+    <dimen name="search_tab_space">4dp</dimen>
+    <dimen name="search_tab_textSize">16sp</dimen>
+    <dimen name="search_resultLabel_textSize">14sp</dimen>
+    <dimen name="search_resultLabel_margin">16dp</dimen>
+    <dimen name="search_keyword_textSize">14sp</dimen>
+
+    <dimen name="summary_label_marginStart">16dp</dimen>
+    <dimen name="summary_label_marginTop">24dp</dimen>
+    <dimen name="summary_text_marginEnd">16dp</dimen>
+    <dimen name="summary_text_marginStart">16dp</dimen>
+    <dimen name="summary_label_textSize">16sp</dimen>
+    <dimen name="summary_text_textSize">14sp</dimen>
+    <dimen name="summary_imageView_height">250dp</dimen>
+    <dimen name="summary_lastItem_marginBottom">100dp</dimen>
+    <dimen name="summary_fab_marginBottom">100dp</dimen>
+    <dimen name="summary_fab_marginEnd">16dp</dimen>
+    <dimen name="summary_fab_padding">8dp</dimen>
+    <dimen name="summary_fab_size">40dp</dimen>
+    <dimen name="summary_floatingButton_paddingVertical">4dp</dimen>
+    <dimen name="summary_floatingButton_paddingEnd">8dp</dimen>
+    <dimen name="summary_floatingButton_paddingStart">10dp</dimen>
+    <dimen name="summary_floatingButton_drawablePadding">8dp</dimen>
+    <dimen name="summary_floatingButton_textSize">12sp</dimen>
+    <dimen name="summary_floatingButton_marginBottom">8dp</dimen>
+
 </resources>

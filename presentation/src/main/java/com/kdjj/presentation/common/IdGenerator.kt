@@ -8,8 +8,16 @@ import javax.inject.Singleton
 
 @Singleton
 class IdGenerator @Inject constructor(@ApplicationContext private val context: Context) {
+    private var lastGenerateTime: Long = 0L
 
-    fun generateId() = getDeviceId() + System.currentTimeMillis()
+    fun generateId(): String {
+        var currentTime = System.currentTimeMillis()
+        while (currentTime == lastGenerateTime) {
+            currentTime++
+        }
+        lastGenerateTime = currentTime
+        return getDeviceId() + currentTime
+    }
 
     fun getDeviceId(): String {
         return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)

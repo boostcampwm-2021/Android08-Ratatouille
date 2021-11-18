@@ -1,42 +1,52 @@
 package com.kdjj.presentation.view.home.my
 
 import android.os.Bundle
-import android.util.Log
+import android.view.*
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
-import com.kdjj.domain.model.Recipe
-import com.kdjj.domain.model.RecipeState
-import com.kdjj.domain.model.RecipeType
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.kdjj.presentation.R
+import com.kdjj.presentation.common.*
 import com.kdjj.presentation.databinding.FragmentMyRecipeBinding
-import com.kdjj.presentation.model.MyRecipeItem
 import com.kdjj.presentation.view.adapter.MyRecipeListAdapter
+import com.kdjj.presentation.viewmodel.my.MyRecipeViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MyRecipeFragment : Fragment() {
 
     private var _binding: FragmentMyRecipeBinding? = null
     private val binding get() = _binding!!
-    private val testAdapter by lazy { MyRecipeListAdapter(navigation) }
+    private val viewModel: MyRecipeViewModel by activityViewModels()
+    private val myRecipeAdapter by lazy { MyRecipeListAdapter(viewModel) }
     private val navigation by lazy { Navigation.findNavController(binding.root) }
+
+    @Inject
+    lateinit var displayConverter: DisplayConverter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_recipe, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.myViewModel = viewModel
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolBar()
-        initRadioButtons()
+        setObservers()
+        initSwipeRefreshLayout()
         initRecyclerView()
     }
 
@@ -44,76 +54,77 @@ class MyRecipeFragment : Fragment() {
         binding.toolbarMyRecipe.apply {
             setTitle(R.string.myRecipe)
             inflateMenu(R.menu.toolbar_menu_search_item)
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.item_search -> {
+                        viewModel.moveToRecipeSearchFragment()
+                        true
+                    }
+                    else -> false
+                }
+            }
         }
     }
 
-    private fun initRadioButtons() {
-        binding.radioGroupMyRecipe.setOnCheckedChangeListener { group, _ ->
-            when (group.checkedRadioButtonId) {
-                R.id.radioButton_orderByDate -> Log.d("selected radio button", "최신순")
-                R.id.radioButton_orderByFavorite -> Log.d("selected radio button", "즐겨찾기순")
-                R.id.radioButton_orderByName -> Log.d("selected radio button", "이름순")
+    private fun setObservers() {
+        viewModel.eventAddRecipeHasPressed.observe(viewLifecycleOwner, EventObserver {
+            navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
+        })
+
+        viewModel.eventSearchIconClicked.observe(viewLifecycleOwner, EventObserver {
+            navigation.navigate(R.id.action_myRecipeFragment_to_searchRecipeFragment)
+        })
+
+        viewModel.eventItemDoubleClicked.observe(viewLifecycleOwner, EventObserver {
+            val bundle = bundleOf(
+                RECIPE_ID to it.recipe.recipeId,
+                RECIPE_STATE to it.recipe.state
+            )
+            navigation.navigate(R.id.action_myRecipeFragment_to_recipeSummaryActivity, bundle)
+        })
+
+        viewModel.eventDataLoadFailed.observe(viewLifecycleOwner, EventObserver {
+            Snackbar.make(binding.root, getString(R.string.dataLoadFailMessage), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.refresh)){
+                     viewModel.refreshRecipeList()
+                }
+                .setActionTextColor(requireContext().getColor(R.color.blue_500))
+                .show()
+        })
+    }
+
+    private fun initSwipeRefreshLayout() {
+        binding.swipeRefreshLayoutMy.apply {
+            setOnRefreshListener {
+                viewModel.refreshRecipeList()
+                isRefreshing = false
             }
         }
     }
 
     private fun initRecyclerView() {
         binding.recyclerViewMyRecipe.apply {
-            layoutManager = GridLayoutManager(requireContext(), 2)
-            adapter = testAdapter
+            val deviceWidth = resources.displayMetrics.widthPixels
+            val itemWidth = displayConverter.dpToPx(160).toInt()
+            val spanCount = deviceWidth / itemWidth
+            layoutManager = GridLayoutManager(requireContext(), spanCount)
+            adapter = myRecipeAdapter
+
+            addItemDecoration(SpacesItemDecoration(spanCount, deviceWidth, itemWidth))
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    val lastVisibleItemPosition = (layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+                    val lastItemPosition = myRecipeAdapter.itemCount - 1
+                    if (lastVisibleItemPosition == lastItemPosition && myRecipeAdapter.itemCount != 0 && dy > 0) {
+                        viewModel.fetchMoreRecipeData(lastVisibleItemPosition)
+                    }
+                }
+            })
         }
-
-        val testList = listOf<MyRecipeItem>(
-            MyRecipeItem.PlusButton,
-            MyRecipeItem.MyRecipe(test1),
-            MyRecipeItem.MyRecipe(test2),
-            MyRecipeItem.MyRecipe(test3)
-        )
-        testAdapter.submitList(testList)
     }
-
-    // Demo를 위한 테스트 코드 추후 삭제 예정
-    val test1 = Recipe(
-        "id1",
-        "title 1",
-        RecipeType(1, "aaa"),
-        "a",
-        "a",
-        listOf(),
-        "a",
-        1,
-        false,
-        1,
-        RecipeState.CREATE,
-    )
-
-    val test2 = Recipe(
-        "id2",
-        "title 2",
-        RecipeType(1, "aaa"),
-        "a",
-        "a",
-        listOf(),
-        "a",
-        1,
-        false,
-        1,
-        RecipeState.CREATE,
-    )
-
-    val test3 = Recipe(
-        "id3",
-        "title 3",
-        RecipeType(1, "aaa"),
-        "a",
-        "a",
-        listOf(),
-        "a",
-        1,
-        false,
-        1,
-        RecipeState.CREATE,
-    )
 
     override fun onDestroyView() {
         super.onDestroyView()

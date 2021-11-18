@@ -10,15 +10,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
-import androidx.core.view.size
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.kdjj.presentation.R
+import com.kdjj.presentation.common.EventObserver
+import com.kdjj.presentation.common.RECIPE_ID
 import com.kdjj.presentation.databinding.ActivityRecipeEditorBinding
-import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.view.adapter.RecipeEditorListAdapter
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
+import com.kdjj.presentation.view.dialog.CustomProgressDialog
 import com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -29,6 +30,8 @@ import java.util.*
 class RecipeEditorActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRecipeEditorBinding
     private val viewModel: RecipeEditorViewModel by viewModels()
+
+    private lateinit var loadingDialog: CustomProgressDialog
 
     private var lastCameraFileUri: String? = null
     private val cameraLauncher = registerForActivityResult(
@@ -100,6 +103,8 @@ class RecipeEditorActivity : AppCompatActivity() {
 
         binding.viewModel = viewModel
 
+        loadingDialog = CustomProgressDialog(this)
+
         setSupportActionBar(binding.toolbarEditor)
         setTitle(R.string.addRecipe)
 
@@ -109,7 +114,12 @@ class RecipeEditorActivity : AppCompatActivity() {
 
         setupObservers()
 
-        viewModel.initializeWith(null)
+        loadRecipe()
+    }
+
+    private fun loadRecipe() {
+        val recipeId = intent.extras?.getString(RECIPE_ID)
+        viewModel.initializeWith(recipeId)
     }
 
     private fun setupObservers() {
@@ -117,9 +127,7 @@ class RecipeEditorActivity : AppCompatActivity() {
             model?.let { showSelectImageDialog() }
         }
 
-        viewModel.liveSaveResult.observe(this) { isSuccess ->
-            isSuccess ?: return@observe
-            viewModel.resetResultState()
+        viewModel.eventSaveResult.observe(this, EventObserver { isSuccess ->
             if (isSuccess) {
                 ConfirmDialogBuilder.create(
                     this,
@@ -133,11 +141,27 @@ class RecipeEditorActivity : AppCompatActivity() {
                     this,
                     "저장 실패",
                     "레시피를 저장하지 못했습니다.",
-                ) {
+                ) { }
+            }
+        })
 
-                }
+        viewModel.liveLoading.observe(this) { doLoading ->
+            if (doLoading) {
+                loadingDialog.show()
+            } else {
+                loadingDialog.dismiss()
             }
         }
+
+        viewModel.eventError.observe(this, EventObserver {
+            ConfirmDialogBuilder.create(
+                this,
+                "오류 발생",
+                "레시피를 들고오던 라따뚜이가 넘어졌습니다..ㅠㅠ\n확인버튼을 누르면 이전 화면으로 돌아갑니다."
+            ) {
+                finish()
+            }
+        })
     }
 
     private fun showSelectImageDialog() {
@@ -145,15 +169,9 @@ class RecipeEditorActivity : AppCompatActivity() {
             .setTitle(R.string.selectPhoto)
             .setItems(R.array.photoSourceSelection) { _, i ->
                 when (i) {
-                    0 -> {
-                        startCamera()
-                    }
-                    1 -> {
-                        startGallery()
-                    }
-                    2 -> {
-                        viewModel.setImageEmpty()
-                    }
+                    0 -> startCamera()
+                    1 -> startGallery()
+                    2 -> viewModel.setImageEmpty()
                 }
             }
             .setOnCancelListener {

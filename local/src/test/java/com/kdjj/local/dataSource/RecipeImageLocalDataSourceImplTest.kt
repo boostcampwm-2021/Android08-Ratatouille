@@ -14,39 +14,40 @@ class RecipeImageLocalDataSourceImplTest {
 	private lateinit var recipeImageLocalDataSourceImpl: RecipeImageLocalDataSourceImpl
 	private val testUri = "this is test uri"
 	private val testByteArray = testUri.toByteArray()
-	
+	private val testDegree = 90f
+	private val testPair = Pair(testByteArray, testDegree)
+
 	@Before
 	fun setup() {
 		mockFileSaveHelper = mock(FileSaveHelper::class.java)
 		recipeImageLocalDataSourceImpl = RecipeImageLocalDataSourceImpl(mockFileSaveHelper)
 	}
-	
+
 	@Test
-	fun convertToByteArray_getImageByteArray_true(): Unit = runBlocking {
+	fun convertToByteArray_getImageByteArrayAndImageDegree_true(): Unit = runBlocking {
 		//given
 		`when`(recipeImageLocalDataSourceImpl.convertToByteArray(testUri)).thenReturn(
-			Result.success(
-				testByteArray
-			)
+			Result.success(testByteArray to testDegree)
 		)
 		//when
-		val byteArrayResult = recipeImageLocalDataSourceImpl.convertToByteArray(testUri)
+		val result = recipeImageLocalDataSourceImpl.convertToByteArray(testUri)
 		//then
-		assertEquals(testByteArray, byteArrayResult.getOrNull())
+		assertEquals(testPair, result.getOrNull())
 	}
-	
+
 	@Test
 	fun convertToInternalStorageUri_localStorageImageUri_true(): Unit = runBlocking {
 		//given
 		`when`(
 			recipeImageLocalDataSourceImpl.convertToInternalStorageUri(
 				testByteArray,
-				"fileName"
+				"fileName",
+				testDegree
 			)
 		).thenReturn(Result.success(testUri))
 		//when
 		val newLocalImagePathResult =
-			recipeImageLocalDataSourceImpl.convertToInternalStorageUri(testByteArray, "fileName")
+			recipeImageLocalDataSourceImpl.convertToInternalStorageUri(testByteArray, "fileName", testDegree)
 		//then
 		assertEquals(testUri, newLocalImagePathResult.getOrNull())
 	}

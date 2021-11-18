@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.kdjj.presentation.viewmodel.others.OthersViewModel.OthersSortType"/>
         <variable
             name="viewModel"
             type="com.kdjj.presentation.viewmodel.others.OthersViewModel" />
@@ -36,6 +37,8 @@
                 android:id="@+id/radioButton_others_orderByDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="@{viewModel.liveSortType == OthersSortType.LATEST}"
+                android:onClick="@{()->viewModel.setChecked(OthersSortType.LATEST)}"
                 android:button="@null"
                 android:minWidth="0dp"
                 android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"
@@ -45,22 +48,45 @@
                 android:id="@+id/radioButton_others_popular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="@{viewModel.liveSortType == OthersSortType.POPULAR}"
+                android:onClick="@{()->viewModel.setChecked(OthersSortType.POPULAR)}"
                 android:button="@null"
                 android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"
                 android:text="@string/others_orderByPopular" />
 
         </RadioGroup>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView_others_recipe"
-            android:layout_width="0dp"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout_others"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            tools:listitem="@layout/item_others_recipe"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/radioGroup_others"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/progressBar_others_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            >
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_others_recipe"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                tools:listitem="@layout/item_list_recipe"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                callback="@{viewModel.setFetchEnabled}"
+                list="@{viewModel.liveRecipeList}"
+                />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar_others_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            visibleProgressBar="@{viewModel.liveFetchLock}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/swipeRefreshLayout_others"
+            app:layout_constraintBottom_toBottomOf="parent"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

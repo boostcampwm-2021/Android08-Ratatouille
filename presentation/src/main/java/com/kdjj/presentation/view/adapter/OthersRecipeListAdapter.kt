@@ -3,47 +3,42 @@ package com.kdjj.presentation.view.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import com.kdjj.domain.model.Recipe
-import com.kdjj.presentation.common.calculateTotalTime
-import com.kdjj.presentation.common.calculateUpdateTime
-import com.kdjj.presentation.databinding.ItemOthersRecipeBinding
+import com.kdjj.presentation.databinding.ItemListRecipeBinding
+import com.kdjj.presentation.model.RecipeListItemModel
+import com.kdjj.presentation.viewmodel.others.OthersViewModel
 
 class OthersRecipeListAdapter(
-) : BaseListAdapter<Recipe, ItemOthersRecipeBinding>(RecipeDiffCallback()) {
+    private val viewModel: OthersViewModel,
+) : SingleViewTypeListAdapter<RecipeListItemModel, ItemListRecipeBinding>(RecipeListItemModelDiffCallback()) {
 
-    override fun createBinding(parent: ViewGroup, viewType: Int): ItemOthersRecipeBinding =
-        ItemOthersRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun createBinding(parent: ViewGroup): ItemListRecipeBinding =
+        ItemListRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
     override fun initViewHolder(
-        binding: ItemOthersRecipeBinding,
+        binding: ItemListRecipeBinding,
         getItemPosition: () -> Int,
-        viewType: Int
     ) {
         binding.root.setOnClickListener {
-            //todo: clicklisntener
+            viewModel.recipeItemClick(getItem(getItemPosition()))
         }
     }
 
     override fun bind(
-        holder: BaseViewHolder<Recipe, ItemOthersRecipeBinding>,
-        item: Recipe,
-        viewType: Int
+        holder: SingleViewTypeViewHolder<RecipeListItemModel, ItemListRecipeBinding>,
+        item: RecipeListItemModel,
     ) {
        with(holder.binding) {
-           textViewOthersItemTitle.text = item.title
-           textViewOthersItemStuffValue.text = item.stuff
-           textViewOthersItemViewCount.text = item.viewCount.toString()
-           textViewOthersItemTimeValue.text = calculateTotalTime(item)
-           textViewOthersItemUpdateTime.text = calculateUpdateTime(item)
+           recipe = item
+           executePendingBindings()
        }
     }
 }
 
-class RecipeDiffCallback : DiffUtil.ItemCallback<Recipe>() {
+class RecipeListItemModelDiffCallback : DiffUtil.ItemCallback<RecipeListItemModel>() {
 
-    override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe): Boolean =
+    override fun areItemsTheSame(oldItem: RecipeListItemModel, newItem: RecipeListItemModel): Boolean =
         oldItem.recipeId == newItem.recipeId
 
-    override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean =
+    override fun areContentsTheSame(oldItem: RecipeListItemModel, newItem: RecipeListItemModel): Boolean =
         true
 }

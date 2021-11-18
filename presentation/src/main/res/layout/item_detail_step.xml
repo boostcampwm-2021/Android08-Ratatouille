@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="step"
+            type="com.kdjj.domain.model.RecipeStep" />
+
+        <variable
+            name="viewModel"
+            type="com.kdjj.presentation.viewmodel.recipedetail.RecipeDetailViewModel" />
+
+        <import type="android.graphics.Typeface" />
+    </data>
+
+    <TextView
+        android:id="@+id/textView_detail_stepTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:paddingTop="@dimen/detail_stepItem_paddingVertical"
+        android:paddingBottom="@dimen/detail_stepItem_paddingVertical"
+        android:paddingStart="@dimen/detail_stepItem_paddingHorizontal"
+        android:paddingEnd="@dimen/detail_stepItem_paddingHorizontal"
+        android:text="@{step.name}"
+        android:textSize="@dimen/detail_stepList_textSize"
+        android:textColor="@color/light_100"
+        android:typeface="@{Typeface.defaultFromStyle(viewModel.liveSelectedStep == step ? Typeface.BOLD : Typeface.NORMAL)}"
+        android:onClick="@{() -> viewModel.selectStep(step)}"
+        tools:text="재료 준비"
+        tools:background="@color/dark_500" />
+</layout>

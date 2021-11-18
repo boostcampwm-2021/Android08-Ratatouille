@@ -13,5 +13,5 @@
     <item
         android:id="@+id/othersRecipeFragment"
         android:icon="@drawable/ic_others_recipe_24dp"
-        android:title="@string/othersRecipe" />
+        android:title="@string/others" />
 </menu>

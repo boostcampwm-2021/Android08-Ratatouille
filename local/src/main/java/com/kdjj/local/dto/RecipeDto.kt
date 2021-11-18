@@ -4,23 +4,21 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.kdjj.domain.model.Recipe
 
-internal data class RecipeEntity(
-    @Embedded val recipeMeta: RecipeMetaEntity,
-
+internal data class RecipeDto(
+    @Embedded val recipeMeta: RecipeMetaDto,
     @Relation(
         parentColumn = "recipeTypeId",
         entityColumn = "recipeTypeId"
     )
-    val recipeType: RecipeTypeEntity,
-
+    val recipeType: RecipeTypeDto,
     @Relation(
         parentColumn = "recipeMetaId",
         entityColumn = "parentRecipeId"
     )
-    val steps: List<RecipeStepEntity>
+    val steps: List<RecipeStepDto>
 )
 
-internal fun RecipeEntity.toDomain(): Recipe =
+internal fun RecipeDto.toDomain(): Recipe =
     Recipe(
         recipeId = recipeMeta.recipeMetaId,
         title = recipeMeta.title,

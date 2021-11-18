@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.kdjj.presentation.R
@@ -14,7 +15,29 @@ import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel
 
 internal class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewModel) :
-    ListAdapter<RecipeEditorItem, RecyclerView.ViewHolder>(RecipeEditorItemCallback()) {
+    ListAdapter<RecipeEditorItem, RecyclerView.ViewHolder>(
+        object : DiffUtil.ItemCallback<RecipeEditorItem>() {
+
+            override fun areItemsTheSame(
+                oldItem: RecipeEditorItem,
+                newItem: RecipeEditorItem
+            ): Boolean = when {
+                oldItem is RecipeEditorItem.RecipeMetaModel &&
+                        newItem is RecipeEditorItem.RecipeMetaModel ->
+                    oldItem.recipeId == newItem.recipeId
+                oldItem is RecipeEditorItem.RecipeStepModel &&
+                        newItem is RecipeEditorItem.RecipeStepModel ->
+                    oldItem.stepId == newItem.stepId
+                oldItem is RecipeEditorItem.PlusButton && newItem is RecipeEditorItem.PlusButton -> true
+                else -> false
+            }
+
+            override fun areContentsTheSame(
+                oldItem: RecipeEditorItem,
+                newItem: RecipeEditorItem
+            ): Boolean = true
+        }
+    ) {
 
     class RecipeMetaViewHolder(
         private val binding: ItemEditorRecipeMetaBinding, viewModel: RecipeEditorViewModel

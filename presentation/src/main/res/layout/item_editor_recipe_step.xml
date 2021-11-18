@@ -12,7 +12,7 @@
             name="model"
             type="com.kdjj.presentation.model.RecipeEditorItem.RecipeStepModel" />
 
-        <import type="com.kdjj.presentation.view.adapter.BindingConverter" />
+        <import type="com.kdjj.presentation.view.bindingadapter.BindingConverter" />
         <import type="android.widget.ImageView" />
     </data>
 

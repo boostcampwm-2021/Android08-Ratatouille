@@ -2,38 +2,32 @@ package com.kdjj.remote.datasource
 
 import com.kdjj.data.datasource.RecipeListRemoteDataSource
 import com.kdjj.domain.model.Recipe
-import com.kdjj.remote.dao.RemoteRecipeListDao
+import com.kdjj.remote.dao.RemoteRecipeListService
 import javax.inject.Inject
 
 internal class RecipeListRemoteDataSourceImpl @Inject constructor(
-	private val recipeListDao: RemoteRecipeListDao,
+    private val recipeListService: RemoteRecipeListService,
 ) : RecipeListRemoteDataSource {
-
-    override suspend fun fetchLatestRecipeListAfter(lastVisibleCreateTime: Long): Result<List<Recipe>> =
-        try {
-            val recipeList = recipeListDao.fetchLatestRecipeListAfter(lastVisibleCreateTime)
-            Result.success(recipeList)
-        } catch (e: Exception) {
-            Result.failure(e)
+    
+    override suspend fun fetchLatestRecipeListAfter(
+        refresh: Boolean
+    ): Result<List<Recipe>> =
+        runCatching {
+            recipeListService.fetchLatestRecipeListAfter(refresh)
         }
-
-    override suspend fun fetchPopularRecipeListAfter(lastVisibleViewCount: Int): Result<List<Recipe>> =
-        try {
-            val recipeList = recipeListDao.fetchPopularRecipeListAfter(lastVisibleViewCount)
-            Result.success(recipeList)
-        } catch (e: Exception) {
-            Result.failure(e)
+    
+    override suspend fun fetchPopularRecipeListAfter(
+        refresh: Boolean
+    ): Result<List<Recipe>> =
+        runCatching {
+            recipeListService.fetchPopularRecipeListAfter(refresh)
         }
-
+    
     override suspend fun fetchSearchRecipeListAfter(
         keyword: String,
-        lastVisibleTitle: String
+        refresh: Boolean
     ): Result<List<Recipe>> =
-        try {
-            val recipeList = recipeListDao.fetchSearchRecipeListAfter(keyword, lastVisibleTitle)
-            Result.success(recipeList)
-        } catch (e: Exception) {
-            Result.failure(e)
+        runCatching {
+            recipeListService.fetchSearchRecipeListAfter(keyword, refresh)
         }
-
 }

@@ -6,26 +6,35 @@ import com.kdjj.domain.repository.RecipeImageRepository
 import javax.inject.Inject
 
 internal class RecipeImageRepositoryImpl @Inject constructor(
-	private val recipeImageLocalDataSource: RecipeImageLocalDataSource,
-	private val recipeImageRemoteDataSource: RecipeImageRemoteDataSource
-): RecipeImageRepository {
+    private val recipeImageLocalDataSource: RecipeImageLocalDataSource,
+    private val recipeImageRemoteDataSource: RecipeImageRemoteDataSource
+) : RecipeImageRepository {
 
-    override suspend fun convertToByteArrayRemote(uri: String): Result<ByteArray> {
-        return recipeImageRemoteDataSource.fetchRecipeImage(uri)
-    }
-
-    override suspend fun convertToByteArrayLocal(uri: String): Result<ByteArray> {
-        return recipeImageLocalDataSource.convertToByteArray(uri)
-    }
-
-    override suspend fun convertToRemoteStorageUri(uri: String): Result<String> {
+    override suspend fun convertInternalUriToRemoteStorageUri(
+        uri: String
+    ): Result<String> {
         return recipeImageRemoteDataSource.uploadRecipeImage(uri)
     }
 
-    override suspend fun convertToLocalStorageUri(
-        byteArray: ByteArray,
+    override suspend fun copyExternalImageToInternal(
+        uri: String,
         fileName: String
-    ): Result<String> {
-        return recipeImageLocalDataSource.convertToInternalStorageUri(byteArray, fileName)
+    ): Result<String> = runCatching {
+        val (byteArray, degree) = recipeImageLocalDataSource.convertToByteArray(uri)
+            .getOrThrow()
+        val newUri = recipeImageLocalDataSource.convertToInternalStorageUri(byteArray, fileName, degree)
+            .getOrThrow()
+        newUri
+    }
+
+    override suspend fun copyRemoteImageToInternal(
+        uri: String,
+        fileName: String
+    ): Result<String> = runCatching {
+        val byteArray = recipeImageRemoteDataSource.fetchRecipeImage(uri)
+            .getOrThrow()
+        val newUri = recipeImageLocalDataSource.convertToInternalStorageUri(byteArray, fileName)
+            .getOrThrow()
+        newUri
     }
 }
