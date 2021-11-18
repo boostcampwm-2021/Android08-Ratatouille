@@ -42,8 +42,6 @@ class FileSaveHelper @Inject constructor(
                 else -> null
             }
             byteArray to degree
-        }.errorMap {
-            Exception(it.message)
         }
     }
 
@@ -59,8 +57,6 @@ class FileSaveHelper @Inject constructor(
             val bitmap = convertByteArrayToBitmap(byteArray, degree)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
             filePath
-        }.errorMap {
-            Exception(it.message)
         }
     }
 
