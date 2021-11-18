@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kdjj.domain.model.Recipe
+import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.RecipeStepType
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.model.request.EmptyRequest
@@ -94,7 +95,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                             }
                     } ?: run {
                         recipeMetaModel = RecipeEditorItem.RecipeMetaModel.create(
-                            idGenerator, recipeTypes, recipeValidator
+                            idGenerator, recipeValidator
                         )
                         recipeStepModelList = listOf(
                             RecipeEditorItem.RecipeStepModel.create(
@@ -177,7 +178,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                 )
                 saveRecipeUseCase(SaveLocalRecipeRequest(recipe))
                     .onSuccess {
-                        if (isEditing) {
+                        if (recipeMetaModel.state == RecipeState.UPLOAD) {
                             updateRemoteRecipeUseCase(UpdateRemoteRecipeRequest(recipe))
                                 .onSuccess {
                                     _eventSaveResult.value = Event(true)
