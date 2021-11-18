@@ -127,6 +127,11 @@ class RecipeSummaryActivity : AppCompatActivity() {
             val message = if(isSuccess) "업로드 성공" else "업로드 실패"
             showSnackBar(message)
         })
+        
+        eventSaveFinish.observe(this@RecipeSummaryActivity, EventObserver{ isSuccess ->
+            val message = if(isSuccess) "저장 성공" else "저장 실패"
+            showSnackBar(message)
+        })
     }
     
     private fun initFloatingMenuVisibility(buttonList: List<AppCompatButton>?) = with(binding) {
