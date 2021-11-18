@@ -1,18 +1,19 @@
 package com.kdjj.presentation.viewmodel.my
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kdjj.domain.model.Recipe
-import com.kdjj.domain.model.request.FetchLocalFavoriteRecipeListRequest
-import com.kdjj.domain.model.request.FetchLocalLatestRecipeListRequest
-import com.kdjj.domain.model.request.FetchLocalTitleRecipeListRequest
+import com.kdjj.domain.model.request.*
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.MyRecipeItem
 import com.kdjj.presentation.model.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,7 +21,8 @@ import javax.inject.Inject
 internal class MyRecipeViewModel @Inject constructor(
     private val latestRecipeUseCase: UseCase<FetchLocalLatestRecipeListRequest, List<Recipe>>,
     private val favoriteRecipeUseCase: UseCase<FetchLocalFavoriteRecipeListRequest, List<Recipe>>,
-    private val titleRecipeUseCase: UseCase<FetchLocalTitleRecipeListRequest, List<Recipe>>
+    private val titleRecipeUseCase: UseCase<FetchLocalTitleRecipeListRequest, List<Recipe>>,
+    private val getRecipeUpdateStateRequest: UseCase<EmptyRequest, Flow<Int>>
 ) : ViewModel() {
 
     private val _liveSortType = MutableLiveData<SortType>()
@@ -46,6 +48,15 @@ internal class MyRecipeViewModel @Inject constructor(
 
     init {
         setSortType(SortType.SORT_BY_TIME)
+
+        viewModelScope.launch {
+            getRecipeUpdateStateRequest(EmptyRequest)
+                .onSuccess {
+                    it.collect {
+                        refreshRecipeList()
+                    }
+                }
+        }
     }
 
     fun recipeItemSelected(selectedRecipe: MyRecipeItem.MyRecipe) {
@@ -162,13 +173,13 @@ internal class MyRecipeViewModel @Inject constructor(
         }
     }
 
-    private fun showProgress(){
+    private fun showProgress() {
         _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(MyRecipeItem.Progress)
     }
 
-    private fun hideProgress(){
-        _liveRecipeItemList.value?.let{
-            if(it.isNotEmpty()){
+    private fun hideProgress() {
+        _liveRecipeItemList.value?.let {
+            if (it.isNotEmpty()) {
                 _liveRecipeItemList.value = it.subList(0, it.size - 1)
             }
         }

@@ -5,29 +5,38 @@ import com.kdjj.data.datasource.RecipeRemoteDataSource
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.repository.RecipeRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 internal class RecipeRepositoryImpl @Inject constructor(
     private val recipeLocalDataSource: RecipeLocalDataSource,
     private val recipeRemoteDataSource: RecipeRemoteDataSource
 ) : RecipeRepository {
-    
+
+    private val isUpdated = MutableStateFlow(0)
+
     override suspend fun saveLocalRecipe(
         recipe: Recipe
     ): Result<Boolean> {
-        return recipeLocalDataSource.saveRecipe(recipe)
+        return recipeLocalDataSource.saveRecipe(recipe).also {
+            it.onSuccess { isUpdated.value++ }
+        }
     }
     
     override suspend fun updateLocalRecipe(
         recipe: Recipe
     ): Result<Boolean> {
-        return recipeLocalDataSource.updateRecipe(recipe)
+        return recipeLocalDataSource.updateRecipe(recipe).also {
+            it.onSuccess { isUpdated.value++ }
+        }
     }
     
     override suspend fun deleteLocalRecipe(
         recipe: Recipe
     ): Result<Boolean> {
-        return recipeLocalDataSource.deleteRecipe(recipe)
+        return recipeLocalDataSource.deleteRecipe(recipe).also {
+            it.onSuccess { isUpdated.value++ }
+        }
     }
     
     override suspend fun uploadRecipe(
@@ -52,5 +61,9 @@ internal class RecipeRepositoryImpl @Inject constructor(
         recipeId: String
     ): Result<Flow<Recipe>> {
         return recipeLocalDataSource.getRecipeFlow(recipeId)
+    }
+
+    override fun getRecipeUpdateState(): Result<Flow<Int>> {
+        return  Result.success(isUpdated)
     }
 }
