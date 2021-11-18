@@ -30,14 +30,15 @@
         <item name="android:textStyle">bold</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/summary_expectedTimeLabel_marginTop</item>
-        <item name="android:layout_marginStart">@dimen/summary_expectedTimeLabel_marginStart</item>
+        <item name="android:layout_marginTop">@dimen/summary_label_marginTop</item>
+        <item name="android:layout_marginStart">@dimen/summary_label_marginStart</item>
     </style>
 
     <style name="SummaryText" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/dark_500</item>
         <item name="android:textSize">@dimen/summary_text_textSize</item>
-        <item name="android:layout_marginStart">@dimen/summary_expectedTime_marginStart</item>
+        <item name="android:layout_marginStart">@dimen/summary_text_marginStart</item>
+        <item name="android:layout_marginEnd">@dimen/summary_text_marginEnd</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
     </style>
