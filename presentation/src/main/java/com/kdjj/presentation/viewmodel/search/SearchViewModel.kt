@@ -13,6 +13,7 @@ import com.kdjj.presentation.model.OthersRecipeModel
 import com.kdjj.presentation.model.SearchTabState
 import com.kdjj.presentation.model.toOthersRecipeModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -41,18 +42,21 @@ class SearchViewModel @Inject constructor(
 
     fun setTabState(tabState: SearchTabState) {
         if (_liveTabState.value != tabState) {
-            _liveTabState.value = tabState
             fetchingJob?.cancel()
             isFetching = false
+            _liveTabState.value = tabState
         }
     }
 
     fun updateSearchKeyword() {
-        if (isFetching) return
+        if (isFetching) {
+            fetchingJob?.cancel()
+        }
         isFetching = true
 
+        _liveResultList.value = listOf()
         if (liveKeyword.value?.isNotBlank() != true) {
-            _liveResultList.value = listOf()
+            isFetching = false
             return
         }
 
@@ -64,7 +68,9 @@ class SearchViewModel @Inject constructor(
                             _liveResultList.value = it.map(Recipe::toOthersRecipeModel)
                         }
                         .onFailure {
-                            _eventException.value = Event(Unit)
+                            if (it !is CancellationException) {
+                                _eventException.value = Event(Unit)
+                            }
                         }
                 }
                 SearchTabState.MY_RECIPE -> {
@@ -73,7 +79,9 @@ class SearchViewModel @Inject constructor(
                             _liveResultList.value = it.map(Recipe::toOthersRecipeModel)
                         }
                         .onFailure {
-                            _eventException.value = Event(Unit)
+                            if (it !is CancellationException) {
+                                _eventException.value = Event(Unit)
+                            }
                         }
                 }
             }
@@ -87,6 +95,7 @@ class SearchViewModel @Inject constructor(
 
         if (liveKeyword.value?.isNotBlank() != true) {
             _liveResultList.value = listOf()
+            isFetching = false
             return
         }
 
@@ -100,7 +109,9 @@ class SearchViewModel @Inject constructor(
                                 ?: recipeList.map(Recipe::toOthersRecipeModel)
                         }
                         .onFailure {
-                            _eventException.value = Event(Unit)
+                            if (it !is CancellationException) {
+                                _eventException.value = Event(Unit)
+                            }
                         }
                 }
                 SearchTabState.MY_RECIPE -> {
@@ -111,7 +122,9 @@ class SearchViewModel @Inject constructor(
                                 ?: recipeList.map(Recipe::toOthersRecipeModel)
                         }
                         .onFailure {
-                            _eventException.value = Event(Unit)
+                            if (it !is CancellationException) {
+                                _eventException.value = Event(Unit)
+                            }
                         }
                 }
             }
