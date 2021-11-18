@@ -67,5 +67,27 @@
             app:layout_constraintBottom_toBottomOf="@id/textView_search_btnOthers"
             app:layout_constraintStart_toEndOf="@id/textView_search_btnOthers"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/textview_search_resultLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/myRecipeSearchResult"
+            android:textSize="@dimen/search_resultLabel_textSize"
+            android:textColor="@color/dark_500"
+            android:layout_margin="@dimen/search_resultLabel_margin"
+            app:layout_constraintTop_toBottomOf="@id/textView_search_btnOthers"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_search"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/search_resultLabel_margin"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/textview_search_resultLabel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

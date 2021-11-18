@@ -83,6 +83,8 @@
     <dimen name="search_tab_margin">8dp</dimen>
     <dimen name="search_tab_space">4dp</dimen>
     <dimen name="search_tab_textSize">16sp</dimen>
+    <dimen name="search_resultLabel_textSize">14sp</dimen>
+    <dimen name="search_resultLabel_margin">16dp</dimen>
 
     <dimen name="summary_expectedTimeLabel_marginStart">16dp</dimen>
     <dimen name="summary_expectedTimeLabel_marginTop">24dp</dimen>
