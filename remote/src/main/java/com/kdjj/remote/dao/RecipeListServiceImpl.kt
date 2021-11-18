@@ -16,27 +16,38 @@ internal class RecipeListServiceImpl @Inject constructor(
     private val fireStore: FirebaseFirestore
 ) : RemoteRecipeListService {
 
+    private var latestListQuery: Query? = null
     private var popularListQuery: Query? = null
 
     override suspend fun fetchLatestRecipeListAfter(
-        lastVisibleCreateTime: Long
+        refresh: Boolean
     ): List<Recipe> =
         suspendCancellableCoroutine {
             it.invokeOnCancellation {
                 Log.d("Test", "invokeOnCancellation")
             }
-            Log.d("Test", "fetchLatestRecipeListAfter")
-            fireStore.collection(RECIPE_COLLECTION_ID)
+
+            if (refresh) {
+                latestListQuery = null
+            }
+
+            val query = latestListQuery ?: fireStore.collection(RECIPE_COLLECTION_ID)
                 .orderBy(FIELD_CREATE_TIME, Query.Direction.DESCENDING)
-                .startAfter(lastVisibleCreateTime)
                 .limit(PAGING_SIZE)
-                .get()
+
+            query.get()
                 .addOnSuccessListener { queryDocumentSnapshot ->
+
+                    if (queryDocumentSnapshot.documents.isNotEmpty()) {
+                        latestListQuery = fireStore.collection(RECIPE_COLLECTION_ID)
+                            .orderBy(FIELD_CREATE_TIME, Query.Direction.DESCENDING)
+                            .startAfter(queryDocumentSnapshot.documents.last())
+                            .limit(PAGING_SIZE)
+                    }
+
                     if (queryDocumentSnapshot.metadata.isFromCache) {
-                        Log.d("Test", "addOnSuccessListener NetworkException")
                         it.resumeWithException(NetworkException())
                     } else {
-                        Log.d("Test", "addOnSuccessListener Success")
                         it.resumeWith(
                             Result.success(
                                 queryDocumentSnapshot.map { item ->
@@ -47,7 +58,6 @@ internal class RecipeListServiceImpl @Inject constructor(
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Log.d("Test", "addOnFailureListener")
                     it.resumeWithException(ApiException(exception.message))
                 }.addOnCanceledListener {
                     Log.d("Test", "addOnCanceledListener")
@@ -137,6 +147,6 @@ internal class RecipeListServiceImpl @Inject constructor(
         const val FIELD_CREATE_TIME = "createTime"
         const val FIELD_VIEW_COUNT = "viewCount"
         const val RECIPE_COLLECTION_ID = "recipe"
-        const val PAGING_SIZE = 10L
+        const val PAGING_SIZE = 2L
     }
 }

@@ -84,7 +84,7 @@ class OthersViewModel @Inject constructor(
 
             fetchingJob = viewModelScope.launch {
                 if (it == OthersSortType.LATEST) {
-                    fetchRemoteLatestRecipeList()
+                    fetchRemoteLatestRecipeList(isFirstPage)
                 } else {
                     fetchRemotePopularRecipeList(isFirstPage)
                 }
@@ -92,15 +92,10 @@ class OthersViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchRemoteLatestRecipeList() {
-        val lastVisibleCreateTime = _liveRecipeList.value?.let {
-            if (it.isEmpty()) Long.MAX_VALUE
-            else it.last().createTime
-        } ?: Long.MAX_VALUE
-
+    private suspend fun fetchRemoteLatestRecipeList(isFirstPage: Boolean) {
         onRecipeListFetched(
             fetchRemoteLatestRecipeListUseCase(
-                FetchRemoteLatestRecipeListRequest(lastVisibleCreateTime)
+                FetchRemoteLatestRecipeListRequest(isFirstPage)
             )
         )
     }

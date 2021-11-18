@@ -10,10 +10,10 @@ internal class RecipeListRemoteDataSourceImpl @Inject constructor(
 ) : RecipeListRemoteDataSource {
     
     override suspend fun fetchLatestRecipeListAfter(
-        lastVisibleCreateTime: Long
+        refresh: Boolean
     ): Result<List<Recipe>> =
         runCatching {
-            recipeListService.fetchLatestRecipeListAfter(lastVisibleCreateTime)
+            recipeListService.fetchLatestRecipeListAfter(refresh)
         }
     
     override suspend fun fetchPopularRecipeListAfter(

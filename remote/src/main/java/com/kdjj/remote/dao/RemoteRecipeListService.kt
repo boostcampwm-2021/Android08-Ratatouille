@@ -5,7 +5,7 @@ import com.kdjj.domain.model.Recipe
 internal interface RemoteRecipeListService {
     
     suspend fun fetchLatestRecipeListAfter(
-        lastVisibleCreateTime: Long
+        refresh: Boolean
     ): List<Recipe>
     
     suspend fun fetchPopularRecipeListAfter(
