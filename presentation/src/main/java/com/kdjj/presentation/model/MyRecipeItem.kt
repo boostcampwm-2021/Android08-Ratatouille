@@ -9,4 +9,5 @@ internal sealed class MyRecipeItem {
     ) : MyRecipeItem()
 
     object PlusButton : MyRecipeItem()
+    object Progress: MyRecipeItem()
 }
