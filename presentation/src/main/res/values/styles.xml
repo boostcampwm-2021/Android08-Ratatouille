@@ -59,7 +59,5 @@
         <item name="backgroundTint">@color/blue_500</item>
         <item name="android:background">@drawable/bg_summary_button_round</item>
         <item name="android:layout_marginBottom">@dimen/summary_floatingButton_marginBottom</item>
-        <item name="android:visibility">gone</item>
-        <item name="android:alpha" format="float" type="dimen">0.0</item>
     </style>
 </resources>

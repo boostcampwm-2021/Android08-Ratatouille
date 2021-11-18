@@ -24,25 +24,28 @@ class RecipeSummaryViewModel @Inject constructor(
     val liveRecipe: LiveData<Recipe> = _liveRecipe
     private val _eventNoInfo = MutableLiveData<Event<Unit>>()
     val eventNoInfo: LiveData<Event<Unit>> = _eventNoInfo
-    val liveRecipeSummaryType: LiveData<RecipeSummaryType> = _liveRecipe.switchMap { recipe ->
-        MutableLiveData(
-            when {
-                recipe.authorId == userId && (recipe.state == RecipeState.CREATE || recipe.state == RecipeState.UPLOAD) -> {
-                    RecipeSummaryType.MY_SAVE_RECIPE
-                }
-                recipe.state == RecipeState.DOWNLOAD -> {
-                    RecipeSummaryType.MY_SAVE_OTHER_RECIPE
-                }
-                recipe.authorId == userId && recipe.state == RecipeState.NETWORK -> {
-                    RecipeSummaryType.MY_SERVER_RECIPE
-                }
-                recipe.authorId != userId && recipe.state == RecipeState.NETWORK -> {
-                    RecipeSummaryType.OTHER_SERVER_RECIPE
-                }
-                else -> throw Exception("Unknown RecipeSummaryType")
-            }
-        )
-    }
+    val eventInitView: LiveData<Event<RecipeSummaryType>> =
+        _liveRecipe.switchMap { recipe ->
+            MutableLiveData(
+                Event(
+                    when {
+                        recipe.authorId == userId && (recipe.state == RecipeState.CREATE || recipe.state == RecipeState.UPLOAD) -> {
+                            RecipeSummaryType.MY_SAVE_RECIPE
+                        }
+                        recipe.state == RecipeState.DOWNLOAD -> {
+                            RecipeSummaryType.MY_SAVE_OTHER_RECIPE
+                        }
+                        recipe.authorId == userId && recipe.state == RecipeState.NETWORK -> {
+                            RecipeSummaryType.MY_SERVER_RECIPE
+                        }
+                        recipe.authorId != userId && recipe.state == RecipeState.NETWORK -> {
+                            RecipeSummaryType.OTHER_SERVER_RECIPE
+                        }
+                        else -> throw Exception("Unknown RecipeSummaryType")
+                    }
+                )
+            )
+        }
     private var isInitialized = false
     private val userId = idGenerator.getDeviceId()
     
