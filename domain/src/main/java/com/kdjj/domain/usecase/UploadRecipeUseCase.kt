@@ -35,6 +35,7 @@ class UploadRecipeUseCase @Inject constructor(
                 recipe.copy(
                     imgPath = recipeImageUri,
                     stepList = recipeStepList,
+                    createTime = System.currentTimeMillis()
                 )
             ).getOrThrow()
 
