@@ -8,7 +8,12 @@ import com.kdjj.presentation.model.ConfirmDialogModel
 
 internal object ConfirmDialogBuilder {
 
-    fun create(context: Context, title: String, content: String, onConfirmListener: () -> Unit) {
+    fun create(
+        context: Context,
+        title: String,
+        content: String,
+        onConfirmListener: () -> Unit
+    ) {
         val binding = DialogConfirmBinding.inflate(LayoutInflater.from(context))
         val dialog = AlertDialog.Builder(context)
             .setView(binding.root)
