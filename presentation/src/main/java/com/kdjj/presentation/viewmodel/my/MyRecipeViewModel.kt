@@ -1,6 +1,5 @@
 package com.kdjj.presentation.viewmodel.my
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -57,17 +56,8 @@ internal class MyRecipeViewModel @Inject constructor(
         }
     }
 
-    fun fetchMoreRecipeData(page: Int) {
-        when (_liveSortType.value) {
-            SortType.SORT_BY_TIME -> fetchLocalLatestRecipeList(page)
-            SortType.SORT_BY_FAVORITE -> fetchLocalFavoriteRecipeList(page)
-            SortType.SORT_BY_NAME -> fetchLocalTitleRecipeList(page)
-        }
-    }
-
     private fun fetchLocalLatestRecipeList(page: Int) {
         viewModelScope.launch {
-            Log.d("aaa", liveSortType.value.toString())
             latestRecipeUseCase(FetchLocalLatestRecipeListRequest(page))
                 .onSuccess { latestRecipeList ->
                     if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_TIME && page > 0) {
@@ -135,6 +125,14 @@ internal class MyRecipeViewModel @Inject constructor(
 
     fun moveToRecipeSearchFragment() {
         _eventSearchIconClicked.value = Event(Unit)
+    }
+
+    fun fetchMoreRecipeData(page: Int) {
+        when (_liveSortType.value) {
+            SortType.SORT_BY_TIME -> fetchLocalLatestRecipeList(page)
+            SortType.SORT_BY_FAVORITE -> fetchLocalFavoriteRecipeList(page)
+            SortType.SORT_BY_NAME -> fetchLocalTitleRecipeList(page)
+        }
     }
 
     fun refreshRecipeList() {
