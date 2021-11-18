@@ -39,6 +39,8 @@ class RecipeSummaryViewModel @Inject constructor(
     val eventDeleteRecipeSuccess: LiveData<Event<Unit>> = _eventDeleteRecipeSuccess
     private val _eventUploadFinish = MutableLiveData<Event<Boolean>>()
     val eventUploadFinish: LiveData<Event<Boolean>> = _eventUploadFinish
+    private val _eventSaveFinish = MutableLiveData<Event<Boolean>>()
+    val eventSaveFinish: LiveData<Event<Boolean>> = _eventSaveFinish
     val eventInitView: LiveData<Event<RecipeSummaryType>> =
         _liveRecipe.switchMap { recipe ->
             MutableLiveData(
@@ -130,7 +132,7 @@ class RecipeSummaryViewModel @Inject constructor(
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
                 val newRecipeId = idGenerator.generateId()
-                saveLocalRecipeUseCase(
+                val saveResult = saveLocalRecipeUseCase(
                     SaveLocalRecipeRequest(
                         recipe.copy(
                             recipeId = newRecipeId,
@@ -138,7 +140,7 @@ class RecipeSummaryViewModel @Inject constructor(
                         )
                     )
                 )
-                // TODO : 성공 실패 피드백
+                _eventSaveFinish.value = Event(saveResult.isSuccess)
             }
         }
     
