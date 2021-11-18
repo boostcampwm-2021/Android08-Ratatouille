@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kdjj.domain.model.Recipe
-import com.kdjj.domain.model.exception.NetworkException
 import com.kdjj.domain.model.request.FetchRemoteLatestRecipeListRequest
 import com.kdjj.domain.model.request.FetchRemotePopularRecipeListRequest
 import com.kdjj.domain.usecase.UseCase
@@ -15,9 +14,7 @@ import com.kdjj.presentation.model.OthersRecipeModel
 import com.kdjj.presentation.model.toOthersRecipeModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -46,6 +43,9 @@ class OthersViewModel @Inject constructor(
 
     private var _eventSearchIconClicked = MutableLiveData<Event<Unit>>()
     val eventSearchIconClicked: LiveData<Event<Unit>> get() = _eventSearchIconClicked
+
+    private var _eventRecipeItemClicked = MutableLiveData<Event<OthersRecipeModel>>()
+    val eventRecipeItemClicked: LiveData<Event<OthersRecipeModel>> get() = _eventRecipeItemClicked
 
     init {
         Log.d("Test", "OthersViewModel init")
@@ -140,6 +140,10 @@ class OthersViewModel @Inject constructor(
 
     fun moveToRecipeSearchFragment() {
         _eventSearchIconClicked.value = Event(Unit)
+    }
+
+    fun recipeItemClick(recipeModel: OthersRecipeModel) {
+        _eventRecipeItemClicked.value = Event(recipeModel)
     }
 
     enum class OthersSortType {

@@ -1,6 +1,7 @@
 package com.kdjj.presentation.model
 
 import com.kdjj.domain.model.Recipe
+import com.kdjj.domain.model.RecipeState
 
 data class OthersRecipeModel(
     val recipeId: String,
@@ -10,6 +11,7 @@ data class OthersRecipeModel(
     val viewCount: Int,
     val imgPath: String,
     val createTime: Long,
+    val state: RecipeState,
 )
 
 internal fun Recipe.toOthersRecipeModel() =
@@ -20,5 +22,6 @@ internal fun Recipe.toOthersRecipeModel() =
         stuff,
         viewCount,
         imgPath,
-        createTime
+        createTime,
+        state
     )

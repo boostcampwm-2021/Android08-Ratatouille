@@ -5,8 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.kdjj.presentation.databinding.ItemOthersRecipeBinding
 import com.kdjj.presentation.model.OthersRecipeModel
+import com.kdjj.presentation.viewmodel.others.OthersViewModel
 
 class OthersRecipeListAdapter(
+    private val viewModel: OthersViewModel,
 ) : SingleViewTypeListAdapter<OthersRecipeModel, ItemOthersRecipeBinding>(OthersRecipeModelDiffCallback()) {
 
     override fun createBinding(parent: ViewGroup): ItemOthersRecipeBinding =
@@ -17,7 +19,7 @@ class OthersRecipeListAdapter(
         getItemPosition: () -> Int,
     ) {
         binding.root.setOnClickListener {
-            //todo: clicklisntener
+            viewModel.recipeItemClick(getItem(getItemPosition()))
         }
     }
 
