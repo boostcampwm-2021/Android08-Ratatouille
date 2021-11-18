@@ -1,6 +1,5 @@
 package com.kdjj.remote.dao
 
-import android.util.Log
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.toObject
 import com.kdjj.domain.model.Recipe
@@ -18,15 +17,12 @@ internal class RecipeListServiceImpl @Inject constructor(
 
     private var latestListQuery: Query? = null
     private var popularListQuery: Query? = null
-    private var searchQueryLastDocument: DocumentSnapshot? = null
+    private var searchListQuery: Query? = null
 
     override suspend fun fetchLatestRecipeListAfter(
         refresh: Boolean
     ): List<Recipe> =
         suspendCancellableCoroutine {
-            it.invokeOnCancellation {
-                Log.d("Test", "invokeOnCancellation")
-            }
 
             if (refresh) {
                 latestListQuery = null
@@ -60,8 +56,6 @@ internal class RecipeListServiceImpl @Inject constructor(
                 }
                 .addOnFailureListener { exception ->
                     it.resumeWithException(ApiException(exception.message))
-                }.addOnCanceledListener {
-                    Log.d("Test", "addOnCanceledListener")
                 }
         }
 
@@ -69,10 +63,6 @@ internal class RecipeListServiceImpl @Inject constructor(
         refresh: Boolean
     ): List<Recipe> =
         suspendCancellableCoroutine {
-
-            it.invokeOnCancellation {
-                Log.d("Test", "invokeOnCancellation")
-            }
 
             if (refresh) {
                 popularListQuery = null
@@ -106,8 +96,6 @@ internal class RecipeListServiceImpl @Inject constructor(
                 }
                 .addOnFailureListener { exception ->
                     it.resumeWithException(ApiException(exception.message))
-                }.addOnCanceledListener {
-                    Log.d("Test", "addOnCanceledListener")
                 }
         }
     
@@ -117,31 +105,28 @@ internal class RecipeListServiceImpl @Inject constructor(
     ): List<Recipe> =
         suspendCancellableCoroutine {
 
-            it.invokeOnCancellation {
-                Log.d("Test", "invokeOnCancellation")
-            }
-
             if (refresh) {
-                searchQueryLastDocument = null
+                searchListQuery = null
             }
 
-            val query = if (searchQueryLastDocument == null) {
-                fireStore.collection(RECIPE_COLLECTION_ID)
-                    .whereGreaterThanOrEqualTo(FIELD_TITLE, keyword)
-                    .whereLessThan(FIELD_TITLE, keyword + HANGLE_MAX_VALUE)
-                    .orderBy(FIELD_TITLE, Query.Direction.ASCENDING)
-                    .limit(PAGING_SIZE)
-            } else {
-                fireStore.collection(RECIPE_COLLECTION_ID)
-                    .whereGreaterThanOrEqualTo(FIELD_TITLE, keyword)
-                    .whereLessThan(FIELD_TITLE, keyword + HANGLE_MAX_VALUE)
-                    .orderBy(FIELD_TITLE, Query.Direction.ASCENDING)
-                    .startAfter(searchQueryLastDocument)
-                    .limit(PAGING_SIZE)
-            }
+            val query = searchListQuery ?: fireStore.collection(RECIPE_COLLECTION_ID)
+                .whereGreaterThanOrEqualTo(FIELD_TITLE, keyword)
+                .whereLessThan(FIELD_TITLE, keyword + HANGLE_MAX_VALUE)
+                .orderBy(FIELD_TITLE, Query.Direction.ASCENDING)
+                .limit(PAGING_SIZE)
 
             query.get()
                 .addOnSuccessListener { queryDocumentSnapshot ->
+
+                    if (queryDocumentSnapshot.documents.isNotEmpty()) {
+                        searchListQuery = fireStore.collection(RECIPE_COLLECTION_ID)
+                            .whereGreaterThanOrEqualTo(FIELD_TITLE, keyword)
+                            .whereLessThan(FIELD_TITLE, keyword + HANGLE_MAX_VALUE)
+                            .orderBy(FIELD_TITLE, Query.Direction.ASCENDING)
+                            .startAfter(queryDocumentSnapshot.documents.last())
+                            .limit(PAGING_SIZE)
+                    }
+
                     if (queryDocumentSnapshot.metadata.isFromCache) {
                         it.resumeWithException(NetworkException())
                     } else {
@@ -166,6 +151,6 @@ internal class RecipeListServiceImpl @Inject constructor(
         const val FIELD_CREATE_TIME = "createTime"
         const val FIELD_VIEW_COUNT = "viewCount"
         const val RECIPE_COLLECTION_ID = "recipe"
-        const val PAGING_SIZE = 2L
+        const val PAGING_SIZE = 10L
     }
 }

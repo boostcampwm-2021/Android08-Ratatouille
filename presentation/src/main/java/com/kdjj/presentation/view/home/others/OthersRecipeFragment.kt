@@ -1,7 +1,6 @@
 package com.kdjj.presentation.view.home.others
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -90,13 +89,11 @@ class OthersRecipeFragment : Fragment() {
 
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    Log.d("Test", dy.toString())
 
                     recyclerViewOthersRecipe.adapter?.let { adapter ->
                         val lastVisibleItemPosition = (recyclerViewOthersRecipe.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
                         val lastItemPosition = adapter.itemCount - 1
                         if (lastVisibleItemPosition == lastItemPosition && adapter.itemCount != 0 && dy > 0) {
-                            Log.d("Test", "onScrolled fetchNextRecipeListPage")
                             this@OthersRecipeFragment.viewModel.fetchNextRecipeListPage(false)
                         }
                     }

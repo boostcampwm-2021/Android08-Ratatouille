@@ -1,6 +1,5 @@
 package com.kdjj.presentation.viewmodel.others
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -48,14 +47,11 @@ class OthersViewModel @Inject constructor(
     val eventRecipeItemClicked: LiveData<Event<RecipeListItemModel>> get() = _eventRecipeItemClicked
 
     init {
-        Log.d("Test", "OthersViewModel init")
         setChecked(OthersSortType.LATEST)
     }
 
     fun setChecked(othersSortType: OthersSortType) {
         if (_liveSortType.value != othersSortType) {
-            Log.d("Test", "OthersViewModel setChecked")
-            // sort type 바뀔 때마다 리스트 초기화 후, 바뀐 type 으로 받아오기
             _liveSortType.value = othersSortType
             initFetching()
             fetchNextRecipeListPage(true)
@@ -70,7 +66,6 @@ class OthersViewModel @Inject constructor(
     }
 
     fun refreshList() {
-        Log.d("Test", "OthersViewModel refreshList")
         initFetching()
         fetchNextRecipeListPage(true)
     }
@@ -112,13 +107,10 @@ class OthersViewModel @Inject constructor(
         result.onSuccess { list ->
             _liveRecipeList.value?.let {
                 if (list.isEmpty()) {
-                    Log.d("Test", "onRecipeListFetched success but empty list")
                     _liveFetchLock.value = false
                     return
                 }
                 val othersRecipeModelList = list.map { recipe -> recipe.toRecipeListItemModel() }
-                Log.d("Test", "onRecipeListFetched success")
-
                 if (it.isEmpty()) _liveRecipeList.value = othersRecipeModelList
                 else _liveRecipeList.value = it.plus(othersRecipeModelList)
             }
@@ -126,7 +118,6 @@ class OthersViewModel @Inject constructor(
             // view 에게 알리기
             _liveFetchLock.value = false
             _eventException.value = Event(it)
-            Log.d("Test", "onRecipeListFetched fail ${it.message}")
         }
     }
 
