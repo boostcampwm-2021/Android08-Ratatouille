@@ -50,7 +50,7 @@ class RecipeDetailViewModel @Inject constructor(
     val eventCloseTimer: LiveData<Event<() -> Unit>> get() = _eventCloseTimer
 
     private var _liveFinishedTimerPosition = MutableLiveData<Int>()
-    val liveFinishedTimerPosition: LiveData<Int> get () = _liveFinishedTimerPosition
+    val liveFinishedTimerPosition: LiveData<Int> get() = _liveFinishedTimerPosition
 
     private val _liveLoading = MutableLiveData(false)
     val liveLoading: LiveData<Boolean> get() = _liveLoading

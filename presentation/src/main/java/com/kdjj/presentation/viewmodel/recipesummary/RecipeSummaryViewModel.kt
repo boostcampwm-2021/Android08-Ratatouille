@@ -29,20 +29,31 @@ class RecipeSummaryViewModel @Inject constructor(
     
     private val _liveRecipe = MutableLiveData<Recipe>()
     val liveRecipe: LiveData<Recipe> = _liveRecipe
+
     private val _eventLoadError = MutableLiveData<Event<Unit>>()
     val eventLoadError: LiveData<Event<Unit>> = _eventLoadError
+
     private val _eventOpenRecipeDetail = MutableLiveData<Event<Recipe>>()
     val eventOpenRecipeDetail: LiveData<Event<Recipe>> = _eventOpenRecipeDetail
+
     private val _eventOpenRecipeEditor = MutableLiveData<Event<Recipe>>()
     val eventOpenRecipeEditor: LiveData<Event<Recipe>> = _eventOpenRecipeEditor
+
     private val _eventDeleteFinish = MutableLiveData<Event<Boolean>>()
     val eventDeleteFinish: LiveData<Event<Boolean>> = _eventDeleteFinish
+
     private val _eventUploadFinish = MutableLiveData<Event<Boolean>>()
     val eventUploadFinish: LiveData<Event<Boolean>> = _eventUploadFinish
+
     private val _eventSaveFinish = MutableLiveData<Event<Boolean>>()
     val eventSaveFinish: LiveData<Event<Boolean>> = _eventSaveFinish
+
     private val _eventUpdateFavoriteFinish = MutableLiveData<Event<Boolean>>()
     val eventUpdateFavoriteFinish: LiveData<Event<Boolean>> = _eventUpdateFavoriteFinish
+
+    private val _liveLoading = MutableLiveData(false)
+    val liveLoading: LiveData<Boolean> get() = _liveLoading
+
     val eventInitView: LiveData<Event<RecipeSummaryType>> =
         _liveRecipe.switchMap { recipe ->
             MutableLiveData(
@@ -68,6 +79,7 @@ class RecipeSummaryViewModel @Inject constructor(
                 )
             )
         }
+
     private var isInitialized = false
     private val userId = idGenerator.getDeviceId()
     private var collectJob: Job? = null
@@ -76,6 +88,7 @@ class RecipeSummaryViewModel @Inject constructor(
         if (isInitialized) return
         if (recipeId == null || recipeState == null) notifyNoInfo()
         else {
+            _liveLoading.value = true
             collectJob = viewModelScope.launch {
                 when (recipeState) {
                     RecipeState.CREATE,
@@ -96,25 +109,30 @@ class RecipeSummaryViewModel @Inject constructor(
                     }
                 }
             }
+            _liveLoading.value = false
         }
         
         isInitialized = true
     }
     
-    fun updateRecipeFavorite() =
+    fun updateRecipeFavorite() {
+        _liveLoading.value = true
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
                 val favoriteResult =
                     updateLocalRecipeFavoriteUseCase(UpdateLocalRecipeFavoriteRequest(recipe))
                 _eventUpdateFavoriteFinish.value = Event(favoriteResult.isSuccess)
             }
+            _liveLoading.value = false
         }
-    
-    fun deleteRecipe() =
+    }
+
+    fun deleteRecipe() {
+        _liveLoading.value = true
         viewModelScope.launch {
             collectJob?.cancel()
             val recipeState = liveRecipe.value?.state ?: return@launch
-            
+
             liveRecipe.value?.let { recipe ->
                 val deleteResult = when (recipeState) {
                     RecipeState.CREATE,
@@ -128,21 +146,26 @@ class RecipeSummaryViewModel @Inject constructor(
                 }
                 _eventDeleteFinish.value = Event(deleteResult.isSuccess)
             }
+            _liveLoading.value = false
         }
-    
-    fun saveRecipeToLocal() =
+    }
+
+    fun saveRecipeToLocal() {
+        _liveLoading.value = true
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
                 val newRecipeId = idGenerator.generateId()
                 val newRecipe = recipe.copy(recipeId = newRecipeId, state = RecipeState.DOWNLOAD)
                 val saveResult = saveLocalRecipeUseCase(SaveLocalRecipeRequest(newRecipe))
-                
+
                 _eventSaveFinish.value = Event(saveResult.isSuccess)
             }
+            _liveLoading.value = false
         }
-    
-    // TODO : UseCase 하나로 합치기
-    fun saveRecipeToLocalWithFavorite() =
+    }
+
+    fun saveRecipeToLocalWithFavorite() {
+        _liveLoading.value = true
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
                 val newRecipeId = idGenerator.generateId()
@@ -152,19 +175,24 @@ class RecipeSummaryViewModel @Inject constructor(
                     isFavorite = true
                 )
                 val saveResult = saveLocalRecipeUseCase(SaveLocalRecipeRequest(newRecipe))
-                
+
                 _eventSaveFinish.value = Event(saveResult.isSuccess)
             }
+            _liveLoading.value = false
         }
-    
-    fun uploadRecipe() =
+    }
+
+    fun uploadRecipe() {
+        _liveLoading.value = true
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
                 val uploadResult = uploadRecipeUseCase(UploadRecipeRequest(recipe))
                 _eventUploadFinish.value = Event(uploadResult.isSuccess)
             }
+            _liveLoading.value = false
         }
-    
+    }
+
     fun openRecipeDetail() {
         liveRecipe.value?.let { recipe ->
             _eventOpenRecipeDetail.value = Event(recipe)

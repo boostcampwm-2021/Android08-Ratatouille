@@ -16,6 +16,7 @@ import com.kdjj.presentation.common.RECIPE_STATE
 import com.kdjj.presentation.databinding.ActivityRecipeSummaryBinding
 import com.kdjj.presentation.model.RecipeSummaryType
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
+import com.kdjj.presentation.view.dialog.CustomProgressDialog
 import com.kdjj.presentation.view.recipedetail.RecipeDetailActivity
 import com.kdjj.presentation.view.recipeeditor.RecipeEditorActivity
 import com.kdjj.presentation.viewmodel.recipesummary.RecipeSummaryViewModel
@@ -51,6 +52,8 @@ class RecipeSummaryActivity : AppCompatActivity() {
             acc + list
         }.distinct()
     private var isFloatingActionButtonOpen = false
+
+    private lateinit var loadingDialog: CustomProgressDialog
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +61,8 @@ class RecipeSummaryActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_recipe_summary)
         binding.viewModel = recipeSummaryViewModel
         binding.lifecycleOwner = this
+
+        loadingDialog = CustomProgressDialog(this)
         
         setSupportActionBar(binding.toolbarSummary)
         
@@ -137,6 +142,14 @@ class RecipeSummaryActivity : AppCompatActivity() {
             val message = if (isSuccess) "즐겨찾기 추가 / 제거 성공" else "즐겨찾기 추가 / 제거 실패"
             showSnackBar(message)
         })
+
+        liveLoading.observe(this@RecipeSummaryActivity) { doLoading ->
+            if (doLoading) {
+                loadingDialog.show()
+            } else {
+                loadingDialog.dismiss()
+            }
+        }
     }
     
     private fun initFloatingMenuVisibility(buttonList: List<AppCompatButton>?) = with(binding) {
