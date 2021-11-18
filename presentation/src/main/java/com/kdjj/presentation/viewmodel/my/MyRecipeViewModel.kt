@@ -46,6 +46,8 @@ internal class MyRecipeViewModel @Inject constructor(
     private val _eventDataLoadFailed = MutableLiveData<Event<Unit>>()
     val eventDataLoadFailed: LiveData<Event<Unit>> get() = _eventDataLoadFailed
 
+    private var isFetching = false
+
     init {
         setSortType(SortType.SORT_BY_TIME)
 
@@ -68,6 +70,8 @@ internal class MyRecipeViewModel @Inject constructor(
     }
 
     private fun fetchLocalLatestRecipeList(page: Int) {
+        if (_liveSortType.value == SortType.SORT_BY_TIME && page > 0 && isFetching) return
+        isFetching = true
         viewModelScope.launch {
             latestRecipeUseCase(FetchLocalLatestRecipeListRequest(page))
                 .onSuccess { latestRecipeList ->
@@ -87,10 +91,12 @@ internal class MyRecipeViewModel @Inject constructor(
                     _liveSortType.value = SortType.SORT_BY_TIME
                     _eventDataLoadFailed.value = Event(Unit)
                 }
+            isFetching = false
         }
     }
 
     private fun fetchLocalFavoriteRecipeList(page: Int) {
+        if (_liveSortType.value == SortType.SORT_BY_FAVORITE && page > 0 && isFetching) return
         viewModelScope.launch {
             favoriteRecipeUseCase(FetchLocalFavoriteRecipeListRequest(page))
                 .onSuccess { favoriteRecipeList ->
@@ -110,10 +116,12 @@ internal class MyRecipeViewModel @Inject constructor(
                     _liveSortType.value = SortType.SORT_BY_FAVORITE
                     _eventDataLoadFailed.value = Event(Unit)
                 }
+            isFetching = false
         }
     }
 
     private fun fetchLocalTitleRecipeList(page: Int) {
+        if (_liveSortType.value == SortType.SORT_BY_NAME && page > 0 && isFetching) return
         viewModelScope.launch {
             titleRecipeUseCase(FetchLocalTitleRecipeListRequest(page))
                 .onSuccess { titleRecipeList ->
@@ -133,6 +141,7 @@ internal class MyRecipeViewModel @Inject constructor(
                     _liveSortType.value = SortType.SORT_BY_NAME
                     _eventDataLoadFailed.value = Event(Unit)
                 }
+            isFetching = false
         }
     }
 
