@@ -87,28 +87,24 @@ class RecipeSummaryActivity : AppCompatActivity() {
             initFloatingMenuVisibility(menuButtonList)
         })
         
-        eventOpenRecipeDetail.observe(this@RecipeSummaryActivity, EventObserver {
+        eventOpenRecipeDetail.observe(this@RecipeSummaryActivity, EventObserver { recipe ->
             val intent = Intent(
                 this@RecipeSummaryActivity,
                 RecipeDetailActivity::class.java
             ).apply {
-                recipeSummaryViewModel.liveRecipe.value?.let { recipe ->
-                    putExtra(RECIPE_ID, recipe.recipeId)
-                    putExtra(RECIPE_STATE, recipe.state)
-                }
+                putExtra(RECIPE_ID, recipe.recipeId)
+                putExtra(RECIPE_STATE, recipe.state)
             }
             startActivity(intent)
         })
         
-        eventOpenRecipeEditor.observe(this@RecipeSummaryActivity, EventObserver {
+        eventOpenRecipeEditor.observe(this@RecipeSummaryActivity, EventObserver { recipe ->
             val intent = Intent(
                 this@RecipeSummaryActivity,
                 RecipeEditorActivity::class.java
             ).apply {
-                recipeSummaryViewModel.liveRecipe.value?.let { recipe ->
-                    putExtra(RECIPE_ID, recipe.recipeId)
-                    putExtra(RECIPE_STATE, recipe.state)
-                }
+                putExtra(RECIPE_ID, recipe.recipeId)
+                putExtra(RECIPE_STATE, recipe.state)
             }
             startActivity(intent)
         })

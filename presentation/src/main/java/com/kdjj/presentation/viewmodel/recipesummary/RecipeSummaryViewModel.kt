@@ -31,10 +31,10 @@ class RecipeSummaryViewModel @Inject constructor(
     val liveRecipe: LiveData<Recipe> = _liveRecipe
     private val _eventNoInfo = MutableLiveData<Event<Unit>>()
     val eventNoInfo: LiveData<Event<Unit>> = _eventNoInfo
-    private val _eventOpenRecipeDetail = MutableLiveData<Event<Unit>>()
-    val eventOpenRecipeDetail: LiveData<Event<Unit>> = _eventOpenRecipeDetail
-    private val _eventOpenRecipeEditor = MutableLiveData<Event<Unit>>()
-    val eventOpenRecipeEditor: LiveData<Event<Unit>> = _eventOpenRecipeEditor
+    private val _eventOpenRecipeDetail = MutableLiveData<Event<Recipe>>()
+    val eventOpenRecipeDetail: LiveData<Event<Recipe>> = _eventOpenRecipeDetail
+    private val _eventOpenRecipeEditor = MutableLiveData<Event<Recipe>>()
+    val eventOpenRecipeEditor: LiveData<Event<Recipe>> = _eventOpenRecipeEditor
     private val _eventDeleteFinish = MutableLiveData<Event<Boolean>>()
     val eventDeleteFinish: LiveData<Event<Boolean>> = _eventDeleteFinish
     private val _eventUploadFinish = MutableLiveData<Event<Boolean>>()
@@ -163,11 +163,15 @@ class RecipeSummaryViewModel @Inject constructor(
         }
     
     fun openRecipeDetail() {
-        _eventOpenRecipeDetail.value = Event(Unit)
+        liveRecipe.value?.let { recipe ->
+            _eventOpenRecipeDetail.value = Event(recipe)
+        }
     }
     
     fun openRecipeEditor() {
-        _eventOpenRecipeEditor.value = Event(Unit)
+        liveRecipe.value?.let { recipe ->
+            _eventOpenRecipeEditor.value = Event(recipe)
+        }
     }
     
     private fun notifyNoInfo() {
