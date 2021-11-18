@@ -3,7 +3,7 @@
     <item>
         <inset
             android:insetRight="@dimen/search_icSearch_insetRight"
-            android:drawable="@drawable/ic_search_recipe_24dp">
+            android:drawable="@drawable/ic_search_recipe_dark_24dp">
         </inset>
     </item>
 </layer-list>
