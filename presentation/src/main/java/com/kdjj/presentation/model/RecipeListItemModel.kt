@@ -3,7 +3,7 @@ package com.kdjj.presentation.model
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeState
 
-data class OthersRecipeModel(
+data class RecipeListItemModel(
     val recipeId: String,
     val title: String,
     val totalTime: Int,
@@ -14,8 +14,8 @@ data class OthersRecipeModel(
     val state: RecipeState,
 )
 
-internal fun Recipe.toOthersRecipeModel() =
-    OthersRecipeModel(
+internal fun Recipe.toRecipeListItemModel() =
+    RecipeListItemModel(
         recipeId,
         title,
         stepList.map { it.seconds }.reduce { acc, i -> acc + i },

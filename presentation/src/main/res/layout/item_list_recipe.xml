@@ -5,7 +5,7 @@
     <data>
         <variable
             name="recipe"
-            type="com.kdjj.presentation.model.OthersRecipeModel" />
+            type="com.kdjj.presentation.model.RecipeListItemModel" />
     </data>
 
     <androidx.cardview.widget.CardView

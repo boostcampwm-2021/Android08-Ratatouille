@@ -10,8 +10,8 @@ import com.kdjj.domain.model.request.FetchRemoteLatestRecipeListRequest
 import com.kdjj.domain.model.request.FetchRemotePopularRecipeListRequest
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.Event
-import com.kdjj.presentation.model.OthersRecipeModel
-import com.kdjj.presentation.model.toOthersRecipeModel
+import com.kdjj.presentation.model.RecipeListItemModel
+import com.kdjj.presentation.model.toRecipeListItemModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -29,8 +29,8 @@ class OthersViewModel @Inject constructor(
     private var _liveFetchLock = MutableLiveData(false)
     val liveFetchLock: LiveData<Boolean> get() = _liveFetchLock
 
-    private var _liveRecipeList = MutableLiveData<List<OthersRecipeModel>>()
-    val liveRecipeList: LiveData<List<OthersRecipeModel>> get() = _liveRecipeList
+    private var _liveRecipeList = MutableLiveData<List<RecipeListItemModel>>()
+    val liveRecipeList: LiveData<List<RecipeListItemModel>> get() = _liveRecipeList
 
     private var fetchingJob: Job? = null
 
@@ -44,8 +44,8 @@ class OthersViewModel @Inject constructor(
     private var _eventSearchIconClicked = MutableLiveData<Event<Unit>>()
     val eventSearchIconClicked: LiveData<Event<Unit>> get() = _eventSearchIconClicked
 
-    private var _eventRecipeItemClicked = MutableLiveData<Event<OthersRecipeModel>>()
-    val eventRecipeItemClicked: LiveData<Event<OthersRecipeModel>> get() = _eventRecipeItemClicked
+    private var _eventRecipeItemClicked = MutableLiveData<Event<RecipeListItemModel>>()
+    val eventRecipeItemClicked: LiveData<Event<RecipeListItemModel>> get() = _eventRecipeItemClicked
 
     init {
         Log.d("Test", "OthersViewModel init")
@@ -126,7 +126,7 @@ class OthersViewModel @Inject constructor(
                     _liveFetchLock.value = false
                     return
                 }
-                val othersRecipeModelList = list.map { recipe -> recipe.toOthersRecipeModel() }
+                val othersRecipeModelList = list.map { recipe -> recipe.toRecipeListItemModel() }
                 if (it.isEmpty()) _liveRecipeList.value = othersRecipeModelList
                 else _liveRecipeList.value = it.plus(othersRecipeModelList)
             }
@@ -142,7 +142,7 @@ class OthersViewModel @Inject constructor(
         _eventSearchIconClicked.value = Event(Unit)
     }
 
-    fun recipeItemClick(recipeModel: OthersRecipeModel) {
+    fun recipeItemClick(recipeModel: RecipeListItemModel) {
         _eventRecipeItemClicked.value = Event(recipeModel)
     }
 

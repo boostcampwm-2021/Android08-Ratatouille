@@ -3,19 +3,19 @@ package com.kdjj.presentation.view.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import com.kdjj.presentation.databinding.ItemOthersRecipeBinding
-import com.kdjj.presentation.model.OthersRecipeModel
+import com.kdjj.presentation.databinding.ItemListRecipeBinding
+import com.kdjj.presentation.model.RecipeListItemModel
 import com.kdjj.presentation.viewmodel.others.OthersViewModel
 
 class OthersRecipeListAdapter(
     private val viewModel: OthersViewModel,
-) : SingleViewTypeListAdapter<OthersRecipeModel, ItemOthersRecipeBinding>(OthersRecipeModelDiffCallback()) {
+) : SingleViewTypeListAdapter<RecipeListItemModel, ItemListRecipeBinding>(RecipeListItemModelDiffCallback()) {
 
-    override fun createBinding(parent: ViewGroup): ItemOthersRecipeBinding =
-        ItemOthersRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun createBinding(parent: ViewGroup): ItemListRecipeBinding =
+        ItemListRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
     override fun initViewHolder(
-        binding: ItemOthersRecipeBinding,
+        binding: ItemListRecipeBinding,
         getItemPosition: () -> Int,
     ) {
         binding.root.setOnClickListener {
@@ -24,8 +24,8 @@ class OthersRecipeListAdapter(
     }
 
     override fun bind(
-        holder: SingleViewTypeViewHolder<OthersRecipeModel, ItemOthersRecipeBinding>,
-        item: OthersRecipeModel,
+        holder: SingleViewTypeViewHolder<RecipeListItemModel, ItemListRecipeBinding>,
+        item: RecipeListItemModel,
     ) {
        with(holder.binding) {
            recipe = item
@@ -34,11 +34,11 @@ class OthersRecipeListAdapter(
     }
 }
 
-class OthersRecipeModelDiffCallback : DiffUtil.ItemCallback<OthersRecipeModel>() {
+class RecipeListItemModelDiffCallback : DiffUtil.ItemCallback<RecipeListItemModel>() {
 
-    override fun areItemsTheSame(oldItem: OthersRecipeModel, newItem: OthersRecipeModel): Boolean =
+    override fun areItemsTheSame(oldItem: RecipeListItemModel, newItem: RecipeListItemModel): Boolean =
         oldItem.recipeId == newItem.recipeId
 
-    override fun areContentsTheSame(oldItem: OthersRecipeModel, newItem: OthersRecipeModel): Boolean =
+    override fun areContentsTheSame(oldItem: RecipeListItemModel, newItem: RecipeListItemModel): Boolean =
         true
 }
