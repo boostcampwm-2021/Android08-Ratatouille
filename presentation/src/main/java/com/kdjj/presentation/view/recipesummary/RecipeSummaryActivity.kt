@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.DataBindingUtil
+import com.google.android.material.snackbar.Snackbar
 import com.kdjj.domain.model.RecipeState
 import com.kdjj.presentation.R
 import com.kdjj.presentation.common.EventObserver
@@ -121,6 +122,11 @@ class RecipeSummaryActivity : AppCompatActivity() {
                 finish()
             }
         })
+        
+        eventUploadFinish.observe(this@RecipeSummaryActivity, EventObserver{ isSuccess ->
+            val message = if(isSuccess) "업로드 성공" else "업로드 실패"
+            showSnackBar(message)
+        })
     }
     
     private fun initFloatingMenuVisibility(buttonList: List<AppCompatButton>?) = with(binding) {
@@ -141,5 +147,13 @@ class RecipeSummaryActivity : AppCompatActivity() {
             val recipeState = bundle.getSerializable(RECIPE_STATE) as? RecipeState
             recipeSummaryViewModel.initViewModel(recipeId, recipeState)
         }
+    }
+    
+    fun showSnackBar(message: String) {
+        Snackbar.make(
+            binding.root,
+            message,
+            Snackbar.LENGTH_LONG
+        ).show()
     }
 }
