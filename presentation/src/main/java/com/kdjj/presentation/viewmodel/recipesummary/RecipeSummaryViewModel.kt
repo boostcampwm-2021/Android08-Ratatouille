@@ -41,6 +41,8 @@ class RecipeSummaryViewModel @Inject constructor(
     val eventUploadFinish: LiveData<Event<Boolean>> = _eventUploadFinish
     private val _eventSaveFinish = MutableLiveData<Event<Boolean>>()
     val eventSaveFinish: LiveData<Event<Boolean>> = _eventSaveFinish
+    private val _eventUpdateFavoriteFinish = MutableLiveData<Event<Boolean>>()
+    val eventUpdateFavoriteFinish: LiveData<Event<Boolean>> = _eventUpdateFavoriteFinish
     val eventInitView: LiveData<Event<RecipeSummaryType>> =
         _liveRecipe.switchMap { recipe ->
             MutableLiveData(
@@ -99,8 +101,9 @@ class RecipeSummaryViewModel @Inject constructor(
     fun updateRecipeFavorite() =
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
-                updateLocalRecipeFavoriteUseCase(UpdateLocalRecipeFavoriteRequest(recipe))
-                // TODO : 성공 실패 유저 피드백
+                val favoriteResult =
+                    updateLocalRecipeFavoriteUseCase(UpdateLocalRecipeFavoriteRequest(recipe))
+                _eventUpdateFavoriteFinish.value = Event(favoriteResult.isSuccess)
             }
         }
     
