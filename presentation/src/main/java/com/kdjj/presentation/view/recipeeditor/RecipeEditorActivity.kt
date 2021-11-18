@@ -127,9 +127,7 @@ class RecipeEditorActivity : AppCompatActivity() {
             model?.let { showSelectImageDialog() }
         }
 
-        viewModel.liveSaveResult.observe(this) { isSuccess ->
-            isSuccess ?: return@observe
-            viewModel.resetResultState()
+        viewModel.eventSaveResult.observe(this, EventObserver { isSuccess ->
             if (isSuccess) {
                 ConfirmDialogBuilder.create(
                     this,
@@ -143,11 +141,9 @@ class RecipeEditorActivity : AppCompatActivity() {
                     this,
                     "저장 실패",
                     "레시피를 저장하지 못했습니다.",
-                ) {
-
-                }
+                ) { }
             }
-        }
+        })
 
         viewModel.liveLoading.observe(this) { doLoading ->
             if (doLoading) {
