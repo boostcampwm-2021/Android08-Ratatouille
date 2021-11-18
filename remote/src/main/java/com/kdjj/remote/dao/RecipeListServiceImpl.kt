@@ -18,6 +18,7 @@ internal class RecipeListServiceImpl @Inject constructor(
 
     private var latestListQuery: Query? = null
     private var popularListQuery: Query? = null
+    private var searchQueryLastDocument: DocumentSnapshot? = null
 
     override suspend fun fetchLatestRecipeListAfter(
         refresh: Boolean
@@ -112,16 +113,34 @@ internal class RecipeListServiceImpl @Inject constructor(
     
     override suspend fun fetchSearchRecipeListAfter(
         keyword: String,
-        lastVisibleTitle: String
+        refresh: Boolean
     ): List<Recipe> =
         suspendCancellableCoroutine {
-            fireStore.collection(RECIPE_COLLECTION_ID)
-                .whereGreaterThanOrEqualTo(FIELD_TITLE, keyword)
-                .whereLessThan(FIELD_TITLE, keyword + HANGLE_MAX_VALUE)
-                .orderBy(FIELD_TITLE, Query.Direction.ASCENDING)
-                .startAfter(lastVisibleTitle)
-                .limit(PAGING_SIZE)
-                .get()
+
+            it.invokeOnCancellation {
+                Log.d("Test", "invokeOnCancellation")
+            }
+
+            if (refresh) {
+                searchQueryLastDocument = null
+            }
+
+            val query = if (searchQueryLastDocument == null) {
+                fireStore.collection(RECIPE_COLLECTION_ID)
+                    .whereGreaterThanOrEqualTo(FIELD_TITLE, keyword)
+                    .whereLessThan(FIELD_TITLE, keyword + HANGLE_MAX_VALUE)
+                    .orderBy(FIELD_TITLE, Query.Direction.ASCENDING)
+                    .limit(PAGING_SIZE)
+            } else {
+                fireStore.collection(RECIPE_COLLECTION_ID)
+                    .whereGreaterThanOrEqualTo(FIELD_TITLE, keyword)
+                    .whereLessThan(FIELD_TITLE, keyword + HANGLE_MAX_VALUE)
+                    .orderBy(FIELD_TITLE, Query.Direction.ASCENDING)
+                    .startAfter(searchQueryLastDocument)
+                    .limit(PAGING_SIZE)
+            }
+
+            query.get()
                 .addOnSuccessListener { queryDocumentSnapshot ->
                     if (queryDocumentSnapshot.metadata.isFromCache) {
                         it.resumeWithException(NetworkException())

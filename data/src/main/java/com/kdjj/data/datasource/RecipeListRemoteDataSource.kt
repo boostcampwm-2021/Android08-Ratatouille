@@ -14,6 +14,6 @@ interface RecipeListRemoteDataSource {
     
     suspend fun fetchSearchRecipeListAfter(
         keyword: String,
-        lastVisibleTitle: String
+        refresh: Boolean
     ): Result<List<Recipe>>
 }
