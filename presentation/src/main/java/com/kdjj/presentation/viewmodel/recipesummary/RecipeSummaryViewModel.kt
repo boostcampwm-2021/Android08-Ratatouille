@@ -131,40 +131,28 @@ class RecipeSummaryViewModel @Inject constructor(
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
                 val newRecipeId = idGenerator.generateId()
-                val saveResult = saveLocalRecipeUseCase(
-                    SaveLocalRecipeRequest(
-                        recipe.copy(
-                            recipeId = newRecipeId,
-                            state = RecipeState.DOWNLOAD
-                        )
-                    )
-                )
+                val newRecipe = recipe.copy(recipeId = newRecipeId, state = RecipeState.DOWNLOAD)
+                val saveResult = saveLocalRecipeUseCase(SaveLocalRecipeRequest(newRecipe))
+                
                 _eventSaveFinish.value = Event(saveResult.isSuccess)
             }
         }
     
+    // TODO : UseCase 하나로 합치기
     fun saveRecipeToLocalWithFavorite() =
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
                 val newRecipeId = idGenerator.generateId()
-                saveLocalRecipeUseCase(
-                    SaveLocalRecipeRequest(
-                        recipe.copy(
-                            recipeId = newRecipeId,
-                            state = RecipeState.DOWNLOAD
+                val newRecipe = recipe.copy(recipeId = newRecipeId, state = RecipeState.DOWNLOAD)
+                saveLocalRecipeUseCase(SaveLocalRecipeRequest(newRecipe))
+                    .onSuccess {
+                        val result=  updateLocalRecipeFavoriteUseCase(
+                            UpdateLocalRecipeFavoriteRequest(newRecipe)
                         )
-                    )
-                ).onSuccess {
-                    updateLocalRecipeFavoriteUseCase(
-                        UpdateLocalRecipeFavoriteRequest(
-                            recipe.copy(
-                                recipeId = newRecipeId,
-                                state = RecipeState.DOWNLOAD
-                            )
-                        )
-                    )
-                    // TODO : 성공 실패 피드백
-                }
+                        _eventSaveFinish.value = Event(result.isSuccess)
+                    }.onFailure {
+                        _eventSaveFinish.value = Event(false)
+                    }
             }
         }
     
