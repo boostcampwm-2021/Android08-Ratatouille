@@ -24,7 +24,11 @@
         android:id="@+id/searchRecipeFragment"
         android:name="com.kdjj.presentation.view.home.search.SearchRecipeFragment"
         android:label="fragment_search_recipe"
-        tools:layout="@layout/fragment_search_recipe" />
+        tools:layout="@layout/fragment_search_recipe" >
+        <action
+            android:id="@+id/action_searchFragment_to_recipeSummaryActivity"
+            app:destination="@id/recipeSummaryActivity" />
+    </fragment>
     <fragment
         android:id="@+id/othersRecipeFragment"
         android:name="com.kdjj.presentation.view.home.others.OthersRecipeFragment"

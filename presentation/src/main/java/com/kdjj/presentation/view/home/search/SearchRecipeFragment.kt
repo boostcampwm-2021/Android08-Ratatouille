@@ -7,28 +7,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.kdjj.domain.model.Recipe
-import com.kdjj.domain.model.request.SaveLocalRecipeRequest
-import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.R
 import com.kdjj.presentation.common.EventObserver
+import com.kdjj.presentation.common.RECIPE_ID
+import com.kdjj.presentation.common.RECIPE_STATE
 import com.kdjj.presentation.databinding.FragmentSearchRecipeBinding
-import com.kdjj.presentation.model.RecipeEditorItem
-import com.kdjj.presentation.view.adapter.OthersRecipeListAdapter
+import com.kdjj.presentation.view.adapter.SearchRecipeListAdapter
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.viewmodel.search.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchRecipeFragment : Fragment() {
@@ -37,8 +33,9 @@ class SearchRecipeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SearchViewModel by viewModels()
+    private val navigation by lazy { Navigation.findNavController(binding.root) }
 
-    private lateinit var resultListAdapter: OthersRecipeListAdapter
+    private lateinit var resultListAdapter: SearchRecipeListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +49,7 @@ class SearchRecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        resultListAdapter = OthersRecipeListAdapter()
+        resultListAdapter = SearchRecipeListAdapter(viewModel)
 
         binding.recyclerViewSearch.apply {
             adapter = resultListAdapter
@@ -82,6 +79,7 @@ class SearchRecipeFragment : Fragment() {
         }
             .debounce(500, TimeUnit.MILLISECONDS)
             .subscribeOn(AndroidSchedulers.mainThread())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 viewModel.updateSearchKeyword()
             }, {
@@ -99,6 +97,14 @@ class SearchRecipeFragment : Fragment() {
         viewModel.liveTabState.observe(viewLifecycleOwner) {
             viewModel.updateSearchKeyword()
         }
+
+        viewModel.eventSummary.observe(viewLifecycleOwner, EventObserver {
+            val bundle = bundleOf(
+                RECIPE_ID to it.recipeId,
+                RECIPE_STATE to it.state
+            )
+            navigation.navigate(R.id.action_searchFragment_to_recipeSummaryActivity, bundle)
+        })
     }
 
     private fun focusInput() {
