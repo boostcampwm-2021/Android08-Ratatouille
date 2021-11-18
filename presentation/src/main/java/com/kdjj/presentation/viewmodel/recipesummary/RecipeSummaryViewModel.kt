@@ -22,6 +22,7 @@ class RecipeSummaryViewModel @Inject constructor(
     private val deleteLocalRecipeUseCase: UseCase<DeleteLocalRecipeRequest, Boolean>,
     private val fetchRemoteRecipeUseCase: UseCase<FetchRemoteRecipeRequest, Recipe>,
     private val saveLocalRecipeUseCase: UseCase<SaveLocalRecipeRequest, Boolean>,
+    private val uploadRecipeUseCase: UseCase<UploadRecipeRequest, Unit>,
     private val idGenerator: IdGenerator
 ) : ViewModel() {
     
@@ -114,8 +115,22 @@ class RecipeSummaryViewModel @Inject constructor(
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
                 val newRecipeId = idGenerator.generateId()
-                saveLocalRecipeUseCase(SaveLocalRecipeRequest(recipe.copy(recipeId = newRecipeId, state = RecipeState.DOWNLOAD)))
+                saveLocalRecipeUseCase(
+                    SaveLocalRecipeRequest(
+                        recipe.copy(
+                            recipeId = newRecipeId,
+                            state = RecipeState.DOWNLOAD
+                        )
+                    )
+                )
                 // TODO : 성공 실패 피드
+            }
+        }
+    
+    fun uploadRecipe() =
+        viewModelScope.launch {
+            liveRecipe.value?.let { recipe ->
+                uploadRecipeUseCase(UploadRecipeRequest(recipe))
             }
         }
     
