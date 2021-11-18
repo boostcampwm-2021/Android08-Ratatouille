@@ -20,6 +20,8 @@ import com.kdjj.presentation.databinding.ActivityRecipeDetailBinding
 import com.kdjj.presentation.view.adapter.RecipeDetailStepListAdapter
 import com.kdjj.presentation.view.adapter.RecipeDetailTimerListAdapter
 import com.kdjj.presentation.view.adapter.RecipeEditorListAdapter
+import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
+import com.kdjj.presentation.view.dialog.CustomProgressDialog
 import com.kdjj.presentation.viewmodel.recipedetail.RecipeDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -29,6 +31,8 @@ class RecipeDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRecipeDetailBinding
     private val viewModel: RecipeDetailViewModel by viewModels()
+
+    private lateinit var loadingDialog: CustomProgressDialog
 
     private lateinit var stepListAdapter: RecipeDetailStepListAdapter
     private lateinit var timerListAdapter: RecipeDetailTimerListAdapter
@@ -61,6 +65,8 @@ class RecipeDetailActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_recipe_detail)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+        loadingDialog = CustomProgressDialog(this)
 
         stepListAdapter = RecipeDetailStepListAdapter(viewModel)
         binding.recyclerViewDetailStep.adapter = stepListAdapter
@@ -116,6 +122,24 @@ class RecipeDetailActivity : AppCompatActivity() {
                     onAnimationEnd()
                 }
                 start()
+            }
+        })
+
+        viewModel.liveLoading.observe(this) { doLoading ->
+            if (doLoading) {
+                loadingDialog.show()
+            } else {
+                loadingDialog.dismiss()
+            }
+        }
+
+        viewModel.eventError.observe(this, EventObserver {
+            ConfirmDialogBuilder.create(
+                this,
+                "오류 발생",
+                "레시피를 들고오던 라따뚜이가 넘어졌습니다..ㅠㅠ\n확인버튼을 누르면 이전 화면으로 돌아갑니다."
+            ) {
+                finish()
             }
         })
     }

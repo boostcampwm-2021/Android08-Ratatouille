@@ -52,16 +52,23 @@ class RecipeDetailViewModel @Inject constructor(
     private var _liveFinishedTimerPosition = MutableLiveData<Int>()
     val liveFinishedTimerPosition: LiveData<Int> get () = _liveFinishedTimerPosition
 
+    private val _liveLoading = MutableLiveData(false)
+    val liveLoading: LiveData<Boolean> get() = _liveLoading
+
+    private val _eventError = MutableLiveData<Event<Unit>>()
+    val eventError: LiveData<Event<Unit>> get() = _eventError
+
     private var isInitialized = false
 
     fun initializeWith(recipeId: String?, state: RecipeState?) {
         if (isInitialized) return
 
         if (recipeId == null || state == null) {
-            // TODO(raise error)
+            _eventError.value = Event(Unit)
             return
         }
 
+        _liveLoading.value = true
         viewModelScope.launch {
             when (state) {
                 RecipeState.NETWORK -> {
@@ -71,7 +78,7 @@ class RecipeDetailViewModel @Inject constructor(
                             selectStep(recipe.stepList[0])
                         }
                         .onFailure {
-                            // TODO(raise error)
+                            _eventError.value = Event(Unit)
                         }
                 }
                 RecipeState.CREATE, RecipeState.DOWNLOAD, RecipeState.UPLOAD -> {
@@ -82,10 +89,11 @@ class RecipeDetailViewModel @Inject constructor(
                             selectStep(recipe.stepList[0])
                         }
                         .onFailure {
-                            // TODO(raise error)
+                            _eventError.value = Event(Unit)
                         }
                 }
             }
+            _liveLoading.value = false
         }
 
         isInitialized = true
