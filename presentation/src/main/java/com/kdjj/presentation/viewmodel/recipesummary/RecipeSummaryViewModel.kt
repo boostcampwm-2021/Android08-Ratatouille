@@ -3,8 +3,10 @@ package com.kdjj.presentation.viewmodel.recipesummary
 import androidx.lifecycle.*
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeState
+import com.kdjj.domain.model.request.DeleteLocalRecipeRequest
 import com.kdjj.domain.model.request.GetLocalRecipeFlowRequest
 import com.kdjj.domain.model.request.UpdateLocalRecipeFavoriteRequest
+import com.kdjj.domain.model.request.UploadRecipeRequest
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.common.IdGenerator
@@ -26,6 +28,8 @@ class RecipeSummaryViewModel @Inject constructor(
     val liveRecipe: LiveData<Recipe> = _liveRecipe
     private val _eventNoInfo = MutableLiveData<Event<Unit>>()
     val eventNoInfo: LiveData<Event<Unit>> = _eventNoInfo
+    private val _eventOpenRecipeDetail = MutableLiveData<Event<Unit>>()
+    val eventOpenRecipeDetail: LiveData<Event<Unit>> = _eventOpenRecipeDetail
     val eventInitView: LiveData<Event<RecipeSummaryType>> =
         _liveRecipe.switchMap { recipe ->
             MutableLiveData(
@@ -84,6 +88,10 @@ class RecipeSummaryViewModel @Inject constructor(
                 // TODO : 성공 실패 유저 피드백
             }
         }
+    
+    fun openRecipeDetail() {
+        _eventOpenRecipeDetail.value = Event(Unit)
+    }
     
     private fun notifyNoInfo() {
         _eventNoInfo.value = Event(Unit)
