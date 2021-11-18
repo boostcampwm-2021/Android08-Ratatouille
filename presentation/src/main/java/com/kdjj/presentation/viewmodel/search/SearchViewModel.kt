@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kdjj.domain.model.Recipe
+import com.kdjj.domain.model.request.EmptyRequest
 import com.kdjj.domain.model.request.FetchLocalSearchRecipeListRequest
 import com.kdjj.domain.model.request.FetchRemoteSearchRecipeListRequest
 import com.kdjj.domain.usecase.UseCase
@@ -15,13 +16,16 @@ import com.kdjj.presentation.model.toOthersRecipeModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val fetchLocalSearchUseCase: UseCase<FetchLocalSearchRecipeListRequest, List<Recipe>>,
-    private val fetchRemoteSearchUseCase: UseCase<FetchRemoteSearchRecipeListRequest, List<Recipe>>
+    private val fetchRemoteSearchUseCase: UseCase<FetchRemoteSearchRecipeListRequest, List<Recipe>>,
+    private val getRecipeUpdateStateUseCase: UseCase<EmptyRequest, Flow<Int>>
 ) : ViewModel() {
     private val _liveTabState = MutableLiveData(SearchTabState.OTHERS_RECIPE)
     val liveTabState: LiveData<SearchTabState> get() = _liveTabState
@@ -39,6 +43,18 @@ class SearchViewModel @Inject constructor(
 
     private var fetchingJob: Job? = null
     private var isFetching = false
+
+    init {
+        viewModelScope.launch {
+            getRecipeUpdateStateUseCase(EmptyRequest).onSuccess {
+                it.collect {
+                    if (liveTabState.value == SearchTabState.MY_RECIPE) {
+                        updateSearchKeyword()
+                    }
+                }
+            }
+        }
+    }
 
     fun setTabState(tabState: SearchTabState) {
         if (_liveTabState.value != tabState) {
