@@ -49,7 +49,7 @@ class SearchViewModel @Inject constructor(
             getRecipeUpdateStateUseCase(EmptyRequest).onSuccess {
                 it.collect {
                     if (liveTabState.value == SearchTabState.MY_RECIPE) {
-                        updateSearchKeyword(false)
+                        updateSearchKeyword()
                     }
                 }
             }
@@ -64,7 +64,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun updateSearchKeyword(isFirstPage: Boolean) {
+    fun updateSearchKeyword() {
         if (isFetching) {
             fetchingJob?.cancel()
         }
@@ -79,7 +79,7 @@ class SearchViewModel @Inject constructor(
         fetchingJob = viewModelScope.launch {
             when (liveTabState.value) {
                 SearchTabState.OTHERS_RECIPE -> {
-                    fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value ?: "", isFirstPage))
+                    fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value ?: "", true))
                         .onSuccess {
                             _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
                         }
@@ -105,7 +105,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun loadMoreRecipe(isFirstPage: Boolean) {
+    fun loadMoreRecipe() {
         if (isFetching) return
         isFetching = true
 
@@ -118,7 +118,7 @@ class SearchViewModel @Inject constructor(
         fetchingJob = viewModelScope.launch {
             when (liveTabState.value) {
                 SearchTabState.OTHERS_RECIPE -> {
-                    fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value ?: "", isFirstPage))
+                    fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value ?: "", false))
                         .onSuccess { recipeList ->
                             _liveResultList.value = _liveResultList.value
                                 ?.let { it + recipeList.map(Recipe::toRecipeListItemModel) }
