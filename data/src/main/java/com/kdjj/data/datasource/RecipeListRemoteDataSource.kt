@@ -9,7 +9,7 @@ interface RecipeListRemoteDataSource {
     ): Result<List<Recipe>>
     
     suspend fun fetchPopularRecipeListAfter(
-        lastVisibleViewCount: Int
+        refresh: Boolean
     ): Result<List<Recipe>>
     
     suspend fun fetchSearchRecipeListAfter(

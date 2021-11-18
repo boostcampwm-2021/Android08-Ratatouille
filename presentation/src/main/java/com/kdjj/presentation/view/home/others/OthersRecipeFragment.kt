@@ -96,7 +96,8 @@ class OthersRecipeFragment : Fragment() {
                         val lastVisibleItemPosition = (recyclerViewOthersRecipe.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
                         val lastItemPosition = adapter.itemCount - 1
                         if (lastVisibleItemPosition == lastItemPosition && adapter.itemCount != 0 && dy > 0) {
-                            this@OthersRecipeFragment.viewModel.fetchNextRecipeListPage()
+                            Log.d("Test", "onScrolled fetchNextRecipeListPage")
+                            this@OthersRecipeFragment.viewModel.fetchNextRecipeListPage(false)
                         }
                     }
                 }

@@ -9,7 +9,7 @@ internal interface RemoteRecipeListService {
     ): List<Recipe>
     
     suspend fun fetchPopularRecipeListAfter(
-        lastVisibleViewCount: Int
+        refresh: Boolean
     ): List<Recipe>
     
     suspend fun fetchSearchRecipeListAfter(

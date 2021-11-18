@@ -58,7 +58,7 @@ class OthersViewModel @Inject constructor(
             // sort type 바뀔 때마다 리스트 초기화 후, 바뀐 type 으로 받아오기
             _liveSortType.value = othersSortType
             initFetching()
-            fetchNextRecipeListPage()
+            fetchNextRecipeListPage(true)
         }
     }
 
@@ -72,10 +72,10 @@ class OthersViewModel @Inject constructor(
     fun refreshList() {
         Log.d("Test", "OthersViewModel refreshList")
         initFetching()
-        fetchNextRecipeListPage()
+        fetchNextRecipeListPage(true)
     }
 
-    fun fetchNextRecipeListPage() {
+    fun fetchNextRecipeListPage(isFirstPage: Boolean) {
         if (liveFetchLock.value == true) return
 
         _liveSortType.value?.let {
@@ -86,7 +86,7 @@ class OthersViewModel @Inject constructor(
                 if (it == OthersSortType.LATEST) {
                     fetchRemoteLatestRecipeList()
                 } else {
-                    fetchRemotePopularRecipeList()
+                    fetchRemotePopularRecipeList(isFirstPage)
                 }
             }
         }
@@ -105,28 +105,25 @@ class OthersViewModel @Inject constructor(
         )
     }
 
-    private suspend fun fetchRemotePopularRecipeList() {
-        val lastVisibleViewCount = _liveRecipeList.value?.let {
-            if (it.isEmpty()) Int.MAX_VALUE
-            else it.last().viewCount
-        } ?: Int.MAX_VALUE
-
+    private suspend fun fetchRemotePopularRecipeList(isFirstPage: Boolean) {
         onRecipeListFetched(
             fetchRemotePopularRecipeListUseCase(
-                FetchRemotePopularRecipeListRequest(lastVisibleViewCount)
+                FetchRemotePopularRecipeListRequest(isFirstPage)
             )
         )
     }
 
     private fun onRecipeListFetched(result: Result<List<Recipe>>) {
         result.onSuccess { list ->
-            Log.d("Test", "onRecipeListFetched success")
             _liveRecipeList.value?.let {
                 if (list.isEmpty()) {
+                    Log.d("Test", "onRecipeListFetched success but empty list")
                     _liveFetchLock.value = false
                     return
                 }
                 val othersRecipeModelList = list.map { recipe -> recipe.toRecipeListItemModel() }
+                Log.d("Test", "onRecipeListFetched success")
+
                 if (it.isEmpty()) _liveRecipeList.value = othersRecipeModelList
                 else _liveRecipeList.value = it.plus(othersRecipeModelList)
             }
