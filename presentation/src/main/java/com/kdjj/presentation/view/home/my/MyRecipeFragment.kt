@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.kdjj.presentation.R
@@ -114,11 +115,10 @@ class MyRecipeFragment : Fragment() {
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    val lastVisibleItemPosition =
-                        (layoutManager as GridLayoutManager).findLastVisibleItemPosition()
-                    val itemCount = myRecipeAdapter.itemCount
 
-                    if (!canScrollVertically(1) && lastVisibleItemPosition + 1 == itemCount) {
+                    val lastVisibleItemPosition = (layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+                    val lastItemPosition = myRecipeAdapter.itemCount - 1
+                    if (lastVisibleItemPosition == lastItemPosition && myRecipeAdapter.itemCount != 0 && dy > 0) {
                         viewModel.fetchMoreRecipeData(lastVisibleItemPosition)
                     }
                 }
