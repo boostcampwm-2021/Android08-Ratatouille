@@ -8,6 +8,7 @@ import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.kdjj.presentation.databinding.ItemMyRecipeAddRecipeBinding
 import com.kdjj.presentation.databinding.ItemMyRecipeBinding
 import com.kdjj.presentation.databinding.ItemMyRecipeProgressBinding
@@ -68,6 +69,10 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
         fun bind(item: MyRecipeItem.MyRecipe) {
             binding.myRecipeViewModel = viewModel
             binding.myRecipeItem = item
+        }
+
+        fun onViewRecycled() {
+            Glide.with(binding.root.context).clear(binding.imageViewMyRecipe)
         }
     }
 
@@ -130,6 +135,12 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
         ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 100f, 0f).apply {
             duration = 200
             start()
+        }
+    }
+
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        when (holder) {
+            is MyRecipeViewHolder -> holder.onViewRecycled()
         }
     }
 

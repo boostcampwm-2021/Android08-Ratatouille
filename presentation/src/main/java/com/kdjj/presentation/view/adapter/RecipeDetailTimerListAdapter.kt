@@ -32,7 +32,7 @@ class RecipeDetailTimerListAdapter(
             }
 
     override fun bind(
-        holder: SingleViewTypeViewHolder<StepTimerModel, ItemDetailTimerBinding>,
+        holder: SingleViewTypeViewHolder<ItemDetailTimerBinding>,
         item: StepTimerModel
     ) {
         with(holder.binding) {

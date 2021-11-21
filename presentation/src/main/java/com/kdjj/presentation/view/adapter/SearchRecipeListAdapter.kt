@@ -2,6 +2,7 @@ package com.kdjj.presentation.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import com.kdjj.presentation.databinding.ItemListRecipeBinding
 import com.kdjj.presentation.model.RecipeListItemModel
 import com.kdjj.presentation.viewmodel.search.SearchViewModel
@@ -23,12 +24,18 @@ class SearchRecipeListAdapter(
     }
 
     override fun bind(
-        holder: SingleViewTypeViewHolder<RecipeListItemModel, ItemListRecipeBinding>,
+        holder: SingleViewTypeViewHolder<ItemListRecipeBinding>,
         item: RecipeListItemModel,
     ) {
        with(holder.binding) {
            recipe = item
            executePendingBindings()
        }
+    }
+
+    override fun onViewRecycled(holder: SingleViewTypeViewHolder<ItemListRecipeBinding>) {
+        with(holder.binding) {
+            Glide.with(root.context).clear(imageViewOthersItemImg)
+        }
     }
 }
