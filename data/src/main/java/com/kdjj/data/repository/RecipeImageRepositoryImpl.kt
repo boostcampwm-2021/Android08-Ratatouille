@@ -1,5 +1,6 @@
 package com.kdjj.data.repository
 
+import com.kdjj.data.common.flatMap
 import com.kdjj.data.datasource.RecipeImageLocalDataSource
 import com.kdjj.data.datasource.RecipeImageRemoteDataSource
 import com.kdjj.domain.repository.RecipeImageRepository
@@ -19,22 +20,16 @@ internal class RecipeImageRepositoryImpl @Inject constructor(
     override suspend fun copyExternalImageToInternal(
         uri: String,
         fileName: String
-    ): Result<String> = runCatching {
-        val (byteArray, degree) = recipeImageLocalDataSource.convertToByteArray(uri)
-            .getOrThrow()
-        val newUri = recipeImageLocalDataSource.convertToInternalStorageUri(byteArray, fileName, degree)
-            .getOrThrow()
-        newUri
-    }
+    ): Result<String> = recipeImageLocalDataSource.convertToByteArray(uri)
+        .flatMap { (byteArray, degree) ->
+            recipeImageLocalDataSource.convertToInternalStorageUri(byteArray, fileName, degree)
+        }
 
     override suspend fun copyRemoteImageToInternal(
         uri: String,
         fileName: String
-    ): Result<String> = runCatching {
-        val byteArray = recipeImageRemoteDataSource.fetchRecipeImage(uri)
-            .getOrThrow()
-        val newUri = recipeImageLocalDataSource.convertToInternalStorageUri(byteArray, fileName)
-            .getOrThrow()
-        newUri
-    }
+    ): Result<String> = recipeImageRemoteDataSource.fetchRecipeImage(uri)
+        .flatMap { byteArray ->
+            recipeImageLocalDataSource.convertToInternalStorageUri(byteArray, fileName)
+        }
 }
