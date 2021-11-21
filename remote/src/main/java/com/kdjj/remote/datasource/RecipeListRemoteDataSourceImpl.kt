@@ -38,6 +38,8 @@ internal class RecipeListRemoteDataSourceImpl @Inject constructor(
     ): Result<List<Recipe>> =
         runCatching {
             recipeListService.fetchSearchRecipeListAfter(keyword, refresh)
+        }.errorMap {
+            fireStoreExceptionToDomain(it)
         }
 
     private fun fireStoreExceptionToDomain(throwable: Throwable) =
