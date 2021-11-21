@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kdjj.domain.model.Recipe
+import com.kdjj.domain.model.exception.ApiException
 import com.kdjj.domain.model.exception.NetworkException
 import com.kdjj.domain.model.request.FetchRemoteLatestRecipeListRequest
 import com.kdjj.domain.model.request.FetchRemotePopularRecipeListRequest
@@ -118,7 +119,12 @@ class OthersViewModel @Inject constructor(
         }.onFailure {
             // view 에게 알리기
             _liveFetchLock.value = false
-            _eventShowSnackBar.value = Event(it.message)
+            when (it) {
+                is NetworkException,
+                is ApiException -> {
+                    _eventShowSnackBar.value = Event(it.message)
+                }
+            }
         }
     }
 
