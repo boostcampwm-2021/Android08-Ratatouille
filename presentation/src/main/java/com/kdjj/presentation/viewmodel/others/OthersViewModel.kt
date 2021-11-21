@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kdjj.domain.model.Recipe
+import com.kdjj.domain.model.exception.NetworkException
 import com.kdjj.domain.model.request.FetchRemoteLatestRecipeListRequest
 import com.kdjj.domain.model.request.FetchRemotePopularRecipeListRequest
 import com.kdjj.domain.usecase.UseCase
@@ -37,8 +38,8 @@ class OthersViewModel @Inject constructor(
         _liveFetchLock.value = false
     }
 
-    private var _eventException = MutableLiveData<Event<Throwable>>()
-    val eventException: LiveData<Event<Throwable>> get() = _eventException
+    private var _eventShowSnackBar = MutableLiveData<Event<String?>>()
+    val eventShowSnackBar: LiveData<Event<String?>> get() = _eventShowSnackBar
 
     private var _eventSearchIconClicked = MutableLiveData<Event<Unit>>()
     val eventSearchIconClicked: LiveData<Event<Unit>> get() = _eventSearchIconClicked
@@ -117,7 +118,7 @@ class OthersViewModel @Inject constructor(
         }.onFailure {
             // view 에게 알리기
             _liveFetchLock.value = false
-            _eventException.value = Event(it)
+            _eventShowSnackBar.value = Event(it.message)
         }
     }
 
