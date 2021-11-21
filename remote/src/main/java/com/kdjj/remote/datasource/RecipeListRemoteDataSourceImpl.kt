@@ -20,17 +20,7 @@ internal class RecipeListRemoteDataSourceImpl @Inject constructor(
         runCatching {
             recipeListService.fetchLatestRecipeListAfter(refresh)
         }.errorMap {
-            when (it) {
-                is FirebaseFirestoreException -> {
-                    when (it.code.value()) {
-                        14 -> NetworkException()
-                        else -> ApiException()
-                    }
-                }
-                else -> {
-                    Exception(it)
-                }
-            }
+            fireStoreExceptionToDomain(it)
         }
     
     override suspend fun fetchPopularRecipeListAfter(
@@ -38,6 +28,8 @@ internal class RecipeListRemoteDataSourceImpl @Inject constructor(
     ): Result<List<Recipe>> =
         runCatching {
             recipeListService.fetchPopularRecipeListAfter(refresh)
+        }.errorMap {
+            fireStoreExceptionToDomain(it)
         }
     
     override suspend fun fetchSearchRecipeListAfter(
@@ -46,5 +38,18 @@ internal class RecipeListRemoteDataSourceImpl @Inject constructor(
     ): Result<List<Recipe>> =
         runCatching {
             recipeListService.fetchSearchRecipeListAfter(keyword, refresh)
+        }
+
+    private fun fireStoreExceptionToDomain(throwable: Throwable) =
+        when (throwable) {
+            is FirebaseFirestoreException -> {
+                when (throwable.code.value()) {
+                    14 -> NetworkException()
+                    else -> ApiException()
+                }
+            }
+            else -> {
+                Exception(throwable)
+            }
         }
 }

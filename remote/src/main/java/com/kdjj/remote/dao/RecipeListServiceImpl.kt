@@ -50,7 +50,7 @@ internal class RecipeListServiceImpl @Inject constructor(
     override suspend fun fetchPopularRecipeListAfter(
         refresh: Boolean
     ): List<Recipe> =
-        suspendCancellableCoroutine {
+        withContext(Dispatchers.IO) {
 
             if (refresh) {
                 popularListQuery = null
@@ -60,31 +60,17 @@ internal class RecipeListServiceImpl @Inject constructor(
                 .orderBy(FIELD_VIEW_COUNT, Query.Direction.DESCENDING)
                 .limit(PAGING_SIZE)
 
-            query.get()
-                .addOnSuccessListener { queryDocumentSnapshot ->
-
-                    if (queryDocumentSnapshot.documents.isNotEmpty()) {
-                        popularListQuery = fireStore.collection(RECIPE_COLLECTION_ID)
-                            .orderBy(FIELD_VIEW_COUNT, Query.Direction.DESCENDING)
-                            .startAfter(queryDocumentSnapshot.documents.last())
-                            .limit(PAGING_SIZE)
-                    }
-
-                    if (queryDocumentSnapshot.metadata.isFromCache) {
-                        it.resumeWithException(NetworkException())
-                    } else {
-                        it.resumeWith(
-                            Result.success(
-                                queryDocumentSnapshot.map { item ->
-                                    item.toObject<RecipeDto>().toDomain()
-                                }
-                            )
-                        )
-                    }
+            with(query.get(Source.SERVER).await()) {
+                if (documents.isNotEmpty()) {
+                    popularListQuery = fireStore.collection(RECIPE_COLLECTION_ID)
+                        .orderBy(FIELD_VIEW_COUNT, Query.Direction.DESCENDING)
+                        .startAfter(documents.last())
+                        .limit(PAGING_SIZE)
                 }
-                .addOnFailureListener { exception ->
-                    it.resumeWithException(ApiException(exception.message))
+                map {
+                    it.toObject<RecipeDto>().toDomain()
                 }
+            }
         }
     
     override suspend fun fetchSearchRecipeListAfter(
