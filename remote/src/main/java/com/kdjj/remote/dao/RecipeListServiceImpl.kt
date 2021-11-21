@@ -7,7 +7,10 @@ import com.kdjj.domain.model.exception.ApiException
 import com.kdjj.domain.model.exception.NetworkException
 import com.kdjj.remote.dto.RecipeDto
 import com.kdjj.remote.dto.toDomain
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.coroutines.resumeWithException
 
@@ -22,8 +25,7 @@ internal class RecipeListServiceImpl @Inject constructor(
     override suspend fun fetchLatestRecipeListAfter(
         refresh: Boolean
     ): List<Recipe> =
-        suspendCancellableCoroutine {
-
+        withContext(Dispatchers.IO) {
             if (refresh) {
                 latestListQuery = null
             }
@@ -32,31 +34,17 @@ internal class RecipeListServiceImpl @Inject constructor(
                 .orderBy(FIELD_CREATE_TIME, Query.Direction.DESCENDING)
                 .limit(PAGING_SIZE)
 
-            query.get()
-                .addOnSuccessListener { queryDocumentSnapshot ->
-
-                    if (queryDocumentSnapshot.documents.isNotEmpty()) {
-                        latestListQuery = fireStore.collection(RECIPE_COLLECTION_ID)
-                            .orderBy(FIELD_CREATE_TIME, Query.Direction.DESCENDING)
-                            .startAfter(queryDocumentSnapshot.documents.last())
-                            .limit(PAGING_SIZE)
-                    }
-
-                    if (queryDocumentSnapshot.metadata.isFromCache) {
-                        it.resumeWithException(NetworkException())
-                    } else {
-                        it.resumeWith(
-                            Result.success(
-                                queryDocumentSnapshot.map { item ->
-                                    item.toObject<RecipeDto>().toDomain()
-                                }
-                            )
-                        )
-                    }
+            with(query.get(Source.SERVER).await()) {
+                if (documents.isNotEmpty()) {
+                    latestListQuery = fireStore.collection(RECIPE_COLLECTION_ID)
+                        .orderBy(FIELD_CREATE_TIME, Query.Direction.DESCENDING)
+                        .startAfter(documents.last())
+                        .limit(PAGING_SIZE)
                 }
-                .addOnFailureListener { exception ->
-                    it.resumeWithException(ApiException(exception.message))
+                map {
+                    it.toObject<RecipeDto>().toDomain()
                 }
+            }
         }
 
     override suspend fun fetchPopularRecipeListAfter(
