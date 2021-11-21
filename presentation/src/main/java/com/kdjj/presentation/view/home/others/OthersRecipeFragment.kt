@@ -112,15 +112,8 @@ class OthersRecipeFragment : Fragment() {
     }
 
     private fun observeNetworkEvent() {
-        viewModel.eventException.observe(viewLifecycleOwner, EventObserver {
-            when (it) {
-                is NetworkException -> {
-                    showSnackBar(getString(R.string.networkErrorMessage))
-                }
-                is ApiException -> {
-                    showSnackBar(getString(R.string.severErrorMessage))
-                }
-            }
+        viewModel.eventShowSnackBar.observe(viewLifecycleOwner, EventObserver {
+            showSnackBar(it ?: getString(R.string.severErrorMessage))
         })
     }
 
