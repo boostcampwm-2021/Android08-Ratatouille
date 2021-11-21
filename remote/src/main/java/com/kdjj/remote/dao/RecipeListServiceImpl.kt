@@ -51,7 +51,6 @@ internal class RecipeListServiceImpl @Inject constructor(
         refresh: Boolean
     ): List<Recipe> =
         withContext(Dispatchers.IO) {
-
             if (refresh) {
                 popularListQuery = null
             }
@@ -77,8 +76,7 @@ internal class RecipeListServiceImpl @Inject constructor(
         keyword: String,
         refresh: Boolean
     ): List<Recipe> =
-        suspendCancellableCoroutine {
-
+        withContext(Dispatchers.IO) {
             if (refresh) {
                 searchListQuery = null
             }
@@ -89,33 +87,19 @@ internal class RecipeListServiceImpl @Inject constructor(
                 .orderBy(FIELD_TITLE, Query.Direction.ASCENDING)
                 .limit(PAGING_SIZE)
 
-            query.get()
-                .addOnSuccessListener { queryDocumentSnapshot ->
-
-                    if (queryDocumentSnapshot.documents.isNotEmpty()) {
-                        searchListQuery = fireStore.collection(RECIPE_COLLECTION_ID)
-                            .whereGreaterThanOrEqualTo(FIELD_TITLE, keyword)
-                            .whereLessThan(FIELD_TITLE, keyword + HANGLE_MAX_VALUE)
-                            .orderBy(FIELD_TITLE, Query.Direction.ASCENDING)
-                            .startAfter(queryDocumentSnapshot.documents.last())
-                            .limit(PAGING_SIZE)
-                    }
-
-                    if (queryDocumentSnapshot.metadata.isFromCache) {
-                        it.resumeWithException(NetworkException())
-                    } else {
-                        it.resumeWith(
-                            Result.success(
-                                queryDocumentSnapshot.map { item ->
-                                    item.toObject<RecipeDto>().toDomain()
-                                }
-                            )
-                        )
-                    }
+            with(query.get(Source.SERVER).await()) {
+                if (documents.isNotEmpty()) {
+                    searchListQuery = fireStore.collection(RECIPE_COLLECTION_ID)
+                        .whereGreaterThanOrEqualTo(FIELD_TITLE, keyword)
+                        .whereLessThan(FIELD_TITLE, keyword + HANGLE_MAX_VALUE)
+                        .orderBy(FIELD_TITLE, Query.Direction.ASCENDING)
+                        .startAfter(documents.last())
+                        .limit(PAGING_SIZE)
                 }
-                .addOnFailureListener { exception ->
-                    it.resumeWithException(ApiException(exception.message))
+                map {
+                    it.toObject<RecipeDto>().toDomain()
                 }
+            }
         }
     
     companion object {
