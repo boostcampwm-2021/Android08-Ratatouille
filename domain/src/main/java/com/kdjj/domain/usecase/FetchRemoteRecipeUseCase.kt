@@ -10,5 +10,5 @@ internal class FetchRemoteRecipeUseCase @Inject constructor(
 ) :ResultUseCase<FetchRemoteRecipeRequest, @JvmSuppressWildcards Recipe> {
 
     override suspend fun invoke(request: FetchRemoteRecipeRequest): Result<Recipe> =
-        recipeRepository.fetchRemoteRecipe(request.recipeID)
+        recipeRepository.fetchRemoteRecipe(request.recipeId)
 }

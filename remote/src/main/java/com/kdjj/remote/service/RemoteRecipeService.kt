@@ -18,6 +18,6 @@ internal interface RemoteRecipeService {
     )
 
     suspend fun fetchRecipe(
-        recipeID: String
+        recipeId: String
     ): RecipeDto
 }

@@ -40,10 +40,10 @@ internal class RecipeServiceImpl @Inject constructor(
                 .await()
         }
 
-    override suspend fun fetchRecipe(recipeID: String): RecipeDto =
+    override suspend fun fetchRecipe(recipeId: String): RecipeDto =
         withContext(Dispatchers.IO) {
             val documentSnapShot = firestore.collection(RECIPE_COLLECTION_ID)
-                .document(recipeID)
+                .document(recipeId)
                 .get(Source.SERVER)
                 .await()
             documentSnapShot.toObject<RecipeDto>() ?: throw Exception()
