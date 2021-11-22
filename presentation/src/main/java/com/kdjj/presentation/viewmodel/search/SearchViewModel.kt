@@ -10,7 +10,7 @@ import com.kdjj.domain.model.exception.NetworkException
 import com.kdjj.domain.model.request.EmptyRequest
 import com.kdjj.domain.model.request.FetchLocalSearchRecipeListRequest
 import com.kdjj.domain.model.request.FetchRemoteSearchRecipeListRequest
-import com.kdjj.domain.usecase.UseCase
+import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.RecipeListItemModel
 import com.kdjj.presentation.model.ResponseError
@@ -26,9 +26,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val fetchLocalSearchUseCase: UseCase<FetchLocalSearchRecipeListRequest, List<Recipe>>,
-    private val fetchRemoteSearchUseCase: UseCase<FetchRemoteSearchRecipeListRequest, List<Recipe>>,
-    private val getRecipeUpdateStateUseCase: UseCase<EmptyRequest, Flow<Int>>
+    private val fetchLocalSearchUseCase: ResultUseCase<FetchLocalSearchRecipeListRequest, List<Recipe>>,
+    private val fetchRemoteSearchUseCase: ResultUseCase<FetchRemoteSearchRecipeListRequest, List<Recipe>>,
+    private val getRecipeUpdateStateUseCase: ResultUseCase<EmptyRequest, Flow<Int>>
 ) : ViewModel() {
     private val _liveTabState = MutableLiveData(SearchTabState.OTHERS_RECIPE)
     val liveTabState: LiveData<SearchTabState> get() = _liveTabState
@@ -90,22 +90,24 @@ class SearchViewModel @Inject constructor(
         fetchingJob = viewModelScope.launch {
             when (liveTabState.value) {
                 SearchTabState.OTHERS_RECIPE -> {
-                    fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value ?: "", true))
-                        .onSuccess {
-                            _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
-                        }
-                        .onFailure { t ->
-                            setException(t)
-                        }
+                    fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value
+                        ?: "", true))
+                            .onSuccess {
+                                _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
+                            }
+                            .onFailure { t ->
+                                setException(t)
+                            }
                 }
                 SearchTabState.MY_RECIPE -> {
-                    fetchLocalSearchUseCase(FetchLocalSearchRecipeListRequest(liveKeyword.value ?: "", 0))
-                        .onSuccess {
-                            _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
-                        }
-                        .onFailure { t ->
-                            setException(t)
-                        }
+                    fetchLocalSearchUseCase(FetchLocalSearchRecipeListRequest(liveKeyword.value
+                        ?: "", 0))
+                            .onSuccess {
+                                _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
+                            }
+                            .onFailure { t ->
+                                setException(t)
+                            }
                 }
             }
             isFetching = false
@@ -125,26 +127,28 @@ class SearchViewModel @Inject constructor(
         fetchingJob = viewModelScope.launch {
             when (liveTabState.value) {
                 SearchTabState.OTHERS_RECIPE -> {
-                    fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value ?: "", false))
-                        .onSuccess { recipeList ->
-                            _liveResultList.value = _liveResultList.value
-                                ?.let { it + recipeList.map(Recipe::toRecipeListItemModel) }
-                                ?: recipeList.map(Recipe::toRecipeListItemModel)
-                        }
-                        .onFailure { t ->
-                            setException(t)
-                        }
+                    fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value
+                        ?: "", false))
+                            .onSuccess { recipeList ->
+                                _liveResultList.value = _liveResultList.value
+                                        ?.let { it + recipeList.map(Recipe::toRecipeListItemModel) }
+                                    ?: recipeList.map(Recipe::toRecipeListItemModel)
+                            }
+                            .onFailure { t ->
+                                setException(t)
+                            }
                 }
                 SearchTabState.MY_RECIPE -> {
-                    fetchLocalSearchUseCase(FetchLocalSearchRecipeListRequest(liveKeyword.value ?: "", _liveResultList.value?.size ?: 0))
-                        .onSuccess { recipeList ->
-                            _liveResultList.value = _liveResultList.value
-                                ?.let { it + recipeList.map(Recipe::toRecipeListItemModel) }
-                                ?: recipeList.map(Recipe::toRecipeListItemModel)
-                        }
-                        .onFailure { t ->
-                            setException(t)
-                        }
+                    fetchLocalSearchUseCase(FetchLocalSearchRecipeListRequest(liveKeyword.value
+                        ?: "", _liveResultList.value?.size ?: 0))
+                            .onSuccess { recipeList ->
+                                _liveResultList.value = _liveResultList.value
+                                        ?.let { it + recipeList.map(Recipe::toRecipeListItemModel) }
+                                    ?: recipeList.map(Recipe::toRecipeListItemModel)
+                            }
+                            .onFailure { t ->
+                                setException(t)
+                            }
                 }
             }
             isFetching = false
@@ -154,6 +158,7 @@ class SearchViewModel @Inject constructor(
     fun moveToSummary(recipeModel: RecipeListItemModel) {
         _eventSummary.value = Event(recipeModel)
     }
+
 
     private fun setException(throwable: Throwable) {
         when (throwable) {
@@ -168,3 +173,4 @@ class SearchViewModel @Inject constructor(
         }
     }
 }
+

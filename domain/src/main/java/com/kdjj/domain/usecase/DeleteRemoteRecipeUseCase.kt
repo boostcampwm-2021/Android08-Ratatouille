@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class DeleteRemoteRecipeUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository
-) : UseCase<DeleteRemoteRecipeRequest, Unit> {
+) : ResultUseCase<DeleteRemoteRecipeRequest, Unit> {
     
     override suspend fun invoke(request: DeleteRemoteRecipeRequest): Result<Unit> {
         return recipeRepository.deleteRemoteRecipe(request.recipe)

@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class GetRecipeUpdateStateUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository
-): UseCase<EmptyRequest, @kotlin.jvm.JvmSuppressWildcards Flow<Int>> {
+): ResultUseCase<EmptyRequest, @kotlin.jvm.JvmSuppressWildcards Flow<Int>> {
 
     override suspend fun invoke(request: EmptyRequest): Result<Flow<Int>> {
         return recipeRepository.getRecipeUpdateState()

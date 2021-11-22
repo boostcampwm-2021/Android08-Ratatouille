@@ -9,7 +9,7 @@ import com.kdjj.domain.model.exception.ApiException
 import com.kdjj.domain.model.exception.NetworkException
 import com.kdjj.domain.model.request.FetchRemoteLatestRecipeListRequest
 import com.kdjj.domain.model.request.FetchRemotePopularRecipeListRequest
-import com.kdjj.domain.usecase.UseCase
+import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.RecipeListItemModel
 import com.kdjj.presentation.model.ResponseError
@@ -22,8 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OthersViewModel @Inject constructor(
-    private val fetchRemoteLatestRecipeListUseCase: UseCase<FetchRemoteLatestRecipeListRequest, List<Recipe>>,
-    private val fetchRemotePopularRecipeListUseCase: UseCase<FetchRemotePopularRecipeListRequest, List<Recipe>>,
+    private val fetchRemoteLatestRecipeListUseCase: ResultUseCase<FetchRemoteLatestRecipeListRequest, List<Recipe>>,
+    private val fetchRemotePopularRecipeListUseCase: ResultUseCase<FetchRemotePopularRecipeListRequest, List<Recipe>>,
 ) : ViewModel() {
 
     private var _liveSortType = MutableLiveData<OthersSortType>()

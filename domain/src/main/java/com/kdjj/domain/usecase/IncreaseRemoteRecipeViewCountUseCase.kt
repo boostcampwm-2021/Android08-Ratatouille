@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class IncreaseRemoteRecipeViewCountUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository
-) : UseCase<IncreaseRemoteRecipeViewCountRequest, Unit> {
+) : ResultUseCase<IncreaseRemoteRecipeViewCountRequest, Unit> {
     
     override suspend fun invoke(request: IncreaseRemoteRecipeViewCountRequest): Result<Unit> {
         return recipeRepository.increaseRemoteRecipeViewCount(request.recipe)
