@@ -29,18 +29,6 @@ internal class MyRecipeViewModel @Inject constructor(
     private val _liveRecipeItemSelected = MutableLiveData<MyRecipeItem.MyRecipe?>()
     val liveRecipeItemSelected: LiveData<MyRecipeItem.MyRecipe?> get() = _liveRecipeItemSelected
 
-    private val _eventItemDoubleClicked = MutableLiveData<Event<MyRecipeItem.MyRecipe>>()
-    val eventItemDoubleClicked: LiveData<Event<MyRecipeItem.MyRecipe>> get() = _eventItemDoubleClicked
-
-    private val _eventSearchIconClicked = MutableLiveData<Event<Unit>>()
-    val eventSearchIconClicked: LiveData<Event<Unit>> get() = _eventSearchIconClicked
-
-    private val _eventAddRecipeHasPressed = MutableLiveData<Event<Unit>>()
-    val eventAddRecipeHasPressed: LiveData<Event<Unit>> get() = _eventAddRecipeHasPressed
-
-    private val _eventDataLoadFailed = MutableLiveData<Event<Unit>>()
-    val eventDataLoadFailed: LiveData<Event<Unit>> get() = _eventDataLoadFailed
-
     private val _liveRecipeList = MutableLiveData(listOf<MyRecipeItem.MyRecipe>())
     private val _liveFetching = MutableLiveData(false)
     val liveRecipeItemList: LiveData<List<MyRecipeItem>> = MediatorLiveData<List<MyRecipeItem>>().apply {
@@ -65,14 +53,24 @@ internal class MyRecipeViewModel @Inject constructor(
 
     private var job: Job? = null
 
+    private val _eventMyRecipe = MutableLiveData<Event<MyRecipeEvent>>()
+    val eventMyRecipe: LiveData<Event<MyRecipeEvent>> get() = _eventMyRecipe
+
+    sealed class MyRecipeEvent {
+        object AddRecipeHasPressed : MyRecipeEvent()
+        class DoubleClicked(val item: MyRecipeItem.MyRecipe) : MyRecipeEvent()
+        object SearchIconClicked : MyRecipeEvent()
+        object DataLoadFailed : MyRecipeEvent()
+    }
+
     init {
         setSortType(SortType.SORT_BY_TIME)
 
         viewModelScope.launch {
             getRecipeUpdateFlowUseCase(EmptyRequest)
-                    .collect {
-                        refreshRecipeList()
-                    }
+                .collect {
+                    refreshRecipeList()
+                }
         }
     }
 
@@ -110,7 +108,7 @@ internal class MyRecipeViewModel @Inject constructor(
                 }
             }.onFailure {
                 if (it !is CancellationException) {
-                    _eventDataLoadFailed.value = Event(Unit)
+                    _eventMyRecipe.value = Event(MyRecipeEvent.DataLoadFailed)
                 }
             }
             _liveFetching.value = false
@@ -121,15 +119,15 @@ internal class MyRecipeViewModel @Inject constructor(
         if (_liveRecipeItemSelected.value != selectedRecipe) {
             _liveRecipeItemSelected.value = selectedRecipe
         } else {
-            _eventItemDoubleClicked.value = Event(selectedRecipe)
+            _eventMyRecipe.value = Event(MyRecipeEvent.DoubleClicked(selectedRecipe))
         }
     }
 
     fun moveToRecipeEditorActivity() {
-        _eventAddRecipeHasPressed.value = Event(Unit)
+        _eventMyRecipe.value = Event(MyRecipeEvent.AddRecipeHasPressed)
     }
 
     fun moveToRecipeSearchFragment() {
-        _eventSearchIconClicked.value = Event(Unit)
+        _eventMyRecipe.value = Event(MyRecipeEvent.SearchIconClicked)
     }
 }

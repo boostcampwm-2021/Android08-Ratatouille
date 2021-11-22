@@ -68,29 +68,30 @@ class MyRecipeFragment : Fragment() {
     }
 
     private fun setObservers() {
-        viewModel.eventAddRecipeHasPressed.observe(viewLifecycleOwner, EventObserver {
-            navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
-        })
-
-        viewModel.eventSearchIconClicked.observe(viewLifecycleOwner, EventObserver {
-            navigation.navigate(R.id.action_myRecipeFragment_to_searchRecipeFragment)
-        })
-
-        viewModel.eventItemDoubleClicked.observe(viewLifecycleOwner, EventObserver {
-            val bundle = bundleOf(
-                RECIPE_ID to it.recipe.recipeId,
-                RECIPE_STATE to it.recipe.state
-            )
-            navigation.navigate(R.id.action_myRecipeFragment_to_recipeSummaryActivity, bundle)
-        })
-
-        viewModel.eventDataLoadFailed.observe(viewLifecycleOwner, EventObserver {
-            Snackbar.make(binding.root, getString(R.string.dataLoadFailMessage), Snackbar.LENGTH_LONG)
-                .setAction(getString(R.string.refresh)){
-                     viewModel.refreshRecipeList()
+        viewModel.eventMyRecipe.observe(viewLifecycleOwner, EventObserver{
+            when(it){
+                is MyRecipeViewModel.MyRecipeEvent.AddRecipeHasPressed -> {
+                    navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
                 }
-                .setActionTextColor(requireContext().getColor(R.color.blue_500))
-                .show()
+                is MyRecipeViewModel.MyRecipeEvent.DoubleClicked-> {
+                    val bundle = bundleOf(
+                        RECIPE_ID to it.item.recipe.recipeId,
+                        RECIPE_STATE to it.item.recipe.state
+                    )
+                    navigation.navigate(R.id.action_myRecipeFragment_to_recipeSummaryActivity, bundle)
+                }
+                is MyRecipeViewModel.MyRecipeEvent.DataLoadFailed ->{
+                    Snackbar.make(binding.root, getString(R.string.dataLoadFailMessage), Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.refresh)){
+                            viewModel.refreshRecipeList()
+                        }
+                        .setActionTextColor(requireContext().getColor(R.color.blue_500))
+                        .show()
+                }
+                is MyRecipeViewModel.MyRecipeEvent.SearchIconClicked -> {
+                    navigation.navigate(R.id.action_myRecipeFragment_to_searchRecipeFragment)
+                }
+            }
         })
     }
 
