@@ -46,5 +46,6 @@ class RecipeDetailStepListAdapter(
                     if (step == item) Paint.UNDERLINE_TEXT_FLAG else 0
             }
         }
+        holder.binding.executePendingBindings()
     }
 }
