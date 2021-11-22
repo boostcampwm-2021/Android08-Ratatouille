@@ -44,7 +44,8 @@ class SearchRecipeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search_recipe, container, false)
+        _binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_search_recipe, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         return binding.root
@@ -89,29 +90,33 @@ class SearchRecipeFragment : Fragment() {
                 it.printStackTrace()
             })
 
-        viewModel.eventException.observe(viewLifecycleOwner, EventObserver { responseError ->
-            when (responseError) {
-                ResponseError.NETWORK_CONNECTION, ResponseError.SERVER ->
-                    showSnackBar(responseError.stringRes)
-                else -> ConfirmDialogBuilder.create(
-                    context ?: return@EventObserver,
-                    getString(R.string.errorOccurs),
-                    getString(responseError.stringRes)
-                ) { }
-            }
-        })
-
         viewModel.liveTabState.observe(viewLifecycleOwner) {
             viewModel.updateSearchKeyword()
         }
 
-        viewModel.eventSummary.observe(viewLifecycleOwner, EventObserver {
-            val bundle = bundleOf(
-                RECIPE_ID to it.recipeId,
-                RECIPE_STATE to it.state
-            )
-            navigation.navigate(R.id.action_searchFragment_to_recipeSummaryActivity, bundle)
+        viewModel.eventSearchRecipe.observe(viewLifecycleOwner, EventObserver {
+            when (it) {
+                is SearchViewModel.SearchRecipeEvent.Summary -> {
+                    val bundle = bundleOf(
+                        RECIPE_ID to it.item.recipeId,
+                        RECIPE_STATE to it.item.state
+                    )
+                    navigation.navigate(R.id.action_searchFragment_to_recipeSummaryActivity, bundle)
+                }
+                is SearchViewModel.SearchRecipeEvent.Exception -> {
+                    when (it.error) {
+                        ResponseError.NETWORK_CONNECTION, ResponseError.SERVER ->
+                            showSnackBar(it.error.stringRes)
+                        else -> ConfirmDialogBuilder.create(
+                            context ?: return@EventObserver,
+                            getString(R.string.errorOccurs),
+                            getString(it.error.stringRes)
+                        ) { }
+                    }
+                }
+            }
         })
+
     }
 
     private fun showSnackBar(@StringRes resId: Int) {
@@ -120,7 +125,8 @@ class SearchRecipeFragment : Fragment() {
 
     private fun focusInput() {
         binding.editTextSearch.requestFocus()
-        val inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager ?: return
+        val inputMethodManager =
+            context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager ?: return
         inputMethodManager.showSoftInput(binding.editTextSearch, InputMethodManager.SHOW_IMPLICIT)
     }
 
