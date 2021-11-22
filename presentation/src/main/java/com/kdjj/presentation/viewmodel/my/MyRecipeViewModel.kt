@@ -1,9 +1,6 @@
 package com.kdjj.presentation.viewmodel.my
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.request.*
 import com.kdjj.domain.usecase.FlowUseCase
@@ -29,9 +26,6 @@ internal class MyRecipeViewModel @Inject constructor(
     private val _liveSortType = MutableLiveData<SortType>()
     val liveSortType: LiveData<SortType> get() = _liveSortType
 
-    private val _liveRecipeItemList = MutableLiveData<List<MyRecipeItem>>()
-    val liveRecipeItemList: LiveData<List<MyRecipeItem>> get() = _liveRecipeItemList
-
     private val _liveRecipeItemSelected = MutableLiveData<MyRecipeItem.MyRecipe?>()
     val liveRecipeItemSelected: LiveData<MyRecipeItem.MyRecipe?> get() = _liveRecipeItemSelected
 
@@ -47,17 +41,27 @@ internal class MyRecipeViewModel @Inject constructor(
     private val _eventDataLoadFailed = MutableLiveData<Event<Unit>>()
     val eventDataLoadFailed: LiveData<Event<Unit>> get() = _eventDataLoadFailed
 
-    private var isFetching = false
-        set(value) {
-            field = value
-            notifyRecipeDataSetChanged()
+    private val _liveRecipeList = MutableLiveData(listOf<MyRecipeItem.MyRecipe>())
+    private val _liveFetching = MutableLiveData(false)
+    val liveRecipeItemList: LiveData<List<MyRecipeItem>> = MediatorLiveData<List<MyRecipeItem>>().apply {
+        addSource(_liveRecipeList) { recipeList ->
+            value = if (_liveFetching.value == true) {
+                listOf(MyRecipeItem.PlusButton) + recipeList + MyRecipeItem.Progress
+            } else {
+                listOf(MyRecipeItem.PlusButton) + recipeList
+            }
         }
 
-    private var recipeList: List<MyRecipeItem.MyRecipe> = listOf()
-        set(value) {
-            field = value
-            notifyRecipeDataSetChanged()
+        addSource(_liveFetching) { isFetching ->
+            _liveRecipeList.value?.let { recipeList ->
+                value = if (isFetching) {
+                    listOf(MyRecipeItem.PlusButton) + recipeList + MyRecipeItem.Progress
+                } else {
+                    listOf(MyRecipeItem.PlusButton) + recipeList
+                }
+            }
         }
+    }
 
     private var job: Job? = null
 
@@ -84,8 +88,8 @@ internal class MyRecipeViewModel @Inject constructor(
     }
 
     fun fetchRecipeList(page: Int) {
-        if (isFetching && page > 0) return
-        isFetching = true
+        if (_liveFetching.value == true && page > 0) return
+        _liveFetching.value = true
         if (page == 0) job?.cancel()
 
         job = viewModelScope.launch {
@@ -99,28 +103,17 @@ internal class MyRecipeViewModel @Inject constructor(
                 else -> return@launch
             }.onSuccess { fetchedRecipeList ->
                 val myRecipeList = fetchedRecipeList.map { MyRecipeItem.MyRecipe(it) }
-                _liveRecipeItemList.value?.let {
-                    if (page == 0) {
-                        recipeList = myRecipeList
-                    } else {
-                        recipeList = recipeList.plus(myRecipeList)
-                    }
+                if (page == 0) {
+                    _liveRecipeList.value = myRecipeList
+                } else {
+                    _liveRecipeList.value = _liveRecipeList.value?.plus(myRecipeList)
                 }
             }.onFailure {
                 if (it !is CancellationException) {
                     _eventDataLoadFailed.value = Event(Unit)
                 }
             }
-            isFetching = false
-        }
-    }
-
-    private fun notifyRecipeDataSetChanged() {
-        if (isFetching) {
-            _liveRecipeItemList.value =
-                listOf(MyRecipeItem.PlusButton) + recipeList + MyRecipeItem.Progress
-        } else {
-            _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + recipeList
+            _liveFetching.value = false
         }
     }
 
