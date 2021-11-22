@@ -110,11 +110,8 @@ class OthersRecipeFragment : Fragment() {
     }
 
     private fun observeNetworkEvent() {
-        viewModel.eventNetworkFail.observe(viewLifecycleOwner, EventObserver {
-            showSnackBar(getString(R.string.networkErrorMessage))
-        })
-        viewModel.eventApiFail.observe(viewLifecycleOwner, EventObserver {
-            showSnackBar(getString(R.string.severErrorMessage))
+        viewModel.eventShowSnackBar.observe(viewLifecycleOwner, EventObserver {
+            showSnackBar(getString(it.stringRes))
         })
     }
 
