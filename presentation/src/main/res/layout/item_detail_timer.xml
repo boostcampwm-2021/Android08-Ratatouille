@@ -8,6 +8,8 @@
         <variable
             name="model"
             type="com.kdjj.presentation.model.StepTimerModel" />
+
+        <import type="com.kdjj.presentation.model.StepTimerModel.TimerState" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -20,8 +22,8 @@
         android:layout_marginBottom="@dimen/detail_timer_marginVertical"
         android:clickable="true"
         android:focusable="true"
-        android:onClick="@{() -> model.liveRunning ? model.pause() : model.resume()}"
-        app:cardBackgroundColor="@color/dark_100"
+        android:onClick="@{() -> model.liveState == TimerState.RUNNING ? model.pause() : model.liveState == TimerState.PAUSED ? model.resume() : null}"
+        app:cardBackgroundColor="@{model.liveState == TimerState.END ? @color/red_500 : @color/dark_100}"
         app:cardCornerRadius="@dimen/detail_timer_corner">
 
         <androidx.constraintlayout.widget.ConstraintLayout
