@@ -89,38 +89,6 @@ class RecipeDetailActivity : AppCompatActivity() {
     }
 
     private fun setObservers() {
-        viewModel.eventOpenTimer.observe(this, EventObserver {
-            AnimatorSet().apply {
-                playTogether(
-                    ObjectAnimator.ofFloat(
-                        binding.recyclerViewDetailTimer, View.TRANSLATION_Y, displayConverter.dpToPx(-50), 0f
-                    ),
-                    ObjectAnimator.ofFloat(
-                        binding.recyclerViewDetailTimer, View.ALPHA, 0f, 1f
-                    )
-                )
-                duration = 500
-                start()
-            }
-        })
-
-        viewModel.eventCloseTimer.observe(this, EventObserver { onAnimationEnd ->
-            AnimatorSet().apply {
-                playTogether(
-                    ObjectAnimator.ofFloat(
-                        binding.recyclerViewDetailTimer, View.TRANSLATION_Y, 0f, displayConverter.dpToPx(-50)
-                    ),
-                    ObjectAnimator.ofFloat(
-                        binding.recyclerViewDetailTimer, View.ALPHA, 1f, 0f
-                    )
-                )
-                duration = 500
-                doOnEnd {
-                    onAnimationEnd()
-                }
-                start()
-            }
-        })
 
         viewModel.liveLoading.observe(this) { doLoading ->
             if (doLoading) {
@@ -130,18 +98,55 @@ class RecipeDetailActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.eventError.observe(this, EventObserver {
-            ConfirmDialogBuilder.create(
-                this,
-                "오류 발생",
-                "레시피를 들고오던 라따뚜이가 넘어졌습니다..ㅠㅠ\n확인버튼을 누르면 이전 화면으로 돌아갑니다."
-            ) {
-                finish()
-            }
-        })
-
         viewModel.liveTitle.observe(this) {
             title = it
         }
+
+        viewModel.eventRecipeDetail.observe(this, EventObserver {
+            when(it){
+                is RecipeDetailViewModel.RecipeDetailEvent.OpenTimer -> {
+                    AnimatorSet().apply {
+                        playTogether(
+                            ObjectAnimator.ofFloat(
+                                binding.recyclerViewDetailTimer, View.TRANSLATION_Y, displayConverter.dpToPx(-50), 0f
+                            ),
+                            ObjectAnimator.ofFloat(
+                                binding.recyclerViewDetailTimer, View.ALPHA, 0f, 1f
+                            )
+                        )
+                        duration = 500
+                        start()
+                    }
+                }
+
+                is RecipeDetailViewModel.RecipeDetailEvent.CloseTimer -> {
+                    AnimatorSet().apply {
+                        playTogether(
+                            ObjectAnimator.ofFloat(
+                                binding.recyclerViewDetailTimer, View.TRANSLATION_Y, 0f, displayConverter.dpToPx(-50)
+                            ),
+                            ObjectAnimator.ofFloat(
+                                binding.recyclerViewDetailTimer, View.ALPHA, 1f, 0f
+                            )
+                        )
+                        duration = 500
+                        doOnEnd { _ ->
+                            it.onAnimationEnd()
+                        }
+                        start()
+                    }
+                }
+
+                is RecipeDetailViewModel.RecipeDetailEvent.Error -> {
+                    ConfirmDialogBuilder.create(
+                        this,
+                        "오류 발생",
+                        "레시피를 들고오던 라따뚜이가 넘어졌습니다..ㅠㅠ\n확인버튼을 누르면 이전 화면으로 돌아갑니다."
+                    ) {
+                        finish()
+                    }
+                }
+            }
+        })
     }
 }

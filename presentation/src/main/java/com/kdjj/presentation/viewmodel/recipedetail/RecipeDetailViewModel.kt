@@ -42,31 +42,31 @@ class RecipeDetailViewModel @Inject constructor(
         }
     }
 
-    private val _eventOpenTimer = MutableLiveData<Event<Unit>>()
-    val eventOpenTimer: LiveData<Event<Unit>> get() = _eventOpenTimer
-
-    private val _eventCloseTimer = MutableLiveData<Event<() -> Unit>>()
-    val eventCloseTimer: LiveData<Event<() -> Unit>> get() = _eventCloseTimer
-
     private var _liveFinishedTimerPosition = MutableLiveData<Int>()
     val liveFinishedTimerPosition: LiveData<Int> get() = _liveFinishedTimerPosition
 
     private val _liveLoading = MutableLiveData(false)
     val liveLoading: LiveData<Boolean> get() = _liveLoading
 
-    private val _eventError = MutableLiveData<Event<Unit>>()
-    val eventError: LiveData<Event<Unit>> get() = _eventError
-
     private val _liveTitle = MutableLiveData<String>()
     val liveTitle: LiveData<String> get() = _liveTitle
 
     private var isInitialized = false
 
+    private val _eventRecipeDetail = MutableLiveData<Event<RecipeDetailEvent>>()
+    val eventRecipeDetail: LiveData<Event<RecipeDetailEvent>> get() = _eventRecipeDetail
+
+    sealed class RecipeDetailEvent {
+        object OpenTimer: RecipeDetailEvent()
+        class CloseTimer(val onAnimationEnd: () -> Unit): RecipeDetailEvent()
+        object Error: RecipeDetailEvent()
+    }
+
     fun initializeWith(recipeId: String?, state: RecipeState?) {
         if (isInitialized) return
 
         if (recipeId == null || state == null) {
-            _eventError.value = Event(Unit)
+            _eventRecipeDetail.value = Event(RecipeDetailEvent.Error)
             return
         }
 
@@ -81,7 +81,7 @@ class RecipeDetailViewModel @Inject constructor(
                                 _liveTitle.value = recipe.title
                             }
                             .onFailure {
-                                _eventError.value = Event(Unit)
+                                _eventRecipeDetail.value = Event(RecipeDetailEvent.Error)
                             }
                 }
                 RecipeState.CREATE,
@@ -108,7 +108,8 @@ class RecipeDetailViewModel @Inject constructor(
         _liveTimerList.value?.let { timerList ->
             if (!timerList.any { it.recipeStep == step }) {
                 if (timerList.isEmpty()) {
-                    _eventOpenTimer.value = Event(Unit)
+                    _eventRecipeDetail.value = Event(RecipeDetailEvent.OpenTimer)
+
                 }
                 _liveTimerList.value = timerList + StepTimerModel(step) {
                     ringtone.play()
@@ -138,11 +139,12 @@ class RecipeDetailViewModel @Inject constructor(
         _liveTimerList.value?.let { modelList ->
             timerModel.pause()
             if (modelList.size == 1) {
-                _eventCloseTimer.value = Event {
-                    _liveTimerList.value = modelList.toMutableList().apply {
-                        remove(timerModel)
-                    }
-                }
+                _eventRecipeDetail.value =
+                    Event(RecipeDetailEvent.CloseTimer {
+                        _liveTimerList.value = modelList.toMutableList().apply {
+                            remove(timerModel)
+                        }
+                    })
             } else {
                 _liveTimerList.value = modelList.toMutableList().apply {
                     remove(timerModel)
