@@ -105,13 +105,15 @@ class MyRecipeFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.recyclerViewMyRecipe.apply {
-            val deviceWidth = resources.displayMetrics.widthPixels
-            val itemWidth = displayConverter.dpToPx(160).toInt()
-            val spanCount = deviceWidth / itemWidth
+
+            val displayWidth = resources.displayMetrics.widthPixels
+            val itemWidth = resources.getDimensionPixelSize(R.dimen.myRecipe_cardView_width)
+            val spanCount = maxOf(displayWidth / itemWidth, 2)
             layoutManager = GridLayoutManager(requireContext(), spanCount)
             adapter = myRecipeAdapter
 
-            addItemDecoration(SpacesItemDecoration(spanCount, deviceWidth, itemWidth))
+            val space = resources.getDimensionPixelSize(R.dimen.myRecipe_space_size)
+            addItemDecoration(SpacesItemDecoration(space))
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

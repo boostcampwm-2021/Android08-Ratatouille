@@ -80,6 +80,8 @@
                 android:id="@+id/recyclerView_myRecipe"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:paddingStart="@dimen/myRecipe_space_size"
+                android:paddingEnd="@dimen/myRecipe_space_size"
                 android:orientation="vertical"
                 app:submitList="@{myViewModel.liveRecipeItemList}"
                 tools:listitem="@layout/item_my_recipe_add_recipe" />
