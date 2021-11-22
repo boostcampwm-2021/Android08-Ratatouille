@@ -36,7 +36,7 @@ interface RecipeRepository {
     ): Flow<Recipe>
 
     suspend fun fetchRemoteRecipe(
-        recipeID: String
+        recipeId: String
     ): Result<Recipe>
 
     fun getRecipeUpdateFlow(): Flow<Int>
