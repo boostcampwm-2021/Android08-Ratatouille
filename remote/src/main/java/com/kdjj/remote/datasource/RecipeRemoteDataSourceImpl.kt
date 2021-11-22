@@ -3,6 +3,7 @@ package com.kdjj.remote.datasource
 import com.kdjj.data.common.errorMap
 import com.kdjj.data.datasource.RecipeRemoteDataSource
 import com.kdjj.domain.model.Recipe
+import com.kdjj.remote.common.fireStoreExceptionToDomain
 import com.kdjj.remote.dao.RemoteRecipeService
 import javax.inject.Inject
 
@@ -34,5 +35,7 @@ internal class RecipeRemoteDataSourceImpl @Inject constructor(
     override suspend fun fetchRecipe(recipeID: String): Result<Recipe> =
         runCatching {
             recipeService.fetchRecipe(recipeID)
+        }.errorMap {
+            fireStoreExceptionToDomain(it)
         }
 }

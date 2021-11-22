@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 import kotlin.coroutines.resumeWithException
 
@@ -47,23 +48,12 @@ internal class RecipeServiceImpl @Inject constructor(
         }
 
     override suspend fun fetchRecipe(recipeID: String): Recipe =
-        suspendCancellableCoroutine {
-            firestore.collection(RECIPE_COLLECTION_ID)
+        withContext(Dispatchers.IO) {
+            val documentSnapShot = firestore.collection(RECIPE_COLLECTION_ID)
                 .document(recipeID)
                 .get()
-                .addOnSuccessListener { recipeFireStore ->
-                    if (recipeFireStore.metadata.isFromCache) {
-                        it.resumeWithException(NetworkException())
-                    } else {
-                        val recipe = recipeFireStore.toObject<RecipeDto>()?.toDomain()
-                        recipe?.let { item ->
-                            it.resumeWith(Result.success(item))
-                        } ?: it.resumeWithException(ApiException())
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    it.resumeWithException(ApiException(exception.message))
-                }
+                .await()
+            documentSnapShot.toObject<RecipeDto>()?.toDomain() ?: throw Exception()
         }
 
     companion object {
