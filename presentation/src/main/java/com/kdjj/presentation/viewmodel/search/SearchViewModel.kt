@@ -36,13 +36,7 @@ class SearchViewModel @Inject constructor(
     private val _liveResultList = MutableLiveData<List<RecipeListItemModel>>(listOf())
     val liveResultList: LiveData<List<RecipeListItemModel>> get() = _liveResultList
 
-    private val _eventException = MutableLiveData<Event<ResponseError>>()
-    val eventException: LiveData<Event<ResponseError>> get() = _eventException
-
     val liveKeyword = MutableLiveData("")
-
-    private var _eventSummary = MutableLiveData<Event<RecipeListItemModel>>()
-    val eventSummary: LiveData<Event<RecipeListItemModel>> get() = _eventSummary
 
     private var fetchingJob: Job? = null
 
@@ -54,6 +48,14 @@ class SearchViewModel @Inject constructor(
             field = value
             _liveLoading.value = isFetching
         }
+
+    private val _eventSearchRecipe = MutableLiveData<Event<SearchRecipeEvent>>()
+    val eventSearchRecipe: LiveData<Event<SearchRecipeEvent>> get() = _eventSearchRecipe
+
+    sealed class SearchRecipeEvent {
+        class Exception(val error: ResponseError) : SearchRecipeEvent()
+        class Summary(val item: RecipeListItemModel) : SearchRecipeEvent()
+    }
 
     init {
         viewModelScope.launch {
@@ -89,24 +91,32 @@ class SearchViewModel @Inject constructor(
         fetchingJob = viewModelScope.launch {
             when (liveTabState.value) {
                 SearchTabState.OTHERS_RECIPE -> {
-                    fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value
-                        ?: "", true))
-                            .onSuccess {
-                                _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
-                            }
-                            .onFailure { t ->
-                                setException(t)
-                            }
+                    fetchRemoteSearchUseCase(
+                        FetchRemoteSearchRecipeListRequest(
+                            liveKeyword.value
+                                ?: "", true
+                        )
+                    )
+                        .onSuccess {
+                            _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
+                        }
+                        .onFailure { t ->
+                            setException(t)
+                        }
                 }
                 SearchTabState.MY_RECIPE -> {
-                    fetchLocalSearchUseCase(FetchLocalSearchRecipeListRequest(liveKeyword.value
-                        ?: "", 0))
-                            .onSuccess {
-                                _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
-                            }
-                            .onFailure { t ->
-                                setException(t)
-                            }
+                    fetchLocalSearchUseCase(
+                        FetchLocalSearchRecipeListRequest(
+                            liveKeyword.value
+                                ?: "", 0
+                        )
+                    )
+                        .onSuccess {
+                            _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
+                        }
+                        .onFailure { t ->
+                            setException(t)
+                        }
                 }
             }
             isFetching = false
@@ -126,28 +136,36 @@ class SearchViewModel @Inject constructor(
         fetchingJob = viewModelScope.launch {
             when (liveTabState.value) {
                 SearchTabState.OTHERS_RECIPE -> {
-                    fetchRemoteSearchUseCase(FetchRemoteSearchRecipeListRequest(liveKeyword.value
-                        ?: "", false))
-                            .onSuccess { recipeList ->
-                                _liveResultList.value = _liveResultList.value
-                                        ?.let { it + recipeList.map(Recipe::toRecipeListItemModel) }
-                                    ?: recipeList.map(Recipe::toRecipeListItemModel)
-                            }
-                            .onFailure { t ->
-                                setException(t)
-                            }
+                    fetchRemoteSearchUseCase(
+                        FetchRemoteSearchRecipeListRequest(
+                            liveKeyword.value
+                                ?: "", false
+                        )
+                    )
+                        .onSuccess { recipeList ->
+                            _liveResultList.value = _liveResultList.value
+                                ?.let { it + recipeList.map(Recipe::toRecipeListItemModel) }
+                                ?: recipeList.map(Recipe::toRecipeListItemModel)
+                        }
+                        .onFailure { t ->
+                            setException(t)
+                        }
                 }
                 SearchTabState.MY_RECIPE -> {
-                    fetchLocalSearchUseCase(FetchLocalSearchRecipeListRequest(liveKeyword.value
-                        ?: "", _liveResultList.value?.size ?: 0))
-                            .onSuccess { recipeList ->
-                                _liveResultList.value = _liveResultList.value
-                                        ?.let { it + recipeList.map(Recipe::toRecipeListItemModel) }
-                                    ?: recipeList.map(Recipe::toRecipeListItemModel)
-                            }
-                            .onFailure { t ->
-                                setException(t)
-                            }
+                    fetchLocalSearchUseCase(
+                        FetchLocalSearchRecipeListRequest(
+                            liveKeyword.value
+                                ?: "", _liveResultList.value?.size ?: 0
+                        )
+                    )
+                        .onSuccess { recipeList ->
+                            _liveResultList.value = _liveResultList.value
+                                ?.let { it + recipeList.map(Recipe::toRecipeListItemModel) }
+                                ?: recipeList.map(Recipe::toRecipeListItemModel)
+                        }
+                        .onFailure { t ->
+                            setException(t)
+                        }
                 }
             }
             isFetching = false
@@ -155,20 +173,21 @@ class SearchViewModel @Inject constructor(
     }
 
     fun moveToSummary(recipeModel: RecipeListItemModel) {
-        _eventSummary.value = Event(recipeModel)
+        _eventSearchRecipe.value = Event(SearchRecipeEvent.Summary(recipeModel))
     }
 
 
     private fun setException(throwable: Throwable) {
         when (throwable) {
             is NetworkException -> {
-                _eventException.value = Event(ResponseError.NETWORK_CONNECTION)
+                _eventSearchRecipe.value = Event(SearchRecipeEvent.Exception(ResponseError.NETWORK_CONNECTION))
             }
             is ApiException -> {
-                _eventException.value = Event(ResponseError.SERVER)
+                _eventSearchRecipe.value = Event(SearchRecipeEvent.Exception(ResponseError.SERVER))
             }
-            is CancellationException -> {}
-            else -> _eventException.value = Event(ResponseError.UNKNOWN)
+            is CancellationException -> {
+            }
+            else -> _eventSearchRecipe.value = Event(SearchRecipeEvent.Exception(ResponseError.UNKNOWN))
         }
     }
 }
