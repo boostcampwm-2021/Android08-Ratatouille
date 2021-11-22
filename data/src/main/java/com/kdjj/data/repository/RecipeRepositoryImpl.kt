@@ -18,25 +18,19 @@ internal class RecipeRepositoryImpl @Inject constructor(
     override suspend fun saveLocalRecipe(
         recipe: Recipe
     ): Result<Boolean> {
-        return recipeLocalDataSource.saveRecipe(recipe).also {
-            it.onSuccess { isUpdated.value++ }
-        }
+        return recipeLocalDataSource.saveRecipe(recipe).onSuccess { isUpdated.value++ }
     }
 
     override suspend fun updateLocalRecipe(
         recipe: Recipe
     ): Result<Boolean> {
-        return recipeLocalDataSource.updateRecipe(recipe).also {
-            it.onSuccess { isUpdated.value++ }
-        }
+        return recipeLocalDataSource.updateRecipe(recipe).onSuccess { isUpdated.value++ }
     }
 
     override suspend fun deleteLocalRecipe(
         recipe: Recipe
     ): Result<Boolean> {
-        return recipeLocalDataSource.deleteRecipe(recipe).also {
-            it.onSuccess { isUpdated.value++ }
-        }
+        return recipeLocalDataSource.deleteRecipe(recipe).onSuccess { isUpdated.value++ }
     }
 
     override suspend fun uploadRecipe(
