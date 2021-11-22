@@ -56,28 +56,26 @@ class RecipeSummaryViewModel @Inject constructor(
     val liveLoading: LiveData<Boolean> get() = _liveLoading
 
     val eventInitView: LiveData<Event<RecipeSummaryType>> =
-        _liveRecipe.switchMap { recipe ->
-            MutableLiveData(
-                Event(
-                    when {
-                        recipe.authorId == userId && (recipe.state == RecipeState.CREATE || recipe.state == RecipeState.UPLOAD) -> {
-                            RecipeSummaryType.MY_SAVE_RECIPE
-                        }
-                        recipe.state == RecipeState.DOWNLOAD -> {
-                            RecipeSummaryType.MY_SAVE_OTHER_RECIPE
-                        }
-                        recipe.authorId == userId && recipe.state == RecipeState.NETWORK -> {
-                            RecipeSummaryType.MY_SERVER_RECIPE
-                        }
-                        recipe.authorId != userId && recipe.state == RecipeState.NETWORK -> {
-                            RecipeSummaryType.OTHER_SERVER_RECIPE
-                        }
-                        else -> {
-                            _eventLoadError.value = Event(Unit)
-                            RecipeSummaryType.MY_SAVE_RECIPE
-                        }
+        _liveRecipe.map { recipe ->
+            Event(
+                when {
+                    recipe.authorId == userId && (recipe.state == RecipeState.CREATE || recipe.state == RecipeState.UPLOAD) -> {
+                        RecipeSummaryType.MY_SAVE_RECIPE
                     }
-                )
+                    recipe.state == RecipeState.DOWNLOAD -> {
+                        RecipeSummaryType.MY_SAVE_OTHER_RECIPE
+                    }
+                    recipe.authorId == userId && recipe.state == RecipeState.NETWORK -> {
+                        RecipeSummaryType.MY_SERVER_RECIPE
+                    }
+                    recipe.authorId != userId && recipe.state == RecipeState.NETWORK -> {
+                        RecipeSummaryType.OTHER_SERVER_RECIPE
+                    }
+                    else -> {
+                        _eventLoadError.value = Event(Unit)
+                        RecipeSummaryType.MY_SAVE_RECIPE
+                    }
+                }
             )
         }
 

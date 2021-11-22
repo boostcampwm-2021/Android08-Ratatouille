@@ -2,7 +2,7 @@ package com.kdjj.presentation.model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.switchMap
+import androidx.lifecycle.map
 import com.kdjj.domain.model.*
 import com.kdjj.presentation.common.IdGenerator
 import com.kdjj.presentation.common.RecipeStepValidator
@@ -71,8 +71,8 @@ internal sealed class RecipeEditorItem {
                     liveRecipeImgPath = liveRecipeImgPath,
                     liveRecipeTypeInt = liveCategoryPosition,
 
-                    liveStuffState = liveStuff.switchMap { MutableLiveData(recipeValidator.validateStuff(it)) },
-                    liveTitleState = liveTitle.switchMap { MutableLiveData(recipeValidator.validateTitle(it)) },
+                    liveStuffState = liveStuff.map { recipeValidator.validateStuff(it) },
+                    liveTitleState = liveTitle.map { recipeValidator.validateTitle(it) },
 
                     recipeId = idGenerator.generateId(),
                     uploadId = idGenerator.getDeviceId(),
@@ -142,10 +142,10 @@ internal sealed class RecipeEditorItem {
                     liveTimerSec = liveTimerSec,
                     liveTypeInt = liveTypeInt,
 
-                    liveNameState = liveName.switchMap { MutableLiveData(recipeStepValidator.validateName(it)) },
-                    liveDescriptionState = liveDescription.switchMap { MutableLiveData(recipeStepValidator.validateDescription(it)) },
-                    liveTimerMinState = liveTimerMin.switchMap { MutableLiveData(recipeStepValidator.validateMinutes(it)) },
-                    liveTimerSecState = liveTimerSec.switchMap { MutableLiveData(recipeStepValidator.validateSeconds(it)) },
+                    liveNameState = liveName.map { recipeStepValidator.validateName(it) },
+                    liveDescriptionState = liveDescription.map { recipeStepValidator.validateDescription(it) },
+                    liveTimerMinState = liveTimerMin.map { recipeStepValidator.validateMinutes(it) },
+                    liveTimerSecState = liveTimerSec.map { recipeStepValidator.validateSeconds(it) },
 
                     stepId = idGenerator.generateId(),
                     liveImgPath = MutableLiveData("")
@@ -201,8 +201,8 @@ internal fun Recipe.toPresentation(
         liveRecipeImgPath = liveRecipeImgPath,
         liveRecipeTypeInt = liveCategoryPosition,
 
-        liveStuffState = liveStuff.switchMap { MutableLiveData(recipeValidator.validateStuff(it)) },
-        liveTitleState = liveTitle.switchMap { MutableLiveData(recipeValidator.validateTitle(it)) },
+        liveStuffState = liveStuff.map { recipeValidator.validateStuff(it) },
+        liveTitleState = liveTitle.map { recipeValidator.validateTitle(it) },
 
         recipeId = recipeId,
         uploadId = authorId,
@@ -225,18 +225,10 @@ internal fun RecipeStep.toPresentation(
         liveTimerSec = liveTimerSec,
         liveTypeInt = liveTypeInt,
 
-        liveNameState = liveName.switchMap {
-            MutableLiveData(recipeStepValidator.validateName(it))
-        },
-        liveDescriptionState = liveDescription.switchMap {
-            MutableLiveData(recipeStepValidator.validateDescription(it))
-        },
-        liveTimerMinState = liveTimerMin.switchMap {
-            MutableLiveData(recipeStepValidator.validateMinutes(it))
-        },
-        liveTimerSecState = liveTimerSec.switchMap {
-            MutableLiveData(recipeStepValidator.validateSeconds(it))
-        },
+        liveNameState = liveName.map { recipeStepValidator.validateName(it) },
+        liveDescriptionState = liveDescription.map { recipeStepValidator.validateDescription(it) },
+        liveTimerMinState = liveTimerMin.map { recipeStepValidator.validateMinutes(it) },
+        liveTimerSecState = liveTimerSec.map { recipeStepValidator.validateSeconds(it) },
 
         stepId = stepId,
         liveImgPath = MutableLiveData(imgPath)
