@@ -4,20 +4,20 @@ import androidx.lifecycle.*
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.request.*
+import com.kdjj.domain.usecase.FlowUseCase
 import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.common.IdGenerator
 import com.kdjj.presentation.model.RecipeSummaryType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RecipeSummaryViewModel @Inject constructor(
-    private val getRecipeFlowUseCase: ResultUseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>,
+    private val getLocalRecipeFlowUseCase: FlowUseCase<GetLocalRecipeFlowRequest, Recipe>,
     private val updateLocalRecipeFavoriteUseCase: ResultUseCase<UpdateLocalRecipeFavoriteRequest, Boolean>,
     private val deleteLocalRecipeUseCase: ResultUseCase<DeleteLocalRecipeRequest, Boolean>,
     private val deleteRemoteRecipeUseCase: ResultUseCase<DeleteRemoteRecipeRequest, Unit>,
@@ -27,7 +27,7 @@ class RecipeSummaryViewModel @Inject constructor(
     private val increaseViewCountUseCase: ResultUseCase<IncreaseRemoteRecipeViewCountRequest, Unit>,
     private val idGenerator: IdGenerator
 ) : ViewModel() {
-    
+
     private val _liveRecipe = MutableLiveData<Recipe>()
     val liveRecipe: LiveData<Recipe> = _liveRecipe
 
@@ -84,7 +84,7 @@ class RecipeSummaryViewModel @Inject constructor(
     private var isInitialized = false
     private val userId = idGenerator.getDeviceId()
     private var collectJob: Job? = null
-    
+
     fun initViewModel(recipeId: String?, recipeState: RecipeState?) {
         if (isInitialized) return
         if (recipeId == null || recipeState == null) notifyNoInfo()
@@ -95,28 +95,26 @@ class RecipeSummaryViewModel @Inject constructor(
                     RecipeState.CREATE,
                     RecipeState.UPLOAD,
                     RecipeState.DOWNLOAD -> {
-                        getRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
-                            .onSuccess { recipeFlow ->
-                                recipeFlow.collect { recipe ->
-                                    _liveRecipe.value = recipe
-                                }
-                            }
+                        val recipeFlow = getLocalRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
+                        recipeFlow.collect { recipe ->
+                            _liveRecipe.value = recipe
+                        }
                     }
                     RecipeState.NETWORK -> {
                         fetchRemoteRecipeUseCase(FetchRemoteRecipeRequest(recipeId))
-                            .onSuccess { recipe ->
-                                _liveRecipe.value = recipe
-                                increaseViewCountUseCase(IncreaseRemoteRecipeViewCountRequest(recipe))
-                            }
+                                .onSuccess { recipe ->
+                                    _liveRecipe.value = recipe
+                                    increaseViewCountUseCase(IncreaseRemoteRecipeViewCountRequest(recipe))
+                                }
                     }
                 }
             }
             _liveLoading.value = false
         }
-        
+
         isInitialized = true
     }
-    
+
     fun updateRecipeFavorite() {
         _liveLoading.value = true
         viewModelScope.launch {
@@ -205,13 +203,13 @@ class RecipeSummaryViewModel @Inject constructor(
             _eventOpenRecipeDetail.value = Event(recipe)
         }
     }
-    
+
     fun openRecipeEditor() {
         liveRecipe.value?.let { recipe ->
             _eventOpenRecipeEditor.value = Event(recipe)
         }
     }
-    
+
     private fun notifyNoInfo() {
         _eventLoadError.value = Event(Unit)
     }

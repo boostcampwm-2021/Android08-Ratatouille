@@ -15,7 +15,7 @@ import javax.inject.Inject
 internal class RecipeLocalDataSourceImpl @Inject constructor(
     private val recipeDao: RecipeDao
 ) : RecipeLocalDataSource {
-    
+
     override suspend fun saveRecipe(
         recipe: Recipe
     ): Result<Boolean> =
@@ -28,7 +28,7 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
                 Exception(it.message)
             }
         }
-    
+
     override suspend fun updateRecipe(
         recipe: Recipe
     ): Result<Boolean> =
@@ -40,7 +40,7 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
                 Exception(it.message)
             }
         }
-    
+
     override suspend fun deleteRecipe(
         recipe: Recipe
     ): Result<Boolean> =
@@ -52,14 +52,10 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
                 Exception(it.message)
             }
         }
-    
+
     override fun getRecipeFlow(
         recipeId: String
-    ): Result<Flow<Recipe>> =
-        runCatching {
-            recipeDao.getRecipe(recipeId)
+    ): Flow<Recipe> =
+        recipeDao.getRecipe(recipeId)
                 .map { it.toDomain() }
-        }.errorMap {
-            Exception(it.message)
-        }
 }
