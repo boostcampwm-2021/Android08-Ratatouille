@@ -105,5 +105,6 @@
     <dimen name="summary_floatingButton_drawablePadding">8dp</dimen>
     <dimen name="summary_floatingButton_textSize">12sp</dimen>
     <dimen name="summary_floatingButton_marginBottom">8dp</dimen>
+    <dimen name="search_progressBar_marginStart">4dp</dimen>
 
 </resources>

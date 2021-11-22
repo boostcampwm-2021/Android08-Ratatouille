@@ -45,7 +45,15 @@ class SearchViewModel @Inject constructor(
     val eventSummary: LiveData<Event<RecipeListItemModel>> get() = _eventSummary
 
     private var fetchingJob: Job? = null
+
+    private val _liveLoading = MutableLiveData(false)
+    val liveLoading: LiveData<Boolean> get() = _liveLoading
+
     private var isFetching = false
+        set(value) {
+            field = value
+            _liveLoading.value = isFetching
+        }
 
     init {
         viewModelScope.launch {
