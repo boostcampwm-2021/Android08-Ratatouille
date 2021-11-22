@@ -3,6 +3,7 @@ package com.kdjj.presentation.viewmodel.recipesummary
 import androidx.lifecycle.*
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeState
+import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.model.request.*
 import com.kdjj.domain.usecase.FlowUseCase
 import com.kdjj.domain.usecase.ResultUseCase
@@ -25,6 +26,7 @@ class RecipeSummaryViewModel @Inject constructor(
     private val saveLocalRecipeUseCase: ResultUseCase<SaveLocalRecipeRequest, Boolean>,
     private val uploadRecipeUseCase: ResultUseCase<UploadRecipeRequest, Unit>,
     private val increaseViewCountUseCase: ResultUseCase<IncreaseRemoteRecipeViewCountRequest, Unit>,
+    private val fetchRecipeTypeListUseCase: ResultUseCase<EmptyRequest, List<RecipeType>>,
     private val idGenerator: IdGenerator
 ) : ViewModel() {
 
@@ -89,6 +91,7 @@ class RecipeSummaryViewModel @Inject constructor(
         else {
             _liveLoading.value = true
             collectJob = viewModelScope.launch {
+                fetchRecipeTypeListUseCase(EmptyRequest)
                 when (recipeState) {
                     RecipeState.CREATE,
                     RecipeState.UPLOAD,
