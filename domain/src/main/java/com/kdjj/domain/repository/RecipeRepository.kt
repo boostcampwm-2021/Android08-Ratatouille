@@ -39,5 +39,5 @@ interface RecipeRepository {
         recipeID: String
     ): Result<Recipe>
 
-    fun getRecipeUpdateState(): Result<Flow<Int>>
+    fun getRecipeUpdateFlow(): Flow<Int>
 }
