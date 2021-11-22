@@ -97,7 +97,6 @@ class MyRecipeFragment : Fragment() {
     private fun initSwipeRefreshLayout() {
         binding.swipeRefreshLayoutMy.apply {
             setOnRefreshListener {
-                Log.d("aa", "refresh")
                 viewModel.refreshRecipeList()
                 isRefreshing = false
             }
@@ -120,7 +119,6 @@ class MyRecipeFragment : Fragment() {
                     val lastVisibleItemPosition = (layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
                     val lastItemPosition = myRecipeAdapter.itemCount - 1
                     if (lastVisibleItemPosition == lastItemPosition && myRecipeAdapter.itemCount != 0 && dy > 0) {
-                        Log.d("aa", "paging")
                         viewModel.fetchRecipeList(lastVisibleItemPosition)
                     }
                 }
