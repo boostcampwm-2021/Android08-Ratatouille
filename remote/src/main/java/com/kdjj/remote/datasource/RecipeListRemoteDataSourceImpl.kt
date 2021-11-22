@@ -4,7 +4,7 @@ import com.kdjj.data.common.errorMap
 import com.kdjj.data.datasource.RecipeListRemoteDataSource
 import com.kdjj.domain.model.Recipe
 import com.kdjj.remote.common.fireStoreExceptionToDomain
-import com.kdjj.remote.dao.RemoteRecipeListService
+import com.kdjj.remote.service.RemoteRecipeListService
 import javax.inject.Inject
 
 internal class RecipeListRemoteDataSourceImpl @Inject constructor(

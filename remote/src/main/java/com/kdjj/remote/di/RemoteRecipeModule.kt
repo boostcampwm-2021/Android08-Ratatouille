@@ -1,8 +1,8 @@
 package com.kdjj.remote.di
 
 import com.kdjj.data.datasource.RecipeRemoteDataSource
-import com.kdjj.remote.dao.RecipeServiceImpl
-import com.kdjj.remote.dao.RemoteRecipeService
+import com.kdjj.remote.service.RecipeServiceImpl
+import com.kdjj.remote.service.RemoteRecipeService
 import com.kdjj.remote.datasource.RecipeRemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module

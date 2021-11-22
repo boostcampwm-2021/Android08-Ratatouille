@@ -1,4 +1,4 @@
-package com.kdjj.remote.dao
+package com.kdjj.remote.service
 
 internal interface FirebaseStorageService {
     

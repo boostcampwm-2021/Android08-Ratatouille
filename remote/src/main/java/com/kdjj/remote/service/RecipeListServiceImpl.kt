@@ -1,18 +1,14 @@
-package com.kdjj.remote.dao
+package com.kdjj.remote.service
 
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.toObject
 import com.kdjj.domain.model.Recipe
-import com.kdjj.domain.model.exception.ApiException
-import com.kdjj.domain.model.exception.NetworkException
 import com.kdjj.remote.dto.RecipeDto
 import com.kdjj.remote.dto.toDomain
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.coroutines.resumeWithException
 
 internal class RecipeListServiceImpl @Inject constructor(
     private val fireStore: FirebaseFirestore
