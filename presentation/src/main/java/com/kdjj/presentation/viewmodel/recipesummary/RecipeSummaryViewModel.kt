@@ -31,53 +31,22 @@ class RecipeSummaryViewModel @Inject constructor(
     private val _liveRecipe = MutableLiveData<Recipe>()
     val liveRecipe: LiveData<Recipe> = _liveRecipe
 
-    private val _eventLoadError = MutableLiveData<Event<Unit>>()
-    val eventLoadError: LiveData<Event<Unit>> = _eventLoadError
-
-    private val _eventOpenRecipeDetail = MutableLiveData<Event<Recipe>>()
-    val eventOpenRecipeDetail: LiveData<Event<Recipe>> = _eventOpenRecipeDetail
-
-    private val _eventOpenRecipeEditor = MutableLiveData<Event<Recipe>>()
-    val eventOpenRecipeEditor: LiveData<Event<Recipe>> = _eventOpenRecipeEditor
-
-    private val _eventDeleteFinish = MutableLiveData<Event<Boolean>>()
-    val eventDeleteFinish: LiveData<Event<Boolean>> = _eventDeleteFinish
-
-    private val _eventUploadFinish = MutableLiveData<Event<Boolean>>()
-    val eventUploadFinish: LiveData<Event<Boolean>> = _eventUploadFinish
-
-    private val _eventSaveFinish = MutableLiveData<Event<Boolean>>()
-    val eventSaveFinish: LiveData<Event<Boolean>> = _eventSaveFinish
-
-    private val _eventUpdateFavoriteFinish = MutableLiveData<Event<Boolean>>()
-    val eventUpdateFavoriteFinish: LiveData<Event<Boolean>> = _eventUpdateFavoriteFinish
-
     private val _liveLoading = MutableLiveData(false)
     val liveLoading: LiveData<Boolean> get() = _liveLoading
 
-    val eventInitView: LiveData<Event<RecipeSummaryType>> =
-        _liveRecipe.map { recipe ->
-            Event(
-                when {
-                    recipe.authorId == userId && (recipe.state == RecipeState.CREATE || recipe.state == RecipeState.UPLOAD) -> {
-                        RecipeSummaryType.MY_SAVE_RECIPE
-                    }
-                    recipe.state == RecipeState.DOWNLOAD -> {
-                        RecipeSummaryType.MY_SAVE_OTHER_RECIPE
-                    }
-                    recipe.authorId == userId && recipe.state == RecipeState.NETWORK -> {
-                        RecipeSummaryType.MY_SERVER_RECIPE
-                    }
-                    recipe.authorId != userId && recipe.state == RecipeState.NETWORK -> {
-                        RecipeSummaryType.OTHER_SERVER_RECIPE
-                    }
-                    else -> {
-                        _eventLoadError.value = Event(Unit)
-                        RecipeSummaryType.MY_SAVE_RECIPE
-                    }
-                }
-            )
-        }
+    private val _eventRecipeSummary = MutableLiveData<Event<RecipeSummaryEvent>>()
+    val eventRecipeSummary: LiveData<Event<RecipeSummaryEvent>> = _eventRecipeSummary
+
+    sealed class RecipeSummaryEvent {
+        object LoadError : RecipeSummaryEvent()
+        class OpenRecipeDetail(val item: Recipe) : RecipeSummaryEvent()
+        class OpenRecipeEditor(val item: Recipe) : RecipeSummaryEvent()
+        class DeleteFinish(val flag: Boolean) : RecipeSummaryEvent()
+        class UploadFinish(val flag: Boolean) : RecipeSummaryEvent()
+        class SaveFinish(val flag: Boolean) : RecipeSummaryEvent()
+        class UpdateFavoriteFinish(val flag: Boolean) : RecipeSummaryEvent()
+        class InitView(val type: RecipeSummaryType) : RecipeSummaryEvent()
+    }
 
     private var isInitialized = false
     private val userId = idGenerator.getDeviceId()
@@ -94,16 +63,22 @@ class RecipeSummaryViewModel @Inject constructor(
                     RecipeState.UPLOAD,
                     RecipeState.DOWNLOAD -> {
                         getLocalRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
-                                .collect { recipe ->
-                                    _liveRecipe.value = recipe
-                                }
+                            .collect { recipe ->
+                                _liveRecipe.value = recipe
+                                updateRecipeSummaryType(recipe)
+                            }
                     }
                     RecipeState.NETWORK -> {
                         fetchRemoteRecipeUseCase(FetchRemoteRecipeRequest(recipeId))
-                                .onSuccess { recipe ->
-                                    _liveRecipe.value = recipe
-                                    increaseViewCountUseCase(IncreaseRemoteRecipeViewCountRequest(recipe))
-                                }
+                            .onSuccess { recipe ->
+                                _liveRecipe.value = recipe
+                                updateRecipeSummaryType(recipe)
+                                increaseViewCountUseCase(
+                                    IncreaseRemoteRecipeViewCountRequest(
+                                        recipe
+                                    )
+                                )
+                            }
                     }
                 }
             }
@@ -113,13 +88,40 @@ class RecipeSummaryViewModel @Inject constructor(
         isInitialized = true
     }
 
+    private fun updateRecipeSummaryType(recipe: Recipe) {
+        _eventRecipeSummary.value =
+            Event(
+                RecipeSummaryEvent.InitView(
+                    when {
+                        recipe.authorId == userId && (recipe.state == RecipeState.CREATE || recipe.state == RecipeState.UPLOAD) -> {
+                            RecipeSummaryType.MY_SAVE_RECIPE
+                        }
+                        recipe.state == RecipeState.DOWNLOAD -> {
+                            RecipeSummaryType.MY_SAVE_OTHER_RECIPE
+                        }
+                        recipe.authorId == userId && recipe.state == RecipeState.NETWORK -> {
+                            RecipeSummaryType.MY_SERVER_RECIPE
+                        }
+                        recipe.authorId != userId && recipe.state == RecipeState.NETWORK -> {
+                            RecipeSummaryType.OTHER_SERVER_RECIPE
+                        }
+                        else -> {
+                            _eventRecipeSummary.value = Event(RecipeSummaryEvent.LoadError)
+                            RecipeSummaryType.MY_SAVE_RECIPE
+                        }
+                    }
+                )
+            )
+    }
+
     fun updateRecipeFavorite() {
         _liveLoading.value = true
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
                 val favoriteResult =
                     updateLocalRecipeFavoriteUseCase(UpdateLocalRecipeFavoriteRequest(recipe))
-                _eventUpdateFavoriteFinish.value = Event(favoriteResult.isSuccess)
+                _eventRecipeSummary.value =
+                    Event(RecipeSummaryEvent.UpdateFavoriteFinish(favoriteResult.isSuccess))
             }
             _liveLoading.value = false
         }
@@ -142,7 +144,8 @@ class RecipeSummaryViewModel @Inject constructor(
                         deleteRemoteRecipeUseCase(DeleteRemoteRecipeRequest(recipe))
                     }
                 }
-                _eventDeleteFinish.value = Event(deleteResult.isSuccess)
+                _eventRecipeSummary.value =
+                    Event(RecipeSummaryEvent.DeleteFinish(deleteResult.isSuccess))
             }
             _liveLoading.value = false
         }
@@ -160,7 +163,8 @@ class RecipeSummaryViewModel @Inject constructor(
                 )
                 val saveResult = saveLocalRecipeUseCase(SaveLocalRecipeRequest(newRecipe))
 
-                _eventSaveFinish.value = Event(saveResult.isSuccess)
+                _eventRecipeSummary.value =
+                    Event(RecipeSummaryEvent.SaveFinish(saveResult.isSuccess))
             }
             _liveLoading.value = false
         }
@@ -179,7 +183,8 @@ class RecipeSummaryViewModel @Inject constructor(
                 )
                 val saveResult = saveLocalRecipeUseCase(SaveLocalRecipeRequest(newRecipe))
 
-                _eventSaveFinish.value = Event(saveResult.isSuccess)
+                _eventRecipeSummary.value =
+                    Event(RecipeSummaryEvent.SaveFinish(saveResult.isSuccess))
             }
             _liveLoading.value = false
         }
@@ -190,7 +195,8 @@ class RecipeSummaryViewModel @Inject constructor(
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
                 val uploadResult = uploadRecipeUseCase(UploadRecipeRequest(recipe))
-                _eventUploadFinish.value = Event(uploadResult.isSuccess)
+                _eventRecipeSummary.value =
+                    Event(RecipeSummaryEvent.UploadFinish(uploadResult.isSuccess))
             }
             _liveLoading.value = false
         }
@@ -198,17 +204,17 @@ class RecipeSummaryViewModel @Inject constructor(
 
     fun openRecipeDetail() {
         liveRecipe.value?.let { recipe ->
-            _eventOpenRecipeDetail.value = Event(recipe)
+            _eventRecipeSummary.value = Event(RecipeSummaryEvent.OpenRecipeDetail(recipe))
         }
     }
 
     fun openRecipeEditor() {
         liveRecipe.value?.let { recipe ->
-            _eventOpenRecipeEditor.value = Event(recipe)
+            _eventRecipeSummary.value = Event(RecipeSummaryEvent.OpenRecipeEditor(recipe))
         }
     }
 
     private fun notifyNoInfo() {
-        _eventLoadError.value = Event(Unit)
+        _eventRecipeSummary.value = Event(RecipeSummaryEvent.LoadError)
     }
 }

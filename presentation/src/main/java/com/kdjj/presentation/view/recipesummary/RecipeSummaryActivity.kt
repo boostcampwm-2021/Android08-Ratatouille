@@ -2,6 +2,7 @@ package com.kdjj.presentation.view.recipesummary
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -71,77 +72,10 @@ class RecipeSummaryActivity : AppCompatActivity() {
     }
     
     private fun initObserver() = with(recipeSummaryViewModel) {
-        eventLoadError.observe(this@RecipeSummaryActivity, EventObserver {
-            ConfirmDialogBuilder.create(
-                this@RecipeSummaryActivity,
-                "오류 발생",
-                "레시피를 들고오던 라따뚜이가 넘어졌습니다..ㅠㅠ\n확인버튼을 누르면 이전 화면으로 돌아갑니다."
-            ) {
-                finish()
-            }
-        })
-        
+
         liveRecipe.observe(this@RecipeSummaryActivity) { recipe ->
             title = recipe.title
         }
-        
-        eventInitView.observe(this@RecipeSummaryActivity, EventObserver { recipeSummaryType ->
-            val menuButtonList = floatingMenuIdListMap[recipeSummaryType]?.map {
-                findViewById<AppCompatButton>(it)
-            }
-            initFloatingMenuVisibility(menuButtonList)
-        })
-        
-        eventOpenRecipeDetail.observe(this@RecipeSummaryActivity, EventObserver { recipe ->
-            val intent = Intent(
-                this@RecipeSummaryActivity,
-                RecipeDetailActivity::class.java
-            ).apply {
-                putExtra(RECIPE_ID, recipe.recipeId)
-                putExtra(RECIPE_STATE, recipe.state)
-            }
-            startActivity(intent)
-        })
-        
-        eventOpenRecipeEditor.observe(this@RecipeSummaryActivity, EventObserver { recipe ->
-            val intent = Intent(
-                this@RecipeSummaryActivity,
-                RecipeEditorActivity::class.java
-            ).apply {
-                putExtra(RECIPE_ID, recipe.recipeId)
-                putExtra(RECIPE_STATE, recipe.state)
-            }
-            startActivity(intent)
-        })
-        
-        eventDeleteFinish.observe(this@RecipeSummaryActivity, EventObserver { isSuccess ->
-            if (isSuccess) {
-                ConfirmDialogBuilder.create(
-                    this@RecipeSummaryActivity,
-                    "삭제 완료",
-                    "레시피가 정상적으로 삭제되었습니다.\n확인을 눌러 이전화면으로 돌아가주세요."
-                ) {
-                    finish()
-                }
-            } else {
-                showSnackBar("삭제 실패")
-            }
-        })
-        
-        eventUploadFinish.observe(this@RecipeSummaryActivity, EventObserver { isSuccess ->
-            val message = if (isSuccess) "업로드 성공" else "업로드 실패"
-            showSnackBar(message)
-        })
-        
-        eventSaveFinish.observe(this@RecipeSummaryActivity, EventObserver { isSuccess ->
-            val message = if (isSuccess) "저장 성공" else "저장 실패"
-            showSnackBar(message)
-        })
-        
-        eventUpdateFavoriteFinish.observe(this@RecipeSummaryActivity, EventObserver { isSuccess ->
-            val message = if (isSuccess) "즐겨찾기 추가 / 제거 성공" else "즐겨찾기 추가 / 제거 실패"
-            showSnackBar(message)
-        })
 
         liveLoading.observe(this@RecipeSummaryActivity) { doLoading ->
             if (doLoading) {
@@ -150,6 +84,79 @@ class RecipeSummaryActivity : AppCompatActivity() {
                 loadingDialog.dismiss()
             }
         }
+
+        eventRecipeSummary.observe(this@RecipeSummaryActivity, EventObserver{
+            when(it){
+                is RecipeSummaryViewModel.RecipeSummaryEvent.LoadError -> {
+                    ConfirmDialogBuilder.create(
+                        this@RecipeSummaryActivity,
+                        "오류 발생",
+                        "레시피를 들고오던 라따뚜이가 넘어졌습니다..ㅠㅠ\n확인버튼을 누르면 이전 화면으로 돌아갑니다."
+                    ) {
+                        finish()
+                    }
+                }
+
+                is RecipeSummaryViewModel.RecipeSummaryEvent.InitView -> {
+                    Log.d("aaa", it.type.toString())
+                    val menuButtonList = floatingMenuIdListMap[it.type]?.map{ id ->
+                        findViewById<AppCompatButton>(id)
+                    }
+                    initFloatingMenuVisibility(menuButtonList)
+                }
+
+                is RecipeSummaryViewModel.RecipeSummaryEvent.OpenRecipeDetail -> {
+                    val intent = Intent(
+                        this@RecipeSummaryActivity,
+                        RecipeDetailActivity::class.java
+                    ).apply {
+                        putExtra(RECIPE_ID, it.item.recipeId)
+                        putExtra(RECIPE_STATE, it.item.state)
+                    }
+                    startActivity(intent)
+                }
+
+                is RecipeSummaryViewModel.RecipeSummaryEvent.OpenRecipeEditor -> {
+                    val intent = Intent(
+                        this@RecipeSummaryActivity,
+                        RecipeEditorActivity::class.java
+                    ).apply {
+                        putExtra(RECIPE_ID, it.item.recipeId)
+                        putExtra(RECIPE_STATE, it.item.state)
+                    }
+                    startActivity(intent)
+                }
+
+                is RecipeSummaryViewModel.RecipeSummaryEvent.DeleteFinish -> {
+                    if (it.flag) {
+                        ConfirmDialogBuilder.create(
+                            this@RecipeSummaryActivity,
+                            "삭제 완료",
+                            "레시피가 정상적으로 삭제되었습니다.\n확인을 눌러 이전화면으로 돌아가주세요."
+                        ) {
+                            finish()
+                        }
+                    } else {
+                        showSnackBar("삭제 실패")
+                    }
+                }
+
+                is RecipeSummaryViewModel.RecipeSummaryEvent.UploadFinish -> {
+                    val message = if (it.flag) "업로드 성공" else "업로드 실패"
+                    showSnackBar(message)
+                }
+
+                is RecipeSummaryViewModel.RecipeSummaryEvent.SaveFinish -> {
+                    val message = if (it.flag) "저장 성공" else "저장 실패"
+                    showSnackBar(message)
+                }
+
+                is RecipeSummaryViewModel.RecipeSummaryEvent.UpdateFavoriteFinish -> {
+                    val message = if (it.flag) "즐겨찾기 추가 / 제거 성공" else "즐겨찾기 추가 / 제거 실패"
+                    showSnackBar(message)
+                }
+            }
+        })
     }
     
     private fun initFloatingMenuVisibility(buttonList: List<AppCompatButton>?) = with(binding) {
