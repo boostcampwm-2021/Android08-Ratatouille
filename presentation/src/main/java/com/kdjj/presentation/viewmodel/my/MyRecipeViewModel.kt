@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.request.*
-import com.kdjj.domain.usecase.UseCase
+import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.MyRecipeItem
 import com.kdjj.presentation.model.SortType
@@ -20,10 +20,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class MyRecipeViewModel @Inject constructor(
-    private val latestRecipeUseCase: UseCase<FetchLocalLatestRecipeListRequest, List<Recipe>>,
-    private val favoriteRecipeUseCase: UseCase<FetchLocalFavoriteRecipeListRequest, List<Recipe>>,
-    private val titleRecipeUseCase: UseCase<FetchLocalTitleRecipeListRequest, List<Recipe>>,
-    private val getRecipeUpdateStateRequest: UseCase<EmptyRequest, Flow<Int>>
+    private val latestRecipeUseCase: ResultUseCase<FetchLocalLatestRecipeListRequest, List<Recipe>>,
+    private val favoriteRecipeUseCase: ResultUseCase<FetchLocalFavoriteRecipeListRequest, List<Recipe>>,
+    private val titleRecipeUseCase: ResultUseCase<FetchLocalTitleRecipeListRequest, List<Recipe>>,
+    private val getRecipeUpdateStateRequest: ResultUseCase<EmptyRequest, Flow<Int>>
 ) : ViewModel() {
 
     private val _liveSortType = MutableLiveData<SortType>()

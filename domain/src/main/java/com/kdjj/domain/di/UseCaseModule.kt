@@ -14,90 +14,90 @@ abstract class UseCaseModule {
     @Binds
     internal abstract fun bindDeleteLocalRecipeUseCase(
         deleteLocalRecipeUseCase: DeleteLocalRecipeUseCase
-    ): UseCase<DeleteLocalRecipeRequest, Boolean>
+    ): ResultUseCase<DeleteLocalRecipeRequest, Boolean>
     
     @Binds
     internal abstract fun bindFetchLocalFavoriteRecipeListUseCase(
         fetchLocalFavoriteRecipeListUseCase: FetchLocalFavoriteRecipeListUseCase
-    ): UseCase<FetchLocalFavoriteRecipeListRequest, List<Recipe>>
+    ): ResultUseCase<FetchLocalFavoriteRecipeListRequest, List<Recipe>>
     
     @Binds
     internal abstract fun bindFetchLocalLatestRecipeListUseCase(
         fetchLocalLatestRecipeListUseCase: FetchLocalLatestRecipeListUseCase
-    ): UseCase<FetchLocalLatestRecipeListRequest, List<Recipe>>
+    ): ResultUseCase<FetchLocalLatestRecipeListRequest, List<Recipe>>
     
     @Binds
     internal abstract fun bindFechLocalTitleRecipeListUseCase(
         fetchLocalTitleRecipeListUseCase: FetchLocalTitleRecipeListUseCase
-    ): UseCase<FetchLocalTitleRecipeListRequest, List<Recipe>>
+    ): ResultUseCase<FetchLocalTitleRecipeListRequest, List<Recipe>>
     
     @Binds
     internal abstract fun bindFetchLocalSearchRecipeListUseCase(
         fetchLocalSearchRecipeListUseCase: FetchLocalSearchRecipeListUseCase
-    ): UseCase<FetchLocalSearchRecipeListRequest, List<Recipe>>
+    ): ResultUseCase<FetchLocalSearchRecipeListRequest, List<Recipe>>
     
     @Binds
     internal abstract fun bindFetchRecipeTypesUseCase(
         fetchRecipeTypeListUseCase: FetchRecipeTypeListUseCase
-    ): UseCase<EmptyRequest, List<RecipeType>>
+    ): ResultUseCase<EmptyRequest, List<RecipeType>>
     
     @Binds
     internal abstract fun bindFetchRemoteLatestRecipeListUseCase(
         fetchRemoteLatestRecipeListUseCase: FetchRemoteLatestRecipeListUseCase
-    ): UseCase<FetchRemoteLatestRecipeListRequest, List<Recipe>>
+    ): ResultUseCase<FetchRemoteLatestRecipeListRequest, List<Recipe>>
     
     @Binds
     internal abstract fun bindFetchRemotePopularRecipeListUseCase(
         fetchRemotePopularRecipeListUseCase: FetchRemotePopularRecipeListUseCase
-    ): UseCase<FetchRemotePopularRecipeListRequest, List<Recipe>>
+    ): ResultUseCase<FetchRemotePopularRecipeListRequest, List<Recipe>>
     
     @Binds
     internal abstract fun bindFetchRemoteSearchRecipeListUseCase(
         fetchRemoteSearchRecipeListUseCase: FetchRemoteSearchRecipeListUseCase
-    ): UseCase<FetchRemoteSearchRecipeListRequest, List<Recipe>>
+    ): ResultUseCase<FetchRemoteSearchRecipeListRequest, List<Recipe>>
     
     @Binds
     internal abstract fun bindSaveLocalRecipeUseCase(
         saveLocalRecipeUseCase: SaveLocalRecipeUseCase
-    ): UseCase<SaveLocalRecipeRequest, Boolean>
+    ): ResultUseCase<SaveLocalRecipeRequest, Boolean>
     
     @Binds
     internal abstract fun bindUpdateLocalRecipeFavoriteUseCase(
         updateLocalRecipeFavoriteUseCase: UpdateLocalRecipeFavoriteUseCase
-    ): UseCase<UpdateLocalRecipeFavoriteRequest, Boolean>
+    ): ResultUseCase<UpdateLocalRecipeFavoriteRequest, Boolean>
     
     @Binds
     internal abstract fun bindUploadRecipeUseCase(
         uploadRecipeUseCase: UploadRecipeUseCase
-    ): UseCase<UploadRecipeRequest, Unit>
+    ): ResultUseCase<UploadRecipeRequest, Unit>
     
     @Binds
     internal abstract fun bindUpdateRemoteRecipeUseCase(
         updateRemoteRecipeUseCase: UpdateRemoteRecipeUseCase
-    ): UseCase<UpdateRemoteRecipeRequest, Unit>
+    ): ResultUseCase<UpdateRemoteRecipeRequest, Unit>
     
     @Binds
     internal abstract fun bindIncreaseRemoteRecipeViewCountUseCase(
         increaseRemoteRecipeViewCountUseCase: IncreaseRemoteRecipeViewCountUseCase
-    ): UseCase<IncreaseRemoteRecipeViewCountRequest, Unit>
+    ): ResultUseCase<IncreaseRemoteRecipeViewCountRequest, Unit>
     
     @Binds
     internal abstract fun bindDeleteRemoteRecipeUseCase(
         deleteRemoteRecipeUseCase: DeleteRemoteRecipeUseCase
-    ): UseCase<DeleteRemoteRecipeRequest, Unit>
+    ): ResultUseCase<DeleteRemoteRecipeRequest, Unit>
     
     @Binds
     internal abstract fun bindGetLocalRecipeFlowUseCase(
         getLocalRecipeFlowUseCase: GetLocalRecipeFlowUseCase
-    ): UseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>
+    ): ResultUseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>
 
     @Binds
     internal abstract fun bindGetRecipeUpdateStateUseCase(
         getRecipeUpdateStateUseCase: GetRecipeUpdateStateUseCase
-    ): UseCase<EmptyRequest, Flow<Int>>
+    ): ResultUseCase<EmptyRequest, Flow<Int>>
 
     @Binds
     internal abstract fun bindFetchRemoteRecipeUseCase(
         fetchRemoteRecipeUseCase: FetchRemoteRecipeUseCase
-    ): UseCase<FetchRemoteRecipeRequest, Recipe>
+    ): ResultUseCase<FetchRemoteRecipeRequest, Recipe>
 }

@@ -8,7 +8,7 @@ import javax.inject.Inject
 internal class SaveLocalRecipeUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository,
     private val imageRepository: RecipeImageRepository
-) : UseCase<SaveLocalRecipeRequest, Boolean> {
+) : ResultUseCase<SaveLocalRecipeRequest, Boolean> {
 
     override suspend fun invoke(request: SaveLocalRecipeRequest): Result<Boolean> =
         kotlin.runCatching {

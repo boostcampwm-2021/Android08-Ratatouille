@@ -7,21 +7,20 @@ import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.RecipeStep
 import com.kdjj.domain.model.request.FetchRemoteRecipeRequest
 import com.kdjj.domain.model.request.GetLocalRecipeFlowRequest
-import com.kdjj.domain.usecase.UseCase
+import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.StepTimerModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
     private val ringtone: Ringtone,
-    private val getLocalRecipeFlowUseCase: UseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>,
-    private val fetchRemoteRecipeUseCase: UseCase<FetchRemoteRecipeRequest, Recipe>
+    private val getLocalRecipeFlowUseCase: ResultUseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>,
+    private val fetchRemoteRecipeUseCase: ResultUseCase<FetchRemoteRecipeRequest, Recipe>
 ) : ViewModel() {
 
     private val _liveStepList = MutableLiveData<List<RecipeStep>>()

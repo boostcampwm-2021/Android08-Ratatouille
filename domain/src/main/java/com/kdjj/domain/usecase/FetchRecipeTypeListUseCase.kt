@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class FetchRecipeTypeListUseCase @Inject constructor(
 	private val recipeTypeRepository: RecipeTypeRepository
-) : UseCase<EmptyRequest, @JvmSuppressWildcards List<RecipeType>> {
+) : ResultUseCase<EmptyRequest, @JvmSuppressWildcards List<RecipeType>> {
 	
 	override suspend fun invoke(request: EmptyRequest): Result<List<RecipeType>> {
 		val remoteResult = recipeTypeRepository.fetchRemoteRecipeTypeList()

@@ -12,8 +12,7 @@ import com.kdjj.domain.model.request.EmptyRequest
 import com.kdjj.domain.model.request.GetLocalRecipeFlowRequest
 import com.kdjj.domain.model.request.SaveLocalRecipeRequest
 import com.kdjj.domain.model.request.UpdateRemoteRecipeRequest
-import com.kdjj.domain.usecase.UpdateRemoteRecipeUseCase
-import com.kdjj.domain.usecase.UseCase
+import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.common.IdGenerator
 import com.kdjj.presentation.common.RecipeStepValidator
@@ -23,8 +22,6 @@ import com.kdjj.presentation.model.toDomain
 import com.kdjj.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,10 +30,10 @@ import javax.inject.Inject
 internal class RecipeEditorViewModel @Inject constructor(
     private val recipeValidator: RecipeValidator,
     private val recipeStepValidator: RecipeStepValidator,
-    private val saveRecipeUseCase: UseCase<SaveLocalRecipeRequest, Boolean>,
-    private val fetchRecipeTypesUseCase: UseCase<EmptyRequest, List<RecipeType>>,
-    private val getLocalRecipeFlowUseCase: UseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>,
-    private val updateRemoteRecipeUseCase: UseCase<UpdateRemoteRecipeRequest, Unit>,
+    private val saveRecipeUseCase: ResultUseCase<SaveLocalRecipeRequest, Boolean>,
+    private val fetchRecipeTypesUseCase: ResultUseCase<EmptyRequest, List<RecipeType>>,
+    private val getLocalRecipeFlowUseCase: ResultUseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>,
+    private val updateRemoteRecipeUseCase: ResultUseCase<UpdateRemoteRecipeRequest, Unit>,
     private val idGenerator: IdGenerator,
 ) : ViewModel() {
     

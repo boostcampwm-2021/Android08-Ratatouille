@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 internal class FetchRemotePopularRecipeListUseCase @Inject constructor(
     private val recipeListRepository: RecipeListRepository
-) : UseCase<FetchRemotePopularRecipeListRequest, @JvmSuppressWildcards List<Recipe>>{
+) : ResultUseCase<FetchRemotePopularRecipeListRequest, @JvmSuppressWildcards List<Recipe>>{
 
     override suspend fun invoke(request: FetchRemotePopularRecipeListRequest): Result<List<Recipe>> =
         recipeListRepository.fetchRemotePopularRecipeListAfter(request.refresh)

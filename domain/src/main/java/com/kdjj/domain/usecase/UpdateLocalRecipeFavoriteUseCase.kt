@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 internal class UpdateLocalRecipeFavoriteUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository
-) : UseCase<UpdateLocalRecipeFavoriteRequest, Boolean> {
+) : ResultUseCase<UpdateLocalRecipeFavoriteRequest, Boolean> {
     
     override suspend fun invoke(request: UpdateLocalRecipeFavoriteRequest): Result<Boolean> {
         val recipe = request.recipe

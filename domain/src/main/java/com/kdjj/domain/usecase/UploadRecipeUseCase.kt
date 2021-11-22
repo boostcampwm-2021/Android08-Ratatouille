@@ -9,7 +9,7 @@ import javax.inject.Inject
 class UploadRecipeUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository,
     private val recipeImageRepository: RecipeImageRepository
-) : UseCase<UploadRecipeRequest, Unit> {
+) : ResultUseCase<UploadRecipeRequest, Unit> {
 
     override suspend fun invoke(request: UploadRecipeRequest): Result<Unit> =
         runCatching {

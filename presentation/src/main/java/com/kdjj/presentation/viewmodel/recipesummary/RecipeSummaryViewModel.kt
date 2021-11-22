@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.request.*
-import com.kdjj.domain.usecase.UseCase
+import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.common.IdGenerator
 import com.kdjj.presentation.model.RecipeSummaryType
@@ -17,14 +17,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeSummaryViewModel @Inject constructor(
-    private val getRecipeFlowUseCase: UseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>,
-    private val updateLocalRecipeFavoriteUseCase: UseCase<UpdateLocalRecipeFavoriteRequest, Boolean>,
-    private val deleteLocalRecipeUseCase: UseCase<DeleteLocalRecipeRequest, Boolean>,
-    private val deleteRemoteRecipeUseCase: UseCase<DeleteRemoteRecipeRequest, Unit>,
-    private val fetchRemoteRecipeUseCase: UseCase<FetchRemoteRecipeRequest, Recipe>,
-    private val saveLocalRecipeUseCase: UseCase<SaveLocalRecipeRequest, Boolean>,
-    private val uploadRecipeUseCase: UseCase<UploadRecipeRequest, Unit>,
-    private val increaseViewCountUseCase: UseCase<IncreaseRemoteRecipeViewCountRequest, Unit>,
+    private val getRecipeFlowUseCase: ResultUseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>,
+    private val updateLocalRecipeFavoriteUseCase: ResultUseCase<UpdateLocalRecipeFavoriteRequest, Boolean>,
+    private val deleteLocalRecipeUseCase: ResultUseCase<DeleteLocalRecipeRequest, Boolean>,
+    private val deleteRemoteRecipeUseCase: ResultUseCase<DeleteRemoteRecipeRequest, Unit>,
+    private val fetchRemoteRecipeUseCase: ResultUseCase<FetchRemoteRecipeRequest, Recipe>,
+    private val saveLocalRecipeUseCase: ResultUseCase<SaveLocalRecipeRequest, Boolean>,
+    private val uploadRecipeUseCase: ResultUseCase<UploadRecipeRequest, Unit>,
+    private val increaseViewCountUseCase: ResultUseCase<IncreaseRemoteRecipeViewCountRequest, Unit>,
     private val idGenerator: IdGenerator
 ) : ViewModel() {
     
