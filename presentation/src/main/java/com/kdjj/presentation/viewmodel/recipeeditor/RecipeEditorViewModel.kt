@@ -51,9 +51,6 @@ internal class RecipeEditorViewModel @Inject constructor(
     private val _liveRegisterHasPressed = MutableLiveData(false)
     val liveRegisterHasPressed: LiveData<Boolean> get() = _liveRegisterHasPressed
 
-    private val _eventSaveResult = MutableLiveData<Event<Boolean>>()
-    val eventSaveResult: LiveData<Event<Boolean>> get() = _eventSaveResult
-
     private val _liveLoading = MutableLiveData(false)
     val liveLoading: LiveData<Boolean> get() = _liveLoading
 
@@ -64,8 +61,13 @@ internal class RecipeEditorViewModel @Inject constructor(
 
     private var isEditing = false
 
-    private val _eventError = MutableLiveData<Event<Unit>>()
-    val eventError: LiveData<Event<Unit>> get() = _eventError
+    private val _eventRecipeEditor = MutableLiveData<Event<RecipeEditorEvent>>()
+    val eventRecipeEditor: LiveData<Event<RecipeEditorEvent>> get() = _eventRecipeEditor
+
+    sealed class RecipeEditorEvent {
+        class SaveResult(val isSuccess: Boolean) : RecipeEditorEvent()
+        object Error : RecipeEditorEvent()
+    }
 
     fun initializeWith(recipeId: String?) {
         if (isInitialized) return
@@ -73,31 +75,32 @@ internal class RecipeEditorViewModel @Inject constructor(
         _liveLoading.value = true
         viewModelScope.launch {
             fetchRecipeTypesUseCase(EmptyRequest)
-                    .onSuccess { recipeTypes ->
-                        _liveRecipeTypes.value = recipeTypes
-                        recipeId?.let {
-                            val recipeFlow = getLocalRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
-                            val recipe = recipeFlow.first()
-                            val (metaModel, stepList) =
-                                recipe.toPresentation(recipeValidator, recipeTypes, recipeStepValidator)
-                            recipeMetaModel = metaModel
-                            _liveStepModelList.value = stepList
-                            isEditing = true
+                .onSuccess { recipeTypes ->
+                    _liveRecipeTypes.value = recipeTypes
+                    recipeId?.let {
+                        val recipeFlow =
+                            getLocalRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
+                        val recipe = recipeFlow.first()
+                        val (metaModel, stepList) =
+                            recipe.toPresentation(recipeValidator, recipeTypes, recipeStepValidator)
+                        recipeMetaModel = metaModel
+                        _liveStepModelList.value = stepList
+                        isEditing = true
 
-                        } ?: run {
-                            recipeMetaModel = RecipeEditorItem.RecipeMetaModel.create(
-                                idGenerator, recipeValidator
+                    } ?: run {
+                        recipeMetaModel = RecipeEditorItem.RecipeMetaModel.create(
+                            idGenerator, recipeValidator
+                        )
+                        _liveStepModelList.value = listOf(
+                            RecipeEditorItem.RecipeStepModel.create(
+                                idGenerator, recipeStepValidator
                             )
-                            _liveStepModelList.value = listOf(
-                                RecipeEditorItem.RecipeStepModel.create(
-                                    idGenerator, recipeStepValidator
-                                )
-                            )
-                        }
+                        )
                     }
-                    .onFailure {
-                        _eventError.value = Event(Unit)
-                    }
+                }
+                .onFailure {
+                    _eventRecipeEditor.value = Event(RecipeEditorEvent.Error)
+                }
             _liveLoading.value = false
         }
         isInitialized = true
@@ -164,22 +167,26 @@ internal class RecipeEditorViewModel @Inject constructor(
                     liveRecipeTypes.value ?: emptyList()
                 )
                 saveRecipeUseCase(SaveLocalRecipeRequest(recipe))
-                        .onSuccess {
-                            if (recipeMetaModel.state == RecipeState.UPLOAD) {
-                                updateRemoteRecipeUseCase(UpdateRemoteRecipeRequest(recipe))
-                                        .onSuccess {
-                                            _eventSaveResult.value = Event(true)
-                                        }
-                                        .onFailure {
-                                            _eventSaveResult.value = Event(false)
-                                        }
-                            } else {
-                                _eventSaveResult.value = Event(true)
-                            }
-                        }.onFailure {
-                            it.printStackTrace()
-                            _eventSaveResult.value = Event(false)
+                    .onSuccess {
+                        if (recipeMetaModel.state == RecipeState.UPLOAD) {
+                            updateRemoteRecipeUseCase(UpdateRemoteRecipeRequest(recipe))
+                                .onSuccess {
+                                    _eventRecipeEditor.value =
+                                        Event(RecipeEditorEvent.SaveResult(true))
+                                }
+                                .onFailure {
+                                    _eventRecipeEditor.value =
+                                        Event(RecipeEditorEvent.SaveResult(false))
+                                }
+                        } else {
+                            _eventRecipeEditor.value =
+                                Event(RecipeEditorEvent.SaveResult(true))
                         }
+                    }.onFailure {
+                        it.printStackTrace()
+                        _eventRecipeEditor.value =
+                            Event(RecipeEditorEvent.SaveResult(false))
+                    }
                 _liveLoading.value = false
             }
         }
