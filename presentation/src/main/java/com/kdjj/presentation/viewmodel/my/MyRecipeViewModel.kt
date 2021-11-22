@@ -12,6 +12,7 @@ import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.MyRecipeItem
 import com.kdjj.presentation.model.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -47,6 +48,18 @@ internal class MyRecipeViewModel @Inject constructor(
     val eventDataLoadFailed: LiveData<Event<Unit>> get() = _eventDataLoadFailed
 
     private var isFetching = false
+        set(value) {
+            field = value
+            notifyRecipeDataSetChanged()
+        }
+
+    private var recipeList: List<MyRecipeItem.MyRecipe> = listOf()
+        set(value) {
+            field = value
+            notifyRecipeDataSetChanged()
+        }
+
+    private var job: Job? = null
 
     init {
         setSortType(SortType.SORT_BY_TIME)
@@ -55,37 +68,29 @@ internal class MyRecipeViewModel @Inject constructor(
             getRecipeUpdateStateRequest(EmptyRequest)
                 .onSuccess {
                     it.collect {
-                        Log.d("aa", "collect")
                         refreshRecipeList()
                     }
                 }
         }
     }
 
-    private fun initFetching() {
-        _liveRecipeItemList.value = listOf()
-        isFetching = false
-    }
-
     fun setSortType(sortType: SortType) {
         if (_liveSortType.value != sortType) {
             _liveSortType.value = sortType
-            initFetching()
             fetchRecipeList(0)
         }
     }
 
     fun refreshRecipeList() {
-        initFetching()
         fetchRecipeList(0)
     }
 
     fun fetchRecipeList(page: Int) {
-        Log.d("aa", "fetchRecipeList")
         if (isFetching && page > 0) return
         isFetching = true
+        if (page == 0) job?.cancel()
 
-        viewModelScope.launch {
+        job = viewModelScope.launch {
             when (_liveSortType.value) {
                 SortType.SORT_BY_TIME ->
                     latestRecipeUseCase(FetchLocalLatestRecipeListRequest(page))
@@ -98,27 +103,26 @@ internal class MyRecipeViewModel @Inject constructor(
                 val myRecipeList = fetchedRecipeList.map { MyRecipeItem.MyRecipe(it) }
                 _liveRecipeItemList.value?.let {
                     if (page == 0) {
-                        _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + myRecipeList
+                        recipeList = myRecipeList
                     } else {
-                        _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
+                        recipeList = recipeList.plus(myRecipeList)
                     }
                 }
             }.onFailure {
-                _liveRecipeItemList.value = listOf()
                 _eventDataLoadFailed.value = Event(Unit)
             }
             isFetching = false
         }
     }
 
-//    private fun notifyRecipeDataSetChanged(isSuccess: Boolean) {
-//        if (isSuccess) {
-//            _liveRecipeItemList.value =
-//                listOf(MyRecipeItem.PlusButton) + recipeList
-//        } else {
-//            _liveRecipeItemList.value = listOf()
-//        }
-//    }
+    private fun notifyRecipeDataSetChanged() {
+        if (isFetching) {
+            _liveRecipeItemList.value =
+                listOf(MyRecipeItem.PlusButton) + recipeList + MyRecipeItem.Progress
+        } else {
+            _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + recipeList
+        }
+    }
 
     fun recipeItemSelected(selectedRecipe: MyRecipeItem.MyRecipe) {
         if (_liveRecipeItemSelected.value != selectedRecipe) {
