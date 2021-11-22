@@ -34,16 +34,15 @@ internal class RecipeListServiceImpl @Inject constructor(
                 .orderBy(FIELD_CREATE_TIME, Query.Direction.DESCENDING)
                 .limit(PAGING_SIZE)
 
-            with(query.get(Source.SERVER).await()) {
-                if (documents.isNotEmpty()) {
-                    latestListQuery = fireStore.collection(RECIPE_COLLECTION_ID)
-                        .orderBy(FIELD_CREATE_TIME, Query.Direction.DESCENDING)
-                        .startAfter(documents.last())
-                        .limit(PAGING_SIZE)
-                }
-                map {
-                    it.toObject<RecipeDto>().toDomain()
-                }
+            val querySnapshot = query.get(Source.SERVER).await()
+            if (querySnapshot.documents.isNotEmpty()) {
+                latestListQuery = fireStore.collection(RECIPE_COLLECTION_ID)
+                    .orderBy(FIELD_CREATE_TIME, Query.Direction.DESCENDING)
+                    .startAfter(querySnapshot.documents.last())
+                    .limit(PAGING_SIZE)
+            }
+            querySnapshot.map {
+                it.toObject<RecipeDto>().toDomain()
             }
         }
 
@@ -59,16 +58,15 @@ internal class RecipeListServiceImpl @Inject constructor(
                 .orderBy(FIELD_VIEW_COUNT, Query.Direction.DESCENDING)
                 .limit(PAGING_SIZE)
 
-            with(query.get(Source.SERVER).await()) {
-                if (documents.isNotEmpty()) {
-                    popularListQuery = fireStore.collection(RECIPE_COLLECTION_ID)
-                        .orderBy(FIELD_VIEW_COUNT, Query.Direction.DESCENDING)
-                        .startAfter(documents.last())
-                        .limit(PAGING_SIZE)
-                }
-                map {
-                    it.toObject<RecipeDto>().toDomain()
-                }
+            val querySnapshot = query.get(Source.SERVER).await()
+            if (querySnapshot.documents.isNotEmpty()) {
+                popularListQuery = fireStore.collection(RECIPE_COLLECTION_ID)
+                    .orderBy(FIELD_VIEW_COUNT, Query.Direction.DESCENDING)
+                    .startAfter(querySnapshot.documents.last())
+                    .limit(PAGING_SIZE)
+            }
+            querySnapshot.map {
+                it.toObject<RecipeDto>().toDomain()
             }
         }
     
@@ -87,18 +85,17 @@ internal class RecipeListServiceImpl @Inject constructor(
                 .orderBy(FIELD_TITLE, Query.Direction.ASCENDING)
                 .limit(PAGING_SIZE)
 
-            with(query.get(Source.SERVER).await()) {
-                if (documents.isNotEmpty()) {
-                    searchListQuery = fireStore.collection(RECIPE_COLLECTION_ID)
-                        .whereGreaterThanOrEqualTo(FIELD_TITLE, keyword)
-                        .whereLessThan(FIELD_TITLE, keyword + HANGLE_MAX_VALUE)
-                        .orderBy(FIELD_TITLE, Query.Direction.ASCENDING)
-                        .startAfter(documents.last())
-                        .limit(PAGING_SIZE)
-                }
-                map {
-                    it.toObject<RecipeDto>().toDomain()
-                }
+            val querySnapshot = query.get(Source.SERVER).await()
+            if (querySnapshot.documents.isNotEmpty()) {
+                searchListQuery = fireStore.collection(RECIPE_COLLECTION_ID)
+                    .whereGreaterThanOrEqualTo(FIELD_TITLE, keyword)
+                    .whereLessThan(FIELD_TITLE, keyword + HANGLE_MAX_VALUE)
+                    .orderBy(FIELD_TITLE, Query.Direction.ASCENDING)
+                    .startAfter(querySnapshot.documents.last())
+                    .limit(PAGING_SIZE)
+            }
+            querySnapshot.map {
+                it.toObject<RecipeDto>().toDomain()
             }
         }
     
