@@ -3,7 +3,7 @@ package com.kdjj.remote.datasource
 import com.kdjj.data.common.errorMap
 import com.kdjj.data.datasource.RecipeTypeRemoteDataSource
 import com.kdjj.domain.model.RecipeType
-import com.kdjj.remote.dao.FirestoreService
+import com.kdjj.remote.service.FirestoreService
 import javax.inject.Inject
 
 internal class RecipeTypeRemoteDataSourceImpl @Inject constructor(

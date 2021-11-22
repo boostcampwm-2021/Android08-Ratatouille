@@ -1,4 +1,4 @@
-package com.kdjj.remote.dao
+package com.kdjj.remote.service
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
