@@ -41,15 +41,6 @@ class OthersViewModel @Inject constructor(
         _liveFetchLock.value = false
     }
 
-    private var _eventShowSnackBar = MutableLiveData<Event<ResponseError>>()
-    val eventShowSnackBar: LiveData<Event<ResponseError>> get() = _eventShowSnackBar
-
-    private var _eventSearchIconClicked = MutableLiveData<Event<Unit>>()
-    val eventSearchIconClicked: LiveData<Event<Unit>> get() = _eventSearchIconClicked
-
-    private var _eventRecipeItemClicked = MutableLiveData<Event<RecipeListItemModel>>()
-    val eventRecipeItemClicked: LiveData<Event<RecipeListItemModel>> get() = _eventRecipeItemClicked
-
     private var _eventOtherRecipe = MutableLiveData<Event<OtherRecipeEvent>>()
     val eventOtherRecipe: LiveData<Event<OtherRecipeEvent>> get() = _eventOtherRecipe
 
