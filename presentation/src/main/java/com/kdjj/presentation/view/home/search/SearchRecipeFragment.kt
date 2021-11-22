@@ -7,17 +7,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.kdjj.presentation.R
 import com.kdjj.presentation.common.EventObserver
 import com.kdjj.presentation.common.RECIPE_ID
 import com.kdjj.presentation.common.RECIPE_STATE
 import com.kdjj.presentation.databinding.FragmentSearchRecipeBinding
+import com.kdjj.presentation.model.ResponseError
 import com.kdjj.presentation.view.adapter.SearchRecipeListAdapter
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.viewmodel.search.SearchViewModel
@@ -86,12 +89,16 @@ class SearchRecipeFragment : Fragment() {
                 it.printStackTrace()
             })
 
-        viewModel.eventException.observe(viewLifecycleOwner, EventObserver {
-            ConfirmDialogBuilder.create(
-                context ?: return@EventObserver,
-                "오류",
-                "오류가 발생했습니다."
-            ) { }
+        viewModel.eventException.observe(viewLifecycleOwner, EventObserver { responseError ->
+            when (responseError) {
+                ResponseError.NETWORK_CONNECTION, ResponseError.SERVER ->
+                    showSnackBar(responseError.stringRes)
+                else -> ConfirmDialogBuilder.create(
+                    context ?: return@EventObserver,
+                    getString(R.string.errorOccurs),
+                    getString(responseError.stringRes)
+                ) { }
+            }
         })
 
         viewModel.liveTabState.observe(viewLifecycleOwner) {
@@ -105,6 +112,10 @@ class SearchRecipeFragment : Fragment() {
             )
             navigation.navigate(R.id.action_searchFragment_to_recipeSummaryActivity, bundle)
         })
+    }
+
+    private fun showSnackBar(@StringRes resId: Int) {
+        Snackbar.make(binding.root, resId, Snackbar.LENGTH_LONG).show()
     }
 
     private fun focusInput() {

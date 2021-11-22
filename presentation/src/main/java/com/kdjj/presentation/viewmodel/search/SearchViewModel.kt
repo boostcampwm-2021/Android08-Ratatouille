@@ -5,12 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kdjj.domain.model.Recipe
+import com.kdjj.domain.model.exception.ApiException
+import com.kdjj.domain.model.exception.NetworkException
 import com.kdjj.domain.model.request.EmptyRequest
 import com.kdjj.domain.model.request.FetchLocalSearchRecipeListRequest
 import com.kdjj.domain.model.request.FetchRemoteSearchRecipeListRequest
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.RecipeListItemModel
+import com.kdjj.presentation.model.ResponseError
 import com.kdjj.presentation.model.SearchTabState
 import com.kdjj.presentation.model.toRecipeListItemModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,8 +36,8 @@ class SearchViewModel @Inject constructor(
     private val _liveResultList = MutableLiveData<List<RecipeListItemModel>>(listOf())
     val liveResultList: LiveData<List<RecipeListItemModel>> get() = _liveResultList
 
-    private val _eventException = MutableLiveData<Event<Unit>>()
-    val eventException: LiveData<Event<Unit>> get() = _eventException
+    private val _eventException = MutableLiveData<Event<ResponseError>>()
+    val eventException: LiveData<Event<ResponseError>> get() = _eventException
 
     val liveKeyword = MutableLiveData("")
 
@@ -83,10 +86,8 @@ class SearchViewModel @Inject constructor(
                         .onSuccess {
                             _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
                         }
-                        .onFailure {
-                            if (it !is CancellationException) {
-                                _eventException.value = Event(Unit)
-                            }
+                        .onFailure { t ->
+                            setException(t)
                         }
                 }
                 SearchTabState.MY_RECIPE -> {
@@ -94,10 +95,8 @@ class SearchViewModel @Inject constructor(
                         .onSuccess {
                             _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
                         }
-                        .onFailure {
-                            if (it !is CancellationException) {
-                                _eventException.value = Event(Unit)
-                            }
+                        .onFailure { t ->
+                            setException(t)
                         }
                 }
             }
@@ -124,10 +123,8 @@ class SearchViewModel @Inject constructor(
                                 ?.let { it + recipeList.map(Recipe::toRecipeListItemModel) }
                                 ?: recipeList.map(Recipe::toRecipeListItemModel)
                         }
-                        .onFailure {
-                            if (it !is CancellationException) {
-                                _eventException.value = Event(Unit)
-                            }
+                        .onFailure { t ->
+                            setException(t)
                         }
                 }
                 SearchTabState.MY_RECIPE -> {
@@ -137,10 +134,8 @@ class SearchViewModel @Inject constructor(
                                 ?.let { it + recipeList.map(Recipe::toRecipeListItemModel) }
                                 ?: recipeList.map(Recipe::toRecipeListItemModel)
                         }
-                        .onFailure {
-                            if (it !is CancellationException) {
-                                _eventException.value = Event(Unit)
-                            }
+                        .onFailure { t ->
+                            setException(t)
                         }
                 }
             }
@@ -150,5 +145,18 @@ class SearchViewModel @Inject constructor(
 
     fun moveToSummary(recipeModel: RecipeListItemModel) {
         _eventSummary.value = Event(recipeModel)
+    }
+
+    private fun setException(throwable: Throwable) {
+        when (throwable) {
+            is NetworkException -> {
+                _eventException.value = Event(ResponseError.NETWORK_CONNECTION)
+            }
+            is ApiException -> {
+                _eventException.value = Event(ResponseError.SERVER)
+            }
+            is CancellationException -> {}
+            else -> _eventException.value = Event(ResponseError.UNKNOWN)
+        }
     }
 }
