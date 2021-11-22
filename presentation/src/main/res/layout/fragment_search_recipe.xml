@@ -9,6 +9,7 @@
             type="com.kdjj.presentation.viewmodel.search.SearchViewModel" />
 
         <import type="com.kdjj.presentation.model.SearchTabState" />
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -91,6 +92,17 @@
             android:layout_margin="@dimen/search_resultLabel_margin"
             app:layout_constraintTop_toBottomOf="@id/textView_search_btnOthers"
             app:layout_constraintStart_toStartOf="parent" />
+        
+        <ProgressBar
+            android:id="@+id/progressBar_search"
+            android:layout_width="@dimen/search_tab_textSize"
+            android:layout_height="@dimen/search_tab_textSize"
+            android:layout_marginStart="@dimen/search_progressBar_marginStart"
+            android:indeterminateTint="@color/blue_500"
+            android:visibility="@{viewModel.liveLoading ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toEndOf="@id/textview_search_resultLabel"
+            app:layout_constraintTop_toTopOf="@id/textview_search_resultLabel"
+            app:layout_constraintBottom_toBottomOf="@id/textview_search_resultLabel" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_search"
