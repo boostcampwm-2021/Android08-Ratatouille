@@ -22,7 +22,7 @@ internal class RecipeRepositoryImpl @Inject constructor(
             it.onSuccess { isUpdated.value++ }
         }
     }
-    
+
     override suspend fun updateLocalRecipe(
         recipe: Recipe
     ): Result<Boolean> {
@@ -30,7 +30,7 @@ internal class RecipeRepositoryImpl @Inject constructor(
             it.onSuccess { isUpdated.value++ }
         }
     }
-    
+
     override suspend fun deleteLocalRecipe(
         recipe: Recipe
     ): Result<Boolean> {
@@ -38,25 +38,25 @@ internal class RecipeRepositoryImpl @Inject constructor(
             it.onSuccess { isUpdated.value++ }
         }
     }
-    
+
     override suspend fun uploadRecipe(
         recipe: Recipe
     ): Result<Unit> {
         return recipeRemoteDataSource.uploadRecipe(recipe)
     }
-    
+
     override suspend fun increaseRemoteRecipeViewCount(
         recipe: Recipe
     ): Result<Unit> {
         return recipeRemoteDataSource.increaseViewCount(recipe)
     }
-    
+
     override suspend fun deleteRemoteRecipe(
         recipe: Recipe
     ): Result<Unit> {
         return recipeRemoteDataSource.deleteRecipe(recipe)
     }
-    
+
     override fun getLocalRecipeFlow(
         recipeId: String
     ): Flow<Recipe> {
@@ -67,7 +67,7 @@ internal class RecipeRepositoryImpl @Inject constructor(
         return recipeRemoteDataSource.fetchRecipe(recipeID)
     }
 
-    override fun getRecipeUpdateState(): Result<Flow<Int>> {
-        return  Result.success(isUpdated)
+    override fun getRecipeUpdateFlow(): Flow<Int> {
+        return isUpdated
     }
 }

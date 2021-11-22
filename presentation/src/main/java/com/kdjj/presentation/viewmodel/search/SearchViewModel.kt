@@ -10,6 +10,7 @@ import com.kdjj.domain.model.exception.NetworkException
 import com.kdjj.domain.model.request.EmptyRequest
 import com.kdjj.domain.model.request.FetchLocalSearchRecipeListRequest
 import com.kdjj.domain.model.request.FetchRemoteSearchRecipeListRequest
+import com.kdjj.domain.usecase.FlowUseCase
 import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.RecipeListItemModel
@@ -19,7 +20,6 @@ import com.kdjj.presentation.model.toRecipeListItemModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,7 +28,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val fetchLocalSearchUseCase: ResultUseCase<FetchLocalSearchRecipeListRequest, List<Recipe>>,
     private val fetchRemoteSearchUseCase: ResultUseCase<FetchRemoteSearchRecipeListRequest, List<Recipe>>,
-    private val getRecipeUpdateStateUseCase: ResultUseCase<EmptyRequest, Flow<Int>>
+    private val getRecipeUpdateFlowUseCase: FlowUseCase<EmptyRequest, Int>
 ) : ViewModel() {
     private val _liveTabState = MutableLiveData(SearchTabState.OTHERS_RECIPE)
     val liveTabState: LiveData<SearchTabState> get() = _liveTabState
@@ -57,11 +57,10 @@ class SearchViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getRecipeUpdateStateUseCase(EmptyRequest).onSuccess {
-                it.collect {
-                    if (liveTabState.value == SearchTabState.MY_RECIPE) {
-                        updateSearchKeyword()
-                    }
+            val updateFlow = getRecipeUpdateFlowUseCase(EmptyRequest)
+            updateFlow.collect {
+                if (liveTabState.value == SearchTabState.MY_RECIPE) {
+                    updateSearchKeyword()
                 }
             }
         }
