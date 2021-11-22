@@ -9,6 +9,7 @@ import com.kdjj.presentation.common.RecipeStepValidator
 import com.kdjj.presentation.common.RecipeValidator
 import com.kdjj.presentation.common.calculateSeconds
 import java.lang.Exception
+import java.util.*
 
 internal sealed class RecipeEditorItem {
 
@@ -26,6 +27,33 @@ internal sealed class RecipeEditorItem {
         val liveStuffState: LiveData<Boolean>,
         val state: RecipeState
     ) : RecipeEditorItem() {
+
+        override fun equals(other: Any?): Boolean {
+            return when (other) {
+                is RecipeMetaModel -> {
+                    this.liveTitle.value == other.liveTitle.value && this.liveRecipeTypeInt.value == other.liveRecipeTypeInt.value &&
+                        this.liveStuff.value == other.liveStuff.value && this.liveRecipeImgPath.value == other.liveRecipeImgPath.value &&
+                            this.recipeId == other.recipeId && this.uploadId == other.uploadId && this.viewCount == other.viewCount &&
+                                this.isFavorite == other.isFavorite && this.state == other.state
+                }
+                else -> false
+            }
+        }
+
+        override fun hashCode(): Int {
+            return Objects.hash(
+                liveTitle,
+                liveRecipeTypeInt,
+                liveStuff,
+                liveRecipeImgPath,
+                recipeId,
+                viewCount,
+                isFavorite,
+                liveTitleState,
+                liveStuffState,
+                state
+            )
+        }
 
         companion object {
 
@@ -69,6 +97,30 @@ internal sealed class RecipeEditorItem {
 
         val stepId: String
     ) : RecipeEditorItem() {
+
+        override fun equals(other: Any?): Boolean {
+            return when (other) {
+                is RecipeStepModel -> {
+                    this.liveName.value == other.liveName.value && this.liveTypeInt.value == other.liveTypeInt.value &&
+                        this.liveDescription.value == other.liveDescription.value && this.liveImgPath.value == other.liveImgPath.value &&
+                            this.liveTimerMin.value == other.liveTimerMin.value && this.liveTimerSec.value == other.liveTimerSec.value &&
+                                this.stepId == other.stepId
+                }
+                else -> false
+            }
+        }
+
+        override fun hashCode(): Int {
+            return Objects.hash(
+                liveName,
+                liveTypeInt,
+                liveDescription,
+                liveImgPath,
+                liveTimerMin,
+                liveTimerSec,
+                stepId
+            )
+        }
 
         companion object {
 

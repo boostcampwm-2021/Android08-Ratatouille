@@ -49,5 +49,5 @@ class RecipeListItemModelDiffCallback : DiffUtil.ItemCallback<RecipeListItemMode
         oldItem.recipeId == newItem.recipeId
 
     override fun areContentsTheSame(oldItem: RecipeListItemModel, newItem: RecipeListItemModel): Boolean =
-        true
+        oldItem == newItem
 }
