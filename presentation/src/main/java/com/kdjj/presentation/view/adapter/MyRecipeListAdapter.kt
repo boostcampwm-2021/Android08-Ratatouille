@@ -69,6 +69,7 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
         fun bind(item: MyRecipeItem.MyRecipe) {
             binding.myRecipeViewModel = viewModel
             binding.myRecipeItem = item
+            binding.executePendingBindings()
         }
 
         fun onViewRecycled() {
@@ -78,13 +79,20 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
 
     inner class AddRecipeViewHolder(private val binding: ItemMyRecipeAddRecipeBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        init {
+
+        fun bind(){
             binding.myRecipeViewModel = viewModel
+            binding.executePendingBindings()
         }
     }
 
     inner class ProgressViewHolder(private val binding: ItemMyRecipeProgressBinding) :
-        RecyclerView.ViewHolder(binding.root) { }
+        RecyclerView.ViewHolder(binding.root) {
+
+            fun bind(){
+                binding.executePendingBindings()
+            }
+        }
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
@@ -128,6 +136,8 @@ internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = getItem(position)) {
             is MyRecipeItem.MyRecipe -> (holder as MyRecipeViewHolder).bind(item)
+            is MyRecipeItem.PlusButton -> (holder as AddRecipeViewHolder).bind()
+            is MyRecipeItem.Progress -> (holder as ProgressViewHolder).bind()
         }
     }
 

@@ -1,6 +1,7 @@
 package com.kdjj.presentation.view.home.my
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -96,6 +97,7 @@ class MyRecipeFragment : Fragment() {
     private fun initSwipeRefreshLayout() {
         binding.swipeRefreshLayoutMy.apply {
             setOnRefreshListener {
+                Log.d("aa", "refresh")
                 viewModel.refreshRecipeList()
                 isRefreshing = false
             }
@@ -115,11 +117,11 @@ class MyRecipeFragment : Fragment() {
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-
                     val lastVisibleItemPosition = (layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
                     val lastItemPosition = myRecipeAdapter.itemCount - 1
                     if (lastVisibleItemPosition == lastItemPosition && myRecipeAdapter.itemCount != 0 && dy > 0) {
-                        viewModel.fetchMoreRecipeData(lastVisibleItemPosition)
+                        Log.d("aa", "paging")
+                        viewModel.fetchRecipeList(lastVisibleItemPosition)
                     }
                 }
             })

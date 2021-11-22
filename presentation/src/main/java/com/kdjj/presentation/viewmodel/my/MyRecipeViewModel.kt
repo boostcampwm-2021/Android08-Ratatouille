@@ -28,7 +28,7 @@ internal class MyRecipeViewModel @Inject constructor(
     private val _liveSortType = MutableLiveData<SortType>()
     val liveSortType: LiveData<SortType> get() = _liveSortType
 
-    private val _liveRecipeItemList = MutableLiveData<List<MyRecipeItem>>(listOf())
+    private val _liveRecipeItemList = MutableLiveData<List<MyRecipeItem>>()
     val liveRecipeItemList: LiveData<List<MyRecipeItem>> get() = _liveRecipeItemList
 
     private val _liveRecipeItemSelected = MutableLiveData<MyRecipeItem.MyRecipe?>()
@@ -55,11 +55,70 @@ internal class MyRecipeViewModel @Inject constructor(
             getRecipeUpdateStateRequest(EmptyRequest)
                 .onSuccess {
                     it.collect {
+                        Log.d("aa", "collect")
                         refreshRecipeList()
                     }
                 }
         }
     }
+
+    private fun initFetching() {
+        _liveRecipeItemList.value = listOf()
+        isFetching = false
+    }
+
+    fun setSortType(sortType: SortType) {
+        if (_liveSortType.value != sortType) {
+            _liveSortType.value = sortType
+            initFetching()
+            fetchRecipeList(0)
+        }
+    }
+
+    fun refreshRecipeList() {
+        initFetching()
+        fetchRecipeList(0)
+    }
+
+    fun fetchRecipeList(page: Int) {
+        Log.d("aa", "fetchRecipeList")
+        if (isFetching && page > 0) return
+        isFetching = true
+
+        viewModelScope.launch {
+            when (_liveSortType.value) {
+                SortType.SORT_BY_TIME ->
+                    latestRecipeUseCase(FetchLocalLatestRecipeListRequest(page))
+                SortType.SORT_BY_FAVORITE ->
+                    favoriteRecipeUseCase(FetchLocalFavoriteRecipeListRequest(page))
+                SortType.SORT_BY_NAME ->
+                    titleRecipeUseCase(FetchLocalTitleRecipeListRequest(page))
+                else -> return@launch
+            }.onSuccess { fetchedRecipeList ->
+                val myRecipeList = fetchedRecipeList.map { MyRecipeItem.MyRecipe(it) }
+                _liveRecipeItemList.value?.let {
+                    if (page == 0) {
+                        _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + myRecipeList
+                    } else {
+                        _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
+                    }
+                }
+            }.onFailure {
+                _liveRecipeItemList.value = listOf()
+                _eventDataLoadFailed.value = Event(Unit)
+            }
+            isFetching = false
+        }
+    }
+
+//    private fun notifyRecipeDataSetChanged(isSuccess: Boolean) {
+//        if (isSuccess) {
+//            _liveRecipeItemList.value =
+//                listOf(MyRecipeItem.PlusButton) + recipeList
+//        } else {
+//            _liveRecipeItemList.value = listOf()
+//        }
+//    }
 
     fun recipeItemSelected(selectedRecipe: MyRecipeItem.MyRecipe) {
         if (_liveRecipeItemSelected.value != selectedRecipe) {
@@ -69,128 +128,11 @@ internal class MyRecipeViewModel @Inject constructor(
         }
     }
 
-    private fun fetchLocalLatestRecipeList(page: Int) {
-        if (_liveSortType.value == SortType.SORT_BY_TIME && page > 0 && isFetching) return
-        isFetching = true
-        viewModelScope.launch {
-            latestRecipeUseCase(FetchLocalLatestRecipeListRequest(page))
-                .onSuccess { latestRecipeList ->
-                    if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_TIME && page > 0) {
-                        hideProgress()
-                        val myRecipeList = latestRecipeList.map { MyRecipeItem.MyRecipe(it) }
-                        _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
-                    } else {
-                        val myRecipeList = latestRecipeList.map { MyRecipeItem.MyRecipe(it) }
-                        _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + myRecipeList
-                        _liveSortType.value = SortType.SORT_BY_TIME
-                        _liveRecipeItemSelected.value = null
-                    }
-                }
-                .onFailure {
-                    hideProgress()
-                    _liveSortType.value = SortType.SORT_BY_TIME
-                    _eventDataLoadFailed.value = Event(Unit)
-                }
-            isFetching = false
-        }
-    }
-
-    private fun fetchLocalFavoriteRecipeList(page: Int) {
-        if (_liveSortType.value == SortType.SORT_BY_FAVORITE && page > 0 && isFetching) return
-        viewModelScope.launch {
-            favoriteRecipeUseCase(FetchLocalFavoriteRecipeListRequest(page))
-                .onSuccess { favoriteRecipeList ->
-                    if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_FAVORITE && page > 0) {
-                        hideProgress()
-                        val myRecipeList = favoriteRecipeList.map { MyRecipeItem.MyRecipe(it) }
-                        _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
-                    } else {
-                        val myRecipeList = favoriteRecipeList.map { MyRecipeItem.MyRecipe(it) }
-                        _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + myRecipeList
-                        _liveSortType.value = SortType.SORT_BY_FAVORITE
-                        _liveRecipeItemSelected.value = null
-                    }
-                }
-                .onFailure {
-                    hideProgress()
-                    _liveSortType.value = SortType.SORT_BY_FAVORITE
-                    _eventDataLoadFailed.value = Event(Unit)
-                }
-            isFetching = false
-        }
-    }
-
-    private fun fetchLocalTitleRecipeList(page: Int) {
-        if (_liveSortType.value == SortType.SORT_BY_NAME && page > 0 && isFetching) return
-        viewModelScope.launch {
-            titleRecipeUseCase(FetchLocalTitleRecipeListRequest(page))
-                .onSuccess { titleRecipeList ->
-                    if (_liveRecipeItemList.value?.isNotEmpty() == true && _liveSortType.value == SortType.SORT_BY_NAME && page > 0) {
-                        hideProgress()
-                        val myRecipeList = titleRecipeList.map { MyRecipeItem.MyRecipe(it) }
-                        _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(myRecipeList)
-                    } else {
-                        val myRecipeList = titleRecipeList.map { MyRecipeItem.MyRecipe(it) }
-                        _liveRecipeItemList.value = listOf(MyRecipeItem.PlusButton) + myRecipeList
-                        _liveSortType.value = SortType.SORT_BY_NAME
-                        _liveRecipeItemSelected.value = null
-                    }
-                }
-                .onFailure {
-                    hideProgress()
-                    _liveSortType.value = SortType.SORT_BY_NAME
-                    _eventDataLoadFailed.value = Event(Unit)
-                }
-            isFetching = false
-        }
-    }
-
     fun moveToRecipeEditorActivity() {
         _eventAddRecipeHasPressed.value = Event(Unit)
     }
 
     fun moveToRecipeSearchFragment() {
         _eventSearchIconClicked.value = Event(Unit)
-    }
-
-    fun fetchMoreRecipeData(page: Int) {
-        showProgress()
-        when (_liveSortType.value) {
-            SortType.SORT_BY_TIME -> fetchLocalLatestRecipeList(page)
-            SortType.SORT_BY_FAVORITE -> fetchLocalFavoriteRecipeList(page)
-            SortType.SORT_BY_NAME -> fetchLocalTitleRecipeList(page)
-        }
-    }
-
-    fun refreshRecipeList() {
-        _liveSortType.value?.let {
-            when (it) {
-                SortType.SORT_BY_TIME -> fetchLocalLatestRecipeList(0)
-                SortType.SORT_BY_FAVORITE -> fetchLocalFavoriteRecipeList(0)
-                SortType.SORT_BY_NAME -> fetchLocalTitleRecipeList(0)
-            }
-        }
-    }
-
-    fun setSortType(sortType: SortType) {
-        if (_liveSortType.value != sortType) {
-            when (sortType) {
-                SortType.SORT_BY_TIME -> fetchLocalLatestRecipeList(0)
-                SortType.SORT_BY_FAVORITE -> fetchLocalFavoriteRecipeList(0)
-                SortType.SORT_BY_NAME -> fetchLocalTitleRecipeList(0)
-            }
-        }
-    }
-
-    private fun showProgress() {
-        _liveRecipeItemList.value = _liveRecipeItemList.value?.plus(MyRecipeItem.Progress)
-    }
-
-    private fun hideProgress() {
-        _liveRecipeItemList.value?.let {
-            if (it.lastOrNull() == MyRecipeItem.Progress) {
-                _liveRecipeItemList.value = it.subList(0, it.size - 1)
-            }
-        }
     }
 }
