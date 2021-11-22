@@ -39,8 +39,11 @@ class OthersViewModel @Inject constructor(
         _liveFetchLock.value = false
     }
 
-    private var _eventShowSnackBar = MutableLiveData<Event<String?>>()
-    val eventShowSnackBar: LiveData<Event<String?>> get() = _eventShowSnackBar
+    private var _eventNetworkFail = MutableLiveData<Event<Unit>>()
+    val eventNetworkFail: LiveData<Event<Unit>> get() = _eventNetworkFail
+
+    private var _eventApiFail = MutableLiveData<Event<Unit>>()
+    val eventApiFail: LiveData<Event<Unit>> get() = _eventApiFail
 
     private var _eventSearchIconClicked = MutableLiveData<Event<Unit>>()
     val eventSearchIconClicked: LiveData<Event<Unit>> get() = _eventSearchIconClicked
@@ -60,7 +63,6 @@ class OthersViewModel @Inject constructor(
         }
     }
 
-    // 리스트 Fetch 관련 모든 설정을 초기화
     private fun initFetching() {
         fetchingJob?.cancel()
         _liveFetchLock.value = false
@@ -117,12 +119,13 @@ class OthersViewModel @Inject constructor(
                 else _liveRecipeList.value = it.plus(othersRecipeModelList)
             }
         }.onFailure {
-            // view 에게 알리기
             _liveFetchLock.value = false
             when (it) {
-                is NetworkException,
+                is NetworkException -> {
+                    _eventNetworkFail.value = Event(Unit)
+                }
                 is ApiException -> {
-                    _eventShowSnackBar.value = Event(it.message)
+                    _eventApiFail.value = Event(Unit)
                 }
             }
         }
