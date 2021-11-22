@@ -59,7 +59,7 @@ internal class RecipeRepositoryImpl @Inject constructor(
     
     override fun getLocalRecipeFlow(
         recipeId: String
-    ): Result<Flow<Recipe>> {
+    ): Flow<Recipe> {
         return recipeLocalDataSource.getRecipeFlow(recipeId)
     }
 
