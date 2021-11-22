@@ -109,7 +109,7 @@ internal class MyRecipeViewModel @Inject constructor(
                     }
                 }
             }.onFailure {
-                if (!(it is CancellationException)) {
+                if (it !is CancellationException) {
                     _eventDataLoadFailed.value = Event(Unit)
                 }
             }
