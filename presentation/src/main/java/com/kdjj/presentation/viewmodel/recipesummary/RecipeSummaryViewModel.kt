@@ -95,10 +95,10 @@ class RecipeSummaryViewModel @Inject constructor(
                     RecipeState.CREATE,
                     RecipeState.UPLOAD,
                     RecipeState.DOWNLOAD -> {
-                        val recipeFlow = getLocalRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
-                        recipeFlow.collect { recipe ->
-                            _liveRecipe.value = recipe
-                        }
+                        getLocalRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
+                                .collect { recipe ->
+                                    _liveRecipe.value = recipe
+                                }
                     }
                     RecipeState.NETWORK -> {
                         fetchRemoteRecipeUseCase(FetchRemoteRecipeRequest(recipeId))

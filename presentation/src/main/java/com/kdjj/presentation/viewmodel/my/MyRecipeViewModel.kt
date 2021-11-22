@@ -65,11 +65,10 @@ internal class MyRecipeViewModel @Inject constructor(
         setSortType(SortType.SORT_BY_TIME)
 
         viewModelScope.launch {
-            val updateFlow = getRecipeUpdateFlowRequest(EmptyRequest)
-            updateFlow.collect {
-                refreshRecipeList()
-            }
-
+            getRecipeUpdateFlowRequest(EmptyRequest)
+                    .collect {
+                        refreshRecipeList()
+                    }
         }
     }
 
