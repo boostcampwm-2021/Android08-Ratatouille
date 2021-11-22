@@ -6,10 +6,9 @@ import com.kdjj.domain.model.request.*
 import com.kdjj.domain.usecase.*
 import dagger.Binds
 import dagger.Module
-import kotlinx.coroutines.flow.Flow
 
 @Module
-abstract class UseCaseModule {
+abstract class ResultUseCaseModule {
 
     @Binds
     internal abstract fun bindDeleteLocalRecipeUseCase(
@@ -85,16 +84,6 @@ abstract class UseCaseModule {
     internal abstract fun bindDeleteRemoteRecipeUseCase(
         deleteRemoteRecipeUseCase: DeleteRemoteRecipeUseCase
     ): ResultUseCase<DeleteRemoteRecipeRequest, Unit>
-
-    @Binds
-    internal abstract fun bindGetLocalRecipeFlowUseCase(
-        getLocalRecipeFlowUseCase: GetLocalRecipeFlowUseCase
-    ): FlowUseCase<GetLocalRecipeFlowRequest, Recipe>
-
-    @Binds
-    internal abstract fun bindGetRecipeUpdateFlowUseCase(
-        getRecipeUpdateFlowUseCase: GetRecipeUpdateFlowUseCase
-    ): FlowUseCase<EmptyRequest, Int>
 
     @Binds
     internal abstract fun bindFetchRemoteRecipeUseCase(
