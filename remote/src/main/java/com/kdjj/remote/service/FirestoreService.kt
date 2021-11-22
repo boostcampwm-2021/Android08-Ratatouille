@@ -1,8 +1,8 @@
 package com.kdjj.remote.service
 
-import com.kdjj.domain.model.RecipeType
+import com.kdjj.remote.dto.RecipeTypeDto
 
 internal interface FirestoreService {
-    
-    suspend fun fetchRecipeTypes(): List<RecipeType>
+
+    suspend fun fetchRecipeTypes(): List<RecipeTypeDto>
 }

@@ -1,10 +1,10 @@
 package com.kdjj.remote.service
 
-import com.google.firebase.firestore.*
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.toObject
-import com.kdjj.domain.model.Recipe
 import com.kdjj.remote.dto.RecipeDto
-import com.kdjj.remote.dto.toDomain
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -20,7 +20,7 @@ internal class RecipeListServiceImpl @Inject constructor(
 
     override suspend fun fetchLatestRecipeListAfter(
         refresh: Boolean
-    ): List<Recipe> =
+    ): List<RecipeDto> =
         withContext(Dispatchers.IO) {
             if (refresh) {
                 latestListQuery = null
@@ -38,13 +38,13 @@ internal class RecipeListServiceImpl @Inject constructor(
                     .limit(PAGING_SIZE)
             }
             querySnapshot.map {
-                it.toObject<RecipeDto>().toDomain()
+                it.toObject<RecipeDto>()
             }
         }
 
     override suspend fun fetchPopularRecipeListAfter(
         refresh: Boolean
-    ): List<Recipe> =
+    ): List<RecipeDto> =
         withContext(Dispatchers.IO) {
             if (refresh) {
                 popularListQuery = null
@@ -62,14 +62,14 @@ internal class RecipeListServiceImpl @Inject constructor(
                     .limit(PAGING_SIZE)
             }
             querySnapshot.map {
-                it.toObject<RecipeDto>().toDomain()
+                it.toObject<RecipeDto>()
             }
         }
-    
+
     override suspend fun fetchSearchRecipeListAfter(
         keyword: String,
         refresh: Boolean
-    ): List<Recipe> =
+    ): List<RecipeDto> =
         withContext(Dispatchers.IO) {
             if (refresh) {
                 searchListQuery = null
@@ -91,12 +91,12 @@ internal class RecipeListServiceImpl @Inject constructor(
                     .limit(PAGING_SIZE)
             }
             querySnapshot.map {
-                it.toObject<RecipeDto>().toDomain()
+                it.toObject<RecipeDto>()
             }
         }
-    
+
     companion object {
-        
+
         const val HANGLE_MAX_VALUE = "힣"
         const val FIELD_TITLE = "title"
         const val FIELD_CREATE_TIME = "createTime"
