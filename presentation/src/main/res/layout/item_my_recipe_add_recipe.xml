@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="myRecipeViewModel"
             type="com.kdjj.presentation.viewmodel.my.MyRecipeViewModel" />
@@ -13,13 +14,12 @@
         android:layout_height="wrap_content">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="@dimen/myRecipe_cardView_width"
-            android:layout_height="@dimen/myRecipe_cardView_height"
-            android:layout_marginTop="@dimen/myRecipe_cardView_marginTop"
-            android:layout_marginBottom="@dimen/myRecipe_cardView_marginBottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             app:cardBackgroundColor="@color/light_500"
             app:cardCornerRadius="@dimen/myRecipe_cardView_corner"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -32,8 +32,8 @@
                 android:clickable="true"
                 android:contentDescription="@string/addRecipeButton"
                 android:focusable="true"
-                android:scaleType="center"
                 android:onClick="@{() ->  myRecipeViewModel.moveToRecipeEditorActivity()}"
+                android:scaleType="center"
                 android:src="@drawable/ic_round_add_24" />
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

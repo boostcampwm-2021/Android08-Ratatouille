@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="myRecipeViewModel"
             type="com.kdjj.presentation.viewmodel.my.MyRecipeViewModel" />
@@ -12,32 +13,35 @@
             type="com.kdjj.presentation.model.MyRecipeItem.MyRecipe" />
 
         <import type="android.widget.ImageView" />
+
         <import type="android.view.View" />
-        <import type="com.kdjj.presentation.common.UtilsKt"/>
+
+        <import type="com.kdjj.presentation.common.UtilsKt" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+      >
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardView_myRecipe"
-            android:layout_width="@dimen/myRecipe_cardView_width"
-            android:layout_height="@dimen/myRecipe_cardView_height"
-            android:layout_marginTop="@dimen/myRecipe_cardView_marginTop"
-            android:layout_marginBottom="@dimen/myRecipe_cardView_marginBottom"
-            app:cardBackgroundColor="@color/light_500"
-            app:cardCornerRadius="@dimen/myRecipe_cardView_corner"
-            android:onClick="@{ ()-> myRecipeViewModel.recipeItemSelected(myRecipeItem)}"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:clickable="true"
             android:focusable="true"
-            app:strokeColor="@color/blue_600"
-            app:strokeWidth="@{myRecipeViewModel.liveRecipeItemSelected == myRecipeItem ?6 : 0}"
+            app:layout_constraintDimensionRatio="1:1"
+            android:onClick="@{ ()-> myRecipeViewModel.recipeItemSelected(myRecipeItem)}"
+            app:cardBackgroundColor="@color/light_500"
+            app:cardCornerRadius="@dimen/myRecipe_cardView_corner"
             app:layout_constraintBottom_toBottomOf="parent"
+
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@color/blue_600"
+            app:strokeWidth="@{myRecipeViewModel.liveRecipeItemSelected == myRecipeItem ?6 : 0}">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -53,8 +57,8 @@
                     app:loadImage="@{myRecipeItem.recipe.imgPath}" />
 
                 <TextView
-                    android:layout_width="@dimen/myRecipe_cardView_width"
-                    android:layout_height="@dimen/myRecipe_cardView_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:background="@color/dark_500_tp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -89,23 +93,23 @@
                     android:text="@string/total_time"
                     android:textColor="@color/light_300"
                     android:textSize="@dimen/myRecipe_textView_timeSize"
-                    app:layout_constraintTop_toTopOf="@id/textView_myRecipe_time"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/textView_myRecipe_time"
                     app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintEnd_toStartOf="@id/textView_myRecipe_time"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/textView_myRecipe_time" />
 
                 <TextView
                     android:id="@+id/textView_myRecipe_time"
+                    formatTotalTime="@{UtilsKt.calculateTotalTime(myRecipeItem.recipe)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/myRecipe_time_marginLeft"
                     android:layout_marginTop="@dimen/myRecipe_textView_title_marginTop"
                     android:textColor="@color/light_300"
                     android:textSize="@dimen/myRecipe_textView_timeSize"
-                    android:layout_marginStart="@dimen/myRecipe_time_marginLeft"
-                    formatTotalTime="@{UtilsKt.calculateTotalTime(myRecipeItem.recipe)}"
                     app:layout_constraintBottom_toTopOf="@id/textView_myRecipe_description"
-                    app:layout_constraintStart_toEndOf="@id/textView_time_title"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/textView_time_title"
                     app:layout_constraintTop_toBottomOf="@id/textView_myRecipe_title" />
 
                 <TextView
