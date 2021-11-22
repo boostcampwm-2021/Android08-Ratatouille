@@ -69,8 +69,9 @@ class RecipeSummaryActivity : AppCompatActivity() {
         
         initViewModel()
         initObserver()
+        initEventObserver()
     }
-    
+
     private fun initObserver() = with(recipeSummaryViewModel) {
 
         liveRecipe.observe(this@RecipeSummaryActivity) { recipe ->
@@ -84,7 +85,9 @@ class RecipeSummaryActivity : AppCompatActivity() {
                 loadingDialog.dismiss()
             }
         }
+    }
 
+    private fun initEventObserver() = with(recipeSummaryViewModel){
         eventRecipeSummary.observe(this@RecipeSummaryActivity, EventObserver{
             when(it){
                 is RecipeSummaryViewModel.RecipeSummaryEvent.LoadError -> {
@@ -158,7 +161,7 @@ class RecipeSummaryActivity : AppCompatActivity() {
             }
         })
     }
-    
+
     private fun initFloatingMenuVisibility(buttonList: List<AppCompatButton>?) = with(binding) {
         allFloatingButtonList.map { buttonId ->
             findViewById<AppCompatButton>(buttonId)
