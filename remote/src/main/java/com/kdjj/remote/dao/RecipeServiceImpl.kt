@@ -1,6 +1,7 @@
 package com.kdjj.remote.dao
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.toObject
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.exception.ApiException
@@ -51,7 +52,7 @@ internal class RecipeServiceImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             val documentSnapShot = firestore.collection(RECIPE_COLLECTION_ID)
                 .document(recipeID)
-                .get()
+                .get(Source.SERVER)
                 .await()
             documentSnapShot.toObject<RecipeDto>()?.toDomain() ?: throw Exception()
         }
