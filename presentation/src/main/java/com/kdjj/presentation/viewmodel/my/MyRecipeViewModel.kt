@@ -11,6 +11,7 @@ import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.MyRecipeItem
 import com.kdjj.presentation.model.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -108,7 +109,9 @@ internal class MyRecipeViewModel @Inject constructor(
                     }
                 }
             }.onFailure {
-                _eventDataLoadFailed.value = Event(Unit)
+                if (!(it is CancellationException)) {
+                    _eventDataLoadFailed.value = Event(Unit)
+                }
             }
             isFetching = false
         }
