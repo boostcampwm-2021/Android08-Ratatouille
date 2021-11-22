@@ -36,7 +36,7 @@ internal class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewMo
             override fun areContentsTheSame(
                 oldItem: RecipeEditorItem,
                 newItem: RecipeEditorItem
-            ): Boolean = true
+            ): Boolean = oldItem == newItem
         }
     ) {
 
