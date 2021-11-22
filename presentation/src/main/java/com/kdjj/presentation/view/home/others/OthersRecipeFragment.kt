@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.kdjj.domain.model.*
-import com.kdjj.domain.model.exception.ApiException
-import com.kdjj.domain.model.exception.NetworkException
 import com.kdjj.presentation.R
 import com.kdjj.presentation.common.EventObserver
 import com.kdjj.presentation.common.RECIPE_ID
@@ -112,8 +110,11 @@ class OthersRecipeFragment : Fragment() {
     }
 
     private fun observeNetworkEvent() {
-        viewModel.eventShowSnackBar.observe(viewLifecycleOwner, EventObserver {
-            showSnackBar(it ?: getString(R.string.severErrorMessage))
+        viewModel.eventNetworkFail.observe(viewLifecycleOwner, EventObserver {
+            showSnackBar(getString(R.string.networkErrorMessage))
+        })
+        viewModel.eventApiFail.observe(viewLifecycleOwner, EventObserver {
+            showSnackBar(getString(R.string.severErrorMessage))
         })
     }
 
