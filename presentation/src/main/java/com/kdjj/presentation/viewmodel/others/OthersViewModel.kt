@@ -12,8 +12,10 @@ import com.kdjj.domain.model.request.FetchRemotePopularRecipeListRequest
 import com.kdjj.domain.usecase.UseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.RecipeListItemModel
+import com.kdjj.presentation.model.ResponseError
 import com.kdjj.presentation.model.toRecipeListItemModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,11 +41,8 @@ class OthersViewModel @Inject constructor(
         _liveFetchLock.value = false
     }
 
-    private var _eventNetworkFail = MutableLiveData<Event<Unit>>()
-    val eventNetworkFail: LiveData<Event<Unit>> get() = _eventNetworkFail
-
-    private var _eventApiFail = MutableLiveData<Event<Unit>>()
-    val eventApiFail: LiveData<Event<Unit>> get() = _eventApiFail
+    private var _eventShowSnackBar = MutableLiveData<Event<ResponseError>>()
+    val eventShowSnackBar: LiveData<Event<ResponseError>> get() = _eventShowSnackBar
 
     private var _eventSearchIconClicked = MutableLiveData<Event<Unit>>()
     val eventSearchIconClicked: LiveData<Event<Unit>> get() = _eventSearchIconClicked
@@ -122,11 +121,13 @@ class OthersViewModel @Inject constructor(
             _liveFetchLock.value = false
             when (it) {
                 is NetworkException -> {
-                    _eventNetworkFail.value = Event(Unit)
+                    _eventShowSnackBar.value = Event(ResponseError.NETWORK_CONNECTION)
                 }
                 is ApiException -> {
-                    _eventApiFail.value = Event(Unit)
+                    _eventShowSnackBar.value = Event(ResponseError.SERVER)
                 }
+                is CancellationException -> {}
+                else -> _eventShowSnackBar.value = Event(ResponseError.UNKNOWN)
             }
         }
     }

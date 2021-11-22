@@ -55,6 +55,7 @@
     <string name="networkErrorMessage">네트워크와 연결이 끊어졌습니다.</string>
     <string name="severErrorMessage">서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="dataLoadFailMessage">데이터 로드에 실패하였습니다.</string>
+    <string name="unknownErrorMessage">예상치 못한 에러가 발생했습니다. 다시 시도해 주세요.</string>
     <string name="refresh">새로고침</string>
 
     <string name="othersRecipe">남의 레시피</string>
