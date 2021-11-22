@@ -1,9 +1,6 @@
 package com.kdjj.presentation.viewmodel.recipeeditor
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.RecipeStepType
@@ -38,10 +35,11 @@ internal class RecipeEditorViewModel @Inject constructor(
 ) : ViewModel() {
 
     private lateinit var recipeMetaModel: RecipeEditorItem.RecipeMetaModel
-    private var recipeStepModelList = listOf<RecipeEditorItem.RecipeStepModel>()
+    private val _liveStepModelList = MutableLiveData<List<RecipeEditorItem.RecipeStepModel>>()
 
-    private val _liveRecipeItemList = MutableLiveData<List<RecipeEditorItem>>()
-    val liveRecipeItemList: LiveData<List<RecipeEditorItem>> get() = _liveRecipeItemList
+    val liveRecipeItemList: LiveData<List<RecipeEditorItem>> = _liveStepModelList.map {
+        listOf(recipeMetaModel) + it + RecipeEditorItem.PlusButton
+    }
 
     val stepTypes = RecipeStepType.values()
     private val _liveRecipeTypes = MutableLiveData<List<RecipeType>>()
@@ -83,20 +81,19 @@ internal class RecipeEditorViewModel @Inject constructor(
                             val (metaModel, stepList) =
                                 recipe.toPresentation(recipeValidator, recipeTypes, recipeStepValidator)
                             recipeMetaModel = metaModel
-                            recipeStepModelList = stepList
+                            _liveStepModelList.value = stepList
                             isEditing = true
 
                         } ?: run {
                             recipeMetaModel = RecipeEditorItem.RecipeMetaModel.create(
                                 idGenerator, recipeValidator
                             )
-                            recipeStepModelList = listOf(
+                            _liveStepModelList.value = listOf(
                                 RecipeEditorItem.RecipeStepModel.create(
                                     idGenerator, recipeStepValidator
                                 )
                             )
                         }
-                        notifyStepListChange()
                     }
                     .onFailure {
                         _eventError.value = Event(Unit)
@@ -104,11 +101,6 @@ internal class RecipeEditorViewModel @Inject constructor(
             _liveLoading.value = false
         }
         isInitialized = true
-    }
-
-    private fun notifyStepListChange() {
-        _liveRecipeItemList.value =
-            listOf(recipeMetaModel) + recipeStepModelList + RecipeEditorItem.PlusButton
     }
 
     fun startSelectImage(model: RecipeEditorItem) {
@@ -142,23 +134,24 @@ internal class RecipeEditorViewModel @Inject constructor(
     }
 
     fun addRecipeStep() {
-        recipeStepModelList = recipeStepModelList +
+        _liveStepModelList.value = (_liveStepModelList.value ?: listOf()) +
                 RecipeEditorItem.RecipeStepModel.create(idGenerator, recipeStepValidator)
-        notifyStepListChange()
-        _liveMoveToPosition.value = recipeStepModelList.size + 2
+        _liveMoveToPosition.value = (_liveStepModelList.value?.size ?: 0) + 2
     }
 
     fun removeRecipeStep(position: Int) {
-        recipeStepModelList = recipeStepModelList.subList(0, position - 1) +
-                recipeStepModelList.subList(position, recipeStepModelList.size)
-        notifyStepListChange()
+        _liveStepModelList.value?.let { modelList ->
+            _liveStepModelList.value = modelList.subList(0, position - 1) +
+                    modelList.subList(position, modelList.size)
+        }
     }
 
     fun changeRecipeStepPosition(from: Int, to: Int) {
-        recipeStepModelList = recipeStepModelList.toMutableList().apply {
-            set(from - 1, set(to - 1, get(from - 1)))
+        _liveStepModelList.value?.let { modelList ->
+            _liveStepModelList.value = modelList.toMutableList().apply {
+                set(from - 1, set(to - 1, get(from - 1)))
+            }
         }
-        notifyStepListChange()
     }
 
     fun saveRecipe() {
@@ -167,7 +160,7 @@ internal class RecipeEditorViewModel @Inject constructor(
             _liveLoading.value = true
             viewModelScope.launch {
                 val recipe = recipeMetaModel.toDomain(
-                    recipeStepModelList,
+                    _liveStepModelList.value ?: listOf(),
                     liveRecipeTypes.value ?: emptyList()
                 )
                 saveRecipeUseCase(SaveLocalRecipeRequest(recipe))
@@ -201,7 +194,7 @@ internal class RecipeEditorViewModel @Inject constructor(
             return false
         }
 
-        recipeStepModelList.forEachIndexed { i, stepModel ->
+        _liveStepModelList.value?.forEachIndexed { i, stepModel ->
             if (stepModel.liveNameState.value != true ||
                 stepModel.liveDescriptionState.value != true ||
                 stepModel.liveTimerMinState.value != true ||
