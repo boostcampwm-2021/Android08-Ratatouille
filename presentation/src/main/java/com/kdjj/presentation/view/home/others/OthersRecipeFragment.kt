@@ -45,13 +45,31 @@ class OthersRecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observeNetworkEvent()
-        observeMoveToSearchEvent()
-        observeRecipeItemClickEvent()
+        setObserver()
         setAdapter()
         setSwipeRefreshLayout()
         setBinding()
         initToolBar()
+    }
+
+    private fun setObserver() {
+        viewModel.eventOtherRecipe.observe(viewLifecycleOwner, EventObserver {
+            when (it) {
+                is OthersViewModel.OtherRecipeEvent.RecipeItemClicked -> {
+                    val bundle = bundleOf(
+                        RECIPE_ID to it.item.recipeId,
+                        RECIPE_STATE to it.item.state
+                    )
+                    navigation.navigate(R.id.action_othersFragment_to_recipeSummaryActivity, bundle)
+                }
+                is OthersViewModel.OtherRecipeEvent.SearchIconClicked -> {
+                    navigation.navigate(R.id.action_othersFragment_to_searchRecipeFragment)
+                }
+                is OthersViewModel.OtherRecipeEvent.ShowSnackBar -> {
+                    showSnackBar(getString(it.error.stringRes))
+                }
+            }
+        })
     }
 
     private fun setBinding() {
@@ -65,8 +83,8 @@ class OthersRecipeFragment : Fragment() {
         binding.toolbarOthers.apply {
             title = getString(R.string.others)
             inflateMenu(R.menu.toolbar_menu_search_item)
-            setOnMenuItemClickListener{
-                when(it.itemId){
+            setOnMenuItemClickListener {
+                when (it.itemId) {
                     R.id.item_search -> {
                         viewModel.moveToRecipeSearchFragment()
                         true
@@ -89,7 +107,8 @@ class OthersRecipeFragment : Fragment() {
                     super.onScrolled(recyclerView, dx, dy)
 
                     recyclerViewOthersRecipe.adapter?.let { adapter ->
-                        val lastVisibleItemPosition = (recyclerViewOthersRecipe.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+                        val lastVisibleItemPosition =
+                            (recyclerViewOthersRecipe.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
                         val lastItemPosition = adapter.itemCount - 1
                         if (lastVisibleItemPosition == lastItemPosition && adapter.itemCount != 0 && dy > 0) {
                             this@OthersRecipeFragment.viewModel.fetchNextRecipeListPage(false)
@@ -107,28 +126,6 @@ class OthersRecipeFragment : Fragment() {
                 swipeRefreshLayoutOthers.isRefreshing = false
             }
         }
-    }
-
-    private fun observeNetworkEvent() {
-        viewModel.eventShowSnackBar.observe(viewLifecycleOwner, EventObserver {
-            showSnackBar(getString(it.stringRes))
-        })
-    }
-
-    private fun observeMoveToSearchEvent() {
-        viewModel.eventSearchIconClicked.observe(viewLifecycleOwner, EventObserver {
-            navigation.navigate(R.id.action_othersFragment_to_searchRecipeFragment)
-        })
-    }
-
-    private fun observeRecipeItemClickEvent() {
-        viewModel.eventRecipeItemClicked.observe(viewLifecycleOwner, EventObserver {
-            val bundle = bundleOf(
-                RECIPE_ID to it.recipeId,
-                RECIPE_STATE to it.state
-            )
-            navigation.navigate(R.id.action_othersFragment_to_recipeSummaryActivity, bundle)
-        })
     }
 
     private fun showSnackBar(msg: String) {

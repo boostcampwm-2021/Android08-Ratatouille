@@ -50,6 +50,15 @@ class OthersViewModel @Inject constructor(
     private var _eventRecipeItemClicked = MutableLiveData<Event<RecipeListItemModel>>()
     val eventRecipeItemClicked: LiveData<Event<RecipeListItemModel>> get() = _eventRecipeItemClicked
 
+    private var _eventOtherRecipe = MutableLiveData<Event<OtherRecipeEvent>>()
+    val eventOtherRecipe: LiveData<Event<OtherRecipeEvent>> get() = _eventOtherRecipe
+
+    sealed class OtherRecipeEvent {
+        class ShowSnackBar(val error: ResponseError) : OtherRecipeEvent()
+        object SearchIconClicked : OtherRecipeEvent()
+        class RecipeItemClicked(val item: RecipeListItemModel) : OtherRecipeEvent()
+    }
+
     init {
         setChecked(OthersSortType.LATEST)
     }
@@ -121,23 +130,27 @@ class OthersViewModel @Inject constructor(
             _liveFetchLock.value = false
             when (it) {
                 is NetworkException -> {
-                    _eventShowSnackBar.value = Event(ResponseError.NETWORK_CONNECTION)
+                    _eventOtherRecipe.value =
+                        Event(OtherRecipeEvent.ShowSnackBar(ResponseError.NETWORK_CONNECTION))
                 }
                 is ApiException -> {
-                    _eventShowSnackBar.value = Event(ResponseError.SERVER)
+                    _eventOtherRecipe.value =
+                        Event(OtherRecipeEvent.ShowSnackBar(ResponseError.SERVER))
                 }
-                is CancellationException -> {}
-                else -> _eventShowSnackBar.value = Event(ResponseError.UNKNOWN)
+                is CancellationException -> {
+                }
+                else -> _eventOtherRecipe.value =
+                    Event(OtherRecipeEvent.ShowSnackBar(ResponseError.UNKNOWN))
             }
         }
     }
 
     fun moveToRecipeSearchFragment() {
-        _eventSearchIconClicked.value = Event(Unit)
+        _eventOtherRecipe.value = Event(OtherRecipeEvent.SearchIconClicked)
     }
 
     fun recipeItemClick(recipeModel: RecipeListItemModel) {
-        _eventRecipeItemClicked.value = Event(recipeModel)
+        _eventOtherRecipe.value = Event(OtherRecipeEvent.RecipeItemClicked(recipeModel))
     }
 
     enum class OthersSortType {
