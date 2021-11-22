@@ -8,7 +8,9 @@ internal class ConfirmDialogModel(
     private val dialog: AlertDialog,
     title: String,
     content: String,
-    private val onConfirmListener: () -> Unit
+    private val onConfirmListener: () -> Unit,
+    val showCancel: Boolean,
+    private val onCancelListener: (() -> Unit)?
 ) {
     val liveTitle: LiveData<String> = MutableLiveData(title)
     val liveContent: LiveData<String> = MutableLiveData(content)
@@ -16,5 +18,10 @@ internal class ConfirmDialogModel(
     fun onConfirm() {
         dialog.dismiss()
         onConfirmListener()
+    }
+
+    fun onCancel() {
+        dialog.dismiss()
+        onCancelListener?.invoke()
     }
 }

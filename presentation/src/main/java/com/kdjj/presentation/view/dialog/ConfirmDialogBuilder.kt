@@ -12,6 +12,8 @@ internal object ConfirmDialogBuilder {
         context: Context,
         title: String,
         content: String,
+        showCancel: Boolean = false,
+        onCancelListener: (() -> Unit)? = null,
         onConfirmListener: () -> Unit
     ) {
         val binding = DialogConfirmBinding.inflate(LayoutInflater.from(context))
@@ -19,7 +21,16 @@ internal object ConfirmDialogBuilder {
             .setView(binding.root)
             .setCancelable(false)
             .create()
-        binding.model = ConfirmDialogModel(dialog, title, content, onConfirmListener)
+
+        binding.model = ConfirmDialogModel(
+            dialog,
+            title,
+            content,
+            onConfirmListener,
+            showCancel,
+            onCancelListener
+        )
+
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialog.show()
     }
