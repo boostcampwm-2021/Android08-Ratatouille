@@ -3,7 +3,6 @@ package com.kdjj.presentation.viewmodel.recipeeditor
 import androidx.lifecycle.*
 import androidx.work.*
 import com.kdjj.domain.model.Recipe
-import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.RecipeStepType
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.model.request.*
@@ -24,7 +23,7 @@ internal class RecipeEditorViewModel @Inject constructor(
     private val recipeStepValidator: RecipeStepValidator,
     private val saveRecipeUseCase: ResultUseCase<SaveLocalRecipeRequest, Boolean>,
     private val fetchRecipeTypesUseCase: ResultUseCase<EmptyRequest, List<RecipeType>>,
-    private val getLocalRecipeFlowUseCase: FlowUseCase<GetLocalRecipeFlowRequest, Recipe>,
+    private val getLocalRecipeFlowUseCase: FlowUseCase<GetLocalRecipeRequest, Recipe>,
     private val updateRemoteRecipeUseCase: ResultUseCase<UpdateRemoteRecipeRequest, Unit>,
     private val updateLocalRecipeUseCase: ResultUseCase<UpdateLocalRecipeRequest, Unit>,
     private val idGenerator: IdGenerator,
@@ -76,7 +75,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                     _liveRecipeTypes.value = recipeTypes
                     recipeId?.let {
                         val recipeFlow =
-                            getLocalRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
+                            getLocalRecipeFlowUseCase(GetLocalRecipeRequest(recipeId))
                         val recipe = recipeFlow.first()
                         val (metaModel, stepList) =
                             recipe.toPresentation(recipeValidator, recipeTypes, recipeStepValidator)

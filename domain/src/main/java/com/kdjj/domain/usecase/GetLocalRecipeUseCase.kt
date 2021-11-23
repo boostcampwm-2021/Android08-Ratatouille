@@ -6,10 +6,10 @@ import com.kdjj.domain.repository.RecipeRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-internal class GetLocalRecipeFlowUseCase @Inject constructor(
+internal class GetLocalRecipeUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository
-) : FlowUseCase<GetLocalRecipeRequest, Recipe> {
+) : ResultUseCase<GetLocalRecipeRequest, Recipe> {
 
-    override fun invoke(request: GetLocalRecipeRequest): Flow<Recipe> =
-        recipeRepository.getLocalRecipeFlow(request.recipeId)
+    override suspend fun invoke(request: GetLocalRecipeRequest): Result<Recipe> =
+        recipeRepository.getLocalRecipe(request.recipeId)
 }

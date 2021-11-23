@@ -1,5 +1,5 @@
 package com.kdjj.domain.model.request
 
-data class GetLocalRecipeFlowRequest(
+data class GetLocalRecipeRequest(
     val recipeId: String
 ) : Request
