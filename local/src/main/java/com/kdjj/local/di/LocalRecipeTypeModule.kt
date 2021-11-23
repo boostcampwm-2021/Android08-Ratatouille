@@ -26,7 +26,6 @@ abstract class LocalRecipeTypeModule {
         @Singleton
         internal fun provideRecipeTypeDao(
             recipeDatabase: RecipeDatabase
-        ) =
-            recipeDatabase.getRecipeTypeDao()
+        ) = recipeDatabase.getRecipeTypeDao()
     }
 }
