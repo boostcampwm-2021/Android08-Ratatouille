@@ -30,22 +30,22 @@ class RecipeSummaryActivity : AppCompatActivity() {
     private val floatingMenuIdListMap: Map<RecipeSummaryType, List<AppCompatButton>> by lazy {
         mapOf(
             RecipeSummaryType.MY_SAVE_RECIPE to listOf(
-                binding.uploadButtonSummary,
-                binding.deleteButtonSummary,
-                binding.editButtonSummary,
-                binding.favoriteButtonSummary,
+                binding.buttonSummaryUpload,
+                binding.buttonSummaryDelete,
+                binding.buttonSummaryEdit,
+                binding.buttonSummaryFavorite,
             ),
             RecipeSummaryType.OTHER_SERVER_RECIPE to listOf(
-                binding.stealButtonSummary,
-                binding.stealFavoriteButtonSummary,
+                binding.buttonSummarySteal,
+                binding.buttonSummaryStealFavorite,
             ),
             RecipeSummaryType.MY_SERVER_RECIPE to listOf(
-                binding.deleteButtonSummary
+                binding.buttonSummaryDelete
             ),
             RecipeSummaryType.MY_SAVE_OTHER_RECIPE to listOf(
-                binding.deleteButtonSummary,
-                binding.editButtonSummary,
-                binding.favoriteButtonSummary,
+                binding.buttonSummaryDelete,
+                binding.buttonSummaryEdit,
+                binding.buttonSummaryFavorite,
             )
         )
     }
@@ -87,7 +87,7 @@ class RecipeSummaryActivity : AppCompatActivity() {
         liveFabState.observe(this@RecipeSummaryActivity) { (recipeSummaryType, isFabOpen) ->
             val buttonList = floatingMenuIdListMap[recipeSummaryType]
             if (!isInitializeFab) {
-                binding.floatingActionButtonMenuListSummary.visibility = View.GONE
+                binding.groupSummaryFabMenu.visibility = View.GONE
                 buttonList?.forEach { button ->
                     button.visibility = View.VISIBLE
                 }
