@@ -10,6 +10,8 @@
             type="com.kdjj.presentation.viewmodel.recipesummary.RecipeSummaryViewModel" />
 
         <import type="com.kdjj.presentation.common.UtilsKt" />
+
+        <import type="android.widget.ImageView" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,7 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/summary_imageView_height"
                     android:contentDescription="@string/recipeImage"
-                    android:scaleType="centerCrop"
+                    android:scaleType="@{viewModel.liveRecipe.imgPath.empty ? ImageView.ScaleType.CENTER : ImageView.ScaleType.CENTER_CROP}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:loadImage="@{viewModel.liveRecipe.imgPath}"
