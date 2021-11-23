@@ -106,6 +106,7 @@ class RecipeSummaryActivity : AppCompatActivity() {
                         findViewById<AppCompatButton>(id)
                     }
                     initFloatingMenuVisibility(menuButtonList)
+                    initAnimation(menuButtonList)
                 }
 
                 is RecipeSummaryViewModel.RecipeSummaryEvent.OpenRecipeDetail -> {
@@ -173,7 +174,22 @@ class RecipeSummaryActivity : AppCompatActivity() {
             button.visibility = View.VISIBLE
         }
     }
-    
+
+    private fun initAnimation(buttonList: List<AppCompatButton>?) = with(binding) {
+        floatingActionButtonSummary.setOnClickListener {
+            if (isFloatingActionButtonOpen) {
+                buttonList?.reversed()?.forEachIndexed { index, button ->
+                    button.animate().alpha(0.0f).duration = 200L * index
+                }
+            } else {
+                buttonList?.forEachIndexed { index, button ->
+                    button.animate().alpha(1.0f).duration = 200L * index
+                }
+            }
+            isFloatingActionButtonOpen = !isFloatingActionButtonOpen
+        }
+    }
+
     private fun initViewModel() {
         intent.extras?.let { bundle ->
             val recipeId = bundle.getString(RECIPE_ID)
@@ -188,5 +204,10 @@ class RecipeSummaryActivity : AppCompatActivity() {
             message,
             Snackbar.LENGTH_LONG
         ).show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        println("ONDESTORY")
     }
 }
