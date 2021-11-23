@@ -104,4 +104,9 @@ abstract class ResultUseCaseModule {
     internal abstract fun bindSaveRecipeTempUseCase(
         saveRecipeTempUseCase: SaveRecipeTempUseCase
     ) : ResultUseCase<SaveRecipeTempRequest, Unit>
+
+    @Binds
+    internal abstract fun bindGetLocalRecipeUseCase(
+        getLocalRecipeUseCase: GetLocalRecipeUseCase
+    ) : ResultUseCase<GetLocalRecipeRequest, Recipe>
 }

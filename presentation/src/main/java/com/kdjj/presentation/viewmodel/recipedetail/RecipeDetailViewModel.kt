@@ -6,7 +6,7 @@ import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.RecipeStep
 import com.kdjj.domain.model.request.FetchRemoteRecipeRequest
-import com.kdjj.domain.model.request.GetLocalRecipeFlowRequest
+import com.kdjj.domain.model.request.GetLocalRecipeRequest
 import com.kdjj.domain.usecase.FlowUseCase
 import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
     private val ringtone: Ringtone,
-    private val getLocalRecipeFlowUseCase: FlowUseCase<GetLocalRecipeFlowRequest, Recipe>,
+    private val getLocalRecipeFlowUseCase: FlowUseCase<GetLocalRecipeRequest, Recipe>,
     private val fetchRemoteRecipeUseCase: ResultUseCase<FetchRemoteRecipeRequest, Recipe>
 ) : ViewModel() {
 
@@ -87,7 +87,7 @@ class RecipeDetailViewModel @Inject constructor(
                 RecipeState.CREATE,
                 RecipeState.DOWNLOAD,
                 RecipeState.UPLOAD -> {
-                    val recipeFlow = getLocalRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
+                    val recipeFlow = getLocalRecipeFlowUseCase(GetLocalRecipeRequest(recipeId))
                     val recipe = recipeFlow.first()
                     _liveStepList.value = recipe.stepList
                     selectStep(recipe.stepList[0])

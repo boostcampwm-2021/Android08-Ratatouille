@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeSummaryViewModel @Inject constructor(
-    private val getLocalRecipeFlowUseCase: FlowUseCase<GetLocalRecipeFlowRequest, Recipe>,
+    private val getLocalRecipeFlowUseCase: FlowUseCase<GetLocalRecipeRequest, Recipe>,
     private val updateLocalRecipeFavoriteUseCase: ResultUseCase<UpdateLocalRecipeFavoriteRequest, Boolean>,
     private val deleteLocalRecipeUseCase: ResultUseCase<DeleteLocalRecipeRequest, Boolean>,
     private val deleteRemoteRecipeUseCase: ResultUseCase<DeleteRemoteRecipeRequest, Unit>,
@@ -67,7 +67,7 @@ class RecipeSummaryViewModel @Inject constructor(
                     RecipeState.CREATE,
                     RecipeState.UPLOAD,
                     RecipeState.DOWNLOAD -> {
-                        getLocalRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
+                        getLocalRecipeFlowUseCase(GetLocalRecipeRequest(recipeId))
                             .collect { recipe ->
                                 _liveRecipe.value = recipe
                                 updateFabState(recipe)
