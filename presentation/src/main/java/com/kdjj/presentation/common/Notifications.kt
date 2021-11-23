@@ -4,10 +4,23 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.kdjj.domain.model.RecipeStep
 import com.kdjj.presentation.R
 
 object Notifications {
+
+    fun showAlarm(context: Context, step: RecipeStep) {
+        val builder = NotificationCompat.Builder(context, ALARM_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle(context.getString(R.string.timerEnd, step.name))
+            .setContentText(context.getString(R.string.timerEndContent, step.name))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        NotificationManagerCompat.from(context)
+            .notify(step.stepId.hashCode(), builder.build())
+    }
 
     fun createChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -21,7 +34,7 @@ object Notifications {
             val alarmChannel = NotificationChannel(
                 ALARM_CHANNEL_ID,
                 context.getString(R.string.ratatouilleAlarm),
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_HIGH
             )
             NotificationManagerCompat.from(context).createNotificationChannel(alarmChannel)
         }
