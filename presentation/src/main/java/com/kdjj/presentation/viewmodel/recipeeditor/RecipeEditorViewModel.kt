@@ -5,10 +5,7 @@ import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.RecipeStepType
 import com.kdjj.domain.model.RecipeType
-import com.kdjj.domain.model.request.EmptyRequest
-import com.kdjj.domain.model.request.GetLocalRecipeFlowRequest
-import com.kdjj.domain.model.request.SaveLocalRecipeRequest
-import com.kdjj.domain.model.request.UpdateRemoteRecipeRequest
+import com.kdjj.domain.model.request.*
 import com.kdjj.domain.usecase.FlowUseCase
 import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
@@ -31,6 +28,7 @@ internal class RecipeEditorViewModel @Inject constructor(
     private val fetchRecipeTypesUseCase: ResultUseCase<EmptyRequest, List<RecipeType>>,
     private val getLocalRecipeFlowUseCase: FlowUseCase<GetLocalRecipeFlowRequest, Recipe>,
     private val updateRemoteRecipeUseCase: ResultUseCase<UpdateRemoteRecipeRequest, Unit>,
+    private val updateLocalRecipeUseCase: ResultUseCase<UpdateLocalRecipeRequest, Unit>,
     private val idGenerator: IdGenerator,
 ) : ViewModel() {
 
@@ -166,8 +164,9 @@ internal class RecipeEditorViewModel @Inject constructor(
                     _liveStepModelList.value ?: listOf(),
                     liveRecipeTypes.value ?: emptyList()
                 )
-                saveRecipeUseCase(SaveLocalRecipeRequest(recipe))
-                    .onSuccess {
+                val res = if (isEditing) updateLocalRecipeUseCase(UpdateLocalRecipeRequest(recipe))
+                          else saveRecipeUseCase(SaveLocalRecipeRequest(recipe))
+                res.onSuccess {
                         if (recipeMetaModel.state == RecipeState.UPLOAD) {
                             updateRemoteRecipeUseCase(UpdateRemoteRecipeRequest(recipe))
                                 .onSuccess {

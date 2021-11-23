@@ -43,6 +43,6 @@ class UploadRecipeUseCase @Inject constructor(
                 recipe.copy(
                     state = RecipeState.UPLOAD
                 )
-            ).getOrThrow()
+            ).getOrNull()
         }
 }

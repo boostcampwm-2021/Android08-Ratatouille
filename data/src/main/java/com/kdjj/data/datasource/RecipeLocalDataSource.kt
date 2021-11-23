@@ -24,4 +24,9 @@ interface RecipeLocalDataSource {
     suspend fun getRecipe(
         recipeId: String
     ): Result<Recipe>
+
+    suspend fun updateRecipe(
+        recipe: Recipe,
+        originImgPathList: List<String>
+    ): Result<Unit>
 }

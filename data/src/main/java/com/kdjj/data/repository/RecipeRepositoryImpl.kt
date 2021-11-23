@@ -27,6 +27,13 @@ internal class RecipeRepositoryImpl @Inject constructor(
         return recipeLocalDataSource.updateRecipe(recipe).onSuccess { isUpdated.value++ }
     }
 
+    override suspend fun updateLocalRecipe(
+        recipe: Recipe,
+        originImgPathList: List<String>
+    ): Result<Unit> {
+        return recipeLocalDataSource.updateRecipe(recipe, originImgPathList).onSuccess { isUpdated.value++ }
+    }
+
     override suspend fun deleteLocalRecipe(
         recipe: Recipe
     ): Result<Boolean> {

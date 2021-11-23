@@ -54,6 +54,30 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
             }
         }
 
+    override suspend fun updateRecipe(
+        recipe: Recipe,
+        originImgPathList: List<String>
+    ): Result<Unit> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                recipeDatabase.withTransaction {
+                    recipeImageValidationDao.updateValidate(
+                        recipe.stepList.map { it.imgPath }.plus(recipe.imgPath),
+                        true
+                    )
+                    recipeImageValidationDao.updateValidate(
+                        originImgPathList,
+                        false
+                    )
+                    recipeDao.deleteStepList(recipe.recipeId)
+                    recipeDao.insertRecipeMeta(recipe.toDto())
+                    recipe.stepList.forEachIndexed { idx, recipeStep ->
+                        recipeDao.insertRecipeStep(recipeStep.toDto(recipe.recipeId, idx + 1))
+                    }
+                }
+            }
+        }
+
     override suspend fun deleteRecipe(
         recipe: Recipe
     ): Result<Boolean> =

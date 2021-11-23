@@ -93,5 +93,5 @@ abstract class ResultUseCaseModule {
     @Binds
     internal abstract fun bindUpdateLocalRecipeUseCase(
         updateLocalRecipeUseCase: UpdateLocalRecipeUseCase
-    ) : ResultUseCase<UpdateLocalRecipeRequest, Boolean>
+    ) : ResultUseCase<UpdateLocalRecipeRequest, Unit>
 }
