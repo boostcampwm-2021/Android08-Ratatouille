@@ -14,10 +14,6 @@ internal interface RecipeDao {
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecipeStep(recipeStep: RecipeStepDto)
-
-    @Transaction
-    @Query("SELECT * FROM RecipeMeta")
-    suspend fun getAllRecipe(): List<RecipeDto>
     
     @Query("DELETE FROM RecipeStep WHERE parentRecipeId = :recipeId")
     suspend fun deleteStepList(recipeId: String)
