@@ -92,29 +92,30 @@ class RecipeSummaryViewModel @Inject constructor(
     }
 
     private fun updateRecipeSummaryType(recipe: Recipe) {
-        _eventRecipeSummary.value =
-            Event(
-                RecipeSummaryEvent.InitView(
-                    when {
-                        recipe.authorId == userId && (recipe.state == RecipeState.CREATE || recipe.state == RecipeState.UPLOAD) -> {
-                            RecipeSummaryType.MY_SAVE_RECIPE
-                        }
-                        recipe.state == RecipeState.DOWNLOAD -> {
-                            RecipeSummaryType.MY_SAVE_OTHER_RECIPE
-                        }
-                        recipe.authorId == userId && recipe.state == RecipeState.NETWORK -> {
-                            RecipeSummaryType.MY_SERVER_RECIPE
-                        }
-                        recipe.authorId != userId && recipe.state == RecipeState.NETWORK -> {
-                            RecipeSummaryType.OTHER_SERVER_RECIPE
-                        }
-                        else -> {
-                            _eventRecipeSummary.value = Event(RecipeSummaryEvent.LoadError)
-                            RecipeSummaryType.MY_SAVE_RECIPE
-                        }
+        val oldState = eventRecipeSummary.value
+        val newState = Event(
+            RecipeSummaryEvent.InitView(
+                when {
+                    recipe.authorId == userId && (recipe.state == RecipeState.CREATE || recipe.state == RecipeState.UPLOAD) -> {
+                        RecipeSummaryType.MY_SAVE_RECIPE
                     }
-                )
+                    recipe.state == RecipeState.DOWNLOAD -> {
+                        RecipeSummaryType.MY_SAVE_OTHER_RECIPE
+                    }
+                    recipe.authorId == userId && recipe.state == RecipeState.NETWORK -> {
+                        RecipeSummaryType.MY_SERVER_RECIPE
+                    }
+                    recipe.authorId != userId && recipe.state == RecipeState.NETWORK -> {
+                        RecipeSummaryType.OTHER_SERVER_RECIPE
+                    }
+                    else -> {
+                        _eventRecipeSummary.value = Event(RecipeSummaryEvent.LoadError)
+                        RecipeSummaryType.MY_SAVE_RECIPE
+                    }
+                }
             )
+        )
+        if (oldState != newState) _eventRecipeSummary.value = newState
     }
 
     fun updateRecipeFavorite() {
