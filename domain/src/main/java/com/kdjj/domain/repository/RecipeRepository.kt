@@ -44,4 +44,9 @@ interface RecipeRepository {
     suspend fun getLocalRecipe(
         recipeId: String
     ): Result<Recipe>
+
+    suspend fun updateLocalRecipe(
+        recipe: Recipe,
+        originImgPathList: List<String>
+    ): Result<Unit>
 }

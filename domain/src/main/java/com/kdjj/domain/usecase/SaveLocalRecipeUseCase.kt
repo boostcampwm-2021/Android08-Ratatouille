@@ -18,7 +18,7 @@ internal class SaveLocalRecipeUseCase @Inject constructor(
             val recipeImageUri = when (recipe.imgPath.isNotEmpty()) {
                 true -> {
                     if (recipe.imgPath.startsWith("https://") || recipe.imgPath.startsWith("gs://")) {
-                        imageRepository.copyRemoteImageToInternal(recipe.imgPath, recipe.recipeId)
+                        imageRepository.copyRemoteImageToInternal(recipe.imgPath, idGenerator.generateId())
                             .getOrThrow()
                     } else {
                         imageRepository.copyExternalImageToInternal(recipe.imgPath, idGenerator.generateId())
@@ -31,7 +31,7 @@ internal class SaveLocalRecipeUseCase @Inject constructor(
                 val stepImageUri = when (step.imgPath.isNotEmpty()) {
                     true -> {
                         if (recipe.imgPath.startsWith("https://") || recipe.imgPath.startsWith("gs://")) {
-                            imageRepository.copyRemoteImageToInternal(step.imgPath, step.stepId)
+                            imageRepository.copyRemoteImageToInternal(step.imgPath, idGenerator.generateId())
                                 .getOrThrow()
                         } else {
                             imageRepository.copyExternalImageToInternal(step.imgPath, idGenerator.generateId())
