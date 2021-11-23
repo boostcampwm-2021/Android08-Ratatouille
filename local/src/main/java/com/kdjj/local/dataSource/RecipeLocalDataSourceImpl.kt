@@ -1,9 +1,10 @@
 package com.kdjj.local.dataSource
 
+import androidx.room.withTransaction
 import com.kdjj.data.common.errorMap
 import com.kdjj.data.datasource.RecipeLocalDataSource
 import com.kdjj.domain.model.Recipe
-import com.kdjj.local.dao.RecipeDao
+import com.kdjj.local.database.RecipeDatabase
 import com.kdjj.local.dto.toDomain
 import com.kdjj.local.dto.toDto
 import kotlinx.coroutines.Dispatchers
@@ -13,16 +14,28 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 internal class RecipeLocalDataSourceImpl @Inject constructor(
-    private val recipeDao: RecipeDao
+    private val recipeDatabase: RecipeDatabase
 ) : RecipeLocalDataSource {
+
+    private val recipeDao = recipeDatabase.getRecipeDao()
+    private val recipeImageValidationDao = recipeDatabase.getImageValidationDao()
 
     override suspend fun saveRecipe(
         recipe: Recipe
     ): Result<Boolean> =
         withContext(Dispatchers.IO) {
             runCatching {
-                recipeDao.deleteStepList(recipe.recipeId)
-                recipeDao.insertRecipe(recipe)
+                recipeDatabase.withTransaction {
+                    recipeImageValidationDao.updateValidate(
+                        recipe.stepList.map { it.imgPath }.plus(recipe.imgPath),
+                        true
+                    )
+                    recipeDao.deleteStepList(recipe.recipeId)
+                    recipeDao.insertRecipeMeta(recipe.toDto())
+                    recipe.stepList.forEachIndexed { idx, recipeStep ->
+                        recipeDao.insertRecipeStep(recipeStep.toDto(recipe.recipeId, idx + 1))
+                    }
+                }
                 true
             }.errorMap {
                 Exception(it.message)

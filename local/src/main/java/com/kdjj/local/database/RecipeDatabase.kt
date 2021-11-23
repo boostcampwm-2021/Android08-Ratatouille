@@ -6,12 +6,13 @@ import com.kdjj.local.dao.ImageValidationDao
 import com.kdjj.local.dao.RecipeDao
 import com.kdjj.local.dao.RecipeListDao
 import com.kdjj.local.dao.RecipeTypeDao
+import com.kdjj.local.dto.ImageValidationDto
 import com.kdjj.local.dto.RecipeMetaDto
 import com.kdjj.local.dto.RecipeStepDto
 import com.kdjj.local.dto.RecipeTypeDto
 
 @Database(
-    entities = [RecipeMetaDto::class, RecipeTypeDto::class, RecipeStepDto::class],
+    entities = [RecipeMetaDto::class, RecipeTypeDto::class, RecipeStepDto::class, ImageValidationDto::class],
     version = 1,
     exportSchema = false
 )
