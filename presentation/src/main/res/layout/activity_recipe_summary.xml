@@ -142,6 +142,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:tint="@color/light_100" />
 
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/floatingActionButtonMenuList_summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="favoriteButton_summary, editButton_summary, deleteButton_summary, stealButton_summary, stealFavoriteButton_summary, uploadButton_summary" />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/favoriteButton_summary"
             style="@style/SummaryFloatingButton"
