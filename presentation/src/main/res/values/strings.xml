@@ -1,4 +1,7 @@
 <resources>
+    <string name="ratatouilleAlarm">Ratatouille Alarm</string>
+    <string name="ratatouilleTimer">Ratatouille Timer</string>
+
     <string name="addRecipe">레시피 추가</string>
     <string name="recipeImage">레시피 이미지</string>
     <string name="title">제목</string>
