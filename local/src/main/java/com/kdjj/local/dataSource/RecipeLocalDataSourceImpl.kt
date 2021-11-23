@@ -86,7 +86,7 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
                 recipeDatabase.withTransaction {
                     recipeImageValidationDao.updateValidate(
                         recipe.stepList.map { it.imgPath }.plus(recipe.imgPath),
-                        true
+                        false
                     )
                     recipeDao.deleteRecipe(recipe.toDto())
                     true
