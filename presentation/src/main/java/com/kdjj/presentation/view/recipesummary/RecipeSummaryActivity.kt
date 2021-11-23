@@ -79,6 +79,7 @@ class RecipeSummaryActivity : AppCompatActivity() {
 
         liveRecipe.observe(this@RecipeSummaryActivity) { recipe ->
             title = recipe.title
+            isInitializeFab = false
         }
 
         liveLoading.observe(this@RecipeSummaryActivity) { doLoading ->
