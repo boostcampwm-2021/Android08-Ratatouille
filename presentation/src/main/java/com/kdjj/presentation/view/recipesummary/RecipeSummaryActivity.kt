@@ -179,11 +179,11 @@ class RecipeSummaryActivity : AppCompatActivity() {
         floatingActionButtonSummary.setOnClickListener {
             if (isFloatingActionButtonOpen) {
                 buttonList?.reversed()?.forEachIndexed { index, button ->
-                    button.animate().alpha(0.0f).duration = 200L * index
+                    button.animate().alpha(0.0f).duration = 80L * index
                 }
             } else {
                 buttonList?.forEachIndexed { index, button ->
-                    button.animate().alpha(1.0f).duration = 200L * index
+                    button.animate().alpha(1.0f).duration = 80L * index
                 }
             }
             isFloatingActionButtonOpen = !isFloatingActionButtonOpen
