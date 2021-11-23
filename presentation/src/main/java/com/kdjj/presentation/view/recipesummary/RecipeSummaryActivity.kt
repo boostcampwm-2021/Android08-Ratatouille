@@ -49,12 +49,6 @@ class RecipeSummaryActivity : AppCompatActivity() {
             )
         )
     }
-    private val allFloatingButtonList by lazy {
-        floatingMenuIdListMap.values
-            .fold(listOf<AppCompatButton>()) { acc, list ->
-                acc + list
-            }.distinct()
-    }
     private var isInitializeFab = false
 
     private lateinit var loadingDialog: CustomProgressDialog
@@ -93,10 +87,7 @@ class RecipeSummaryActivity : AppCompatActivity() {
         liveFabState.observe(this@RecipeSummaryActivity) { (recipeSummaryType, isFabOpen) ->
             val buttonList = floatingMenuIdListMap[recipeSummaryType]
             if (!isInitializeFab) {
-                allFloatingButtonList.forEach { button ->
-                    button.visibility = View.GONE
-                }
-
+                binding.floatingActionButtonMenuListSummary.visibility = View.GONE
                 buttonList?.forEach { button ->
                     button.visibility = View.VISIBLE
                 }
