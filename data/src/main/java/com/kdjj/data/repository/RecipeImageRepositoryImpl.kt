@@ -32,4 +32,6 @@ internal class RecipeImageRepositoryImpl @Inject constructor(
         .flatMap { byteArray ->
             recipeImageLocalDataSource.convertToInternalStorageUri(byteArray, fileName)
         }
+
+    override fun isUriExists(uri: String): Boolean = recipeImageLocalDataSource.isUriExists(uri)
 }

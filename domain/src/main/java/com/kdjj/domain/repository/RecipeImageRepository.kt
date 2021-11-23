@@ -15,4 +15,6 @@ interface RecipeImageRepository {
         uri: String,
         fileName: String
     ): Result<String>
+
+    fun isUriExists(uri: String): Boolean
 }

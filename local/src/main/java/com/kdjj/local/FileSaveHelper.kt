@@ -13,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.Exception
 import javax.inject.Inject
 
 internal class FileSaveHelper @Inject constructor(
@@ -59,6 +58,16 @@ internal class FileSaveHelper @Inject constructor(
             filePath
         }
     }
+
+    fun isUriExists(uri: String): Boolean =
+        try {
+            val changedUri = if (!uri.contains("://")) "file://${uri}" else uri
+            val inputStream = contentResolver.openInputStream(Uri.parse(changedUri))
+            true
+        } catch (e: Exception) {
+            false
+        }
+
 
     private fun convertByteArrayToBitmap(byteArray: ByteArray, degree: Float?): Bitmap {
         val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
