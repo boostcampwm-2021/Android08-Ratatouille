@@ -21,5 +21,7 @@ internal class RecipeImageLocalDataSourceImpl @Inject constructor(
     ): Result<String> {
         return fileSaveHelper.convertToInternalStorageUri(byteArray, fileName, degree)
     }
+
+    override fun isUriExists(uri: String): Boolean = fileSaveHelper.isUriExists(uri)
 }
 

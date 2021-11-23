@@ -11,4 +11,6 @@ interface RecipeImageLocalDataSource {
         fileName: String,
         degree: Float? = null
     ): Result<String>
+
+    fun isUriExists(uri: String): Boolean
 }
