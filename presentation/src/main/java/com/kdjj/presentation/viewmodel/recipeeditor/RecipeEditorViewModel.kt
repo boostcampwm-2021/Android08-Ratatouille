@@ -5,6 +5,7 @@ import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.RecipeStepType
 import com.kdjj.domain.model.RecipeType
+import com.kdjj.domain.model.exception.UploadException
 import com.kdjj.domain.model.request.*
 import com.kdjj.domain.usecase.FlowUseCase
 import com.kdjj.domain.usecase.ResultUseCase
@@ -167,25 +168,17 @@ internal class RecipeEditorViewModel @Inject constructor(
                 val res = if (isEditing) updateLocalRecipeUseCase(UpdateLocalRecipeRequest(recipe))
                           else saveRecipeUseCase(SaveLocalRecipeRequest(recipe))
                 res.onSuccess {
-                        if (recipeMetaModel.state == RecipeState.UPLOAD) {
-                            updateRemoteRecipeUseCase(UpdateRemoteRecipeRequest(recipe))
-                                .onSuccess {
-                                    _eventRecipeEditor.value =
-                                        Event(RecipeEditorEvent.SaveResult(true))
-                                }
-                                .onFailure {
-                                    _eventRecipeEditor.value =
-                                        Event(RecipeEditorEvent.SaveResult(false))
-                                }
-                        } else {
-                            _eventRecipeEditor.value =
-                                Event(RecipeEditorEvent.SaveResult(true))
-                        }
-                    }.onFailure {
-                        it.printStackTrace()
+                    _eventRecipeEditor.value =
+                        Event(RecipeEditorEvent.SaveResult(true))
+                }.onFailure {
+                    it.printStackTrace()
+                    if (it is UploadException) {
+                        //worker manager
+                    } else {
                         _eventRecipeEditor.value =
                             Event(RecipeEditorEvent.SaveResult(false))
                     }
+                }
                 _liveLoading.value = false
             }
         }
