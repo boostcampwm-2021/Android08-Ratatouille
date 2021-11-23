@@ -83,8 +83,14 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
     ): Result<Boolean> =
         withContext(Dispatchers.IO) {
             runCatching {
-                recipeDao.deleteRecipe(recipe.toDto())
-                true
+                recipeDatabase.withTransaction {
+                    recipeImageValidationDao.updateValidate(
+                        recipe.stepList.map { it.imgPath }.plus(recipe.imgPath),
+                        true
+                    )
+                    recipeDao.deleteRecipe(recipe.toDto())
+                    true
+                }
             }.errorMap {
                 Exception(it.message)
             }
