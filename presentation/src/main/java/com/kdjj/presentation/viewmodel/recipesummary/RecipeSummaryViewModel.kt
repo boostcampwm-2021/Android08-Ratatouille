@@ -36,6 +36,9 @@ class RecipeSummaryViewModel @Inject constructor(
     private val _liveLoading = MutableLiveData(false)
     val liveLoading: LiveData<Boolean> get() = _liveLoading
 
+    private val _liveFabState = MutableLiveData<Pair<RecipeSummaryType, Boolean>>()
+    val liveFabState: LiveData<Pair<RecipeSummaryType, Boolean>> get() = _liveFabState
+
     private val _eventRecipeSummary = MutableLiveData<Event<RecipeSummaryEvent>>()
     val eventRecipeSummary: LiveData<Event<RecipeSummaryEvent>> = _eventRecipeSummary
 
@@ -47,7 +50,6 @@ class RecipeSummaryViewModel @Inject constructor(
         class UploadFinish(val flag: Boolean) : RecipeSummaryEvent()
         class SaveFinish(val flag: Boolean) : RecipeSummaryEvent()
         class UpdateFavoriteFinish(val flag: Boolean) : RecipeSummaryEvent()
-        class InitView(val type: RecipeSummaryType) : RecipeSummaryEvent()
     }
 
     private var isInitialized = false
@@ -68,14 +70,14 @@ class RecipeSummaryViewModel @Inject constructor(
                         getLocalRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
                             .collect { recipe ->
                                 _liveRecipe.value = recipe
-                                updateRecipeSummaryType(recipe)
+                                updateFabState(recipe)
                             }
                     }
                     RecipeState.NETWORK -> {
                         fetchRemoteRecipeUseCase(FetchRemoteRecipeRequest(recipeId))
                             .onSuccess { recipe ->
                                 _liveRecipe.value = recipe
-                                updateRecipeSummaryType(recipe)
+                                updateFabState(recipe)
                                 increaseViewCountUseCase(
                                     IncreaseRemoteRecipeViewCountRequest(
                                         recipe
@@ -91,31 +93,30 @@ class RecipeSummaryViewModel @Inject constructor(
         isInitialized = true
     }
 
-    private fun updateRecipeSummaryType(recipe: Recipe) {
-        val oldState = eventRecipeSummary.value
-        val newState = Event(
-            RecipeSummaryEvent.InitView(
-                when {
-                    recipe.authorId == userId && (recipe.state == RecipeState.CREATE || recipe.state == RecipeState.UPLOAD) -> {
-                        RecipeSummaryType.MY_SAVE_RECIPE
-                    }
-                    recipe.state == RecipeState.DOWNLOAD -> {
-                        RecipeSummaryType.MY_SAVE_OTHER_RECIPE
-                    }
-                    recipe.authorId == userId && recipe.state == RecipeState.NETWORK -> {
-                        RecipeSummaryType.MY_SERVER_RECIPE
-                    }
-                    recipe.authorId != userId && recipe.state == RecipeState.NETWORK -> {
-                        RecipeSummaryType.OTHER_SERVER_RECIPE
-                    }
-                    else -> {
-                        _eventRecipeSummary.value = Event(RecipeSummaryEvent.LoadError)
-                        RecipeSummaryType.MY_SAVE_RECIPE
-                    }
-                }
-            )
-        )
-        if (oldState != newState) _eventRecipeSummary.value = newState
+    private fun updateFabState(recipe: Recipe) {
+        val oldRecipeSummaryType = _liveFabState.value?.first
+        val newRecipeSummaryType = when {
+            recipe.authorId == userId && (recipe.state == RecipeState.CREATE || recipe.state == RecipeState.UPLOAD) -> {
+                RecipeSummaryType.MY_SAVE_RECIPE
+            }
+            recipe.state == RecipeState.DOWNLOAD -> {
+                RecipeSummaryType.MY_SAVE_OTHER_RECIPE
+            }
+            recipe.authorId == userId && recipe.state == RecipeState.NETWORK -> {
+                RecipeSummaryType.MY_SERVER_RECIPE
+            }
+            recipe.authorId != userId && recipe.state == RecipeState.NETWORK -> {
+                RecipeSummaryType.OTHER_SERVER_RECIPE
+            }
+            else -> {
+                _eventRecipeSummary.value = Event(RecipeSummaryEvent.LoadError)
+                RecipeSummaryType.MY_SAVE_RECIPE
+            }
+        }
+
+        if (oldRecipeSummaryType != newRecipeSummaryType) {
+            _liveFabState.value = Pair(newRecipeSummaryType, false)
+        }
     }
 
     fun updateRecipeFavorite() {
@@ -215,6 +216,12 @@ class RecipeSummaryViewModel @Inject constructor(
     fun openRecipeEditor() {
         liveRecipe.value?.let { recipe ->
             _eventRecipeSummary.value = Event(RecipeSummaryEvent.OpenRecipeEditor(recipe))
+        }
+    }
+
+    fun changeFabState() {
+        _liveFabState.value?.let { (recipeSummaryType, isFabOpen) ->
+            _liveFabState.value = Pair(recipeSummaryType, !isFabOpen)
         }
     }
 

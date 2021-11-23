@@ -2,7 +2,6 @@ package com.kdjj.presentation.view.recipesummary
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -25,48 +24,52 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RecipeSummaryActivity : AppCompatActivity() {
-    
+
     private lateinit var binding: ActivityRecipeSummaryBinding
     private val recipeSummaryViewModel: RecipeSummaryViewModel by viewModels()
-    private val floatingMenuIdListMap: Map<RecipeSummaryType, List<Int>> = mapOf(
-        RecipeSummaryType.MY_SAVE_RECIPE to listOf(
-            R.id.uploadButton_summary,
-            R.id.deleteButton_summary,
-            R.id.editButton_summary,
-            R.id.favoriteButton_summary,
-        ),
-        RecipeSummaryType.OTHER_SERVER_RECIPE to listOf(
-            R.id.stealButton_summary,
-            R.id.stealFavoriteButton_summary,
-        ),
-        RecipeSummaryType.MY_SERVER_RECIPE to listOf(
-            R.id.deleteButton_summary
-        ),
-        RecipeSummaryType.MY_SAVE_OTHER_RECIPE to listOf(
-            R.id.deleteButton_summary,
-            R.id.editButton_summary,
-            R.id.favoriteButton_summary,
+    private val floatingMenuIdListMap: Map<RecipeSummaryType, List<AppCompatButton>> by lazy {
+        mapOf(
+            RecipeSummaryType.MY_SAVE_RECIPE to listOf(
+                binding.uploadButtonSummary,
+                binding.deleteButtonSummary,
+                binding.editButtonSummary,
+                binding.favoriteButtonSummary,
+            ),
+            RecipeSummaryType.OTHER_SERVER_RECIPE to listOf(
+                binding.stealButtonSummary,
+                binding.stealFavoriteButtonSummary,
+            ),
+            RecipeSummaryType.MY_SERVER_RECIPE to listOf(
+                binding.deleteButtonSummary
+            ),
+            RecipeSummaryType.MY_SAVE_OTHER_RECIPE to listOf(
+                binding.deleteButtonSummary,
+                binding.editButtonSummary,
+                binding.favoriteButtonSummary,
+            )
         )
-    )
-    private val allFloatingButtonList = floatingMenuIdListMap.values
-        .fold(listOf<Int>()) { acc, list ->
-            acc + list
-        }.distinct()
-    private var isFloatingActionButtonOpen = false
+    }
+    private val allFloatingButtonList by lazy {
+        floatingMenuIdListMap.values
+            .fold(listOf<AppCompatButton>()) { acc, list ->
+                acc + list
+            }.distinct()
+    }
+    private var isInitializeFab = false
 
     private lateinit var loadingDialog: CustomProgressDialog
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_recipe_summary)
         binding.viewModel = recipeSummaryViewModel
         binding.lifecycleOwner = this
 
         loadingDialog = CustomProgressDialog(this)
-        
+
         setSupportActionBar(binding.toolbarSummary)
-        
+
         initViewModel()
         initObserver()
         initEventObserver()
@@ -85,11 +88,34 @@ class RecipeSummaryActivity : AppCompatActivity() {
                 loadingDialog.dismiss()
             }
         }
+
+        liveFabState.observe(this@RecipeSummaryActivity) { (recipeSummaryType, isFabOpen) ->
+            val buttonList = floatingMenuIdListMap[recipeSummaryType]
+            if (!isInitializeFab) {
+                allFloatingButtonList.forEach { button ->
+                    button.visibility = View.GONE
+                }
+
+                buttonList?.forEach { button ->
+                    button.visibility = View.VISIBLE
+                }
+                isInitializeFab = true
+            }
+            if (isFabOpen) {
+                buttonList?.forEachIndexed { index, button ->
+                    button.animate().alpha(1.0f).duration = 80L * index
+                }
+            } else {
+                buttonList?.reversed()?.forEachIndexed { index, button ->
+                    button.animate().alpha(0.0f).duration = 80L * index
+                }
+            }
+        }
     }
 
-    private fun initEventObserver() = with(recipeSummaryViewModel){
-        eventRecipeSummary.observe(this@RecipeSummaryActivity, EventObserver{
-            when(it){
+    private fun initEventObserver() = with(recipeSummaryViewModel) {
+        eventRecipeSummary.observe(this@RecipeSummaryActivity, EventObserver {
+            when (it) {
                 is RecipeSummaryViewModel.RecipeSummaryEvent.LoadError -> {
                     ConfirmDialogBuilder.create(
                         this@RecipeSummaryActivity,
@@ -98,15 +124,6 @@ class RecipeSummaryActivity : AppCompatActivity() {
                     ) {
                         finish()
                     }
-                }
-
-                is RecipeSummaryViewModel.RecipeSummaryEvent.InitView -> {
-                    Log.d("aaa", it.type.toString())
-                    val menuButtonList = floatingMenuIdListMap[it.type]?.map{ id ->
-                        findViewById<AppCompatButton>(id)
-                    }
-                    initFloatingMenuVisibility(menuButtonList)
-                    initAnimation(menuButtonList)
                 }
 
                 is RecipeSummaryViewModel.RecipeSummaryEvent.OpenRecipeDetail -> {
@@ -163,33 +180,6 @@ class RecipeSummaryActivity : AppCompatActivity() {
         })
     }
 
-    private fun initFloatingMenuVisibility(buttonList: List<AppCompatButton>?) = with(binding) {
-        allFloatingButtonList.map { buttonId ->
-            findViewById<AppCompatButton>(buttonId)
-        }.forEach { button ->
-            button.visibility = View.GONE
-        }
-        
-        buttonList?.forEach { button ->
-            button.visibility = View.VISIBLE
-        }
-    }
-
-    private fun initAnimation(buttonList: List<AppCompatButton>?) = with(binding) {
-        floatingActionButtonSummary.setOnClickListener {
-            if (isFloatingActionButtonOpen) {
-                buttonList?.reversed()?.forEachIndexed { index, button ->
-                    button.animate().alpha(0.0f).duration = 80L * index
-                }
-            } else {
-                buttonList?.forEachIndexed { index, button ->
-                    button.animate().alpha(1.0f).duration = 80L * index
-                }
-            }
-            isFloatingActionButtonOpen = !isFloatingActionButtonOpen
-        }
-    }
-
     private fun initViewModel() {
         intent.extras?.let { bundle ->
             val recipeId = bundle.getString(RECIPE_ID)
@@ -197,17 +187,12 @@ class RecipeSummaryActivity : AppCompatActivity() {
             recipeSummaryViewModel.initViewModel(recipeId, recipeState)
         }
     }
-    
+
     fun showSnackBar(message: String) {
         Snackbar.make(
             binding.root,
             message,
             Snackbar.LENGTH_LONG
         ).show()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        println("ONDESTORY")
     }
 }
