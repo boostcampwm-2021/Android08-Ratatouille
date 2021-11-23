@@ -143,59 +143,59 @@
             app:tint="@color/light_100" />
 
         <androidx.constraintlayout.widget.Group
-            android:id="@+id/floatingActionButtonMenuList_summary"
+            android:id="@+id/group_summary_fabMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="favoriteButton_summary, editButton_summary, deleteButton_summary, stealButton_summary, stealFavoriteButton_summary, uploadButton_summary" />
+            app:constraint_referenced_ids="button_summary_favorite, button_summary_edit, button_summary_delete, button_summary_steal, button_summary_stealFavorite, button_summary_upload" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/favoriteButton_summary"
+            android:id="@+id/button_summary_favorite"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_star_white_16dp"
             android:onClick="@{() -> viewModel.updateRecipeFavorite()}"
             android:text="@{viewModel.liveRecipe.favorite == true ? @string/cancelFavorite : @string/registFavorite}"
-            app:layout_constraintBottom_toTopOf="@id/editButton_summary"
+            app:layout_constraintBottom_toTopOf="@id/button_summary_edit"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/editButton_summary"
+            android:id="@+id/button_summary_edit"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_edit_white_16dp"
             android:onClick="@{() -> viewModel.openRecipeEditor()}"
             android:text="@string/edit"
-            app:layout_constraintBottom_toTopOf="@id/deleteButton_summary"
+            app:layout_constraintBottom_toTopOf="@id/button_summary_delete"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/deleteButton_summary"
+            android:id="@+id/button_summary_delete"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_trash_white_16dp"
             android:elevation="8dp"
             android:onClick="@{() -> viewModel.deleteRecipe()}"
             android:text="@string/delete"
-            app:layout_constraintBottom_toTopOf="@id/uploadButton_summary"
+            app:layout_constraintBottom_toTopOf="@id/button_summary_upload"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/uploadButton_summary"
+            android:id="@+id/button_summary_upload"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_upload_white_16dp"
             android:onClick="@{() -> viewModel.uploadRecipe()}"
             android:text="@string/upload"
-            app:layout_constraintBottom_toTopOf="@id/stealFavoriteButton_summary"
+            app:layout_constraintBottom_toTopOf="@id/button_summary_stealFavorite"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/stealFavoriteButton_summary"
+            android:id="@+id/button_summary_stealFavorite"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_star_white_16dp"
             android:onClick="@{() -> viewModel.saveRecipeToLocalWithFavorite()}"
             android:text="@string/steal_favorite"
-            app:layout_constraintBottom_toTopOf="@id/stealButton_summary"
+            app:layout_constraintBottom_toTopOf="@id/button_summary_steal"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/stealButton_summary"
+            android:id="@+id/button_summary_steal"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_directions_walk_white_16dp"
             android:onClick="@{() -> viewModel.saveRecipeToLocal()}"
