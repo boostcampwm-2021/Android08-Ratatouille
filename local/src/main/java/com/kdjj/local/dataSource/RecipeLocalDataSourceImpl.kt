@@ -27,7 +27,9 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
             runCatching {
                 recipeDatabase.withTransaction {
                     recipeImageValidationDao.updateValidate(
-                        recipe.stepList.map { it.imgPath }.plus(recipe.imgPath),
+                        recipe.stepList
+                        .map { it.imgPath }
+                        .plus(recipe.imgPath),
                         true
                     )
                     recipeDao.deleteStepList(recipe.recipeId)
@@ -62,7 +64,9 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
             runCatching {
                 recipeDatabase.withTransaction {
                     recipeImageValidationDao.updateValidate(
-                        recipe.stepList.map { it.imgPath }.plus(recipe.imgPath),
+                        recipe.stepList
+                        .map { it.imgPath }
+                        .plus(recipe.imgPath),
                         true
                     )
                     recipeImageValidationDao.updateValidate(
@@ -85,7 +89,9 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
             runCatching {
                 recipeDatabase.withTransaction {
                     recipeImageValidationDao.updateValidate(
-                        recipe.stepList.map { it.imgPath }.plus(recipe.imgPath),
+                        recipe.stepList
+                        .map { it.imgPath }
+                        .plus(recipe.imgPath),
                         false
                     )
                     recipeDao.deleteRecipe(recipe.toDto())
