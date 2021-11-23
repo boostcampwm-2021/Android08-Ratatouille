@@ -108,6 +108,19 @@
                     app:layout_constraintEnd_toEndOf="parent" />
 
                 <TextView
+                    android:id="@+id/textView_detail_stepType"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@{viewModel.liveSelectedStep.type.name()}"
+                    android:textSize="@dimen/detail_stepType_textSize"
+                    android:textColor="@color/dark_500"
+                    tools:text="COOK"
+                    app:layout_constraintTop_toBottomOf="@id/textView_detail_stepTitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <TextView
                     android:id="@+id/textView_detail_stepContent"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -116,7 +129,7 @@
                     android:textColor="@color/dark_500"
                     android:layout_margin="@dimen/detail_step_margin"
                     tools:text="양념과 재료를 고루 섞어 뚜껑을 덮고 중불로 20분간 조려줍니다."
-                    app:layout_constraintTop_toBottomOf="@id/textView_detail_stepTitle"
+                    app:layout_constraintTop_toBottomOf="@id/textView_detail_stepType"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
