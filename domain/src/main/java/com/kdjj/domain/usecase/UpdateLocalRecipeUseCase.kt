@@ -13,7 +13,7 @@ internal class UpdateLocalRecipeUseCase @Inject constructor(
 ) : ResultUseCase<UpdateLocalRecipeRequest, Boolean>{
 
     override suspend fun invoke(request: UpdateLocalRecipeRequest): Result<Boolean> {
-        // TODO : 로직 작성 
+        recipeRepository.getLocalRecipe(request.updatedRecipe.recipeId)
         return Result.success(true)
     }
 }

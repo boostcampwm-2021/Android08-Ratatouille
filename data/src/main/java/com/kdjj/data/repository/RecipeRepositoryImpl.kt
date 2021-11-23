@@ -57,11 +57,15 @@ internal class RecipeRepositoryImpl @Inject constructor(
         return recipeLocalDataSource.getRecipeFlow(recipeId)
     }
 
-    override suspend fun fetchRemoteRecipe(recipeID: String): Result<Recipe> {
-        return recipeRemoteDataSource.fetchRecipe(recipeID)
+    override suspend fun fetchRemoteRecipe(recipeId: String): Result<Recipe> {
+        return recipeRemoteDataSource.fetchRecipe(recipeId)
     }
 
     override fun getRecipeUpdateFlow(): Flow<Int> {
         return isUpdated
+    }
+
+    override suspend fun getLocalRecipe(recipeId: String): Result<Recipe> {
+        return recipeLocalDataSource.getRecipe(recipeId)
     }
 }

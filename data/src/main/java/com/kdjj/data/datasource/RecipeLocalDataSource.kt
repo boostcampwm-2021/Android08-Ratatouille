@@ -20,4 +20,8 @@ interface RecipeLocalDataSource {
     fun getRecipeFlow(
         recipeId: String
     ): Flow<Recipe>
+
+    suspend fun getRecipe(
+        recipeId: String
+    ): Result<Recipe>
 }
