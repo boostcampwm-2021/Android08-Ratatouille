@@ -30,4 +30,7 @@ internal interface RecipeDao {
     
     @Query("SELECT * FROM RecipeMeta WHERE recipeMetaId = :recipeId")
     fun getRecipe(recipeId: String): Flow<RecipeDto>
+
+    @Query("SELECT * FROM RecipeMeta WHERE recipeMetaId = :recipeId")
+    fun getRecipeDto(recipeId: String): RecipeDto
 }
