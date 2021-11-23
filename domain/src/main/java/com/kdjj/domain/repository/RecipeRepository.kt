@@ -40,4 +40,8 @@ interface RecipeRepository {
     ): Result<Recipe>
 
     fun getRecipeUpdateFlow(): Flow<Int>
+
+    suspend fun getLocalRecipe(
+        recipeId: String
+    ): Result<Recipe>
 }

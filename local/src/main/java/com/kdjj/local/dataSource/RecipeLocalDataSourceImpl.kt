@@ -71,4 +71,11 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
     ): Flow<Recipe> =
         recipeDao.getRecipe(recipeId)
                 .map { it.toDomain() }
+
+    override suspend fun getRecipe(recipeId: String): Result<Recipe> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                recipeDao.getRecipeDto(recipeId).toDomain()
+            }
+        }
 }
