@@ -71,6 +71,7 @@ class RecipeSummaryViewModel @Inject constructor(
                             .collect { recipe ->
                                 _liveRecipe.value = recipe
                                 updateFabState(recipe)
+                                _liveLoading.value = false
                             }
                     }
                     RecipeState.NETWORK -> {
@@ -83,11 +84,11 @@ class RecipeSummaryViewModel @Inject constructor(
                                         recipe
                                     )
                                 )
+                                _liveLoading.value = false
                             }
                     }
                 }
             }
-            _liveLoading.value = false
         }
 
         isInitialized = true
