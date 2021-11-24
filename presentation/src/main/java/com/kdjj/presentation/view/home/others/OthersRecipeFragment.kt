@@ -21,7 +21,6 @@ import com.kdjj.presentation.view.adapter.OthersRecipeListAdapter
 import com.kdjj.presentation.viewmodel.others.OthersViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
@@ -33,10 +32,6 @@ class OthersRecipeFragment : Fragment() {
     private val navigation by lazy { Navigation.findNavController(binding.root) }
 
     private val compositeDisposable = CompositeDisposable()
-
-    fun Disposable.addDisposable() {
-        compositeDisposable.add(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,7 +74,9 @@ class OthersRecipeFragment : Fragment() {
                         showSnackBar(getString(it.error.stringRes))
                     }
                 }
-            }.addDisposable()
+            }.also {
+                compositeDisposable.add(it)
+            }
     }
 
     private fun setBinding() {
