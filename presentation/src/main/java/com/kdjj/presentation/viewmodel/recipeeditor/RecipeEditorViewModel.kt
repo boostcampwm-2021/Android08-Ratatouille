@@ -1,14 +1,15 @@
 package com.kdjj.presentation.viewmodel.recipeeditor
 
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.work.*
 import com.kdjj.domain.model.Recipe
+import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.RecipeStepType
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.model.request.*
 import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.*
+import com.kdjj.presentation.model.NEW_ID
 import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.model.toDomain
 import com.kdjj.presentation.model.toPresentation
@@ -70,37 +71,29 @@ internal class RecipeEditorViewModel @Inject constructor(
         object Error : RecipeEditorEvent()
     }
 
-    private var tempRecipe: Recipe? = null
+    private lateinit var tempRecipe: Recipe
     private var tempJob: Job? = null
     private var tempTimer: Timer? = null
 
-    fun initializeWith(recipeId: String?) {
+    fun initializeWith(loadingRecipeId: String?) {
         if (isInitialized) return
 
         _liveLoading.value = true
+        val recipeId = loadingRecipeId?.also {
+            isEditing = true
+        } ?: NEW_ID
+
         viewModelScope.launch {
             fetchRecipeTypesUseCase(EmptyRequest)
                 .onSuccess { recipeTypes ->
                     _liveRecipeTypes.value = recipeTypes
-                    recipeId?.let {
-                        tempRecipe = fetchRecipeTempUseCase(FetchRecipeTempRequest(recipeId)).getOrNull()
-                        tempRecipe?.let {
-                            _eventRecipeEditor.value = Event(RecipeEditorEvent.TempDialog(recipeId))
-                        } ?: run {
-                            loadFromLocal(recipeId)
-                        }
-                        isEditing = true
-                    } ?: run {
-                        recipeMetaModel = RecipeEditorItem.RecipeMetaModel.create(
-                            idGenerator, recipeValidator
-                        )
-                        _liveStepModelList.value = listOf(
-                            RecipeEditorItem.RecipeStepModel.create(
-                                idGenerator, recipeStepValidator
-                            )
-                        )
-                        isInitialized = true
-                        startTempTimer()
+                    fetchRecipeTempUseCase(FetchRecipeTempRequest(recipeId)).getOrNull()?.let {
+                        tempRecipe = it
+                        _eventRecipeEditor.value = Event(RecipeEditorEvent.TempDialog(recipeId))
+                    } ?: if (recipeId == NEW_ID) {
+                        createNewRecipe()
+                    } else {
+                        loadFromLocal(recipeId)
                     }
                 }
                 .onFailure {
@@ -110,24 +103,42 @@ internal class RecipeEditorViewModel @Inject constructor(
         }
     }
 
-    fun showRecipeFromTemp(recipeId: String) {
+    fun showRecipeFromTemp() {
         if (isInitialized) return
-        tempRecipe?.let { recipe ->
-            val (metaModel, stepList) =
-                recipe.toPresentation(recipeValidator, _liveRecipeTypes.value ?: listOf(), recipeStepValidator)
-            recipeMetaModel = metaModel
-            _liveStepModelList.value = stepList
-            startTempTimer()
-        } ?: showRecipeFromLocal(recipeId)
+        val (metaModel, stepList) =
+            tempRecipe.toPresentation(
+                recipeValidator,
+                _liveRecipeTypes.value ?: listOf(),
+                recipeStepValidator
+            )
+        recipeMetaModel = metaModel
+        _liveStepModelList.value = stepList
+        startTempTimer()
         isInitialized = true
     }
 
     fun showRecipeFromLocal(recipeId: String) {
         if (isInitialized) return
-        viewModelScope.launch {
-            loadFromLocal(recipeId)
+        if (recipeId == NEW_ID) {
+            createNewRecipe()
+        } else {
+            viewModelScope.launch {
+                loadFromLocal(recipeId)
+            }
         }
         isInitialized = true
+    }
+
+    private fun createNewRecipe() {
+        recipeMetaModel = RecipeEditorItem.RecipeMetaModel.create(
+            idGenerator, recipeValidator
+        )
+        _liveStepModelList.value = listOf(
+            RecipeEditorItem.RecipeStepModel.create(
+                recipeStepValidator
+            )
+        )
+        startTempTimer()
     }
 
     private suspend fun loadFromLocal(recipeId: String) {
@@ -154,7 +165,6 @@ internal class RecipeEditorViewModel @Inject constructor(
                     liveRecipeTypes.value ?: listOf()
                 )
                 saveRecipeTempUseCase(SaveRecipeTempRequest(recipe))
-                println("save temp")
             }
         }
     }
@@ -191,7 +201,7 @@ internal class RecipeEditorViewModel @Inject constructor(
 
     fun addRecipeStep() {
         _liveStepModelList.value = (_liveStepModelList.value ?: listOf()) +
-                RecipeEditorItem.RecipeStepModel.create(idGenerator, recipeStepValidator)
+                RecipeEditorItem.RecipeStepModel.create(recipeStepValidator)
         _liveMoveToPosition.value = (_liveStepModelList.value?.size ?: 0) + 2
     }
 

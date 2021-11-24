@@ -11,6 +11,8 @@ import com.kdjj.presentation.common.calculateSeconds
 import java.lang.Exception
 import java.util.*
 
+const val NEW_ID = ""
+
 internal sealed class RecipeEditorItem {
 
     data class RecipeMetaModel(
@@ -56,7 +58,6 @@ internal sealed class RecipeEditorItem {
         }
 
         companion object {
-
             fun create(
                 idGenerator: IdGenerator,
                 recipeValidator: RecipeValidator
@@ -74,7 +75,7 @@ internal sealed class RecipeEditorItem {
                     liveStuffState = liveStuff.map { recipeValidator.validateStuff(it) },
                     liveTitleState = liveTitle.map { recipeValidator.validateTitle(it) },
 
-                    recipeId = idGenerator.generateId(),
+                    recipeId = NEW_ID,
                     uploadId = idGenerator.getDeviceId(),
                     state = RecipeState.CREATE
                 )
@@ -125,11 +126,8 @@ internal sealed class RecipeEditorItem {
         companion object {
 
             fun create(
-                idGenerator: IdGenerator,
                 recipeStepValidator: RecipeStepValidator
             ): RecipeStepModel {
-                val stepTypes = RecipeStepType.values()
-
                 val liveName =  MutableLiveData("")
                 val liveDescription = MutableLiveData("")
                 val liveTimerMin = MutableLiveData<Int?>(0)
@@ -147,7 +145,7 @@ internal sealed class RecipeEditorItem {
                     liveTimerMinState = liveTimerMin.map { recipeStepValidator.validateMinutes(it) },
                     liveTimerSecState = liveTimerSec.map { recipeStepValidator.validateSeconds(it) },
 
-                    stepId = idGenerator.generateId(),
+                    stepId = NEW_ID,
                     liveImgPath = MutableLiveData("")
                 )
             }

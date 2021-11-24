@@ -174,7 +174,7 @@ class RecipeEditorActivity : AppCompatActivity() {
                             viewModel.showRecipeFromLocal(event.recipeId)
                         }
                     ) {
-                        viewModel.showRecipeFromTemp(event.recipeId)
+                        viewModel.showRecipeFromTemp()
                     }
                 }
             }
