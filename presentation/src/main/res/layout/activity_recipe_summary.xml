@@ -126,21 +126,19 @@
 
         </ScrollView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/floatingActionButton_summary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/summary_fab_size"
+            android:layout_height="@dimen/summary_fab_size"
             android:layout_marginEnd="@dimen/summary_fab_marginEnd"
             android:layout_marginBottom="@dimen/summary_fab_marginBottom"
-            android:backgroundTint="@color/blue_500"
-            android:contentDescription="@string/floatingActionButton"
+            android:background="@drawable/bg_summary_fab"
+            android:elevation="@dimen/summary_fav_elevation"
             android:onClick="@{() -> viewModel.changeFabState()}"
-            android:padding="@dimen/summary_fab_padding"
             android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
-            app:fabCustomSize="@dimen/summary_fab_size"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@color/light_100" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/group_summary_fabMenu"
@@ -170,7 +168,6 @@
             android:id="@+id/button_summary_delete"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_trash_white_16dp"
-            android:elevation="8dp"
             android:onClick="@{() -> viewModel.fabClickSubject.onNext(FabClick.DeleteRecipe)}"
             android:text="@string/delete"
             app:layout_constraintBottom_toTopOf="@id/button_summary_upload"
