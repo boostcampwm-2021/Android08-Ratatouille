@@ -30,7 +30,7 @@ object Notifications {
             .setAutoCancel(false)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(stepName)
-            .setContentText("${timeLeft}")
+            .setContentText(String.format("%02d:%02d", timeLeft/60 , timeLeft%60))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(getPendingIntent(context))
 
@@ -54,6 +54,10 @@ object Notifications {
             )
             NotificationManagerCompat.from(context).createNotificationChannel(alarmChannel)
         }
+    }
+
+    fun cancelAllNotification(context: Context){
+        NotificationManagerCompat.from(context).cancelAll()
     }
 
     private fun getPendingIntent(context: Context): PendingIntent {

@@ -14,10 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.kdjj.domain.model.*
 import com.kdjj.presentation.R
-import com.kdjj.presentation.common.DisplayConverter
-import com.kdjj.presentation.common.EventObserver
-import com.kdjj.presentation.common.RECIPE_ID
-import com.kdjj.presentation.common.RECIPE_STATE
+import com.kdjj.presentation.common.*
 import com.kdjj.presentation.databinding.ActivityRecipeDetailBinding
 import com.kdjj.presentation.services.TimerService
 import com.kdjj.presentation.view.adapter.RecipeDetailStepListAdapter
@@ -44,6 +41,8 @@ class RecipeDetailActivity : AppCompatActivity() {
     lateinit var displayConverter: DisplayConverter
 
     private val service by lazy { Intent(applicationContext, TimerService::class.java) }
+
+    private var isExiting = false
 
     private val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(
         ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT,
@@ -164,23 +163,27 @@ class RecipeDetailActivity : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        Log.d("aaa", "restart" )
-        service.also {
-            applicationContext.stopService(it)
-        }
+        applicationContext.stopService(service)
+    }
+
+    override fun onBackPressed() {
+        isExiting = true
+        super.onBackPressed()
     }
 
     override fun onStop() {
-        super.onStop()
-        service.also {
-            it.action = "ACTION_START"
-            val timerList = viewModel.liveTimerList.value ?: return
-            it.putExtra("TIMERS",
-                timerList.map { timer ->
-                    "${timer.liveLeftSeconds.value ?: 0}:${timer.recipeStep.stepId}:${timer.recipeStep.name}"
-                }.toTypedArray()
-            )
-            applicationContext.startService(it)
+        if (!isExiting) {
+            service.also {
+                it.action = "ACTION_START"
+                val timerList = viewModel.liveTimerList.value ?: return
+                it.putExtra("TIMERS",
+                    timerList.map { timer ->
+                        "${timer.liveLeftSeconds.value ?: 0}:${timer.recipeStep.stepId}:${timer.recipeStep.name}"
+                    }.toTypedArray()
+                )
+                applicationContext.startService(it)
+            }
         }
+        super.onStop()
     }
 }
