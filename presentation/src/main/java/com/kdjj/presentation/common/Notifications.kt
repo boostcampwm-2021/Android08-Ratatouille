@@ -2,37 +2,40 @@ package com.kdjj.presentation.common
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.kdjj.domain.model.RecipeStep
 import com.kdjj.presentation.R
-import com.kdjj.presentation.model.StepTimerModel
+import com.kdjj.presentation.viewmodel.recipedetail.NotificationBroadcastReceiver
 
 object Notifications {
 
-    fun showAlarm(context: Context, step: RecipeStep) {
+    fun showAlarm(context: Context, stepId: String, stepName: String) {
         val builder = NotificationCompat.Builder(context, ALARM_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(context.getString(R.string.timerEnd, step.name))
-            .setContentText(context.getString(R.string.timerEndContent, step.name))
+            .setContentTitle(context.getString(R.string.timerEnd, stepName))
+            .setContentText(context.getString(R.string.timerEndContent, stepName))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(getPendingIntent(context))
 
         NotificationManagerCompat.from(context)
-            .notify(step.stepId.hashCode(), builder.build())
+            .notify(stepId.hashCode(), builder.build())
     }
 
-    fun showTimer(context: Context, step: RecipeStep, leftTime: Int) {
+    fun showTimer(context: Context, stepId: String, stepName: String, timeLeft: Int) {
         val builder = NotificationCompat.Builder(context, TIMER_CHANNEL_ID)
             .setAutoCancel(false)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle("타이머")
-            .setContentText("${leftTime}")
+            .setContentTitle(stepName)
+            .setContentText("${timeLeft}")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(getPendingIntent(context))
 
         NotificationManagerCompat.from(context)
-            .notify(step.stepId.hashCode(), builder.build())
+            .notify(stepId.hashCode(), builder.build())
     }
 
     fun createChannel(context: Context) {
@@ -51,6 +54,11 @@ object Notifications {
             )
             NotificationManagerCompat.from(context).createNotificationChannel(alarmChannel)
         }
+    }
+
+    private fun getPendingIntent(context: Context): PendingIntent {
+        val intent = Intent(context, NotificationBroadcastReceiver::class.java)
+        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     private const val ALARM_CHANNEL_ID = "ID_RATATOUILLE_ALARM"

@@ -20,6 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
@@ -30,6 +31,9 @@
                 android:value="androidx.startup"
                 tools:node="remove" />
         </provider>
+
+        <receiver android:name="com.kdjj.presentation.viewmodel.recipedetail.NotificationBroadcastReceiver"/>
+
     </application>
 
 </manifest>
