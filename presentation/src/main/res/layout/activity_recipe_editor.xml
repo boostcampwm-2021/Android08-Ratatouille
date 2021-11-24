@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel.ButtonClick"/>
+
         <variable
             name="viewModel"
             type="com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel" />
@@ -53,7 +55,7 @@
                 android:focusable="true"
                 android:gravity="center"
                 android:padding="@dimen/bottomButton_padding"
-                android:onClick="@{() -> viewModel.saveRecipe()}"
+                android:onClick="@{() -> viewModel.editorSubject.onNext(ButtonClick.SAVE)}"
                 android:text="@string/registerRecipe"
                 android:textColor="@color/light_100"
                 android:textSize="@dimen/bottomButton_textSize" />

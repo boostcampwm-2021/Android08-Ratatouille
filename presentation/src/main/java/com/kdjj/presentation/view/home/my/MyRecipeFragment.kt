@@ -1,7 +1,6 @@
 package com.kdjj.presentation.view.home.my
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -38,7 +37,7 @@ class MyRecipeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setObservers()
+        setButtonClickObserver()
     }
 
     override fun onCreateView(
@@ -55,6 +54,7 @@ class MyRecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolBar()
+        setEventObserver()
         initSwipeRefreshLayout()
         initRecyclerView()
     }
@@ -75,15 +75,15 @@ class MyRecipeFragment : Fragment() {
         }
     }
 
-    private fun setObservers() {
+    private fun setButtonClickObserver() {
         viewModel.mySubject
             .throttleFirst(1, TimeUnit.SECONDS)
             .subscribe {
                 when (it) {
-                    is MyRecipeViewModel.MyRecipeEvent.AddRecipeHasPressed -> {
+                    is MyRecipeViewModel.ButtonClick.AddRecipeHasPressed -> {
                         navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
                     }
-                    is MyRecipeViewModel.MyRecipeEvent.DoubleClicked -> {
+                    is MyRecipeViewModel.ButtonClick.DoubleClicked -> {
                         val bundle = bundleOf(
                             RECIPE_ID to it.item.recipe.recipeId,
                             RECIPE_STATE to it.item.recipe.state
@@ -93,25 +93,32 @@ class MyRecipeFragment : Fragment() {
                             bundle
                         )
                     }
-                    is MyRecipeViewModel.MyRecipeEvent.DataLoadFailed -> {
-                        Snackbar.make(
-                            binding.root,
-                            getString(R.string.dataLoadFailMessage),
-                            Snackbar.LENGTH_LONG
-                        )
-                            .setAction(getString(R.string.refresh)) {
-                                viewModel.refreshRecipeList()
-                            }
-                            .setActionTextColor(requireContext().getColor(R.color.blue_500))
-                            .show()
-                    }
-                    is MyRecipeViewModel.MyRecipeEvent.SearchIconClicked -> {
+                    is MyRecipeViewModel.ButtonClick.SearchIconClicked -> {
                         navigation.navigate(R.id.action_myRecipeFragment_to_searchRecipeFragment)
                     }
                 }
             }.also {
                 compositeDisposable.add(it)
             }
+    }
+
+    private fun setEventObserver() {
+        viewModel.eventMyRecipe.observe(viewLifecycleOwner, EventObserver {
+            when (it) {
+                is MyRecipeViewModel.MyRecipeEvent.DataLoadFailed -> {
+                    Snackbar.make(
+                        binding.root,
+                        getString(R.string.dataLoadFailMessage),
+                        Snackbar.LENGTH_LONG
+                    )
+                    .setAction(getString(R.string.refresh)) {
+                        viewModel.refreshRecipeList()
+                    }
+                    .setActionTextColor(requireContext().getColor(R.color.blue_500))
+                    .show()
+                }
+            }
+        })
     }
 
     private fun initSwipeRefreshLayout() {

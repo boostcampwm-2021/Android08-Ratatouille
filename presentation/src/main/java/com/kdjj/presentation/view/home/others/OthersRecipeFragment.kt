@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.kdjj.domain.model.*
 import com.kdjj.presentation.R
+import com.kdjj.presentation.common.EventObserver
 import com.kdjj.presentation.common.RECIPE_ID
 import com.kdjj.presentation.common.RECIPE_STATE
 import com.kdjj.presentation.databinding.FragmentOthersRecipeBinding
@@ -35,7 +36,7 @@ class OthersRecipeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setObserver()
+        setButtonClickObserver()
     }
 
     override fun onCreateView(
@@ -54,33 +55,41 @@ class OthersRecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setAdapter()
+        setEventObserver()
         setSwipeRefreshLayout()
         setBinding()
         initToolBar()
     }
 
-    private fun setObserver() {
+    private fun setButtonClickObserver() {
         viewModel.othersSubject
             .throttleFirst(1, TimeUnit.SECONDS)
             .subscribe {
                 when (it) {
-                    is OthersViewModel.OtherRecipeEvent.RecipeItemClicked -> {
+                    is OthersViewModel.ButtonClick.RecipeItemClicked -> {
                         val bundle = bundleOf(
                             RECIPE_ID to it.item.recipeId,
                             RECIPE_STATE to it.item.state
                         )
                         navigation.navigate(R.id.action_othersFragment_to_recipeSummaryActivity, bundle)
                     }
-                    is OthersViewModel.OtherRecipeEvent.SearchIconClicked -> {
+                    is OthersViewModel.ButtonClick.SearchIconClicked -> {
                         navigation.navigate(R.id.action_othersFragment_to_searchRecipeFragment)
-                    }
-                    is OthersViewModel.OtherRecipeEvent.ShowSnackBar -> {
-                        showSnackBar(getString(it.error.stringRes))
                     }
                 }
             }.also {
                 compositeDisposable.add(it)
             }
+    }
+
+    private fun setEventObserver() {
+        viewModel.othersRecipeEvent.observe(viewLifecycleOwner, EventObserver {
+            when (it) {
+                is OthersViewModel.OtherRecipeEvent.ShowSnackBar -> {
+                    showSnackBar(getString(it.error.stringRes))
+                }
+            }
+        })
     }
 
     private fun setBinding() {

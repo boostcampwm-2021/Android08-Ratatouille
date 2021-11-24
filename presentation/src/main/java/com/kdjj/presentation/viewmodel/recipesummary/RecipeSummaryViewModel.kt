@@ -47,12 +47,15 @@ class RecipeSummaryViewModel @Inject constructor(
 
     sealed class RecipeSummaryEvent {
         object LoadError : RecipeSummaryEvent()
-        class OpenRecipeDetail(val item: Recipe) : RecipeSummaryEvent()
-        class OpenRecipeEditor(val item: Recipe) : RecipeSummaryEvent()
         class DeleteFinish(val flag: Boolean) : RecipeSummaryEvent()
         class UploadFinish(val flag: Boolean) : RecipeSummaryEvent()
         class SaveFinish(val flag: Boolean) : RecipeSummaryEvent()
         class UpdateFavoriteFinish(val flag: Boolean) : RecipeSummaryEvent()
+    }
+
+    sealed class ButtonClick {
+        class OpenRecipeDetail(val item: Recipe) : ButtonClick()
+        class OpenRecipeEditor(val item: Recipe) : ButtonClick()
     }
 
     enum class FabClick {
@@ -69,7 +72,7 @@ class RecipeSummaryViewModel @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
     val fabClickSubject: PublishSubject<FabClick> = PublishSubject.create()
-    val summarySubject: PublishSubject<RecipeSummaryEvent> = PublishSubject.create()
+    val summarySubject: PublishSubject<ButtonClick> = PublishSubject.create()
 
     init {
         fabClickSubject.throttleFirst(1, TimeUnit.SECONDS)
@@ -251,13 +254,13 @@ class RecipeSummaryViewModel @Inject constructor(
 
     fun openRecipeDetail() {
         liveRecipe.value?.let { recipe ->
-            summarySubject.onNext(RecipeSummaryEvent.OpenRecipeDetail(recipe))
+            summarySubject.onNext(ButtonClick.OpenRecipeDetail(recipe))
         }
     }
 
     fun openRecipeEditor() {
         liveRecipe.value?.let { recipe ->
-            summarySubject.onNext(RecipeSummaryEvent.OpenRecipeEditor(recipe))
+            summarySubject.onNext(ButtonClick.OpenRecipeEditor(recipe))
         }
     }
 
