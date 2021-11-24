@@ -136,10 +136,10 @@ class RecipeEditorActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.eventRecipeEditor.observe(this, EventObserver {
-            when(it){
+        viewModel.eventRecipeEditor.observe(this, EventObserver { event ->
+            when(event){
                 is RecipeEditorViewModel.RecipeEditorEvent.SaveResult -> {
-                    if (it.isSuccess) {
+                    if (event.isSuccess) {
                         ConfirmDialogBuilder.create(
                             this,
                             "저장 완료",
@@ -155,7 +155,6 @@ class RecipeEditorActivity : AppCompatActivity() {
                         ) { }
                     }
                 }
-
                 is RecipeEditorViewModel.RecipeEditorEvent.Error -> {
                     ConfirmDialogBuilder.create(
                         this,
@@ -163,6 +162,19 @@ class RecipeEditorActivity : AppCompatActivity() {
                         "레시피를 들고오던 라따뚜이가 넘어졌습니다..ㅠㅠ\n확인버튼을 누르면 이전 화면으로 돌아갑니다."
                     ) {
                         finish()
+                    }
+                }
+                is RecipeEditorViewModel.RecipeEditorEvent.TempDialog -> {
+                    ConfirmDialogBuilder.create(
+                        this,
+                        "임시 저장된 레시피",
+                        "저장되지 않은 수정 내역이 존재합니다. 이어서 수정하시겠습니까?",
+                        true,
+                        {
+                            viewModel.showRecipeFromLocal(event.recipeId)
+                        }
+                    ) {
+                        viewModel.showRecipeFromTemp(event.recipeId)
                     }
                 }
             }

@@ -6,14 +6,12 @@ import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeStepType
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.model.request.*
-import com.kdjj.domain.usecase.FlowUseCase
 import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.*
 import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.model.toDomain
 import com.kdjj.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,8 +21,10 @@ internal class RecipeEditorViewModel @Inject constructor(
     private val recipeStepValidator: RecipeStepValidator,
     private val saveRecipeUseCase: ResultUseCase<SaveLocalRecipeRequest, Boolean>,
     private val fetchRecipeTypesUseCase: ResultUseCase<EmptyRequest, List<RecipeType>>,
-    private val getLocalRecipeFlowUseCase: FlowUseCase<GetLocalRecipeRequest, Recipe>,
-    private val updateRemoteRecipeUseCase: ResultUseCase<UpdateRemoteRecipeRequest, Unit>,
+    private val getLocalRecipeUseCase: ResultUseCase<GetLocalRecipeRequest, Recipe>,
+    private val fetchRecipeTempUseCase: ResultUseCase<FetchRecipeTempRequest, Recipe?>,
+    private val saveRecipeTempUseCase: ResultUseCase<SaveRecipeTempRequest, Unit>,
+    private val deleteRecipeTempUseCase: ResultUseCase<DeleteRecipeTempRequest, Unit>,
     private val updateLocalRecipeUseCase: ResultUseCase<UpdateLocalRecipeRequest, Unit>,
     private val idGenerator: IdGenerator,
     private val workManager: WorkManager
@@ -62,8 +62,11 @@ internal class RecipeEditorViewModel @Inject constructor(
 
     sealed class RecipeEditorEvent {
         class SaveResult(val isSuccess: Boolean) : RecipeEditorEvent()
+        class TempDialog(val recipeId: String) : RecipeEditorEvent()
         object Error : RecipeEditorEvent()
     }
+
+    private var tempRecipe: Recipe? = null
 
     fun initializeWith(recipeId: String?) {
         if (isInitialized) return
@@ -74,15 +77,13 @@ internal class RecipeEditorViewModel @Inject constructor(
                 .onSuccess { recipeTypes ->
                     _liveRecipeTypes.value = recipeTypes
                     recipeId?.let {
-                        val recipeFlow =
-                            getLocalRecipeFlowUseCase(GetLocalRecipeRequest(recipeId))
-                        val recipe = recipeFlow.first()
-                        val (metaModel, stepList) =
-                            recipe.toPresentation(recipeValidator, recipeTypes, recipeStepValidator)
-                        recipeMetaModel = metaModel
-                        _liveStepModelList.value = stepList
+                        tempRecipe = fetchRecipeTempUseCase(FetchRecipeTempRequest(recipeId)).getOrNull()
+                        tempRecipe?.let {
+                            _eventRecipeEditor.value = Event(RecipeEditorEvent.TempDialog(recipeId))
+                        } ?: run {
+                            loadFromLocal(recipeId)
+                        }
                         isEditing = true
-
                     } ?: run {
                         recipeMetaModel = RecipeEditorItem.RecipeMetaModel.create(
                             idGenerator, recipeValidator
@@ -92,6 +93,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                                 idGenerator, recipeStepValidator
                             )
                         )
+                        isInitialized = true
                     }
                 }
                 .onFailure {
@@ -99,7 +101,39 @@ internal class RecipeEditorViewModel @Inject constructor(
                 }
             _liveLoading.value = false
         }
+    }
+
+    fun showRecipeFromTemp(recipeId: String) {
+        if (isInitialized) return
+        tempRecipe?.let { recipe ->
+            val (metaModel, stepList) =
+                recipe.toPresentation(recipeValidator, _liveRecipeTypes.value ?: listOf(), recipeStepValidator)
+            recipeMetaModel = metaModel
+            _liveStepModelList.value = stepList
+        } ?: showRecipeFromLocal(recipeId)
         isInitialized = true
+    }
+
+    fun showRecipeFromLocal(recipeId: String) {
+        if (isInitialized) return
+        viewModelScope.launch {
+            loadFromLocal(recipeId)
+        }
+        isInitialized = true
+    }
+
+    private suspend fun loadFromLocal(recipeId: String) {
+        getLocalRecipeUseCase(GetLocalRecipeRequest(recipeId))
+            .onSuccess { recipe ->
+                val (metaModel, stepList) =
+                    recipe.toPresentation(recipeValidator, _liveRecipeTypes.value ?: listOf(), recipeStepValidator)
+                recipeMetaModel = metaModel
+                _liveStepModelList.value = stepList
+                deleteRecipeTempUseCase(DeleteRecipeTempRequest(recipe))
+            }
+            .onFailure {
+                _eventRecipeEditor.value = Event(RecipeEditorEvent.Error)
+            }
     }
 
     fun startSelectImage(model: RecipeEditorItem) {
