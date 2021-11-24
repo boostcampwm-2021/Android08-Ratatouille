@@ -1,6 +1,5 @@
 package com.kdjj.presentation.viewmodel.search
 
-import android.view.SearchEvent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -54,11 +53,14 @@ class SearchViewModel @Inject constructor(
     private val _eventSearchRecipe = MutableLiveData<Event<SearchRecipeEvent>>()
     val eventSearchRecipe: LiveData<Event<SearchRecipeEvent>> get() = _eventSearchRecipe
 
-    val searchSubject: PublishSubject<SearchRecipeEvent> = PublishSubject.create()
+    val searchSubject: PublishSubject<ButtonClick> = PublishSubject.create()
 
     sealed class SearchRecipeEvent {
         class Exception(val error: ResponseError) : SearchRecipeEvent()
-        class Summary(val item: RecipeListItemModel) : SearchRecipeEvent()
+    }
+
+    sealed class ButtonClick {
+        class Summary(val item: RecipeListItemModel) : ButtonClick()
     }
 
     init {
@@ -177,7 +179,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun moveToSummary(recipeModel: RecipeListItemModel) {
-        searchSubject.onNext(SearchRecipeEvent.Summary(recipeModel))
+        searchSubject.onNext(ButtonClick.Summary(recipeModel))
     }
 
 

@@ -15,7 +15,10 @@ import com.kdjj.presentation.model.toDomain
 import com.kdjj.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -73,6 +76,32 @@ internal class RecipeEditorViewModel @Inject constructor(
 
     private lateinit var tempRecipe: Recipe
     private var tempJob: Job? = null
+
+    enum class ButtonClick {
+        SAVE,
+        ADD_STEP
+    }
+
+    private val compositeDisposable = CompositeDisposable()
+    val editorSubject: PublishSubject<ButtonClick> = PublishSubject.create()
+
+    init {
+        editorSubject.throttleFirst(1, TimeUnit.SECONDS)
+            .subscribe {
+                when (it) {
+                    ButtonClick.SAVE -> {
+                        saveRecipe()
+                    }
+                    ButtonClick.ADD_STEP -> {
+                        addRecipeStep()
+                    }
+                    else -> {}
+                }
+            }
+            .also {
+                compositeDisposable.add(it)
+            }
+    }
 
     fun initializeWith(loadingRecipeId: String?) {
         if (isInitialized) return
@@ -206,7 +235,7 @@ internal class RecipeEditorViewModel @Inject constructor(
         _liveImgTarget.value = null
     }
 
-    fun addRecipeStep() {
+    private fun addRecipeStep() {
         _liveStepModelList.value = (_liveStepModelList.value ?: listOf()) +
                 RecipeEditorItem.RecipeStepModel.create(recipeStepValidator)
         _liveMoveToPosition.value = (_liveStepModelList.value?.size ?: 0) + 2
@@ -227,7 +256,7 @@ internal class RecipeEditorViewModel @Inject constructor(
         }
     }
 
-    fun saveRecipe() {
+    private fun saveRecipe() {
         _liveRegisterHasPressed.value = true
         if (isRecipeValid()) {
             _liveLoading.value = true
@@ -291,5 +320,10 @@ internal class RecipeEditorViewModel @Inject constructor(
         }
 
         return true
+    }
+
+    override fun onCleared() {
+        compositeDisposable.dispose()
+        super.onCleared()
     }
 }

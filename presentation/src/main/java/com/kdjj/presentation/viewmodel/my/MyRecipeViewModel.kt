@@ -5,6 +5,7 @@ import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.request.*
 import com.kdjj.domain.usecase.FlowUseCase
 import com.kdjj.domain.usecase.ResultUseCase
+import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.MyRecipeItem
 import com.kdjj.presentation.model.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -53,13 +54,19 @@ internal class MyRecipeViewModel @Inject constructor(
 
     private var job: Job? = null
 
-    val mySubject: PublishSubject<MyRecipeEvent> = PublishSubject.create()
+    private var _eventMyRecipe = MutableLiveData<Event<MyRecipeEvent>>()
+    val eventMyRecipe: LiveData<Event<MyRecipeEvent>> get() = _eventMyRecipe
+
+    val mySubject: PublishSubject<ButtonClick> = PublishSubject.create()
 
     sealed class MyRecipeEvent {
-        object AddRecipeHasPressed : MyRecipeEvent()
-        class DoubleClicked(val item: MyRecipeItem.MyRecipe) : MyRecipeEvent()
-        object SearchIconClicked : MyRecipeEvent()
         object DataLoadFailed : MyRecipeEvent()
+    }
+
+    sealed class ButtonClick {
+        object AddRecipeHasPressed : ButtonClick()
+        class DoubleClicked(val item: MyRecipeItem.MyRecipe) : ButtonClick()
+        object SearchIconClicked : ButtonClick()
     }
 
     init {
@@ -107,7 +114,7 @@ internal class MyRecipeViewModel @Inject constructor(
                 }
             }.onFailure {
                 if (it !is CancellationException) {
-                    mySubject.onNext(MyRecipeEvent.DataLoadFailed)
+                    _eventMyRecipe.value = Event(MyRecipeEvent.DataLoadFailed)
                 }
             }
             _liveFetching.value = false
@@ -118,15 +125,15 @@ internal class MyRecipeViewModel @Inject constructor(
         if (_liveRecipeItemSelected.value != selectedRecipe) {
             _liveRecipeItemSelected.value = selectedRecipe
         } else {
-            mySubject.onNext(MyRecipeEvent.DoubleClicked(selectedRecipe))
+            mySubject.onNext(ButtonClick.DoubleClicked(selectedRecipe))
         }
     }
 
     fun moveToRecipeEditorActivity() {
-        mySubject.onNext(MyRecipeEvent.AddRecipeHasPressed)
+        mySubject.onNext(ButtonClick.AddRecipeHasPressed)
     }
 
     fun moveToRecipeSearchFragment() {
-        mySubject.onNext(MyRecipeEvent.SearchIconClicked)
+        mySubject.onNext(ButtonClick.SearchIconClicked)
     }
 }

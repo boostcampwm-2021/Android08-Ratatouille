@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel.ButtonClick"/>
+
         <variable
             name="viewModel"
             type="com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel" />
@@ -28,7 +30,7 @@
             android:contentDescription="@string/addStepButton"
             android:clickable="true"
             android:focusable="true"
-            android:onClick="@{() -> viewModel.addRecipeStep()}"
+            android:onClick="@{() -> viewModel.editorSubject.onNext(ButtonClick.ADD_STEP)}"
             android:src="@drawable/ic_round_add_24" />
     </androidx.cardview.widget.CardView>
 </layout>

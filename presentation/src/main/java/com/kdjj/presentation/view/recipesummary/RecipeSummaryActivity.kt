@@ -69,11 +69,12 @@ class RecipeSummaryActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbarSummary)
 
         initViewModel()
-        initObserver()
-        initEventObserver()
+        initObservers()
+        setEventObservers()
+        setButtonClickObserver()
     }
 
-    private fun initObserver() = with(recipeSummaryViewModel) {
+    private fun initObservers() = with(recipeSummaryViewModel) {
 
         liveRecipe.observe(this@RecipeSummaryActivity) { recipe ->
             title = recipe.title
@@ -109,11 +110,11 @@ class RecipeSummaryActivity : AppCompatActivity() {
         }
     }
 
-    private fun initEventObserver() = with(recipeSummaryViewModel) {
+    private fun setButtonClickObserver() = with(recipeSummaryViewModel) {
         summarySubject.throttleFirst(1, TimeUnit.SECONDS)
             .subscribe {
                 when (it) {
-                    is RecipeSummaryViewModel.RecipeSummaryEvent.OpenRecipeDetail -> {
+                    is RecipeSummaryViewModel.ButtonClick.OpenRecipeDetail -> {
                         val intent = Intent(
                             this@RecipeSummaryActivity,
                             RecipeDetailActivity::class.java
@@ -124,7 +125,7 @@ class RecipeSummaryActivity : AppCompatActivity() {
                         startActivity(intent)
                     }
 
-                    is RecipeSummaryViewModel.RecipeSummaryEvent.OpenRecipeEditor -> {
+                    is RecipeSummaryViewModel.ButtonClick.OpenRecipeEditor -> {
                         val intent = Intent(
                             this@RecipeSummaryActivity,
                             RecipeEditorActivity::class.java
@@ -138,7 +139,9 @@ class RecipeSummaryActivity : AppCompatActivity() {
             }.also {
                 compositeDisposable.add(it)
             }
+    }
 
+    private fun setEventObservers() = with(recipeSummaryViewModel) {
         eventRecipeSummary.observe(this@RecipeSummaryActivity, EventObserver {
             when (it) {
                 is RecipeSummaryViewModel.RecipeSummaryEvent.LoadError -> {

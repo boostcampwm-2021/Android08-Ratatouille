@@ -45,7 +45,7 @@ class SearchRecipeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSubjectObserves()
+        setButtonClickObserver()
     }
 
     override fun onCreateView(
@@ -80,29 +80,28 @@ class SearchRecipeFragment : Fragment() {
         }
 
         focusInput()
-        setObservers()
+        setEventObservers()
     }
 
-    private fun setSubjectObserves() {
+    private fun setButtonClickObserver() {
         viewModel.searchSubject
             .throttleFirst(1, TimeUnit.SECONDS)
             .subscribe {
                 when (it) {
-                    is SearchViewModel.SearchRecipeEvent.Summary -> {
+                    is SearchViewModel.ButtonClick.Summary -> {
                         val bundle = bundleOf(
                             RECIPE_ID to it.item.recipeId,
                             RECIPE_STATE to it.item.state
                         )
                         navigation.navigate(R.id.action_searchFragment_to_recipeSummaryActivity, bundle)
                     }
-                    else -> {}
                 }
             }.also {
                 compositeDisposable.add(it)
             }
     }
 
-    private fun setObservers() {
+    private fun setEventObservers() {
         Observable.create<Unit> { emitter ->
             viewModel.liveKeyword.observe(viewLifecycleOwner) {
                 emitter.onNext(Unit)
@@ -134,7 +133,6 @@ class SearchRecipeFragment : Fragment() {
                         ) { }
                     }
                 }
-                else -> {}
             }
         })
 
