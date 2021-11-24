@@ -15,7 +15,7 @@ import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
 
-internal class FileSaveHelper @Inject constructor(
+internal class ImageFileHelper @Inject constructor(
     private val fileDir: File,
     private val contentResolver: ContentResolver,
     private val imageValidationDao: ImageValidationDao

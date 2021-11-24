@@ -1,6 +1,6 @@
 package com.kdjj.local.dataSource
 
-import com.kdjj.local.FileSaveHelper
+import com.kdjj.local.ImageFileHelper
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -10,7 +10,7 @@ import org.mockito.Mockito.mock
 
 class RecipeImageLocalDataSourceImplTest {
 	
-	private lateinit var mockFileSaveHelper: FileSaveHelper
+	private lateinit var mockImageFileHelper: ImageFileHelper
 	private lateinit var recipeImageLocalDataSourceImpl: RecipeImageLocalDataSourceImpl
 	private val testUri = "this is test uri"
 	private val testByteArray = testUri.toByteArray()
@@ -19,8 +19,8 @@ class RecipeImageLocalDataSourceImplTest {
 
 	@Before
 	fun setup() {
-		mockFileSaveHelper = mock(FileSaveHelper::class.java)
-		recipeImageLocalDataSourceImpl = RecipeImageLocalDataSourceImpl(mockFileSaveHelper)
+		mockImageFileHelper = mock(ImageFileHelper::class.java)
+		recipeImageLocalDataSourceImpl = RecipeImageLocalDataSourceImpl(mockImageFileHelper)
 	}
 
 	@Test
