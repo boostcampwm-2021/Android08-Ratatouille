@@ -33,6 +33,11 @@ class OthersRecipeFragment : Fragment() {
 
     private val compositeDisposable = CompositeDisposable()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setObserver()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,7 +53,6 @@ class OthersRecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setObserver()
         setAdapter()
         setSwipeRefreshLayout()
         setBinding()
