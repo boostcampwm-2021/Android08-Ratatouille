@@ -9,16 +9,14 @@ import android.os.Build
 class NotificationBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        val activityManager = context?.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val activityManager = (context?.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager) ?: return
         val tasks = activityManager.appTasks
-        if (tasks.isNotEmpty()) {
-            tasks.forEach { task ->
-                if (task.taskInfo.topActivity?.packageName == context.applicationContext.packageName) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        activityManager.moveTaskToFront(task.taskInfo.taskId, 0)
-                    } else {
-                        activityManager.moveTaskToFront(task.taskInfo.id, 0)
-                    }
+        tasks.forEach { task ->
+            if (task.taskInfo.topActivity?.packageName == context.applicationContext.packageName) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    activityManager.moveTaskToFront(task.taskInfo.taskId, 0)
+                } else {
+                    activityManager.moveTaskToFront(task.taskInfo.id, 0)
                 }
             }
         }

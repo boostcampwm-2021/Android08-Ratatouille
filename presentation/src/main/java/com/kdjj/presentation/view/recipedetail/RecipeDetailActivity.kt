@@ -40,8 +40,6 @@ class RecipeDetailActivity : AppCompatActivity() {
     @Inject
     lateinit var displayConverter: DisplayConverter
 
-    private val service by lazy { Intent(applicationContext, TimerService::class.java) }
-
     private var isExiting = false
 
     private val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(
@@ -163,7 +161,7 @@ class RecipeDetailActivity : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        applicationContext.stopService(service)
+        applicationContext.stopService(Intent(applicationContext, TimerService::class.java))
     }
 
     override fun onBackPressed() {
@@ -173,7 +171,7 @@ class RecipeDetailActivity : AppCompatActivity() {
 
     override fun onStop() {
         if (!isExiting) {
-            service.also {
+            Intent(applicationContext, TimerService::class.java).also {
                 it.action = "ACTION_START"
                 val timerList = viewModel.liveTimerList.value ?: return
                 it.putExtra("TIMERS",
