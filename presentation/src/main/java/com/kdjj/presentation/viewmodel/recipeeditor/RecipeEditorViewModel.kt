@@ -164,8 +164,7 @@ internal class RecipeEditorViewModel @Inject constructor(
     }
 
     fun saveTempRecipe() {
-        if (!doSaveTemp || (_eventRecipeEditor.value?.peekContent() as? RecipeEditorEvent.SaveResult)?.isSuccess == true)
-            return
+        if (!doSaveTemp) return
 
         tempJob?.cancel()
         tempJob = viewModelScope.launch {
@@ -254,6 +253,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                     if (recipe.state == RecipeState.UPLOAD) registerUploadTask(recipe.recipeId)
                     _eventRecipeEditor.value =
                         Event(RecipeEditorEvent.SaveResult(true))
+                    stopAndDeleteTemp()
                 }.onFailure {
                     _eventRecipeEditor.value =
                         Event(RecipeEditorEvent.SaveResult(false))
