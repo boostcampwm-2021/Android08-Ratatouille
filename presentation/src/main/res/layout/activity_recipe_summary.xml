@@ -149,8 +149,8 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_summary_favorite"
             style="@style/SummaryFloatingButton"
-            android:drawableEnd="@drawable/ic_star_white_16dp"
             android:onClick="@{() -> viewModel.fabClickSubject.onNext(FabClick.UpdateRecipeFavorite)}"
+            android:drawableEnd="@{viewModel.liveRecipe.favorite == true ? @drawable/ic_baseline_star_16dp : @drawable/ic_star_white_16dp}"
             android:text="@{viewModel.liveRecipe.favorite == true ? @string/cancelFavorite : @string/registFavorite}"
             app:layout_constraintBottom_toTopOf="@id/button_summary_edit"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
