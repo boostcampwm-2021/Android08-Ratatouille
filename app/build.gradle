@@ -50,6 +50,10 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
+    implementation 'androidx.hilt:hilt-work:1.0.0'
+    // When using Kotlin.
+    kapt 'androidx.hilt:hilt-compiler:1.0.0'
+
     implementation project(path: ':data')
     implementation project(path: ':domain')
     implementation project(path: ':remote')
