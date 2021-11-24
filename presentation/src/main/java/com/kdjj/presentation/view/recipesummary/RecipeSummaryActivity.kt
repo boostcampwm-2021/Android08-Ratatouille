@@ -21,6 +21,8 @@ import com.kdjj.presentation.view.recipedetail.RecipeDetailActivity
 import com.kdjj.presentation.view.recipeeditor.RecipeEditorActivity
 import com.kdjj.presentation.viewmodel.recipesummary.RecipeSummaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class RecipeSummaryActivity : AppCompatActivity() {
@@ -52,6 +54,8 @@ class RecipeSummaryActivity : AppCompatActivity() {
     private var isInitializeFab = false
 
     private lateinit var loadingDialog: CustomProgressDialog
+
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,6 +110,35 @@ class RecipeSummaryActivity : AppCompatActivity() {
     }
 
     private fun initEventObserver() = with(recipeSummaryViewModel) {
+        summarySubject.throttleFirst(1, TimeUnit.SECONDS)
+            .subscribe {
+                when (it) {
+                    is RecipeSummaryViewModel.RecipeSummaryEvent.OpenRecipeDetail -> {
+                        val intent = Intent(
+                            this@RecipeSummaryActivity,
+                            RecipeDetailActivity::class.java
+                        ).apply {
+                            putExtra(RECIPE_ID, it.item.recipeId)
+                            putExtra(RECIPE_STATE, it.item.state)
+                        }
+                        startActivity(intent)
+                    }
+
+                    is RecipeSummaryViewModel.RecipeSummaryEvent.OpenRecipeEditor -> {
+                        val intent = Intent(
+                            this@RecipeSummaryActivity,
+                            RecipeEditorActivity::class.java
+                        ).apply {
+                            putExtra(RECIPE_ID, it.item.recipeId)
+                            putExtra(RECIPE_STATE, it.item.state)
+                        }
+                        startActivity(intent)
+                    }
+                }
+            }.also {
+                compositeDisposable.add(it)
+            }
+
         eventRecipeSummary.observe(this@RecipeSummaryActivity, EventObserver {
             when (it) {
                 is RecipeSummaryViewModel.RecipeSummaryEvent.LoadError -> {
@@ -116,28 +149,6 @@ class RecipeSummaryActivity : AppCompatActivity() {
                     ) {
                         finish()
                     }
-                }
-
-                is RecipeSummaryViewModel.RecipeSummaryEvent.OpenRecipeDetail -> {
-                    val intent = Intent(
-                        this@RecipeSummaryActivity,
-                        RecipeDetailActivity::class.java
-                    ).apply {
-                        putExtra(RECIPE_ID, it.item.recipeId)
-                        putExtra(RECIPE_STATE, it.item.state)
-                    }
-                    startActivity(intent)
-                }
-
-                is RecipeSummaryViewModel.RecipeSummaryEvent.OpenRecipeEditor -> {
-                    val intent = Intent(
-                        this@RecipeSummaryActivity,
-                        RecipeEditorActivity::class.java
-                    ).apply {
-                        putExtra(RECIPE_ID, it.item.recipeId)
-                        putExtra(RECIPE_STATE, it.item.state)
-                    }
-                    startActivity(intent)
                 }
 
                 is RecipeSummaryViewModel.RecipeSummaryEvent.DeleteFinish -> {
@@ -180,11 +191,16 @@ class RecipeSummaryActivity : AppCompatActivity() {
         }
     }
 
-    fun showSnackBar(message: String) {
+    private fun showSnackBar(message: String) {
         Snackbar.make(
             binding.root,
             message,
             Snackbar.LENGTH_LONG
         ).show()
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.dispose()
+        super.onDestroy()
     }
 }
