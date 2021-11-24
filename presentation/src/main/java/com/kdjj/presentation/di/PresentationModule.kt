@@ -25,5 +25,5 @@ class PresentationModule {
     @Provides
     fun provideWorkManager(
         @ApplicationContext context: Context
-    ) = WorkManager.getInstance(context.applicationContext)
+    ) = WorkManager.getInstance(context)
 }
