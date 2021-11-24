@@ -1,5 +1,6 @@
 package com.kdjj.presentation.viewmodel.recipeeditor
 
+import android.util.Log
 import androidx.lifecycle.*
 import androidx.work.*
 import com.kdjj.domain.model.Recipe
@@ -12,8 +13,11 @@ import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.model.toDomain
 import com.kdjj.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
+import kotlin.concurrent.timer
 
 @HiltViewModel
 internal class RecipeEditorViewModel @Inject constructor(
@@ -67,6 +71,8 @@ internal class RecipeEditorViewModel @Inject constructor(
     }
 
     private var tempRecipe: Recipe? = null
+    private var tempJob: Job? = null
+    private var tempTimer: Timer? = null
 
     fun initializeWith(recipeId: String?) {
         if (isInitialized) return
@@ -94,6 +100,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                             )
                         )
                         isInitialized = true
+                        startTempTimer()
                     }
                 }
                 .onFailure {
@@ -110,6 +117,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                 recipe.toPresentation(recipeValidator, _liveRecipeTypes.value ?: listOf(), recipeStepValidator)
             recipeMetaModel = metaModel
             _liveStepModelList.value = stepList
+            startTempTimer()
         } ?: showRecipeFromLocal(recipeId)
         isInitialized = true
     }
@@ -130,10 +138,25 @@ internal class RecipeEditorViewModel @Inject constructor(
                 recipeMetaModel = metaModel
                 _liveStepModelList.value = stepList
                 deleteRecipeTempUseCase(DeleteRecipeTempRequest(recipe))
+                startTempTimer()
             }
             .onFailure {
                 _eventRecipeEditor.value = Event(RecipeEditorEvent.Error)
             }
+    }
+
+    private fun startTempTimer() {
+        tempTimer = timer(period = 20000) {
+            tempJob?.cancel()
+            tempJob = viewModelScope.launch {
+                val recipe = recipeMetaModel.toDomain(
+                    _liveStepModelList.value ?: listOf(),
+                    liveRecipeTypes.value ?: listOf()
+                )
+                saveRecipeTempUseCase(SaveRecipeTempRequest(recipe))
+                println("save temp")
+            }
+        }
     }
 
     fun startSelectImage(model: RecipeEditorItem) {
@@ -194,7 +217,7 @@ internal class RecipeEditorViewModel @Inject constructor(
             viewModelScope.launch {
                 val recipe = recipeMetaModel.toDomain(
                     _liveStepModelList.value ?: listOf(),
-                    liveRecipeTypes.value ?: emptyList()
+                    liveRecipeTypes.value ?: listOf()
                 )
                 val res = if (isEditing) {
                     updateLocalRecipeUseCase(UpdateLocalRecipeRequest(recipe))
@@ -250,5 +273,10 @@ internal class RecipeEditorViewModel @Inject constructor(
         }
 
         return true
+    }
+
+    override fun onCleared() {
+        tempTimer?.cancel()
+        super.onCleared()
     }
 }
