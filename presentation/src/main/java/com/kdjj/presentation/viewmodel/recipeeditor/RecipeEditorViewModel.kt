@@ -1,9 +1,7 @@
 package com.kdjj.presentation.viewmodel.recipeeditor
 
 import androidx.lifecycle.*
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.workDataOf
+import androidx.work.*
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.RecipeStepType
@@ -185,13 +183,14 @@ internal class RecipeEditorViewModel @Inject constructor(
     }
 
     private fun registerUploadTask(updatedRecipeId: String) {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
         val updateWorkerRequest = OneTimeWorkRequestBuilder<RecipeUploadWorker>().apply {
-            setInputData(
-                workDataOf(
-                    UPDATED_RECIPE_ID to updatedRecipeId
-                )
-            )
-        }.build()
+            setInputData(workDataOf(UPDATED_RECIPE_ID to updatedRecipeId))
+        }
+            .setConstraints(constraints)
+            .build()
         workManager.enqueue(updateWorkerRequest)
     }
 
