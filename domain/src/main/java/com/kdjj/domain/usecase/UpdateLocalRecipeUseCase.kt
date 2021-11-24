@@ -1,9 +1,6 @@
 package com.kdjj.domain.usecase
 
 import com.kdjj.domain.common.IdGenerator
-import com.kdjj.domain.model.Recipe
-import com.kdjj.domain.model.RecipeState
-import com.kdjj.domain.model.exception.UploadException
 import com.kdjj.domain.model.request.UpdateLocalRecipeRequest
 import com.kdjj.domain.repository.RecipeImageRepository
 import com.kdjj.domain.repository.RecipeRepository
@@ -13,7 +10,7 @@ internal class UpdateLocalRecipeUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository,
     private val imageRepository: RecipeImageRepository,
     private val idGenerator: IdGenerator,
-) : ResultUseCase<UpdateLocalRecipeRequest, Unit>{
+) : ResultUseCase<UpdateLocalRecipeRequest, Unit> {
 
     override suspend fun invoke(request: UpdateLocalRecipeRequest): Result<Unit> =
         runCatching {
@@ -57,45 +54,5 @@ internal class UpdateLocalRecipeUseCase @Inject constructor(
                 updatedRecipe,
                 originRecipe.stepList.map { it.imgPath }.plus(originRecipe.imgPath)
             ).getOrThrow()
-
-            if (updatedRecipe.state == RecipeState.UPLOAD) uploadRecipe(updatedRecipe)
         }
-
-    private suspend fun uploadRecipe(updatedRecipe: Recipe) {
-        runCatching {
-            val fireBaseRecipeImageUri = when (updatedRecipe.imgPath.isNotEmpty()) {
-                true -> {
-                    imageRepository.convertInternalUriToRemoteStorageUri(updatedRecipe.imgPath)
-                        .getOrThrow()
-                }
-                false -> ""
-            }
-            val fireBaseRecipeStepList = updatedRecipe.stepList.map { step ->
-                val stepImageUri = when (step.imgPath.isNotEmpty()) {
-                    true -> {
-                        imageRepository.convertInternalUriToRemoteStorageUri(step.imgPath)
-                            .getOrThrow()
-                    }
-                    false -> ""
-                }
-                step.copy(imgPath = stepImageUri)
-            }
-            recipeRepository.uploadRecipe(
-                updatedRecipe.copy(
-                    imgPath = fireBaseRecipeImageUri,
-                    stepList = fireBaseRecipeStepList,
-                    createTime = System.currentTimeMillis()
-                )
-            ).getOrThrow()
-
-            recipeRepository.updateLocalRecipe(
-                updatedRecipe.copy(
-                    state = RecipeState.UPLOAD
-                )
-            ).getOrNull()
-        }.onFailure {
-            throw UploadException(recipe = updatedRecipe)
-        }
-    }
-
 }
