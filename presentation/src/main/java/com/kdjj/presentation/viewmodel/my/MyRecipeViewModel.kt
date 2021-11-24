@@ -5,10 +5,10 @@ import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.request.*
 import com.kdjj.domain.usecase.FlowUseCase
 import com.kdjj.domain.usecase.ResultUseCase
-import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.MyRecipeItem
 import com.kdjj.presentation.model.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
@@ -53,8 +53,7 @@ internal class MyRecipeViewModel @Inject constructor(
 
     private var job: Job? = null
 
-    private val _eventMyRecipe = MutableLiveData<Event<MyRecipeEvent>>()
-    val eventMyRecipe: LiveData<Event<MyRecipeEvent>> get() = _eventMyRecipe
+    val mySubject: PublishSubject<MyRecipeEvent> = PublishSubject.create()
 
     sealed class MyRecipeEvent {
         object AddRecipeHasPressed : MyRecipeEvent()
@@ -108,7 +107,7 @@ internal class MyRecipeViewModel @Inject constructor(
                 }
             }.onFailure {
                 if (it !is CancellationException) {
-                    _eventMyRecipe.value = Event(MyRecipeEvent.DataLoadFailed)
+                    mySubject.onNext(MyRecipeEvent.DataLoadFailed)
                 }
             }
             _liveFetching.value = false
@@ -119,15 +118,15 @@ internal class MyRecipeViewModel @Inject constructor(
         if (_liveRecipeItemSelected.value != selectedRecipe) {
             _liveRecipeItemSelected.value = selectedRecipe
         } else {
-            _eventMyRecipe.value = Event(MyRecipeEvent.DoubleClicked(selectedRecipe))
+            mySubject.onNext(MyRecipeEvent.DoubleClicked(selectedRecipe))
         }
     }
 
     fun moveToRecipeEditorActivity() {
-        _eventMyRecipe.value = Event(MyRecipeEvent.AddRecipeHasPressed)
+        mySubject.onNext(MyRecipeEvent.AddRecipeHasPressed)
     }
 
     fun moveToRecipeSearchFragment() {
-        _eventMyRecipe.value = Event(MyRecipeEvent.SearchIconClicked)
+        mySubject.onNext(MyRecipeEvent.SearchIconClicked)
     }
 }
