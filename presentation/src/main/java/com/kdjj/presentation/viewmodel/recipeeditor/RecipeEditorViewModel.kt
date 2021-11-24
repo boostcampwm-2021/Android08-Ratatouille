@@ -183,6 +183,7 @@ internal class RecipeEditorViewModel @Inject constructor(
     }
 
     private fun registerUploadTask(updatedRecipeId: String) {
+        workManager.cancelAllWorkByTag(updatedRecipeId)
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
@@ -190,6 +191,7 @@ internal class RecipeEditorViewModel @Inject constructor(
             setInputData(workDataOf(UPDATED_RECIPE_ID to updatedRecipeId))
         }
             .setConstraints(constraints)
+            .addTag(updatedRecipeId)
             .build()
         workManager.enqueue(updateWorkerRequest)
     }
