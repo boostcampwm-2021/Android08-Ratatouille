@@ -9,7 +9,7 @@ interface RecipeTempLocalDataSource {
     ): Result<Unit>
 
     suspend fun deleteRecipeTemp(
-        recipe: Recipe
+        recipeId: String
     ): Result<Unit>
 
     suspend fun getRecipeTemp(

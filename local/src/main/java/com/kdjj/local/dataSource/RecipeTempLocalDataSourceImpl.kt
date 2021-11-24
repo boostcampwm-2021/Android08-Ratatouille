@@ -20,10 +20,10 @@ internal class RecipeTempLocalDataSourceImpl @Inject constructor(
             }
         }
 
-    override suspend fun deleteRecipeTemp(recipe: Recipe): Result<Unit> =
+    override suspend fun deleteRecipeTemp(recipeId: String): Result<Unit> =
         withContext(Dispatchers.IO) {
             runCatching {
-                recipeTempDao.deleteRecipeTemp(recipe.toTempDto())
+                recipeTempDao.deleteRecipeTemp(recipeId)
             }
         }
 

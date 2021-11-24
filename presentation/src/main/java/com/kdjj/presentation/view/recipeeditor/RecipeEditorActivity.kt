@@ -239,4 +239,21 @@ class RecipeEditorActivity : AppCompatActivity() {
             }
         )
     }
+
+    override fun onPause() {
+        viewModel.saveTempRecipe()
+        super.onPause()
+    }
+
+    override fun onBackPressed() {
+        ConfirmDialogBuilder.create(
+            this,
+            "나가기",
+            "변경 사항을 저장하지 않고 나가시겠습니까?",
+            true,
+        ) {
+            viewModel.stopAndDeleteTemp()
+            super.onBackPressed()
+        }
+    }
 }
