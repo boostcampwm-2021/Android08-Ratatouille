@@ -12,7 +12,7 @@ class UpdateRemoteRecipeUseCase @Inject constructor(
     
     override suspend fun invoke(request: UpdateRemoteRecipeRequest): Result<Unit> =
         runCatching {
-            val recipe = request.recipe
+            val recipe = recipeRepository.getLocalRecipe(request.recipeId).getOrThrow()
             val recipeImageUri = when (recipe.imgPath.isNotEmpty()) {
                 true -> {
                     recipeImageRepository.convertInternalUriToRemoteStorageUri(recipe.imgPath)
