@@ -40,7 +40,10 @@ class RecipeDetailActivity : AppCompatActivity() {
     private lateinit var stepListAdapter: RecipeDetailStepListAdapter
     private lateinit var timerListAdapter: RecipeDetailTimerListAdapter
 
-    @Inject lateinit var displayConverter: DisplayConverter
+    @Inject
+    lateinit var displayConverter: DisplayConverter
+
+    private val service by lazy { Intent(applicationContext, TimerService::class.java) }
 
     private val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(
         ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT,
@@ -106,12 +109,15 @@ class RecipeDetailActivity : AppCompatActivity() {
         }
 
         viewModel.eventRecipeDetail.observe(this, EventObserver {
-            when(it){
+            when (it) {
                 is RecipeDetailViewModel.RecipeDetailEvent.OpenTimer -> {
                     AnimatorSet().apply {
                         playTogether(
                             ObjectAnimator.ofFloat(
-                                binding.recyclerViewDetailTimer, View.TRANSLATION_Y, displayConverter.dpToPx(-50), 0f
+                                binding.recyclerViewDetailTimer,
+                                View.TRANSLATION_Y,
+                                displayConverter.dpToPx(-50),
+                                0f
                             ),
                             ObjectAnimator.ofFloat(
                                 binding.recyclerViewDetailTimer, View.ALPHA, 0f, 1f
@@ -126,7 +132,10 @@ class RecipeDetailActivity : AppCompatActivity() {
                     AnimatorSet().apply {
                         playTogether(
                             ObjectAnimator.ofFloat(
-                                binding.recyclerViewDetailTimer, View.TRANSLATION_Y, 0f, displayConverter.dpToPx(-50)
+                                binding.recyclerViewDetailTimer,
+                                View.TRANSLATION_Y,
+                                0f,
+                                displayConverter.dpToPx(-50)
                             ),
                             ObjectAnimator.ofFloat(
                                 binding.recyclerViewDetailTimer, View.ALPHA, 1f, 0f
@@ -153,16 +162,24 @@ class RecipeDetailActivity : AppCompatActivity() {
         })
     }
 
-    override fun onStop() {
-        super.onStop()
-        sendCommandToService("ACTION_START_OR_RESUME_SERVICE")
+    override fun onRestart() {
+        super.onRestart()
+        Log.d("aaa", "restart" )
+        service.also {
+            applicationContext.stopService(it)
+        }
     }
 
-    private fun sendCommandToService(action: String) {
-        Intent(applicationContext, TimerService::class.java).also {
-            it.action = action
+    override fun onStop() {
+        super.onStop()
+        service.also {
+            it.action = "ACTION_START"
             val timerList = viewModel.liveTimerList.value ?: return
-            it.putExtra("TIMERS", timerList.map { timer -> "${timer.liveLeftSeconds.value ?: 0}:${timer.recipeStep.stepId}:${timer.recipeStep.name}" }.toTypedArray())
+            it.putExtra("TIMERS",
+                timerList.map { timer ->
+                    "${timer.liveLeftSeconds.value ?: 0}:${timer.recipeStep.stepId}:${timer.recipeStep.name}"
+                }.toTypedArray()
+            )
             applicationContext.startService(it)
         }
     }
