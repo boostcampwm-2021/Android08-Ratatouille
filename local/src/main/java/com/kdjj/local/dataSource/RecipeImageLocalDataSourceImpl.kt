@@ -1,17 +1,17 @@
 package com.kdjj.local.dataSource
 
 import com.kdjj.data.datasource.RecipeImageLocalDataSource
-import com.kdjj.local.FileSaveHelper
+import com.kdjj.local.ImageFileHelper
 import javax.inject.Inject
 
 internal class RecipeImageLocalDataSourceImpl @Inject constructor(
-    private val fileSaveHelper: FileSaveHelper,
+    private val imageFileHelper: ImageFileHelper,
 ) : RecipeImageLocalDataSource {
 
     override suspend fun convertToByteArray(
         uri: String
     ): Result<Pair<ByteArray, Float?>> {
-        return fileSaveHelper.convertToByteArray(uri)
+        return imageFileHelper.convertToByteArray(uri)
     }
 
     override suspend fun convertToInternalStorageUri(
@@ -19,9 +19,9 @@ internal class RecipeImageLocalDataSourceImpl @Inject constructor(
         fileName: String,
         degree: Float?
     ): Result<String> {
-        return fileSaveHelper.convertToInternalStorageUri(byteArray, fileName, degree)
+        return imageFileHelper.convertToInternalStorageUri(byteArray, fileName, degree)
     }
 
-    override fun isUriExists(uri: String): Boolean = fileSaveHelper.isUriExists(uri)
+    override fun isUriExists(uri: String): Boolean = imageFileHelper.isUriExists(uri)
 }
 
