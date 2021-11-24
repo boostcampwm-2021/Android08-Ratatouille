@@ -62,7 +62,7 @@ internal class FileSaveHelper @Inject constructor(
     fun isUriExists(uri: String): Boolean =
         try {
             val changedUri = if (!uri.contains("://")) "file://${uri}" else uri
-            val inputStream = contentResolver.openInputStream(Uri.parse(changedUri))
+            contentResolver.openInputStream(Uri.parse(changedUri))
             true
         } catch (e: Exception) {
             false

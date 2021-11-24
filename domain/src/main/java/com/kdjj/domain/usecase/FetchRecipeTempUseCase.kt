@@ -16,13 +16,10 @@ class FetchRecipeTempUseCase @Inject constructor(
             val recipe = tempRepository.getRecipeTemp(request.recipeId).getOrNull()
                 ?: return@runCatching null
 
+            val imgPath = if (imageRepository.isUriExists(recipe.imgPath)) recipe.imgPath else ""
             val stepList = recipe.stepList.map { step ->
-                if (step.imgPath.isNotEmpty() && !imageRepository.isUriExists(step.imgPath)) {
-                    step.copy(imgPath = "")
-                } else {
-                    step
-                }
+                if (!imageRepository.isUriExists(step.imgPath)) step.copy(imgPath = "") else step
             }
-            recipe.copy(stepList = stepList)
+            recipe.copy(imgPath = imgPath, stepList = stepList)
         }
 }
