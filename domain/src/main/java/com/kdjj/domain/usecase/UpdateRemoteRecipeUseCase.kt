@@ -1,6 +1,5 @@
 package com.kdjj.domain.usecase
 
-import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.repository.RecipeRepository
 import com.kdjj.domain.model.request.UpdateRemoteRecipeRequest
 import com.kdjj.domain.repository.RecipeImageRepository
@@ -9,7 +8,7 @@ import javax.inject.Inject
 class UpdateRemoteRecipeUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository,
     private val recipeImageRepository: RecipeImageRepository
-) : UseCase<UpdateRemoteRecipeRequest, Unit> {
+) : ResultUseCase<UpdateRemoteRecipeRequest, Unit> {
     
     override suspend fun invoke(request: UpdateRemoteRecipeRequest): Result<Unit> =
         runCatching {

@@ -1,22 +1,23 @@
-package com.kdjj.remote.dao
+package com.kdjj.remote.service
 
 import com.kdjj.domain.model.Recipe
+import com.kdjj.remote.dto.RecipeDto
 
 internal interface RemoteRecipeService {
     
     suspend fun uploadRecipe(
-        recipe: Recipe
+        recipeDto: RecipeDto
     )
     
     suspend fun increaseViewCount(
-        recipe: Recipe
+        recipeDto: RecipeDto
     )
     
     suspend fun deleteRecipe(
-        recipe: Recipe
+        recipeDto: RecipeDto
     )
 
     suspend fun fetchRecipe(
-        recipeID: String
-    ): Recipe
+        recipeId: String
+    ): RecipeDto
 }

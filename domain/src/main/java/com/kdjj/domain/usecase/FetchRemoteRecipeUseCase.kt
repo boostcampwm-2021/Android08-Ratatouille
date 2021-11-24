@@ -7,8 +7,8 @@ import javax.inject.Inject
 
 internal class FetchRemoteRecipeUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository
-) :UseCase<FetchRemoteRecipeRequest, @JvmSuppressWildcards Recipe> {
+) :ResultUseCase<FetchRemoteRecipeRequest, @JvmSuppressWildcards Recipe> {
 
     override suspend fun invoke(request: FetchRemoteRecipeRequest): Result<Recipe> =
-        recipeRepository.fetchRemoteRecipe(request.recipeID)
+        recipeRepository.fetchRemoteRecipe(request.recipeId)
 }

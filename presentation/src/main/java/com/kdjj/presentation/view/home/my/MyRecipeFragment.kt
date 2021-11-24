@@ -1,6 +1,7 @@
 package com.kdjj.presentation.view.home.my
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -67,29 +68,37 @@ class MyRecipeFragment : Fragment() {
     }
 
     private fun setObservers() {
-        viewModel.eventAddRecipeHasPressed.observe(viewLifecycleOwner, EventObserver {
-            navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
-        })
-
-        viewModel.eventSearchIconClicked.observe(viewLifecycleOwner, EventObserver {
-            navigation.navigate(R.id.action_myRecipeFragment_to_searchRecipeFragment)
-        })
-
-        viewModel.eventItemDoubleClicked.observe(viewLifecycleOwner, EventObserver {
-            val bundle = bundleOf(
-                RECIPE_ID to it.recipe.recipeId,
-                RECIPE_STATE to it.recipe.state
-            )
-            navigation.navigate(R.id.action_myRecipeFragment_to_recipeSummaryActivity, bundle)
-        })
-
-        viewModel.eventDataLoadFailed.observe(viewLifecycleOwner, EventObserver {
-            Snackbar.make(binding.root, getString(R.string.dataLoadFailMessage), Snackbar.LENGTH_LONG)
-                .setAction(getString(R.string.refresh)){
-                     viewModel.refreshRecipeList()
+        viewModel.eventMyRecipe.observe(viewLifecycleOwner, EventObserver {
+            when (it) {
+                is MyRecipeViewModel.MyRecipeEvent.AddRecipeHasPressed -> {
+                    navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
                 }
-                .setActionTextColor(requireContext().getColor(R.color.blue_500))
-                .show()
+                is MyRecipeViewModel.MyRecipeEvent.DoubleClicked -> {
+                    val bundle = bundleOf(
+                        RECIPE_ID to it.item.recipe.recipeId,
+                        RECIPE_STATE to it.item.recipe.state
+                    )
+                    navigation.navigate(
+                        R.id.action_myRecipeFragment_to_recipeSummaryActivity,
+                        bundle
+                    )
+                }
+                is MyRecipeViewModel.MyRecipeEvent.DataLoadFailed -> {
+                    Snackbar.make(
+                        binding.root,
+                        getString(R.string.dataLoadFailMessage),
+                        Snackbar.LENGTH_LONG
+                    )
+                        .setAction(getString(R.string.refresh)) {
+                            viewModel.refreshRecipeList()
+                        }
+                        .setActionTextColor(requireContext().getColor(R.color.blue_500))
+                        .show()
+                }
+                is MyRecipeViewModel.MyRecipeEvent.SearchIconClicked -> {
+                    navigation.navigate(R.id.action_myRecipeFragment_to_searchRecipeFragment)
+                }
+            }
         })
     }
 
@@ -104,22 +113,24 @@ class MyRecipeFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.recyclerViewMyRecipe.apply {
-            val deviceWidth = resources.displayMetrics.widthPixels
-            val itemWidth = displayConverter.dpToPx(160).toInt()
-            val spanCount = deviceWidth / itemWidth
+
+            val displayWidth = resources.displayMetrics.widthPixels
+            val itemWidth = resources.getDimensionPixelSize(R.dimen.myRecipe_cardView_width)
+            val spanCount = maxOf(displayWidth / itemWidth, 2)
             layoutManager = GridLayoutManager(requireContext(), spanCount)
             adapter = myRecipeAdapter
 
-            addItemDecoration(SpacesItemDecoration(spanCount, deviceWidth, itemWidth))
+            val space = resources.getDimensionPixelSize(R.dimen.myRecipe_space_size)
+            addItemDecoration(SpacesItemDecoration(space))
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-
-                    val lastVisibleItemPosition = (layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+                    val lastVisibleItemPosition =
+                        (layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
                     val lastItemPosition = myRecipeAdapter.itemCount - 1
                     if (lastVisibleItemPosition == lastItemPosition && myRecipeAdapter.itemCount != 0 && dy > 0) {
-                        viewModel.fetchMoreRecipeData(lastVisibleItemPosition)
+                        viewModel.fetchRecipeList(lastVisibleItemPosition)
                     }
                 }
             })

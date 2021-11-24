@@ -7,21 +7,19 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
-import android.os.FileUtils
-import android.util.Log
-import com.kdjj.data.common.errorMap
+import com.kdjj.local.dao.ImageValidationDao
+import com.kdjj.local.dto.ImageValidationDto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.BufferedInputStream
-import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.Exception
 import javax.inject.Inject
 
-class FileSaveHelper @Inject constructor(
+internal class FileSaveHelper @Inject constructor(
     private val fileDir: File,
-    private val contentResolver: ContentResolver
+    private val contentResolver: ContentResolver,
+    private val imageValidationDao: ImageValidationDao
 ) {
 
     suspend fun convertToByteArray(uri: String): Result<Pair<ByteArray, Float?>> = withContext(Dispatchers.IO) {
@@ -54,6 +52,7 @@ class FileSaveHelper @Inject constructor(
         var fos: FileOutputStream? = null
         runCatching {
             val filePath = "$fileDir/${fileName}.png"
+            imageValidationDao.insertImageValidation(ImageValidationDto(filePath, false))
             fos = FileOutputStream(filePath)
             val bitmap = convertByteArrayToBitmap(byteArray, degree)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)

@@ -7,17 +7,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.kdjj.presentation.R
 import com.kdjj.presentation.common.EventObserver
 import com.kdjj.presentation.common.RECIPE_ID
 import com.kdjj.presentation.common.RECIPE_STATE
 import com.kdjj.presentation.databinding.FragmentSearchRecipeBinding
+import com.kdjj.presentation.model.ResponseError
 import com.kdjj.presentation.view.adapter.SearchRecipeListAdapter
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.viewmodel.search.SearchViewModel
@@ -41,7 +44,8 @@ class SearchRecipeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search_recipe, container, false)
+        _binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_search_recipe, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         return binding.root
@@ -86,30 +90,43 @@ class SearchRecipeFragment : Fragment() {
                 it.printStackTrace()
             })
 
-        viewModel.eventException.observe(viewLifecycleOwner, EventObserver {
-            ConfirmDialogBuilder.create(
-                context ?: return@EventObserver,
-                "오류",
-                "오류가 발생했습니다."
-            ) { }
-        })
-
         viewModel.liveTabState.observe(viewLifecycleOwner) {
             viewModel.updateSearchKeyword()
         }
 
-        viewModel.eventSummary.observe(viewLifecycleOwner, EventObserver {
-            val bundle = bundleOf(
-                RECIPE_ID to it.recipeId,
-                RECIPE_STATE to it.state
-            )
-            navigation.navigate(R.id.action_searchFragment_to_recipeSummaryActivity, bundle)
+        viewModel.eventSearchRecipe.observe(viewLifecycleOwner, EventObserver {
+            when (it) {
+                is SearchViewModel.SearchRecipeEvent.Summary -> {
+                    val bundle = bundleOf(
+                        RECIPE_ID to it.item.recipeId,
+                        RECIPE_STATE to it.item.state
+                    )
+                    navigation.navigate(R.id.action_searchFragment_to_recipeSummaryActivity, bundle)
+                }
+                is SearchViewModel.SearchRecipeEvent.Exception -> {
+                    when (it.error) {
+                        ResponseError.NETWORK_CONNECTION, ResponseError.SERVER ->
+                            showSnackBar(it.error.stringRes)
+                        else -> ConfirmDialogBuilder.create(
+                            context ?: return@EventObserver,
+                            getString(R.string.errorOccurs),
+                            getString(it.error.stringRes)
+                        ) { }
+                    }
+                }
+            }
         })
+
+    }
+
+    private fun showSnackBar(@StringRes resId: Int) {
+        Snackbar.make(binding.root, resId, Snackbar.LENGTH_LONG).show()
     }
 
     private fun focusInput() {
         binding.editTextSearch.requestFocus()
-        val inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager ?: return
+        val inputMethodManager =
+            context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager ?: return
         inputMethodManager.showSoftInput(binding.editTextSearch, InputMethodManager.SHOW_IMPLICIT)
     }
 

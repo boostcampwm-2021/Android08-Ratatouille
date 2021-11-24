@@ -18,56 +18,61 @@ internal class RecipeRepositoryImpl @Inject constructor(
     override suspend fun saveLocalRecipe(
         recipe: Recipe
     ): Result<Boolean> {
-        return recipeLocalDataSource.saveRecipe(recipe).also {
-            it.onSuccess { isUpdated.value++ }
-        }
+        return recipeLocalDataSource.saveRecipe(recipe).onSuccess { isUpdated.value++ }
     }
-    
+
     override suspend fun updateLocalRecipe(
         recipe: Recipe
     ): Result<Boolean> {
-        return recipeLocalDataSource.updateRecipe(recipe).also {
-            it.onSuccess { isUpdated.value++ }
-        }
+        return recipeLocalDataSource.updateRecipe(recipe).onSuccess { isUpdated.value++ }
     }
-    
+
+    override suspend fun updateLocalRecipe(
+        recipe: Recipe,
+        originImgPathList: List<String>
+    ): Result<Unit> {
+        return recipeLocalDataSource.updateRecipe(recipe, originImgPathList).onSuccess { isUpdated.value++ }
+    }
+
     override suspend fun deleteLocalRecipe(
         recipe: Recipe
     ): Result<Boolean> {
-        return recipeLocalDataSource.deleteRecipe(recipe).also {
-            it.onSuccess { isUpdated.value++ }
-        }
+        return recipeLocalDataSource.deleteRecipe(recipe).onSuccess { isUpdated.value++ }
     }
-    
+
     override suspend fun uploadRecipe(
         recipe: Recipe
     ): Result<Unit> {
         return recipeRemoteDataSource.uploadRecipe(recipe)
     }
-    
+
     override suspend fun increaseRemoteRecipeViewCount(
         recipe: Recipe
     ): Result<Unit> {
         return recipeRemoteDataSource.increaseViewCount(recipe)
     }
-    
+
     override suspend fun deleteRemoteRecipe(
         recipe: Recipe
     ): Result<Unit> {
         return recipeRemoteDataSource.deleteRecipe(recipe)
     }
-    
+
     override fun getLocalRecipeFlow(
         recipeId: String
-    ): Result<Flow<Recipe>> {
+    ): Flow<Recipe> {
         return recipeLocalDataSource.getRecipeFlow(recipeId)
     }
 
-    override suspend fun fetchRemoteRecipe(recipeID: String): Result<Recipe> {
-        return recipeRemoteDataSource.fetchRecipe(recipeID)
+    override suspend fun fetchRemoteRecipe(recipeId: String): Result<Recipe> {
+        return recipeRemoteDataSource.fetchRecipe(recipeId)
     }
 
-    override fun getRecipeUpdateState(): Result<Flow<Int>> {
-        return  Result.success(isUpdated)
+    override fun getRecipeUpdateFlow(): Flow<Int> {
+        return isUpdated
+    }
+
+    override suspend fun getLocalRecipe(recipeId: String): Result<Recipe> {
+        return recipeLocalDataSource.getRecipe(recipeId)
     }
 }

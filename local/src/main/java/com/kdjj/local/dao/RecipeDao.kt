@@ -1,11 +1,9 @@
 package com.kdjj.local.dao
 
 import androidx.room.*
-import com.kdjj.domain.model.Recipe
 import com.kdjj.local.dto.RecipeDto
 import com.kdjj.local.dto.RecipeMetaDto
 import com.kdjj.local.dto.RecipeStepDto
-import com.kdjj.local.dto.toDto
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -16,15 +14,7 @@ internal interface RecipeDao {
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecipeStep(recipeStep: RecipeStepDto)
-    
-    @Transaction
-    suspend fun insertRecipe(recipe: Recipe) {
-        insertRecipeMeta(recipe.toDto())
-        recipe.stepList.forEachIndexed { idx, recipeStep ->
-            insertRecipeStep(recipeStep.toDto(recipe.recipeId, idx + 1))
-        }
-    }
-    
+
     @Transaction
     @Query("SELECT * FROM RecipeMeta")
     suspend fun getAllRecipe(): List<RecipeDto>
@@ -40,4 +30,7 @@ internal interface RecipeDao {
     
     @Query("SELECT * FROM RecipeMeta WHERE recipeMetaId = :recipeId")
     fun getRecipe(recipeId: String): Flow<RecipeDto>
+
+    @Query("SELECT * FROM RecipeMeta WHERE recipeMetaId = :recipeId")
+    fun getRecipeDto(recipeId: String): RecipeDto
 }

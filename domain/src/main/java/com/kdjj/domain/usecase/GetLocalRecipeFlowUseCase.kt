@@ -8,8 +8,8 @@ import javax.inject.Inject
 
 internal class GetLocalRecipeFlowUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository
-) : UseCase<GetLocalRecipeFlowRequest, @JvmSuppressWildcards Flow<Recipe>> {
-    
-    override suspend fun invoke(request: GetLocalRecipeFlowRequest): Result<Flow<Recipe>> =
+) : FlowUseCase<GetLocalRecipeFlowRequest, Recipe> {
+
+    override fun invoke(request: GetLocalRecipeFlowRequest): Flow<Recipe> =
         recipeRepository.getLocalRecipeFlow(request.recipeId)
 }

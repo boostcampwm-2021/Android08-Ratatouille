@@ -33,11 +33,20 @@ interface RecipeRepository {
 
     fun getLocalRecipeFlow(
         recipeId: String
-    ): Result<Flow<Recipe>>
+    ): Flow<Recipe>
 
     suspend fun fetchRemoteRecipe(
-        recipeID: String
+        recipeId: String
     ): Result<Recipe>
 
-    fun getRecipeUpdateState(): Result<Flow<Int>>
+    fun getRecipeUpdateFlow(): Flow<Int>
+
+    suspend fun getLocalRecipe(
+        recipeId: String
+    ): Result<Recipe>
+
+    suspend fun updateLocalRecipe(
+        recipe: Recipe,
+        originImgPathList: List<String>
+    ): Result<Unit>
 }

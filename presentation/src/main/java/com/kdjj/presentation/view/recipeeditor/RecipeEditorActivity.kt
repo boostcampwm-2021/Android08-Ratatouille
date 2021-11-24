@@ -123,27 +123,10 @@ class RecipeEditorActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
+
         viewModel.liveImgTarget.observe(this) { model ->
             model?.let { showSelectImageDialog() }
         }
-
-        viewModel.eventSaveResult.observe(this, EventObserver { isSuccess ->
-            if (isSuccess) {
-                ConfirmDialogBuilder.create(
-                    this,
-                    "저장 완료",
-                    "레시피가 정상적으로 저장되었습니다.",
-                ) {
-                    finish()
-                }
-            } else {
-                ConfirmDialogBuilder.create(
-                    this,
-                    "저장 실패",
-                    "레시피를 저장하지 못했습니다.",
-                ) { }
-            }
-        })
 
         viewModel.liveLoading.observe(this) { doLoading ->
             if (doLoading) {
@@ -153,13 +136,35 @@ class RecipeEditorActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.eventError.observe(this, EventObserver {
-            ConfirmDialogBuilder.create(
-                this,
-                "오류 발생",
-                "레시피를 들고오던 라따뚜이가 넘어졌습니다..ㅠㅠ\n확인버튼을 누르면 이전 화면으로 돌아갑니다."
-            ) {
-                finish()
+        viewModel.eventRecipeEditor.observe(this, EventObserver {
+            when(it){
+                is RecipeEditorViewModel.RecipeEditorEvent.SaveResult -> {
+                    if (it.isSuccess) {
+                        ConfirmDialogBuilder.create(
+                            this,
+                            "저장 완료",
+                            "레시피가 정상적으로 저장되었습니다.",
+                        ) {
+                            finish()
+                        }
+                    } else {
+                        ConfirmDialogBuilder.create(
+                            this,
+                            "저장 실패",
+                            "레시피를 저장하지 못했습니다.",
+                        ) { }
+                    }
+                }
+
+                is RecipeEditorViewModel.RecipeEditorEvent.Error -> {
+                    ConfirmDialogBuilder.create(
+                        this,
+                        "오류 발생",
+                        "레시피를 들고오던 라따뚜이가 넘어졌습니다..ㅠㅠ\n확인버튼을 누르면 이전 화면으로 돌아갑니다."
+                    ) {
+                        finish()
+                    }
+                }
             }
         })
     }

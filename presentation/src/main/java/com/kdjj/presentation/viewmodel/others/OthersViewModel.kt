@@ -5,21 +5,25 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kdjj.domain.model.Recipe
+import com.kdjj.domain.model.exception.ApiException
+import com.kdjj.domain.model.exception.NetworkException
 import com.kdjj.domain.model.request.FetchRemoteLatestRecipeListRequest
 import com.kdjj.domain.model.request.FetchRemotePopularRecipeListRequest
-import com.kdjj.domain.usecase.UseCase
+import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.RecipeListItemModel
+import com.kdjj.presentation.model.ResponseError
 import com.kdjj.presentation.model.toRecipeListItemModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class OthersViewModel @Inject constructor(
-    private val fetchRemoteLatestRecipeListUseCase: UseCase<FetchRemoteLatestRecipeListRequest, List<Recipe>>,
-    private val fetchRemotePopularRecipeListUseCase: UseCase<FetchRemotePopularRecipeListRequest, List<Recipe>>,
+    private val fetchRemoteLatestRecipeListUseCase: ResultUseCase<FetchRemoteLatestRecipeListRequest, List<Recipe>>,
+    private val fetchRemotePopularRecipeListUseCase: ResultUseCase<FetchRemotePopularRecipeListRequest, List<Recipe>>,
 ) : ViewModel() {
 
     private var _liveSortType = MutableLiveData<OthersSortType>()
@@ -37,14 +41,14 @@ class OthersViewModel @Inject constructor(
         _liveFetchLock.value = false
     }
 
-    private var _eventException = MutableLiveData<Event<Throwable>>()
-    val eventException: LiveData<Event<Throwable>> get() = _eventException
+    private var _eventOtherRecipe = MutableLiveData<Event<OtherRecipeEvent>>()
+    val eventOtherRecipe: LiveData<Event<OtherRecipeEvent>> get() = _eventOtherRecipe
 
-    private var _eventSearchIconClicked = MutableLiveData<Event<Unit>>()
-    val eventSearchIconClicked: LiveData<Event<Unit>> get() = _eventSearchIconClicked
-
-    private var _eventRecipeItemClicked = MutableLiveData<Event<RecipeListItemModel>>()
-    val eventRecipeItemClicked: LiveData<Event<RecipeListItemModel>> get() = _eventRecipeItemClicked
+    sealed class OtherRecipeEvent {
+        class ShowSnackBar(val error: ResponseError) : OtherRecipeEvent()
+        object SearchIconClicked : OtherRecipeEvent()
+        class RecipeItemClicked(val item: RecipeListItemModel) : OtherRecipeEvent()
+    }
 
     init {
         setChecked(OthersSortType.LATEST)
@@ -58,7 +62,6 @@ class OthersViewModel @Inject constructor(
         }
     }
 
-    // 리스트 Fetch 관련 모든 설정을 초기화
     private fun initFetching() {
         fetchingJob?.cancel()
         _liveFetchLock.value = false
@@ -115,18 +118,30 @@ class OthersViewModel @Inject constructor(
                 else _liveRecipeList.value = it.plus(othersRecipeModelList)
             }
         }.onFailure {
-            // view 에게 알리기
             _liveFetchLock.value = false
-            _eventException.value = Event(it)
+            when (it) {
+                is NetworkException -> {
+                    _eventOtherRecipe.value =
+                        Event(OtherRecipeEvent.ShowSnackBar(ResponseError.NETWORK_CONNECTION))
+                }
+                is ApiException -> {
+                    _eventOtherRecipe.value =
+                        Event(OtherRecipeEvent.ShowSnackBar(ResponseError.SERVER))
+                }
+                is CancellationException -> {
+                }
+                else -> _eventOtherRecipe.value =
+                    Event(OtherRecipeEvent.ShowSnackBar(ResponseError.UNKNOWN))
+            }
         }
     }
 
     fun moveToRecipeSearchFragment() {
-        _eventSearchIconClicked.value = Event(Unit)
+        _eventOtherRecipe.value = Event(OtherRecipeEvent.SearchIconClicked)
     }
 
     fun recipeItemClick(recipeModel: RecipeListItemModel) {
-        _eventRecipeItemClicked.value = Event(recipeModel)
+        _eventOtherRecipe.value = Event(OtherRecipeEvent.RecipeItemClicked(recipeModel))
     }
 
     enum class OthersSortType {

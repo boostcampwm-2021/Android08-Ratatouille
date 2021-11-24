@@ -3,7 +3,6 @@ package com.kdjj.presentation.view.adapter
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import com.kdjj.domain.model.RecipeStep
@@ -37,7 +36,7 @@ class RecipeDetailStepListAdapter(
     }
 
     override fun bind(
-        holder: SingleViewTypeViewHolder<RecipeStep, ItemDetailStepBinding>,
+        holder: SingleViewTypeViewHolder<ItemDetailStepBinding>,
         item: RecipeStep
     ) {
         holder.binding.step = item
@@ -47,5 +46,6 @@ class RecipeDetailStepListAdapter(
                     if (step == item) Paint.UNDERLINE_TEXT_FLAG else 0
             }
         }
+        holder.binding.executePendingBindings()
     }
 }

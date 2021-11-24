@@ -1,7 +1,7 @@
 package com.kdjj.remote.datasource
 
 import com.kdjj.data.datasource.RecipeImageRemoteDataSource
-import com.kdjj.remote.dao.FirebaseStorageService
+import com.kdjj.remote.service.FirebaseStorageService
 import javax.inject.Inject
 
 internal class RecipeImageRemoteDataSourceImpl @Inject constructor(

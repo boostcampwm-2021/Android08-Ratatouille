@@ -1,8 +1,8 @@
 package com.kdjj.remote.di
 
 import com.kdjj.data.datasource.RecipeImageRemoteDataSource
-import com.kdjj.remote.dao.FirebaseStorageService
-import com.kdjj.remote.dao.FirebaseStorageServiceImpl
+import com.kdjj.remote.service.FirebaseStorageService
+import com.kdjj.remote.service.FirebaseStorageServiceImpl
 import com.kdjj.remote.datasource.RecipeImageRemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module

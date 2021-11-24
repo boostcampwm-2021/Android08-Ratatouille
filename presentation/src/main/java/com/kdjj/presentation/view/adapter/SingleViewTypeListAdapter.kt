@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 abstract class SingleViewTypeListAdapter<T, VDB : ViewDataBinding> constructor(
     diffUtil : DiffUtil.ItemCallback<T>,
-) : ListAdapter<T, SingleViewTypeViewHolder<T, VDB>>(diffUtil) {
+) : ListAdapter<T, SingleViewTypeViewHolder<VDB>>(diffUtil) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SingleViewTypeViewHolder<T, VDB> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SingleViewTypeViewHolder<VDB> {
         val binding = createBinding(parent)
         return SingleViewTypeViewHolder(binding, { b, getItemPosition -> initViewHolder(b, getItemPosition)} )
     }
@@ -19,14 +19,14 @@ abstract class SingleViewTypeListAdapter<T, VDB : ViewDataBinding> constructor(
 
     protected open fun initViewHolder(binding: VDB, getItemPosition: () -> Int) {}
 
-    override fun onBindViewHolder(holder: SingleViewTypeViewHolder<T, VDB>, position: Int) {
+    override fun onBindViewHolder(holder: SingleViewTypeViewHolder<VDB>, position: Int) {
         bind(holder, getItem(position))
     }
 
-    protected abstract fun bind(holder: SingleViewTypeViewHolder<T, VDB>, item: T)
+    protected abstract fun bind(holder: SingleViewTypeViewHolder<VDB>, item: T)
 }
 
-class SingleViewTypeViewHolder<T, VDB : ViewDataBinding> constructor(
+class SingleViewTypeViewHolder<VDB : ViewDataBinding> constructor(
     val binding: VDB,
     onViewHolderInit: (VDB, getAdapterPosition: () -> Int) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {

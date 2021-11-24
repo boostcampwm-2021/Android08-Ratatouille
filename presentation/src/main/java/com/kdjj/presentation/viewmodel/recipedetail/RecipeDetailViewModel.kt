@@ -7,21 +7,20 @@ import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.RecipeStep
 import com.kdjj.domain.model.request.FetchRemoteRecipeRequest
 import com.kdjj.domain.model.request.GetLocalRecipeFlowRequest
-import com.kdjj.domain.usecase.UseCase
+import com.kdjj.domain.usecase.FlowUseCase
+import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.StepTimerModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
     private val ringtone: Ringtone,
-    private val getLocalRecipeFlowUseCase: UseCase<GetLocalRecipeFlowRequest, Flow<Recipe>>,
-    private val fetchRemoteRecipeUseCase: UseCase<FetchRemoteRecipeRequest, Recipe>
+    private val getLocalRecipeFlowUseCase: FlowUseCase<GetLocalRecipeFlowRequest, Recipe>,
+    private val fetchRemoteRecipeUseCase: ResultUseCase<FetchRemoteRecipeRequest, Recipe>
 ) : ViewModel() {
 
     private val _liveStepList = MutableLiveData<List<RecipeStep>>()
@@ -43,31 +42,31 @@ class RecipeDetailViewModel @Inject constructor(
         }
     }
 
-    private val _eventOpenTimer = MutableLiveData<Event<Unit>>()
-    val eventOpenTimer: LiveData<Event<Unit>> get() = _eventOpenTimer
-
-    private val _eventCloseTimer = MutableLiveData<Event<() -> Unit>>()
-    val eventCloseTimer: LiveData<Event<() -> Unit>> get() = _eventCloseTimer
-
     private var _liveFinishedTimerPosition = MutableLiveData<Int>()
     val liveFinishedTimerPosition: LiveData<Int> get() = _liveFinishedTimerPosition
 
     private val _liveLoading = MutableLiveData(false)
     val liveLoading: LiveData<Boolean> get() = _liveLoading
 
-    private val _eventError = MutableLiveData<Event<Unit>>()
-    val eventError: LiveData<Event<Unit>> get() = _eventError
-
     private val _liveTitle = MutableLiveData<String>()
     val liveTitle: LiveData<String> get() = _liveTitle
 
     private var isInitialized = false
 
+    private val _eventRecipeDetail = MutableLiveData<Event<RecipeDetailEvent>>()
+    val eventRecipeDetail: LiveData<Event<RecipeDetailEvent>> get() = _eventRecipeDetail
+
+    sealed class RecipeDetailEvent {
+        object OpenTimer: RecipeDetailEvent()
+        class CloseTimer(val onAnimationEnd: () -> Unit): RecipeDetailEvent()
+        object Error: RecipeDetailEvent()
+    }
+
     fun initializeWith(recipeId: String?, state: RecipeState?) {
         if (isInitialized) return
 
         if (recipeId == null || state == null) {
-            _eventError.value = Event(Unit)
+            _eventRecipeDetail.value = Event(RecipeDetailEvent.Error)
             return
         }
 
@@ -76,26 +75,23 @@ class RecipeDetailViewModel @Inject constructor(
             when (state) {
                 RecipeState.NETWORK -> {
                     fetchRemoteRecipeUseCase(FetchRemoteRecipeRequest(recipeId))
-                        .onSuccess { recipe ->
-                            _liveStepList.value = recipe.stepList
-                            selectStep(recipe.stepList[0])
-                            _liveTitle.value = recipe.title
-                        }
-                        .onFailure {
-                            _eventError.value = Event(Unit)
-                        }
+                            .onSuccess { recipe ->
+                                _liveStepList.value = recipe.stepList
+                                selectStep(recipe.stepList[0])
+                                _liveTitle.value = recipe.title
+                            }
+                            .onFailure {
+                                _eventRecipeDetail.value = Event(RecipeDetailEvent.Error)
+                            }
                 }
-                RecipeState.CREATE, RecipeState.DOWNLOAD, RecipeState.UPLOAD -> {
-                    getLocalRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
-                        .onSuccess {
-                            val recipe = it.first()
-                            _liveStepList.value = recipe.stepList
-                            selectStep(recipe.stepList[0])
-                            _liveTitle.value = recipe.title
-                        }
-                        .onFailure {
-                            _eventError.value = Event(Unit)
-                        }
+                RecipeState.CREATE,
+                RecipeState.DOWNLOAD,
+                RecipeState.UPLOAD -> {
+                    val recipeFlow = getLocalRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
+                    val recipe = recipeFlow.first()
+                    _liveStepList.value = recipe.stepList
+                    selectStep(recipe.stepList[0])
+                    _liveTitle.value = recipe.title
                 }
             }
             _liveLoading.value = false
@@ -112,7 +108,8 @@ class RecipeDetailViewModel @Inject constructor(
         _liveTimerList.value?.let { timerList ->
             if (!timerList.any { it.recipeStep == step }) {
                 if (timerList.isEmpty()) {
-                    _eventOpenTimer.value = Event(Unit)
+                    _eventRecipeDetail.value = Event(RecipeDetailEvent.OpenTimer)
+
                 }
                 _liveTimerList.value = timerList + StepTimerModel(step) {
                     ringtone.play()
@@ -142,11 +139,12 @@ class RecipeDetailViewModel @Inject constructor(
         _liveTimerList.value?.let { modelList ->
             timerModel.pause()
             if (modelList.size == 1) {
-                _eventCloseTimer.value = Event {
-                    _liveTimerList.value = modelList.toMutableList().apply {
-                        remove(timerModel)
-                    }
-                }
+                _eventRecipeDetail.value =
+                    Event(RecipeDetailEvent.CloseTimer {
+                        _liveTimerList.value = modelList.toMutableList().apply {
+                            remove(timerModel)
+                        }
+                    })
             } else {
                 _liveTimerList.value = modelList.toMutableList().apply {
                     remove(timerModel)

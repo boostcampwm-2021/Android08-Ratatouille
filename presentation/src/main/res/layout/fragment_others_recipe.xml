@@ -5,6 +5,7 @@
 
     <data>
         <import type="com.kdjj.presentation.viewmodel.others.OthersViewModel.OthersSortType"/>
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.kdjj.presentation.viewmodel.others.OthersViewModel" />
@@ -82,7 +83,7 @@
             android:id="@+id/progressBar_others_bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            visibleProgressBar="@{viewModel.liveFetchLock}"
+            android:visibility="@{viewModel.liveFetchLock ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/swipeRefreshLayout_others"

@@ -2,13 +2,14 @@ package com.kdjj.presentation.model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.switchMap
+import androidx.lifecycle.map
 import com.kdjj.domain.model.*
 import com.kdjj.presentation.common.IdGenerator
 import com.kdjj.presentation.common.RecipeStepValidator
 import com.kdjj.presentation.common.RecipeValidator
 import com.kdjj.presentation.common.calculateSeconds
 import java.lang.Exception
+import java.util.*
 
 internal sealed class RecipeEditorItem {
 
@@ -27,6 +28,33 @@ internal sealed class RecipeEditorItem {
         val state: RecipeState
     ) : RecipeEditorItem() {
 
+        override fun equals(other: Any?): Boolean {
+            return when (other) {
+                is RecipeMetaModel -> {
+                    this.liveTitle.value == other.liveTitle.value && this.liveRecipeTypeInt.value == other.liveRecipeTypeInt.value &&
+                        this.liveStuff.value == other.liveStuff.value && this.liveRecipeImgPath.value == other.liveRecipeImgPath.value &&
+                            this.recipeId == other.recipeId && this.uploadId == other.uploadId && this.viewCount == other.viewCount &&
+                                this.isFavorite == other.isFavorite && this.state == other.state
+                }
+                else -> false
+            }
+        }
+
+        override fun hashCode(): Int {
+            return Objects.hash(
+                liveTitle,
+                liveRecipeTypeInt,
+                liveStuff,
+                liveRecipeImgPath,
+                recipeId,
+                viewCount,
+                isFavorite,
+                liveTitleState,
+                liveStuffState,
+                state
+            )
+        }
+
         companion object {
 
             fun create(
@@ -43,8 +71,8 @@ internal sealed class RecipeEditorItem {
                     liveRecipeImgPath = liveRecipeImgPath,
                     liveRecipeTypeInt = liveCategoryPosition,
 
-                    liveStuffState = liveStuff.switchMap { MutableLiveData(recipeValidator.validateStuff(it)) },
-                    liveTitleState = liveTitle.switchMap { MutableLiveData(recipeValidator.validateTitle(it)) },
+                    liveStuffState = liveStuff.map { recipeValidator.validateStuff(it) },
+                    liveTitleState = liveTitle.map { recipeValidator.validateTitle(it) },
 
                     recipeId = idGenerator.generateId(),
                     uploadId = idGenerator.getDeviceId(),
@@ -70,6 +98,30 @@ internal sealed class RecipeEditorItem {
         val stepId: String
     ) : RecipeEditorItem() {
 
+        override fun equals(other: Any?): Boolean {
+            return when (other) {
+                is RecipeStepModel -> {
+                    this.liveName.value == other.liveName.value && this.liveTypeInt.value == other.liveTypeInt.value &&
+                        this.liveDescription.value == other.liveDescription.value && this.liveImgPath.value == other.liveImgPath.value &&
+                            this.liveTimerMin.value == other.liveTimerMin.value && this.liveTimerSec.value == other.liveTimerSec.value &&
+                                this.stepId == other.stepId
+                }
+                else -> false
+            }
+        }
+
+        override fun hashCode(): Int {
+            return Objects.hash(
+                liveName,
+                liveTypeInt,
+                liveDescription,
+                liveImgPath,
+                liveTimerMin,
+                liveTimerSec,
+                stepId
+            )
+        }
+
         companion object {
 
             fun create(
@@ -90,10 +142,10 @@ internal sealed class RecipeEditorItem {
                     liveTimerSec = liveTimerSec,
                     liveTypeInt = liveTypeInt,
 
-                    liveNameState = liveName.switchMap { MutableLiveData(recipeStepValidator.validateName(it)) },
-                    liveDescriptionState = liveDescription.switchMap { MutableLiveData(recipeStepValidator.validateDescription(it)) },
-                    liveTimerMinState = liveTimerMin.switchMap { MutableLiveData(recipeStepValidator.validateMinutes(it)) },
-                    liveTimerSecState = liveTimerSec.switchMap { MutableLiveData(recipeStepValidator.validateSeconds(it)) },
+                    liveNameState = liveName.map { recipeStepValidator.validateName(it) },
+                    liveDescriptionState = liveDescription.map { recipeStepValidator.validateDescription(it) },
+                    liveTimerMinState = liveTimerMin.map { recipeStepValidator.validateMinutes(it) },
+                    liveTimerSecState = liveTimerSec.map { recipeStepValidator.validateSeconds(it) },
 
                     stepId = idGenerator.generateId(),
                     liveImgPath = MutableLiveData("")
@@ -149,8 +201,8 @@ internal fun Recipe.toPresentation(
         liveRecipeImgPath = liveRecipeImgPath,
         liveRecipeTypeInt = liveCategoryPosition,
 
-        liveStuffState = liveStuff.switchMap { MutableLiveData(recipeValidator.validateStuff(it)) },
-        liveTitleState = liveTitle.switchMap { MutableLiveData(recipeValidator.validateTitle(it)) },
+        liveStuffState = liveStuff.map { recipeValidator.validateStuff(it) },
+        liveTitleState = liveTitle.map { recipeValidator.validateTitle(it) },
 
         recipeId = recipeId,
         uploadId = authorId,
@@ -173,18 +225,10 @@ internal fun RecipeStep.toPresentation(
         liveTimerSec = liveTimerSec,
         liveTypeInt = liveTypeInt,
 
-        liveNameState = liveName.switchMap {
-            MutableLiveData(recipeStepValidator.validateName(it))
-        },
-        liveDescriptionState = liveDescription.switchMap {
-            MutableLiveData(recipeStepValidator.validateDescription(it))
-        },
-        liveTimerMinState = liveTimerMin.switchMap {
-            MutableLiveData(recipeStepValidator.validateMinutes(it))
-        },
-        liveTimerSecState = liveTimerSec.switchMap {
-            MutableLiveData(recipeStepValidator.validateSeconds(it))
-        },
+        liveNameState = liveName.map { recipeStepValidator.validateName(it) },
+        liveDescriptionState = liveDescription.map { recipeStepValidator.validateDescription(it) },
+        liveTimerMinState = liveTimerMin.map { recipeStepValidator.validateMinutes(it) },
+        liveTimerSecState = liveTimerSec.map { recipeStepValidator.validateSeconds(it) },
 
         stepId = stepId,
         liveImgPath = MutableLiveData(imgPath)

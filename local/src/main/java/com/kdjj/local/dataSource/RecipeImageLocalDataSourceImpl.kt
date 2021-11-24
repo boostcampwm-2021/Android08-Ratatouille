@@ -5,7 +5,7 @@ import com.kdjj.local.FileSaveHelper
 import javax.inject.Inject
 
 internal class RecipeImageLocalDataSourceImpl @Inject constructor(
-    private val fileSaveHelper: FileSaveHelper
+    private val fileSaveHelper: FileSaveHelper,
 ) : RecipeImageLocalDataSource {
 
     override suspend fun convertToByteArray(

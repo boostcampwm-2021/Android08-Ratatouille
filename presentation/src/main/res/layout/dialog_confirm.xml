@@ -7,6 +7,8 @@
         <variable
             name="model"
             type="com.kdjj.presentation.model.ConfirmDialogModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -45,6 +47,22 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
+            android:id="@+id/textView_dialog_btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textSize="@dimen/dialog_content_textSize"
+            android:textColor="@color/blue_900"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dialog_button_marginTop"
+            android:padding="@dimen/dialog_button_padding"
+            android:visibility="@{model.showCancel ? View.VISIBLE : View.GONE}"
+            android:onClick="@{() -> model.onCancel()}"
+            app:layout_constraintTop_toBottomOf="@id/textView_dialog_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/textView_dialog_btnConfirm" />
+
+        <TextView
             android:id="@+id/textView_dialog_btnConfirm"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -56,7 +74,7 @@
             android:padding="@dimen/dialog_button_padding"
             android:onClick="@{() -> model.onConfirm()}"
             app:layout_constraintTop_toBottomOf="@id/textView_dialog_content"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/textView_dialog_btnCancel"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -7,6 +7,7 @@ import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.kdjj.presentation.R
 import com.kdjj.presentation.databinding.ItemEditorAddStepBinding
 import com.kdjj.presentation.databinding.ItemEditorRecipeMetaBinding
@@ -35,7 +36,7 @@ internal class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewMo
             override fun areContentsTheSame(
                 oldItem: RecipeEditorItem,
                 newItem: RecipeEditorItem
-            ): Boolean = true
+            ): Boolean = oldItem == newItem
         }
     ) {
 
@@ -61,6 +62,10 @@ internal class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewMo
             binding.model = item
             binding.executePendingBindings()
         }
+
+        fun onViewRecycled() {
+            Glide.with(binding.root.context).clear(binding.imageViewEditorRecipe)
+        }
     }
 
     class RecipeStepViewHolder(
@@ -81,6 +86,10 @@ internal class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewMo
         fun bind(item: RecipeEditorItem.RecipeStepModel) {
             binding.model = item
             binding.executePendingBindings()
+        }
+
+        fun onViewRecycled() {
+            Glide.with(binding.root.context).clear(binding.imageViewEditorStep)
         }
     }
 
@@ -145,6 +154,13 @@ internal class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewMo
         (item as? RecipeEditorItem.RecipeMetaModel)?.let { (holder as RecipeMetaViewHolder).bind(item) }
             ?: (item as? RecipeEditorItem.RecipeStepModel)?.let { (holder as RecipeStepViewHolder).bind(item) }
             ?: (item as? RecipeEditorItem.PlusButton)?.let { (holder as AddStepViewHolder).bind() }
+    }
+
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        when (holder) {
+            is RecipeStepViewHolder -> holder.onViewRecycled()
+            is RecipeMetaViewHolder -> holder.onViewRecycled()
+        }
     }
 
     companion object {

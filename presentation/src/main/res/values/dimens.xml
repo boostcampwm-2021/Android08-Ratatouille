@@ -34,7 +34,6 @@
 
     <dimen name="myRecipe_radioButton_marginLeft">24dp</dimen>
     <dimen name="myRecipe_cardView_width">160dp</dimen>
-    <dimen name="myRecipe_cardView_height">160dp</dimen>
     <dimen name="myRecipe_cardView_marginTop">12dp</dimen>
     <dimen name="myRecipe_cardView_marginStart">16dp</dimen>
     <dimen name="myRecipe_cardView_corner">15dp</dimen>
@@ -46,6 +45,7 @@
     <dimen name="myRecipe_textView_title_marginTop">8dp</dimen>
     <dimen name="myRecipe_textView_description_marginTop">12dp</dimen>
     <dimen name="myRecipe_time_marginLeft">8dp</dimen>
+    <dimen name="myRecipe_space_size">10dp</dimen>
 
     <dimen name="dialog_title_textSize">18sp</dimen>
     <dimen name="dialog_content_textSize">14sp</dimen>
@@ -105,5 +105,7 @@
     <dimen name="summary_floatingButton_drawablePadding">8dp</dimen>
     <dimen name="summary_floatingButton_textSize">12sp</dimen>
     <dimen name="summary_floatingButton_marginBottom">8dp</dimen>
+    <dimen name="search_progressBar_marginStart">4dp</dimen>
+    <dimen name="detail_stepType_textSize">16sp</dimen>
 
 </resources>
