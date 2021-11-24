@@ -83,7 +83,7 @@ class OthersRecipeFragment : Fragment() {
     }
 
     private fun setEventObserver() {
-        viewModel.othersRecipeEvent.observe(viewLifecycleOwner, EventObserver {
+        viewModel.eventOthersRecipe.observe(viewLifecycleOwner, EventObserver {
             when (it) {
                 is OthersViewModel.OtherRecipeEvent.ShowSnackBar -> {
                     showSnackBar(getString(it.error.stringRes))
