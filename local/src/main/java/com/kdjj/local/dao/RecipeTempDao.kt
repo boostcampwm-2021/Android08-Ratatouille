@@ -24,9 +24,9 @@ internal interface RecipeTempDao {
     
     @Query("DELETE FROM RecipeTempStep WHERE parentRecipeId = :recipeId")
     suspend fun deleteTempStepList(recipeId: String)
-    
-    @Delete
-    suspend fun deleteRecipeTemp(recipeTempMeta: RecipeTempMetaDto)
+
+    @Query("DELETE FROM RecipeTempMeta WHERE recipeMetaId = :recipeId")
+    suspend fun deleteRecipeTemp(recipeId: String)
     
     @Query("SELECT * FROM RecipeTempMeta WHERE recipeMetaId = :recipeId")
     fun getRecipeTemp(recipeId: String): RecipeTempDto?

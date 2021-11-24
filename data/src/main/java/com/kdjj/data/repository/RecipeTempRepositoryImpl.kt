@@ -12,8 +12,8 @@ class RecipeTempRepositoryImpl @Inject constructor(
     override suspend fun saveRecipeTemp(recipe: Recipe): Result<Unit> =
         recipeTempLocalDataSource.saveRecipeTemp(recipe)
 
-    override suspend fun deleteRecipeTemp(recipe: Recipe): Result<Unit> =
-        recipeTempLocalDataSource.deleteRecipeTemp(recipe)
+    override suspend fun deleteRecipeTemp(recipeId: String): Result<Unit> =
+        recipeTempLocalDataSource.deleteRecipeTemp(recipeId)
 
     override suspend fun getRecipeTemp(recipeId: String): Result<Recipe?> =
         recipeTempLocalDataSource.getRecipeTemp(recipeId)

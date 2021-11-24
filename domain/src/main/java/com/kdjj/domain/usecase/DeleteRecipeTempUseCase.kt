@@ -9,5 +9,5 @@ class DeleteRecipeTempUseCase @Inject constructor(
 ) : ResultUseCase<DeleteRecipeTempRequest, Unit> {
 
     override suspend fun invoke(request: DeleteRecipeTempRequest): Result<Unit> =
-        tempRepository.deleteRecipeTemp(request.recipe)
+        tempRepository.deleteRecipeTemp(request.recipeId)
 }
