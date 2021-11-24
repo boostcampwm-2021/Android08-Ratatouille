@@ -27,7 +27,7 @@ object Notifications {
 
     fun showTimer(context: Context, stepId: String, stepName: String, timeLeft: Int) {
         val builder = NotificationCompat.Builder(context, TIMER_CHANNEL_ID)
-            .setAutoCancel(false)
+            .setOngoing(true)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(stepName)
             .setContentText(String.format("%02d:%02d", timeLeft/60 , timeLeft%60))
@@ -66,5 +66,5 @@ object Notifications {
     }
 
     private const val ALARM_CHANNEL_ID = "ID_RATATOUILLE_ALARM"
-    const val TIMER_CHANNEL_ID = "ID_RATATOUILLE_TIMER"
+    private const val TIMER_CHANNEL_ID = "ID_RATATOUILLE_TIMER"
 }
