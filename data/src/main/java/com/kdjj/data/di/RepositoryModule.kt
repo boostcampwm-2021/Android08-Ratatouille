@@ -1,10 +1,6 @@
 package com.kdjj.data.di
 
 import com.kdjj.data.repository.*
-import com.kdjj.data.repository.RecipeImageRepositoryImpl
-import com.kdjj.data.repository.RecipeListRepositoryImpl
-import com.kdjj.data.repository.RecipeRepositoryImpl
-import com.kdjj.data.repository.RecipeTypeRepositoryImpl
 import com.kdjj.domain.repository.*
 import dagger.Binds
 import dagger.Module
