@@ -36,6 +36,11 @@ class MyRecipeFragment : Fragment() {
     @Inject
     lateinit var displayConverter: DisplayConverter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setObservers()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,7 +55,6 @@ class MyRecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolBar()
-        setObservers()
         initSwipeRefreshLayout()
         initRecyclerView()
     }
