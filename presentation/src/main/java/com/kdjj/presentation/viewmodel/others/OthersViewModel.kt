@@ -44,8 +44,8 @@ class OthersViewModel @Inject constructor(
 
     val othersSubject: PublishSubject<ButtonClick> = PublishSubject.create()
 
-    private var _othersRecipeEvent = MutableLiveData<Event<OtherRecipeEvent>>()
-    val othersRecipeEvent: LiveData<Event<OtherRecipeEvent>> get() = _othersRecipeEvent
+    private var _eventOthersRecipe = MutableLiveData<Event<OtherRecipeEvent>>()
+    val eventOthersRecipe: LiveData<Event<OtherRecipeEvent>> get() = _eventOthersRecipe
 
     sealed class OtherRecipeEvent {
         class ShowSnackBar(val error: ResponseError) : OtherRecipeEvent()
@@ -127,14 +127,14 @@ class OthersViewModel @Inject constructor(
             _liveFetchLock.value = false
             when (it) {
                 is NetworkException -> {
-                    _othersRecipeEvent.value = Event(OtherRecipeEvent.ShowSnackBar(ResponseError.NETWORK_CONNECTION))
+                    _eventOthersRecipe.value = Event(OtherRecipeEvent.ShowSnackBar(ResponseError.NETWORK_CONNECTION))
                 }
                 is ApiException -> {
-                    _othersRecipeEvent.value = Event(OtherRecipeEvent.ShowSnackBar(ResponseError.SERVER))
+                    _eventOthersRecipe.value = Event(OtherRecipeEvent.ShowSnackBar(ResponseError.SERVER))
                 }
                 is CancellationException -> {
                 }
-                else -> _othersRecipeEvent.value = Event(OtherRecipeEvent.ShowSnackBar(ResponseError.UNKNOWN))
+                else -> _eventOthersRecipe.value = Event(OtherRecipeEvent.ShowSnackBar(ResponseError.UNKNOWN))
 
             }
         }
