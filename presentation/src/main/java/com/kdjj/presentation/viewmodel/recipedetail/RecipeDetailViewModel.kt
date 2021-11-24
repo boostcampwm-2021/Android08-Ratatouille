@@ -152,4 +152,11 @@ class RecipeDetailViewModel @Inject constructor(
             }
         }
     }
+
+    override fun onCleared() {
+        _liveTimerList.value?.forEach { model ->
+            model.pause()
+        }
+        super.onCleared()
+    }
 }
