@@ -137,10 +137,7 @@ internal class RecipeEditorViewModel @Inject constructor(
             )
         )
         viewModelScope.launch {
-            deleteRecipeTempUseCase(DeleteRecipeTempRequest(NEW_ID)).onSuccess {
-            }.onFailure {
-                it.printStackTrace()
-            }
+            deleteRecipeTempUseCase(DeleteRecipeTempRequest(NEW_ID))
         }
     }
 
@@ -151,10 +148,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                     recipe.toPresentation(recipeValidator, _liveRecipeTypes.value ?: listOf(), recipeStepValidator)
                 recipeMetaModel = metaModel
                 _liveStepModelList.value = stepList
-                deleteRecipeTempUseCase(DeleteRecipeTempRequest(recipe.recipeId)).onSuccess {
-                }.onFailure {
-                    it.printStackTrace()
-                }
+                deleteRecipeTempUseCase(DeleteRecipeTempRequest(recipe.recipeId))
             }
             .onFailure {
                 _eventRecipeEditor.value = Event(RecipeEditorEvent.Error)
