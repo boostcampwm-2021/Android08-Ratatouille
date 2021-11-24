@@ -37,6 +37,7 @@ class TimerService : LifecycleService() {
                         StepTimerItem(timeStr.toInt(), stepId, stepName)
                     }.sortedByDescending { it.time }
 
+                    val checkAlarms = hashSetOf<String>()
                     val maxMillis = (timerList.maxOf { it.time } + 1) * 1000L
                     serviceTimer = ServiceTimer(maxMillis) { millisLeft ->
                         val timeElapsed = maxMillis - millisLeft
@@ -49,13 +50,15 @@ class TimerService : LifecycleService() {
                                     item.stepName,
                                     timeLeft
                                 )
-                            }
-                            if (timeLeft == 0) {
-                                Notifications.showAlarm(
-                                    applicationContext,
-                                    item.stepId,
-                                    item.stepName
-                                )
+                            } else {
+                                if(!checkAlarms.contains(item.stepId)){
+                                    Notifications.showAlarm(
+                                        applicationContext,
+                                        item.stepId,
+                                        item.stepName
+                                    )
+                                }
+                                checkAlarms.add(item.stepId)
                             }
                         }
                     }.apply { start() }
