@@ -23,6 +23,10 @@
             android:name=".view.splash.LaunchActivity"
             android:exported="true" />
 
+
+        <service android:name=".services.TimerService"
+            android:foregroundServiceType="location"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.kdjj.ratatouille.fileprovider"

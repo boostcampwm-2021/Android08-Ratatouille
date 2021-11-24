@@ -2,8 +2,10 @@ package com.kdjj.presentation.view.recipedetail
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
@@ -17,6 +19,7 @@ import com.kdjj.presentation.common.EventObserver
 import com.kdjj.presentation.common.RECIPE_ID
 import com.kdjj.presentation.common.RECIPE_STATE
 import com.kdjj.presentation.databinding.ActivityRecipeDetailBinding
+import com.kdjj.presentation.services.TimerService
 import com.kdjj.presentation.view.adapter.RecipeDetailStepListAdapter
 import com.kdjj.presentation.view.adapter.RecipeDetailTimerListAdapter
 import com.kdjj.presentation.view.adapter.RecipeEditorListAdapter
@@ -148,5 +151,19 @@ class RecipeDetailActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    override fun onStop() {
+        super.onStop()
+        sendCommandToService("ACTION_START_OR_RESUME_SERVICE")
+    }
+
+    private fun sendCommandToService(action: String) {
+        Intent(applicationContext, TimerService::class.java).also {
+            it.action = action
+            val timerList = viewModel.liveTimerList.value ?: return
+            it.putExtra("TIMERS", timerList.map { timer -> "${timer.liveLeftSeconds.value ?: 0}:${timer.recipeStep.stepId}:${timer.recipeStep.name}" }.toTypedArray())
+            applicationContext.startService(it)
+        }
     }
 }
