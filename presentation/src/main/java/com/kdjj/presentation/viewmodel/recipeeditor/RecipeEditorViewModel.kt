@@ -1,16 +1,17 @@
 package com.kdjj.presentation.viewmodel.recipeeditor
 
 import androidx.lifecycle.*
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.kdjj.domain.model.Recipe
+import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.RecipeStepType
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.model.request.*
 import com.kdjj.domain.usecase.FlowUseCase
 import com.kdjj.domain.usecase.ResultUseCase
-import com.kdjj.presentation.common.Event
-import com.kdjj.presentation.common.IdGenerator
-import com.kdjj.presentation.common.RecipeStepValidator
-import com.kdjj.presentation.common.RecipeValidator
+import com.kdjj.presentation.common.*
 import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.model.toDomain
 import com.kdjj.presentation.model.toPresentation
@@ -29,6 +30,7 @@ internal class RecipeEditorViewModel @Inject constructor(
     private val updateRemoteRecipeUseCase: ResultUseCase<UpdateRemoteRecipeRequest, Unit>,
     private val updateLocalRecipeUseCase: ResultUseCase<UpdateLocalRecipeRequest, Unit>,
     private val idGenerator: IdGenerator,
+    private val workManager: WorkManager
 ) : ViewModel() {
 
     private lateinit var recipeMetaModel: RecipeEditorItem.RecipeMetaModel
@@ -169,6 +171,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                     saveRecipeUseCase(SaveLocalRecipeRequest(recipe))
                 }
                 res.onSuccess {
+                    if (recipe.state == RecipeState.UPLOAD) registerUploadTask(recipe.recipeId)
                     _eventRecipeEditor.value =
                         Event(RecipeEditorEvent.SaveResult(true))
                 }.onFailure {
@@ -179,6 +182,17 @@ internal class RecipeEditorViewModel @Inject constructor(
                 _liveLoading.value = false
             }
         }
+    }
+
+    private fun registerUploadTask(updatedRecipeId: String) {
+        val updateWorkerRequest = OneTimeWorkRequestBuilder<RecipeUploadWorker>().apply {
+            setInputData(
+                workDataOf(
+                    UPDATED_RECIPE_ID to updatedRecipeId
+                )
+            )
+        }.build()
+        workManager.enqueue(updateWorkerRequest)
     }
 
     private fun isRecipeValid(): Boolean {
