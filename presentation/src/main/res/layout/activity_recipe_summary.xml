@@ -136,7 +136,7 @@
             android:background="@drawable/bg_summary_fab"
             android:elevation="@dimen/summary_fav_elevation"
             android:onClick="@{() -> viewModel.changeFabState()}"
-            android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
+            android:src="@{viewModel.liveFabState.second ? @drawable/ic_baseline_keyboard_arrow_down_24 : @drawable/ic_baseline_keyboard_arrow_up_24}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
