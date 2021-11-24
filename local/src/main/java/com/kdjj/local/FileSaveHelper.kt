@@ -68,7 +68,6 @@ internal class FileSaveHelper @Inject constructor(
             false
         }
 
-
     private fun convertByteArrayToBitmap(byteArray: ByteArray, degree: Float?): Bitmap {
         val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
         val width = bitmap.width.toFloat()
