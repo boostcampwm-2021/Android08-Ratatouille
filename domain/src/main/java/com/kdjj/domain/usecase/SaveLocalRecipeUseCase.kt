@@ -1,9 +1,9 @@
 package com.kdjj.domain.usecase
 
 import com.kdjj.domain.common.IdGenerator
+import com.kdjj.domain.model.request.SaveLocalRecipeRequest
 import com.kdjj.domain.repository.RecipeImageRepository
 import com.kdjj.domain.repository.RecipeRepository
-import com.kdjj.domain.model.request.SaveLocalRecipeRequest
 import javax.inject.Inject
 
 internal class SaveLocalRecipeUseCase @Inject constructor(
@@ -40,11 +40,15 @@ internal class SaveLocalRecipeUseCase @Inject constructor(
                     }
                     false -> ""
                 }
-                step.copy(imgPath = stepImageUri)
+                step.copy(
+                    stepId = idGenerator.generateId(),
+                    imgPath = stepImageUri
+                )
             }
 
             recipeRepository.saveLocalRecipe(
                 recipe.copy(
+                    recipeId = idGenerator.generateId(),
                     imgPath = recipeImageUri,
                     stepList = recipeStepList,
                     createTime = System.currentTimeMillis()
