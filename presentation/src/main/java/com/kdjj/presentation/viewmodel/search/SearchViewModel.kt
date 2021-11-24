@@ -1,5 +1,6 @@
 package com.kdjj.presentation.viewmodel.search
 
+import android.view.SearchEvent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,6 +19,7 @@ import com.kdjj.presentation.model.ResponseError
 import com.kdjj.presentation.model.SearchTabState
 import com.kdjj.presentation.model.toRecipeListItemModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
@@ -51,6 +53,8 @@ class SearchViewModel @Inject constructor(
 
     private val _eventSearchRecipe = MutableLiveData<Event<SearchRecipeEvent>>()
     val eventSearchRecipe: LiveData<Event<SearchRecipeEvent>> get() = _eventSearchRecipe
+
+    val searchSubject: PublishSubject<SearchRecipeEvent> = PublishSubject.create()
 
     sealed class SearchRecipeEvent {
         class Exception(val error: ResponseError) : SearchRecipeEvent()
@@ -173,7 +177,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun moveToSummary(recipeModel: RecipeListItemModel) {
-        _eventSearchRecipe.value = Event(SearchRecipeEvent.Summary(recipeModel))
+        searchSubject.onNext(SearchRecipeEvent.Summary(recipeModel))
     }
 
 
