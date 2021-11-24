@@ -17,6 +17,7 @@ import com.kdjj.presentation.common.RECIPE_ID
 import com.kdjj.presentation.common.RECIPE_STATE
 import com.kdjj.presentation.databinding.ActivityRecipeSummaryBinding
 import com.kdjj.presentation.model.RecipeSummaryType
+import com.kdjj.presentation.model.UpdateFavoriteResult
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.view.dialog.CustomProgressDialog
 import com.kdjj.presentation.view.recipedetail.RecipeDetailActivity
@@ -193,7 +194,11 @@ class RecipeSummaryActivity : AppCompatActivity() {
                 }
 
                 is RecipeSummaryViewModel.RecipeSummaryEvent.UpdateFavoriteFinish -> {
-                    val message = if (it.flag) "즐겨찾기 추가 / 제거 성공" else "즐겨찾기 추가 / 제거 실패"
+                    val message = when (it.result) {
+                        UpdateFavoriteResult.ADD -> "즐겨찾기 추가 성공"
+                        UpdateFavoriteResult.REMOVE -> "즐겨찾기 제거 성공"
+                        UpdateFavoriteResult.ERROR -> "즐겨찾기 변경 실패"
+                    }
                     showSnackBar(message)
                 }
             }
