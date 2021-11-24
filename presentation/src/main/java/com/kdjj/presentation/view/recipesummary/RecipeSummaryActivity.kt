@@ -1,5 +1,7 @@
 package com.kdjj.presentation.view.recipesummary
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -92,19 +94,31 @@ class RecipeSummaryActivity : AppCompatActivity() {
         liveFabState.observe(this@RecipeSummaryActivity) { (recipeSummaryType, isFabOpen) ->
             val buttonList = floatingMenuIdListMap[recipeSummaryType]
             if (!isInitializeFab) {
+                binding.groupSummaryFabMenu.alpha = 0.0f
                 binding.groupSummaryFabMenu.visibility = View.GONE
-                buttonList?.forEach { button ->
-                    button.visibility = View.VISIBLE
-                }
                 isInitializeFab = true
             }
             if (isFabOpen) {
                 buttonList?.forEachIndexed { index, button ->
-                    button.animate().alpha(1.0f).duration = 80L * index
+                    button.animate()
+                        .alpha(1.0f)
+                        .setDuration(80L * index)
+                        .setListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationStart(animation: Animator?) {
+                                button.visibility = View.VISIBLE
+                            }
+                        })
                 }
             } else {
                 buttonList?.reversed()?.forEachIndexed { index, button ->
-                    button.animate().alpha(0.0f).duration = 80L * index
+                    button.animate()
+                        .alpha(0.0f)
+                        .setDuration(80L * index)
+                        .setListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator?) {
+                                button.visibility = View.GONE
+                            }
+                        })
                 }
             }
         }
