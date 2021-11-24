@@ -10,6 +10,7 @@ import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.common.IdGenerator
 import com.kdjj.presentation.model.RecipeSummaryType
+import com.kdjj.presentation.model.UpdateFavoriteResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -50,7 +51,7 @@ class RecipeSummaryViewModel @Inject constructor(
         class DeleteFinish(val flag: Boolean) : RecipeSummaryEvent()
         class UploadFinish(val flag: Boolean) : RecipeSummaryEvent()
         class SaveFinish(val flag: Boolean) : RecipeSummaryEvent()
-        class UpdateFavoriteFinish(val flag: Boolean) : RecipeSummaryEvent()
+        class UpdateFavoriteFinish(val result: UpdateFavoriteResult) : RecipeSummaryEvent()
     }
 
     sealed class ButtonClick {
@@ -170,8 +171,19 @@ class RecipeSummaryViewModel @Inject constructor(
             liveRecipe.value?.let { recipe ->
                 val favoriteResult =
                     updateLocalRecipeFavoriteUseCase(UpdateLocalRecipeFavoriteRequest(recipe))
-                _eventRecipeSummary.value =
-                    Event(RecipeSummaryEvent.UpdateFavoriteFinish(favoriteResult.isSuccess))
+                        .onSuccess { newFavorite ->
+                            val favoriteState = if (newFavorite) {
+                                UpdateFavoriteResult.ADD
+                            } else {
+                                UpdateFavoriteResult.REMOVE
+                            }
+                            _eventRecipeSummary.value =
+                                Event(RecipeSummaryEvent.UpdateFavoriteFinish(favoriteState))
+                        }.onFailure {
+                            _eventRecipeSummary.value =
+                                Event(RecipeSummaryEvent.UpdateFavoriteFinish(UpdateFavoriteResult.ERROR))
+                        }
+
             }
             _liveLoading.value = false
         }
