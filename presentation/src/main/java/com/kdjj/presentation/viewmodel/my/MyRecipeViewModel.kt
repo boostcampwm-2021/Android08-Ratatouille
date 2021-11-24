@@ -54,7 +54,7 @@ internal class MyRecipeViewModel @Inject constructor(
 
     private var job: Job? = null
 
-    private var _eventMyRecipe = MutableLiveData<Event<MyRecipeEvent>>()
+    private val _eventMyRecipe = MutableLiveData<Event<MyRecipeEvent>>()
     val eventMyRecipe: LiveData<Event<MyRecipeEvent>> get() = _eventMyRecipe
 
     val mySubject: PublishSubject<ButtonClick> = PublishSubject.create()
