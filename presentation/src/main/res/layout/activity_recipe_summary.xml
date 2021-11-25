@@ -50,7 +50,7 @@
                     android:layout_height="@dimen/summary_imageView_height"
                     android:contentDescription="@string/recipeImage"
                     android:scaleType="centerCrop"
-                    android:visibility="@{!viewModel.liveRecipe.imgPath.empty ? View.VISIBLE  :View.GONE}"
+                    android:visibility="@{!viewModel.liveRecipe.imgPath.empty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:loadImage="@{viewModel.liveRecipe.imgPath}"
