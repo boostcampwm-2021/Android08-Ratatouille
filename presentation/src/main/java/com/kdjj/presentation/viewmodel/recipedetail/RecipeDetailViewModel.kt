@@ -79,7 +79,7 @@ class RecipeDetailViewModel @Inject constructor(
                     fetchRemoteRecipeUseCase(FetchRemoteRecipeRequest(recipeId))
                             .onSuccess { recipe ->
                                 _liveStepList.value = recipe.stepList
-                                selectStep(recipe.stepList[0])
+                                _liveSelectedStep.value = recipe.stepList.first()
                                 _liveTitle.value = recipe.title
                             }
                             .onFailure {
@@ -92,7 +92,7 @@ class RecipeDetailViewModel @Inject constructor(
                     val recipeFlow = getLocalRecipeFlowUseCase(GetLocalRecipeRequest(recipeId))
                     val recipe = recipeFlow.first()
                     _liveStepList.value = recipe.stepList
-                    selectStep(recipe.stepList[0])
+                    _liveSelectedStep.value = recipe.stepList.first()
                     _liveTitle.value = recipe.title
                 }
             }
@@ -103,7 +103,6 @@ class RecipeDetailViewModel @Inject constructor(
     }
 
     fun selectStep(step: RecipeStep) {
-        _liveSelectedStep.value = step
         _liveMoveToIdx.value = _liveStepList.value?.indexOf(step)
     }
 
