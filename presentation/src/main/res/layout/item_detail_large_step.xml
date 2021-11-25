@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView_detailItem_type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/detailItem_title_textSize"
+            android:textColor="@color/dark_500"
+            android:layout_marginStart="@dimen/detailItem_marginHorizontal"
+            android:layout_marginTop="@dimen/detailItem_marginTop"
+            tools:text="(COOK)"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/textView_detailItem_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/detailItem_title_textSize"
+            android:textColor="@color/dark_500"
+            android:textStyle="bold"
+            android:layout_marginStart="@dimen/detailItem_title_marginStart"
+            android:layout_marginEnd="@dimen/detailItem_marginHorizontal"
+            tools:text="고기 볶기"
+            app:layout_constraintTop_toTopOf="@id/textView_detailItem_type"
+            app:layout_constraintBottom_toBottomOf="@id/textView_detailItem_type"
+            app:layout_constraintStart_toEndOf="@id/textView_detailItem_type"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/detailItem_cardView_marginTop"
+            android:layout_marginStart="@dimen/detailItem_marginHorizontal"
+            android:layout_marginEnd="@dimen/detailItem_marginHorizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView_detailItem_type"
+            app:cardCornerRadius="@dimen/detailItem_cardView_corner">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/imageView_detailItem"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/detailItem_imageView_height"
+                    tools:src="@color/dark_100"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/textView_detailItem_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:contentDescription="@string/stepImage" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline_content_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.2" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline_content_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.8" />
+
+                <TextView
+                    android:id="@+id/textView_detailItem_content"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/detailItem_content_textSize"
+                    android:textColor="@color/dark_500"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/detailItem_content_marginTop"
+                    tools:text="양념과 재료를 고루 섞어 뚜껑을 덮으세요."
+                    app:layout_constraintTop_toBottomOf="@id/imageView_detailItem"
+                    app:layout_constraintBottom_toTopOf="@id/textView_detailItem_timer"
+                    app:layout_constraintStart_toStartOf="@id/guideline_content_start"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_content_end" />
+
+                <TextView
+                    android:id="@+id/textView_detailItem_timer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/detailItem_timer_textSize"
+                    android:textColor="@color/dark_500"
+                    android:gravity="center"
+                    android:padding="@dimen/detailItem_timer_padding"
+                    android:layout_marginTop="@dimen/detailItem_timer_marginTop"
+                    android:layout_marginBottom="@dimen/detailItem_timer_marginBottom"
+                    android:drawableStart="@drawable/ic_round_play_arrow_24"
+                    tools:text="20:00"
+                    app:layout_constraintTop_toBottomOf="@id/textView_detailItem_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
