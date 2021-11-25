@@ -34,4 +34,6 @@ internal class RecipeImageRepositoryImpl @Inject constructor(
         }
 
     override fun isUriExists(uri: String): Boolean = recipeImageLocalDataSource.isUriExists(uri)
+
+    override suspend fun deleteUselessImages(): Result<Unit> = recipeImageLocalDataSource.deleteUselessImages()
 }

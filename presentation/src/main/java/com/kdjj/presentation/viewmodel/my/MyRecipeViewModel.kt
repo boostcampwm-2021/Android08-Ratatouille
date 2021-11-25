@@ -21,7 +21,8 @@ internal class MyRecipeViewModel @Inject constructor(
     private val latestRecipeUseCase: ResultUseCase<FetchLocalLatestRecipeListRequest, List<Recipe>>,
     private val favoriteRecipeUseCase: ResultUseCase<FetchLocalFavoriteRecipeListRequest, List<Recipe>>,
     private val titleRecipeUseCase: ResultUseCase<FetchLocalTitleRecipeListRequest, List<Recipe>>,
-    private val getRecipeUpdateFlowUseCase: FlowUseCase<EmptyRequest, Int>
+    private val getRecipeUpdateFlowUseCase: FlowUseCase<EmptyRequest, Int>,
+    private val deleteUselessImageFileUseCase: ResultUseCase<EmptyRequest, Unit>
 ) : ViewModel() {
 
     private val _liveSortType = MutableLiveData<SortType>()
@@ -71,6 +72,10 @@ internal class MyRecipeViewModel @Inject constructor(
 
     init {
         setSortType(SortType.SORT_BY_TIME)
+
+        viewModelScope.launch {
+            deleteUselessImageFileUseCase(EmptyRequest)
+        }
 
         viewModelScope.launch {
             getRecipeUpdateFlowUseCase(EmptyRequest)
