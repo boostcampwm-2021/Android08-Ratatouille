@@ -15,7 +15,7 @@ class StepItemDecoration : RecyclerView.ItemDecoration() {
     ) {
         if (parent.getChildAdapterPosition(view) == (parent.adapter?.itemCount ?: 0) - 1) {
             if (view.height == 0) fixLayoutSize(view, parent)
-            outRect.bottom = parent.height - view.height
+            outRect.bottom = maxOf(parent.height - view.height, 0)
         }
     }
 
