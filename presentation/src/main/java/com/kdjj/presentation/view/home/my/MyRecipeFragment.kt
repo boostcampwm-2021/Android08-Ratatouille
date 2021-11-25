@@ -32,9 +32,6 @@ class MyRecipeFragment : Fragment() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    @Inject
-    lateinit var displayConverter: DisplayConverter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setButtonClickObserver()

@@ -19,12 +19,10 @@ import com.kdjj.presentation.databinding.ActivityRecipeDetailBinding
 import com.kdjj.presentation.services.TimerService
 import com.kdjj.presentation.view.adapter.RecipeDetailStepListAdapter
 import com.kdjj.presentation.view.adapter.RecipeDetailTimerListAdapter
-import com.kdjj.presentation.view.adapter.RecipeEditorListAdapter
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.view.dialog.CustomProgressDialog
 import com.kdjj.presentation.viewmodel.recipedetail.RecipeDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecipeDetailActivity : AppCompatActivity() {
@@ -36,9 +34,6 @@ class RecipeDetailActivity : AppCompatActivity() {
 
     private lateinit var stepListAdapter: RecipeDetailStepListAdapter
     private lateinit var timerListAdapter: RecipeDetailTimerListAdapter
-
-    @Inject
-    lateinit var displayConverter: DisplayConverter
 
     private var isExiting = false
 
@@ -113,7 +108,7 @@ class RecipeDetailActivity : AppCompatActivity() {
                             ObjectAnimator.ofFloat(
                                 binding.recyclerViewDetailTimer,
                                 View.TRANSLATION_Y,
-                                displayConverter.dpToPx(-50),
+                                resources.getDimensionPixelSize(R.dimen.detail_timer_animationVertical).toFloat(),
                                 0f
                             ),
                             ObjectAnimator.ofFloat(
@@ -132,7 +127,7 @@ class RecipeDetailActivity : AppCompatActivity() {
                                 binding.recyclerViewDetailTimer,
                                 View.TRANSLATION_Y,
                                 0f,
-                                displayConverter.dpToPx(-50)
+                                resources.getDimensionPixelSize(R.dimen.detail_timer_animationVertical).toFloat()
                             ),
                             ObjectAnimator.ofFloat(
                                 binding.recyclerViewDetailTimer, View.ALPHA, 1f, 0f
