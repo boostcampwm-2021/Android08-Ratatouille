@@ -108,5 +108,9 @@
     <dimen name="search_progressBar_marginStart">4dp</dimen>
     <dimen name="detail_stepType_textSize">16sp</dimen>
     <dimen name="summary_fav_elevation">4dp</dimen>
+    <dimen name="splash_image_width">120dp</dimen>
+    <dimen name="splash_image_height">100dp</dimen>
+    <dimen name="splash_title_width">100dp</dimen>
+    <dimen name="splash_title_height">30dp</dimen>
 
 </resources>

@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/imageView_splash_title"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
+        android:layout_width="@dimen/splash_title_width"
+        android:layout_height="@dimen/splash_title_height"
         android:scaleType="centerInside"
         android:src="@drawable/ic_text"
         app:layout_constraintBottom_toTopOf="@id/imageView_splash_food"
@@ -20,8 +20,8 @@
 
     <ImageView
         android:id="@+id/imageView_splash_food"
-        android:layout_width="120dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/splash_image_width"
+        android:layout_height="@dimen/splash_image_height"
         android:scaleType="centerInside"
         android:src="@drawable/ic_food"
         app:layout_constraintBottom_toBottomOf="parent"
