@@ -24,6 +24,7 @@
         <item name="android:layout_marginStart">@dimen/editor_inputLabel_marginStart</item>
     </style>
 
+
     <style name="SummaryLabel" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/dark_500</item>
         <item name="android:textSize">@dimen/summary_label_textSize</item>
@@ -31,16 +32,25 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/summary_label_marginTop</item>
-        <item name="android:layout_marginStart">@dimen/summary_label_marginStart</item>
+    </style>
+
+    <style name="SummaryTextCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="cardCornerRadius">@dimen/summary_cardView_corner</item>
+        <item name="cardElevation">@dimen/summary_cardView_elevation</item>
+        <item name="strokeWidth">@dimen/summary_cardView_strokeWidth</item>
+        <item name="strokeColor">@color/dark_400</item>
+        <item name="android:background">@color/light_500</item>
     </style>
 
     <style name="SummaryText" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/dark_500</item>
         <item name="android:textSize">@dimen/summary_text_textSize</item>
-        <item name="android:layout_marginStart">@dimen/summary_text_marginStart</item>
-        <item name="android:layout_marginEnd">@dimen/summary_text_marginEnd</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">0dp</item>
+        <item name="android:padding">16dp</item>
     </style>
 
     <style name="SummaryFloatingButton">

@@ -9,6 +9,7 @@
 
     <color name="dark_100">#EAF2F5</color>
     <color name="dark_200">#D6E4EC</color>
+    <color name="dark_400">#85949F</color>
     <color name="dark_500">#343C44</color>
     <color name="dark_600">#262F3A</color>
     <color name="dark_900">#091020</color>

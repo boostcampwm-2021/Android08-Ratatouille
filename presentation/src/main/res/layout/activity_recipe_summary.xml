@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.kdjj.presentation.viewmodel.recipesummary.RecipeSummaryViewModel.FabClick"/>
+
+        <import type="com.kdjj.presentation.viewmodel.recipesummary.RecipeSummaryViewModel.FabClick" />
+
         <variable
             name="viewModel"
             type="com.kdjj.presentation.viewmodel.recipesummary.RecipeSummaryViewModel" />
@@ -51,77 +53,108 @@
                     app:loadImage="@{viewModel.liveRecipe.imgPath}"
                     tools:src="@drawable/ic_baseline_fastfood_24" />
 
-                <androidx.constraintlayout.widget.Barrier
-                    android:id="@+id/barrier_summary_recipeImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="imageView_summary_recipeImage" />
+
+                <TextView
+                    android:id="@+id/textView_summary_recipeTypeLabel"
+                    style="@style/SummaryLabel"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/recipeType"
+                    app:layout_constraintStart_toStartOf="@id/guideline_summary_textLeft"
+                    app:layout_constraintTop_toBottomOf="@id/imageView_summary_recipeImage" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardView_summary_recipeType"
+                    style="@style/SummaryTextCardView"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_summary_textRight"
+                    app:layout_constraintStart_toStartOf="@id/guideline_summary_textLeft"
+                    app:layout_constraintTop_toBottomOf="@id/textView_summary_recipeTypeLabel">
+
+                    <TextView
+                        style="@style/SummaryText"
+                        android:text="@{viewModel.liveRecipe.type.title}"
+                        tools:text="한식" />
+                </com.google.android.material.card.MaterialCardView>
 
                 <TextView
                     android:id="@+id/textView_summary_expectedTimeLabel"
                     style="@style/SummaryLabel"
                     android:text="@string/expectedTime"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/barrier_summary_recipeImage" />
+                    app:layout_constraintStart_toStartOf="@id/guideline_summary_textLeft"
+                    app:layout_constraintTop_toBottomOf="@id/cardView_summary_recipeType" />
 
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardView_summary_expectedTime"
+                    style="@style/SummaryTextCardView"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_summary_textRight"
+                    app:layout_constraintStart_toStartOf="@id/guideline_summary_textLeft"
+                    app:layout_constraintTop_toBottomOf="@id/textView_summary_expectedTimeLabel">
 
-                <TextView
-                    android:id="@+id/textView_summary_expectedTime"
-                    style="@style/SummaryText"
-                    formatTotalTime="@{UtilsKt.calculateTotalTime(viewModel.liveRecipe)}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/textView_summary_expectedTimeLabel"
-                    app:layout_constraintTop_toTopOf="@id/textView_summary_expectedTimeLabel"
-                    tools:text="40분" />
+                    <TextView
+                        style="@style/SummaryText"
+                        formatTotalTime="@{UtilsKt.calculateTotalTime(viewModel.liveRecipe)}"
+                        tools:text="40분" />
+                </com.google.android.material.card.MaterialCardView>
 
-                <androidx.constraintlayout.widget.Barrier
-                    android:id="@+id/barrier_summary_expectedTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="textView_summary_expectedTime, textView_summary_expectedTimeLabel" />
 
                 <TextView
                     android:id="@+id/textView_summary_ingredientLabel"
                     style="@style/SummaryLabel"
                     android:text="@string/ingredient"
-                    app:layout_constraintEnd_toEndOf="@id/textView_summary_expectedTimeLabel"
-                    app:layout_constraintTop_toBottomOf="@id/barrier_summary_expectedTime" />
+                    app:layout_constraintStart_toStartOf="@id/guideline_summary_textLeft"
+                    app:layout_constraintTop_toBottomOf="@id/cardView_summary_expectedTime" />
 
-                <TextView
-                    android:id="@+id/textView_summary_ingredient"
-                    style="@style/SummaryText"
-                    android:text="@{viewModel.liveRecipe.stuff}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/textView_summary_ingredientLabel"
-                    app:layout_constraintTop_toTopOf="@id/textView_summary_ingredientLabel"
-                    tools:text="이것 저것 머시기\n이것 저것 머시기\n이것 저것 머시기\n이것 저것 머시기" />
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardView_summary_ingredient"
+                    style="@style/SummaryTextCardView"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_summary_textRight"
+                    app:layout_constraintStart_toStartOf="@id/guideline_summary_textLeft"
+                    app:layout_constraintTop_toBottomOf="@id/textView_summary_ingredientLabel">
 
-                <androidx.constraintlayout.widget.Barrier
-                    android:id="@+id/barrier_summary_ingredient"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="textView_summary_ingredient, textView_summary_ingredientLabel" />
+                    <TextView
+                        style="@style/SummaryText"
+                        android:text="@{viewModel.liveRecipe.stuff}"
+                        tools:text="이것 저것 머시기\n이것 저것 머시기\n이것 저것 머시기\n이것 저것 머시기" />
+                </com.google.android.material.card.MaterialCardView>
+
 
                 <TextView
                     android:id="@+id/textView_summary_stepSummaryLabel"
                     style="@style/SummaryLabel"
                     android:text="@string/stepSummary"
-                    app:layout_constraintEnd_toEndOf="@id/textView_summary_ingredientLabel"
-                    app:layout_constraintTop_toBottomOf="@id/barrier_summary_ingredient" />
+                    app:layout_constraintStart_toStartOf="@id/guideline_summary_textLeft"
+                    app:layout_constraintTop_toBottomOf="@id/cardView_summary_ingredient" />
 
-                <TextView
-                    android:id="@+id/textView_summary_stepSummary"
-                    style="@style/SummaryText"
-                    setStepSummary="@{viewModel.liveRecipe}"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardView_summary_stepSummary"
+                    style="@style/SummaryTextCardView"
                     android:layout_marginBottom="@dimen/summary_lastItem_marginBottom"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_summary_textRight"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/textView_summary_stepSummaryLabel"
-                    app:layout_constraintTop_toTopOf="@id/textView_summary_stepSummaryLabel"
-                    tools:text="재료 준비\n면 삶기\n고기 볶기" />
+                    app:layout_constraintStart_toStartOf="@id/guideline_summary_textLeft"
+                    app:layout_constraintTop_toBottomOf="@id/textView_summary_stepSummaryLabel">
+
+                    <TextView
+                        android:id="@+id/textView_summary_stepSummary"
+                        style="@style/SummaryText"
+                        setStepSummary="@{viewModel.liveRecipe}"
+                        tools:text="재료 준비\n면 삶기\n고기 볶기" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline_summary_textLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.1" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline_summary_textRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.9" />
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
@@ -149,8 +182,8 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_summary_favorite"
             style="@style/SummaryFloatingButton"
-            android:onClick="@{() -> viewModel.fabClickSubject.onNext(FabClick.UpdateRecipeFavorite)}"
             android:drawableEnd="@{viewModel.liveRecipe.favorite == true ? @drawable/ic_baseline_star_16dp : @drawable/ic_star_white_16dp}"
+            android:onClick="@{() -> viewModel.fabClickSubject.onNext(FabClick.UpdateRecipeFavorite)}"
             android:text="@{viewModel.liveRecipe.favorite == true ? @string/cancelFavorite : @string/registFavorite}"
             app:layout_constraintBottom_toTopOf="@id/button_summary_edit"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
