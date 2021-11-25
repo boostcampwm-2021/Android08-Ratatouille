@@ -7,12 +7,10 @@ import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.RecipeStep
 import com.kdjj.domain.model.request.FetchRemoteRecipeRequest
 import com.kdjj.domain.model.request.GetLocalRecipeRequest
-import com.kdjj.domain.usecase.FlowUseCase
 import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.StepTimerModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,8 +36,11 @@ class RecipeDetailViewModel @Inject constructor(
     private val _liveTimerList = MutableLiveData<List<StepTimerModel>>(listOf())
     val liveTimerList: LiveData<List<StepTimerModel>> get() = _liveTimerList
 
-    private val _liveSelectedStep = MutableLiveData<RecipeStep>()
-    val liveSelectedStep: LiveData<RecipeStep> get() = _liveSelectedStep
+    private val _liveStepBarSelected = MutableLiveData<RecipeStep>()
+    val liveStepBarSelected: LiveData<RecipeStep> get() = _liveStepBarSelected
+
+    private val _liveMoveStepBarToIdx = MutableLiveData<Int>()
+    val liveMoveStepBarToIdx: LiveData<Int> get() = _liveMoveStepBarToIdx
 
     private val _liveMoveToIdx = MutableLiveData<Int>()
     val liveMoveToIdx: LiveData<Int> get() = _liveMoveToIdx
@@ -81,7 +82,7 @@ class RecipeDetailViewModel @Inject constructor(
                     getLocalRecipeUseCase(GetLocalRecipeRequest(recipeId))
             }.onSuccess { recipe ->
                 _liveStepList.value = recipe.stepList
-                _liveSelectedStep.value = recipe.stepList.first()
+                _liveStepBarSelected.value = recipe.stepList.first()
                 _liveTitle.value = recipe.title
             }.onFailure {
                 _eventRecipeDetail.value = Event(RecipeDetailEvent.Error)
@@ -98,8 +99,9 @@ class RecipeDetailViewModel @Inject constructor(
 
     fun updateCurrentStepTo(idx: Int) {
         val step = _liveStepList.value?.getOrNull(idx) ?: return
-        if (_liveSelectedStep.value?.stepId != step.stepId) {
-            _liveSelectedStep.value = step
+        if (_liveStepBarSelected.value?.stepId != step.stepId) {
+            _liveStepBarSelected.value = step
+            _liveMoveStepBarToIdx.value = idx
         }
     }
 
