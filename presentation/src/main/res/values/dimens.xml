@@ -74,7 +74,8 @@
     <dimen name="detail_textAddTimer_padding">16dp</dimen>
     <dimen name="detail_addTimerDivider_marginVertical">8dp</dimen>
     <dimen name="detail_stepList_width">200dp</dimen>
-    <dimen name="detail_stepList_textSize">14sp</dimen>
+    <dimen name="detail_stepList_textSize">16sp</dimen>
+    <dimen name="detail_stepListSelected_textSize">18sp</dimen>
     <dimen name="detail_stepItem_paddingVertical">12dp</dimen>
     <dimen name="detail_stepItem_paddingHorizontal">8dp</dimen>
 
