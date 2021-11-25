@@ -11,6 +11,7 @@ import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kdjj.domain.model.*
 import com.kdjj.presentation.R
@@ -75,6 +76,17 @@ class RecipeDetailActivity : AppCompatActivity() {
         binding.recyclerViewDetailLargeStep.apply {
             adapter = largeStepListAdapter
             addItemDecoration(StepItemDecoration())
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    val idx = (recyclerView.layoutManager as? LinearLayoutManager)
+                        ?.findFirstCompletelyVisibleItemPosition()
+                        ?: return
+
+                    viewModel.showScrolledTo(idx)
+                }
+            })
         }
 
         timerListAdapter = RecipeDetailTimerListAdapter(viewModel)

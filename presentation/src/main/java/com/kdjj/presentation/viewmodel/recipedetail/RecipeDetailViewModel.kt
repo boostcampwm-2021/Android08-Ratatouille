@@ -29,18 +29,11 @@ class RecipeDetailViewModel @Inject constructor(
     private val _liveSelectedStep = MutableLiveData<RecipeStep>()
     val liveSelectedStep: LiveData<RecipeStep> get() = _liveSelectedStep
 
+    private val _liveMoveToIdx = MutableLiveData<Int>(0)
+    val liveMoveToIdx: LiveData<Int> get() = _liveMoveToIdx
+
     private val _liveTimerList = MutableLiveData<List<StepTimerModel>>(listOf())
     val liveTimerList: LiveData<List<StepTimerModel>> get() = _liveTimerList
-
-    val liveSelectedTimer: LiveData<StepTimerModel?> = MediatorLiveData<StepTimerModel?>().apply {
-        addSource(_liveTimerList) { timerList ->
-            value = timerList.firstOrNull { it.recipeStep == liveSelectedStep.value }
-        }
-
-        addSource(_liveSelectedStep) { step ->
-            value = _liveTimerList.value?.firstOrNull { it.recipeStep == step }
-        }
-    }
 
     private var _liveFinishedTimerPosition = MutableLiveData<Int>()
     val liveFinishedTimerPosition: LiveData<Int> get() = _liveFinishedTimerPosition
@@ -102,6 +95,14 @@ class RecipeDetailViewModel @Inject constructor(
 
     fun selectStep(step: RecipeStep) {
         _liveSelectedStep.value = step
+        _liveMoveToIdx.value = _liveStepList.value?.indexOf(step)
+    }
+
+    fun showScrolledTo(idx: Int) {
+        val step = _liveStepList.value?.getOrNull(idx) ?: return
+        if (_liveSelectedStep.value != step) {
+            _liveSelectedStep.value = step
+        }
     }
 
     fun addTimer(step: RecipeStep) {
