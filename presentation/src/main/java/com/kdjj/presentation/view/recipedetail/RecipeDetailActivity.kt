@@ -9,7 +9,6 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,8 +24,6 @@ import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.view.dialog.CustomProgressDialog
 import com.kdjj.presentation.viewmodel.recipedetail.RecipeDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RecipeDetailActivity : AppCompatActivity() {
@@ -72,12 +69,15 @@ class RecipeDetailActivity : AppCompatActivity() {
         loadingDialog = CustomProgressDialog(this)
 
         stepListAdapter = RecipeDetailStepListAdapter(viewModel)
-        binding.recyclerViewDetailStep.adapter = stepListAdapter
+        binding.recyclerViewDetailStep.apply {
+            adapter = stepListAdapter
+            addItemDecoration(StepDecoration())
+        }
 
         largeStepListAdapter = RecipeDetailLargeStepListAdapter(viewModel)
         binding.recyclerViewDetailLargeStep.apply {
             adapter = largeStepListAdapter
-            addItemDecoration(StepItemDecoration())
+            addItemDecoration(LargeStepDecoration())
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
