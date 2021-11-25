@@ -19,4 +19,6 @@ interface RecipeImageRepository {
     fun isUriExists(
         uri: String
     ): Boolean
+
+    suspend fun deleteUselessImages(): Result<Unit>
 }

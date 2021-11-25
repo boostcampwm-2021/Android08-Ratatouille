@@ -91,6 +91,11 @@ internal class ImageFileHelper @Inject constructor(
         }
     }
 
+    fun deleteImageFile(imgPath: String) {
+        val file = File(imgPath)
+        if (file.exists()) file.delete()
+    }
+
     companion object{
         const val MAX_WIDTH_HEIGHT_SIZE = 300
     }

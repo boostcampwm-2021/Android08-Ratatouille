@@ -114,4 +114,9 @@ abstract class ResultUseCaseModule {
     internal abstract fun bindDeleteRecipeTempUseCase(
         deleteRecipeTempUseCase: DeleteRecipeTempUseCase
     ) : ResultUseCase<DeleteRecipeTempRequest, Unit>
+
+    @Binds
+    internal abstract fun bindDeleteUselessImageFileUseCase(
+        deleteUselessImageFileUseCase: DeleteUselessImageFileUseCase
+    ) : ResultUseCase<EmptyRequest, Unit>
 }

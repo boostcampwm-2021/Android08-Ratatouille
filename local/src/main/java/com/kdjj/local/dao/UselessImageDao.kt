@@ -13,6 +13,9 @@ internal interface UselessImageDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUselessImage(uselessImageDto: List<UselessImageDto>)
 
+    @Query("SELECT * FROM UselessImage")
+    suspend fun getAllUselessImage(): List<UselessImageDto>
+
     @Delete
     suspend fun deleteUselessImage(uselessImageDto: UselessImageDto)
 
