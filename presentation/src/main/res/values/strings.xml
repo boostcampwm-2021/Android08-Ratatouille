@@ -76,5 +76,6 @@
     <string name="upload">업로드</string>
     <string name="steal">훔쳐오기</string>
     <string name="steal_favorite">훔쳐와서 즐겨찾기 등록</string>
+    <string name="timerBtn">타이머 버튼</string>
 
 </resources>

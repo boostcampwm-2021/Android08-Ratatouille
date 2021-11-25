@@ -107,10 +107,26 @@
     <dimen name="summary_floatingButton_marginBottom">8dp</dimen>
     <dimen name="search_progressBar_marginStart">4dp</dimen>
     <dimen name="detail_stepType_textSize">16sp</dimen>
+
     <dimen name="summary_fav_elevation">4dp</dimen>
     <dimen name="splash_image_width">120dp</dimen>
     <dimen name="splash_image_height">100dp</dimen>
     <dimen name="splash_title_width">100dp</dimen>
     <dimen name="splash_title_height">30dp</dimen>
+
+    <dimen name="detail_largeImage_height">250dp</dimen>
+    <dimen name="detailItem_title_textSize">18sp</dimen>
+    <dimen name="detailItem_marginHorizontal">24dp</dimen>
+    <dimen name="detailItem_title_marginStart">8dp</dimen>
+    <dimen name="detailItem_marginTop">36dp</dimen>
+    <dimen name="detailItem_cardView_marginTop">8dp</dimen>
+    <dimen name="detailItem_cardView_corner">16dp</dimen>
+    <dimen name="detailItem_imageView_height">250dp</dimen>
+    <dimen name="detailItem_content_marginTop">36dp</dimen>
+    <dimen name="detailItem_content_textSize">14sp</dimen>
+    <dimen name="detailItem_timer_marginTop">20dp</dimen>
+    <dimen name="detailItem_timer_textSize">12sp</dimen>
+    <dimen name="detailItem_timer_marginBottom">8dp</dimen>
+    <dimen name="detailItem_timer_padding">4dp</dimen>
 
 </resources>
