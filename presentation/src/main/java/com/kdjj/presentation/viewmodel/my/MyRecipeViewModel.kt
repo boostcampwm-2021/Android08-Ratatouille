@@ -132,6 +132,7 @@ internal class MyRecipeViewModel @Inject constructor(
                 }
             }
             _liveFetching.value = false
+            _liveLoading.value = false
         }
     }
 
