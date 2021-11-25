@@ -5,13 +5,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.core.os.postDelayed
-import com.kdjj.presentation.R
-import com.kdjj.presentation.common.ALPHA
-import com.kdjj.presentation.common.ANIMATION_DURATION
-import com.kdjj.presentation.common.SPLASH_TIME
 import com.kdjj.presentation.databinding.ActivitySplashBinding
 import com.kdjj.presentation.view.home.HomeActivity
 
@@ -25,7 +20,7 @@ class LaunchActivity : AppCompatActivity() {
         setContentView(binding.root)
         setTitleAnimation()
         setFoodAnimation()
-        Handler(mainLooper).postDelayed(2000) {
+        Handler(mainLooper).postDelayed(SPLASH_TIME) {
             startActivity(Intent(this, HomeActivity::class.java))
             finish()
         }
@@ -52,5 +47,11 @@ class LaunchActivity : AppCompatActivity() {
             duration = ANIMATION_DURATION
             start()
         }
+    }
+
+    companion object {
+        const val ANIMATION_DURATION = 800L
+        const val SPLASH_TIME = 1500L
+        const val ALPHA = "alpha"
     }
 }
