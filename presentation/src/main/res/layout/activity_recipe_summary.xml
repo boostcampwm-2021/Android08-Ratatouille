@@ -62,6 +62,8 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView_summary_recipeImage"
                     android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/summary_recipeImage_marginTop"
+                    app:cardCornerRadius="@dimen/summary_recipeImage_cardCornerRadius"
                     android:layout_height="@dimen/summary_imageView_height"
                     android:visibility="@{viewModel.liveRecipe == null || viewModel.liveRecipe.imgPath.empty ? View.GONE : View.VISIBLE}"
                     app:layout_constraintStart_toStartOf="parent"
