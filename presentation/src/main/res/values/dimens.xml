@@ -75,8 +75,8 @@
     <dimen name="detail_addTimerDivider_marginVertical">8dp</dimen>
     <dimen name="detail_stepList_width">200dp</dimen>
     <dimen name="detail_stepList_textSize">14sp</dimen>
-    <dimen name="detail_stepItem_paddingVertical">8dp</dimen>
-    <dimen name="detail_stepItem_paddingHorizontal">16dp</dimen>
+    <dimen name="detail_stepItem_paddingVertical">12dp</dimen>
+    <dimen name="detail_stepItem_paddingHorizontal">8dp</dimen>
 
     <dimen name="search_icSearch_insetRight">12dp</dimen>
     <dimen name="search_tab_paddingVertical">16dp</dimen>
