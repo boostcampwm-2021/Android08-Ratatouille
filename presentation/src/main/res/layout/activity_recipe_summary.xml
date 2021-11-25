@@ -44,14 +44,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+
+                <androidx.constraintlayout.widget.Group
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.liveRecipe == null ? View.GONE : View.VISIBLE}"
+                    app:constraint_referenced_ids="textView_summary_recipeTypeLabel,
+                                                     cardView_summary_recipeType,
+                                                    textView_summary_expectedTimeLabel,
+                                                    cardView_summary_expectedTime,
+                                                    textView_summary_ingredientLabel,
+                                                     cardView_summary_ingredient,
+                                                     textView_summary_stepSummaryLabel,
+                                                     cardView_summary_stepSummary" />
+
+
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView_summary_recipeImage"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/summary_imageView_height"
-                    android:visibility="@{!viewModel.liveRecipe.imgPath.empty ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.liveRecipe == null || viewModel.liveRecipe.imgPath.empty ? View.GONE : View.VISIBLE}"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="@dimen/summary_recipeImage_marginTop"
-                    app:cardCornerRadius="@dimen/summary_recipeImage_cardCornerRadius"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
