@@ -125,24 +125,21 @@ class RecipeDetailActivity : AppCompatActivity() {
         viewModel.eventRecipeDetail.observe(this, EventObserver {
             when (it) {
                 is RecipeDetailViewModel.RecipeDetailEvent.OpenTimer -> {
-                    lifecycleScope.launch {
-                        delay(50)
-                        AnimatorSet().apply {
-                            binding.recyclerViewDetailTimer.visibility = View.VISIBLE
-                            playTogether(
-                                ObjectAnimator.ofFloat(
-                                    binding.recyclerViewDetailTimer,
-                                    View.TRANSLATION_Y,
-                                    binding.recyclerViewDetailTimer.height.toFloat(),
-                                    0f,
-                                ),
-                                ObjectAnimator.ofFloat(
-                                    binding.recyclerViewDetailTimer, View.ALPHA, 0f, 1f
-                                )
+                    AnimatorSet().apply {
+                        binding.recyclerViewDetailTimer.visibility = View.VISIBLE
+                        playTogether(
+                            ObjectAnimator.ofFloat(
+                                binding.recyclerViewDetailTimer,
+                                View.TRANSLATION_Y,
+                                resources.getDimensionPixelSize(R.dimen.detail_timer_animation).toFloat(),
+                                0f,
+                            ),
+                            ObjectAnimator.ofFloat(
+                                binding.recyclerViewDetailTimer, View.ALPHA, 0f, 1f
                             )
-                            duration = 500
-                            start()
-                        }
+                        )
+                        duration = 500
+                        start()
                     }
                 }
 
