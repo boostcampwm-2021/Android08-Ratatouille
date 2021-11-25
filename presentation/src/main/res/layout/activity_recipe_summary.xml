@@ -14,6 +14,8 @@
         <import type="com.kdjj.presentation.common.UtilsKt" />
 
         <import type="android.widget.ImageView" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,12 +49,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/summary_imageView_height"
                     android:contentDescription="@string/recipeImage"
-                    android:scaleType="@{viewModel.liveRecipe.imgPath.empty ? ImageView.ScaleType.CENTER : ImageView.ScaleType.CENTER_CROP}"
+                    android:scaleType="centerCrop"
+                    android:visibility="@{!viewModel.liveRecipe.imgPath.empty ? View.VISIBLE  :View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:loadImage="@{viewModel.liveRecipe.imgPath}"
                     tools:src="@drawable/ic_baseline_fastfood_24" />
-
 
                 <TextView
                     android:id="@+id/textView_summary_recipeTypeLabel"
@@ -128,8 +130,8 @@
                     android:id="@+id/cardView_summary_stepSummary"
                     style="@style/SummaryTextCardView"
                     android:layout_marginBottom="@dimen/summary_lastItem_marginBottom"
-                    app:layout_constraintEnd_toEndOf="@id/guideline_summary_textRight"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_summary_textRight"
                     app:layout_constraintStart_toStartOf="@id/guideline_summary_textLeft"
                     app:layout_constraintTop_toBottomOf="@id/textView_summary_stepSummaryLabel">
 
