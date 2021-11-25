@@ -124,12 +124,11 @@
     <dimen name="detailItem_imageView_height">250dp</dimen>
     <dimen name="detailItem_content_marginTop">36dp</dimen>
     <dimen name="detailItem_content_textSize">14sp</dimen>
-    <dimen name="detailItem_timer_marginTop">20dp</dimen>
+    <dimen name="detailItem_content_marginBottom">24dp</dimen>
     <dimen name="detailItem_timer_textSize">12sp</dimen>
-    <dimen name="detailItem_timer_marginBottom">8dp</dimen>
+    <dimen name="detailItem_cardView_paddingBottom">12dp</dimen>
     <dimen name="detailItem_timer_padding">4dp</dimen>
     <dimen name="detail_timer_padding">12dp</dimen>
     <dimen name="detailItem_paddingBottom">12dp</dimen>
-    <dimen name="detail_timer_animationVertical">50dp</dimen>
 
 </resources>

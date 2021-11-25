@@ -46,10 +46,10 @@
             android:layout_height="0dp"
             tools:listitem="@layout/item_detail_large_step"
             app:moveTo="@{viewModel.liveMoveToIdx}"
-            app:submitList="@{viewModel.liveStepList}"
+            app:submitList="@{viewModel.liveModelList}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/recyclerView_detail_step"
-            app:layout_constraintBottom_toTopOf="@id/recyclerView_detail_timer"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -59,6 +59,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@color/dark_500"
+            android:visibility="gone"
             tools:listitem="@layout/item_detail_timer"
             app:moveTo="@{viewModel.liveFinishedTimerPosition}"
             app:submitList="@{viewModel.liveTimerList}"

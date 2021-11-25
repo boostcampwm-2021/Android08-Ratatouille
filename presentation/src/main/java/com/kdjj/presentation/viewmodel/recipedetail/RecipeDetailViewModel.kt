@@ -25,6 +25,15 @@ class RecipeDetailViewModel @Inject constructor(
 
     private val _liveStepList = MutableLiveData<List<RecipeStep>>()
     val liveStepList: LiveData<List<RecipeStep>> get() = _liveStepList
+    val liveModelList = liveStepList.map { stepList ->
+        stepList.map { step ->
+            StepTimerModel(step) {
+                ringtone.play()
+                _liveFinishedTimerPosition.value = _liveTimerList.value?.indexOf(it)
+                it.startAnimation()
+            }
+        }
+    }
 
     private val _liveSelectedStep = MutableLiveData<RecipeStep>()
     val liveSelectedStep: LiveData<RecipeStep> get() = _liveSelectedStep
@@ -100,23 +109,30 @@ class RecipeDetailViewModel @Inject constructor(
 
     fun showScrolledTo(idx: Int) {
         val step = _liveStepList.value?.getOrNull(idx) ?: return
-        if (_liveSelectedStep.value != step) {
+        if (_liveSelectedStep.value?.stepId != step.stepId) {
             _liveSelectedStep.value = step
         }
     }
 
-    fun addTimer(step: RecipeStep) {
-        _liveTimerList.value?.let { timerList ->
-            if (!timerList.any { it.recipeStep == step }) {
-                if (timerList.isEmpty()) {
-                    _eventRecipeDetail.value = Event(RecipeDetailEvent.OpenTimer)
-
+    fun toggleTimer(model: StepTimerModel) {
+        when (model.liveState.value) {
+            StepTimerModel.TimerState.INITIALIZED -> {
+                _liveTimerList.value?.let { timerList ->
+                    if (timerList.isEmpty()) {
+                        _eventRecipeDetail.value = Event(RecipeDetailEvent.OpenTimer)
+                    }
+                    _liveTimerList.value = timerList + model
+                    model.resume()
                 }
-                _liveTimerList.value = timerList + StepTimerModel(step) {
-                    ringtone.play()
-                    _liveFinishedTimerPosition.value = _liveTimerList.value?.indexOf(it)
-                    it.startAnimation()
-                }
+            }
+            StepTimerModel.TimerState.RUNNING -> {
+                model.pause()
+            }
+            StepTimerModel.TimerState.PAUSED -> {
+                model.resume()
+            }
+            StepTimerModel.TimerState.END -> {
+                removeTimer(model)
             }
         }
     }
@@ -131,7 +147,6 @@ class RecipeDetailViewModel @Inject constructor(
 
     fun removeTimerAt(position: Int) {
         _liveTimerList.value?.getOrNull(position)?.let { model ->
-            model.pause()
             removeTimer(model)
         }
     }
@@ -144,11 +159,13 @@ class RecipeDetailViewModel @Inject constructor(
                     Event(RecipeDetailEvent.CloseTimer {
                         _liveTimerList.value = modelList.toMutableList().apply {
                             remove(timerModel)
+                            timerModel.reset()
                         }
                     })
             } else {
                 _liveTimerList.value = modelList.toMutableList().apply {
                     remove(timerModel)
+                    timerModel.reset()
                 }
             }
         }
