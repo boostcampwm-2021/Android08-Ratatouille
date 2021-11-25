@@ -1,11 +1,10 @@
 package com.kdjj.domain.usecase
 
 import com.kdjj.domain.common.IdGenerator
+import com.kdjj.domain.model.ImageInfo
 import com.kdjj.domain.model.request.UpdateLocalRecipeRequest
 import com.kdjj.domain.repository.RecipeImageRepository
 import com.kdjj.domain.repository.RecipeRepository
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 internal class UpdateLocalRecipeUseCase @Inject constructor(
@@ -21,24 +20,30 @@ internal class UpdateLocalRecipeUseCase @Inject constructor(
 
             val imgList = listOf(updatedRecipe.imgPath)
                 .plus(updatedRecipe.stepList.map { it.imgPath })
-                .map {
-                    coroutineScope {
-                        async {
-                            copyImageToInternal(it)
-                        }
-                    }
+                .toMutableList()
+
+            val imgInfoList = imgList.filter { it.isNotBlank() }
+                .map { ImageInfo(it, idGenerator.generateId()) }
+
+            val changedImgList = copyImageToInternal(imgInfoList)
+
+            var i = 0
+            imgList.forEachIndexed { index, s ->
+                if (s.isNotBlank()) {
+                    imgList[index] = changedImgList[i++]
                 }
+            }
 
             val updatedRecipeStepList = updatedRecipe.stepList.mapIndexed { i, step ->
                 step.copy(
                     stepId = if (step.stepId.isBlank()) idGenerator.generateId()
                     else step.stepId,
-                    imgPath = imgList[i + 1].await()
+                    imgPath = imgList[i + 1]
                 )
             }
 
             updatedRecipe = updatedRecipe.copy(
-                imgPath = imgList.first().await(),
+                imgPath = imgList.first(),
                 stepList = updatedRecipeStepList,
                 createTime = System.currentTimeMillis()
             )
@@ -49,13 +54,13 @@ internal class UpdateLocalRecipeUseCase @Inject constructor(
             ).getOrThrow()
         }
 
-    private suspend fun copyImageToInternal(imgPath: String): String {
-        if (imgPath.isEmpty()) return ""
-        return if (imgPath.startsWith("https://") || imgPath.startsWith("gs://")) {
-            imageRepository.copyRemoteImageToInternal(imgPath, idGenerator.generateId())
+    private suspend fun copyImageToInternal(imgInfoList: List<ImageInfo>): List<String> {
+        if (imgInfoList.isEmpty()) return listOf()
+        return if (imgInfoList.first().uri.startsWith("https://") || imgInfoList.first().uri.startsWith("gs://")) {
+            imageRepository.copyRemoteImageToInternal(imgInfoList)
                 .getOrThrow()
         } else {
-            imageRepository.copyExternalImageToInternal(imgPath, idGenerator.generateId())
+            imageRepository.copyExternalImageToInternal(imgInfoList)
                 .getOrThrow()
         }
     }

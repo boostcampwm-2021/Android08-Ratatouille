@@ -12,17 +12,17 @@ internal class RecipeImageLocalDataSourceImpl @Inject constructor(
 ) : RecipeImageLocalDataSource {
 
     override suspend fun convertToByteArray(
-        uri: String
-    ): Result<Pair<ByteArray, Float?>> {
-        return imageFileHelper.convertToByteArray(uri)
+        uriList: List<String>
+    ): Result<List<Pair<ByteArray, Float?>>> {
+        return imageFileHelper.convertToByteArray(uriList)
     }
 
     override suspend fun convertToInternalStorageUri(
-        byteArray: ByteArray,
-        fileName: String,
-        degree: Float?
-    ): Result<String> {
-        return imageFileHelper.convertToInternalStorageUri(byteArray, fileName, degree)
+        byteArrayList: List<ByteArray>,
+        fileNameList: List<String>,
+        degreeList: List<Float?>
+    ): Result<List<String>> {
+        return imageFileHelper.convertToInternalStorageUri(byteArrayList, fileNameList, degreeList)
     }
 
     override fun isUriExists(
