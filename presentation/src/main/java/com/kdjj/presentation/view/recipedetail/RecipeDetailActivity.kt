@@ -131,8 +131,8 @@ class RecipeDetailActivity : AppCompatActivity() {
                             ObjectAnimator.ofFloat(
                                 binding.recyclerViewDetailTimer,
                                 View.TRANSLATION_Y,
-                                resources.getDimensionPixelSize(R.dimen.detail_timer_animationVertical).toFloat(),
-                                0f
+                                0f,
+                                resources.getDimensionPixelSize(R.dimen.detail_timer_animationVertical).toFloat()
                             ),
                             ObjectAnimator.ofFloat(
                                 binding.recyclerViewDetailTimer, View.ALPHA, 1f, 0f
