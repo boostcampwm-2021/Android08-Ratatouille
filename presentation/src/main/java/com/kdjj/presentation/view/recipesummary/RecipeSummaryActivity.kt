@@ -169,6 +169,17 @@ class RecipeSummaryActivity : AppCompatActivity() {
                     }
                 }
 
+                RecipeSummaryViewModel.RecipeSummaryEvent.DeleteConfirm -> {
+                    ConfirmDialogBuilder.create(
+                        context = this@RecipeSummaryActivity,
+                        title = "삭제 확인",
+                        content = "레시피를 삭제하면 다시 볼 수 없습니다.\n정말 삭제하시겠습니까?",
+                        showCancel = true,
+                        onCancelListener = null,
+                        onConfirmListener = { recipeSummaryViewModel.deleteRecipe() }
+                    )
+                }
+
                 is RecipeSummaryViewModel.RecipeSummaryEvent.DeleteFinish -> {
                     if (it.flag) {
                         ConfirmDialogBuilder.create(

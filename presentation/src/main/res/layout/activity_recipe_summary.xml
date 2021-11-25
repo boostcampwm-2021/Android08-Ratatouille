@@ -203,7 +203,7 @@
             android:id="@+id/button_summary_delete"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_trash_white_16dp"
-            android:onClick="@{() -> viewModel.fabClickSubject.onNext(FabClick.DeleteRecipe)}"
+            android:onClick="@{() -> viewModel.fabClickSubject.onNext(FabClick.RequestDeleteConfirm)}"
             android:text="@string/delete"
             app:layout_constraintBottom_toTopOf="@id/button_summary_upload"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />

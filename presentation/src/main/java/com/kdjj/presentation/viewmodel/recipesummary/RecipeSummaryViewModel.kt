@@ -49,6 +49,7 @@ class RecipeSummaryViewModel @Inject constructor(
     sealed class RecipeSummaryEvent {
         object LoadError : RecipeSummaryEvent()
         class DeleteFinish(val flag: Boolean) : RecipeSummaryEvent()
+        object DeleteConfirm : RecipeSummaryEvent()
         class UploadFinish(val flag: Boolean) : RecipeSummaryEvent()
         class SaveFinish(val flag: Boolean) : RecipeSummaryEvent()
         class UpdateFavoriteFinish(val result: UpdateFavoriteResult) : RecipeSummaryEvent()
@@ -61,7 +62,7 @@ class RecipeSummaryViewModel @Inject constructor(
 
     enum class FabClick {
         UpdateRecipeFavorite,
-        DeleteRecipe,
+        RequestDeleteConfirm,
         SaveRecipeToLocal,
         SaveRecipeToLocalWithFavorite,
         UploadRecipe
@@ -82,8 +83,8 @@ class RecipeSummaryViewModel @Inject constructor(
                     FabClick.UpdateRecipeFavorite -> {
                         updateRecipeFavorite()
                     }
-                    FabClick.DeleteRecipe -> {
-                        deleteRecipe()
+                    FabClick.RequestDeleteConfirm -> {
+                        requestDeleteConfirm()
                     }
                     FabClick.SaveRecipeToLocal -> {
                         saveRecipeToLocal()
@@ -189,7 +190,11 @@ class RecipeSummaryViewModel @Inject constructor(
         }
     }
 
-    private fun deleteRecipe() {
+    private fun requestDeleteConfirm() {
+        _eventRecipeSummary.value = Event(RecipeSummaryEvent.DeleteConfirm)
+    }
+
+    fun deleteRecipe() {
         _liveLoading.value = true
         viewModelScope.launch {
             collectJob?.cancel()
