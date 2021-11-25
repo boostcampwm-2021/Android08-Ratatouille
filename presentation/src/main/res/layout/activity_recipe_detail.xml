@@ -31,6 +31,7 @@
             android:id="@+id/recyclerView_detail_step"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="@color/dark_500"
             android:orientation="horizontal"
             tools:listitem="@layout/item_detail_step"
             app:submitList="@{viewModel.liveStepList}"
@@ -40,9 +41,11 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_detail_largeStep"
             android:layout_width="0dp"
             android:layout_height="0dp"
             tools:listitem="@layout/item_detail_large_step"
+            app:submitList="@{viewModel.liveStepList}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/recyclerView_detail_step"
             app:layout_constraintBottom_toTopOf="@id/recyclerView_detail_timer"
