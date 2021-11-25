@@ -72,7 +72,10 @@ class RecipeDetailActivity : AppCompatActivity() {
         binding.recyclerViewDetailStep.adapter = stepListAdapter
 
         largeStepListAdapter = RecipeDetailLargeStepListAdapter(viewModel)
-        binding.recyclerViewDetailLargeStep.adapter = largeStepListAdapter
+        binding.recyclerViewDetailLargeStep.apply {
+            adapter = largeStepListAdapter
+            addItemDecoration(StepItemDecoration())
+        }
 
         timerListAdapter = RecipeDetailTimerListAdapter(viewModel)
         binding.recyclerViewDetailTimer.adapter = timerListAdapter
