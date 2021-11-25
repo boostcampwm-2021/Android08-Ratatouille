@@ -45,7 +45,9 @@
     <dimen name="myRecipe_textView_title_marginTop">8dp</dimen>
     <dimen name="myRecipe_textView_description_marginTop">12dp</dimen>
     <dimen name="myRecipe_time_marginLeft">8dp</dimen>
-    <dimen name="myRecipe_space_size">10dp</dimen>
+    <dimen name="myRecipe_padding">10dp</dimen>
+    <dimen name="myRecipe_cardView_elevation">8dp</dimen>
+    <dimen name="myRecipe_cardView_selected">6dp</dimen>
 
     <dimen name="dialog_title_textSize">18sp</dimen>
     <dimen name="dialog_content_textSize">14sp</dimen>

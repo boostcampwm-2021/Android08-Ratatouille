@@ -136,9 +136,6 @@ class MyRecipeFragment : Fragment() {
             layoutManager = GridLayoutManager(requireContext(), spanCount)
             adapter = myRecipeAdapter
 
-            val space = resources.getDimensionPixelSize(R.dimen.myRecipe_space_size)
-            addItemDecoration(SpacesItemDecoration(space))
-
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)

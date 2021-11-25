@@ -11,13 +11,16 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="@dimen/myRecipe_padding"
+        android:clipToPadding="false">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:cardBackgroundColor="@color/light_500"
             app:cardCornerRadius="@dimen/myRecipe_cardView_corner"
+            app:cardElevation="@dimen/myRecipe_cardView_elevation"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintLeft_toLeftOf="parent"
