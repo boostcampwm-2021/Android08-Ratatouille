@@ -28,7 +28,7 @@
         android:textSize="@dimen/detail_stepList_textSize"
         android:textColor="@color/light_100"
         android:typeface="@{Typeface.defaultFromStyle(viewModel.liveSelectedStep == step ? Typeface.BOLD : Typeface.NORMAL)}"
-        android:onClick="@{() -> viewModel.selectStep(step)}"
+        android:onClick="@{() -> viewModel.scrollToStep(step)}"
         tools:text="재료 준비"
         tools:background="@color/dark_500" />
 </layout>

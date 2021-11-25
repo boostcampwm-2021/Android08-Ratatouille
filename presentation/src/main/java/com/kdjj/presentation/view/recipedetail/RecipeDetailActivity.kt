@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
@@ -87,7 +86,7 @@ class RecipeDetailActivity : AppCompatActivity() {
                         ?.findFirstCompletelyVisibleItemPosition()
                         ?: return
 
-                    viewModel.showScrolledTo(idx)
+                    viewModel.updateCurrentStepTo(idx)
                 }
             })
         }
