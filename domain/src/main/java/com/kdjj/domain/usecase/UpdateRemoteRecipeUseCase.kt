@@ -3,9 +3,8 @@ package com.kdjj.domain.usecase
 import com.kdjj.domain.repository.RecipeRepository
 import com.kdjj.domain.model.request.UpdateRemoteRecipeRequest
 import com.kdjj.domain.repository.RecipeImageRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 class UpdateRemoteRecipeUseCase @Inject constructor(
@@ -20,8 +19,10 @@ class UpdateRemoteRecipeUseCase @Inject constructor(
             val imgList = listOf(recipe.imgPath)
                 .plus(recipe.stepList.map { it.imgPath })
                 .map {
-                    CoroutineScope(Dispatchers.IO).async {
-                        convertImageToRemote(it)
+                    coroutineScope {
+                        async {
+                            convertImageToRemote(it)
+                        }
                     }
                 }
 
