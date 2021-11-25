@@ -15,7 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/detailItem_paddingTop"
-        android:paddingBottom="@dimen/detailItem_paddingBottom">
+        android:paddingBottom="@dimen/detailItem_paddingBottom"
+        android:clipToPadding="false">
 
         <TextView
             android:id="@+id/textView_detailItem_type"
@@ -64,6 +65,7 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/detailItem_imageView_height"
                     android:visibility="@{step.imgPath.empty ? View.GONE : View.VISIBLE}"
+                    android:scaleType="centerCrop"
                     tools:src="@color/dark_100"
                     app:loadImage="@{step.imgPath}"
                     app:layout_constraintTop_toTopOf="parent"

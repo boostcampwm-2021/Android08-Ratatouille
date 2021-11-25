@@ -17,6 +17,7 @@ import com.kdjj.presentation.R
 import com.kdjj.presentation.common.*
 import com.kdjj.presentation.databinding.ActivityRecipeDetailBinding
 import com.kdjj.presentation.services.TimerService
+import com.kdjj.presentation.view.adapter.RecipeDetailLargeStepListAdapter
 import com.kdjj.presentation.view.adapter.RecipeDetailStepListAdapter
 import com.kdjj.presentation.view.adapter.RecipeDetailTimerListAdapter
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
@@ -33,6 +34,7 @@ class RecipeDetailActivity : AppCompatActivity() {
     private lateinit var loadingDialog: CustomProgressDialog
 
     private lateinit var stepListAdapter: RecipeDetailStepListAdapter
+    private lateinit var largeStepListAdapter: RecipeDetailLargeStepListAdapter
     private lateinit var timerListAdapter: RecipeDetailTimerListAdapter
 
     private var isExiting = false
@@ -68,6 +70,9 @@ class RecipeDetailActivity : AppCompatActivity() {
 
         stepListAdapter = RecipeDetailStepListAdapter(viewModel)
         binding.recyclerViewDetailStep.adapter = stepListAdapter
+
+        largeStepListAdapter = RecipeDetailLargeStepListAdapter(viewModel)
+        binding.recyclerViewDetailLargeStep.adapter = largeStepListAdapter
 
         timerListAdapter = RecipeDetailTimerListAdapter(viewModel)
         binding.recyclerViewDetailTimer.adapter = timerListAdapter
@@ -109,7 +114,7 @@ class RecipeDetailActivity : AppCompatActivity() {
                                 binding.recyclerViewDetailTimer,
                                 View.TRANSLATION_Y,
                                 resources.getDimensionPixelSize(R.dimen.detail_timer_animationVertical).toFloat(),
-                                0f
+                                0f,
                             ),
                             ObjectAnimator.ofFloat(
                                 binding.recyclerViewDetailTimer, View.ALPHA, 0f, 1f
@@ -126,8 +131,8 @@ class RecipeDetailActivity : AppCompatActivity() {
                             ObjectAnimator.ofFloat(
                                 binding.recyclerViewDetailTimer,
                                 View.TRANSLATION_Y,
-                                0f,
-                                resources.getDimensionPixelSize(R.dimen.detail_timer_animationVertical).toFloat()
+                                resources.getDimensionPixelSize(R.dimen.detail_timer_animationVertical).toFloat(),
+                                0f
                             ),
                             ObjectAnimator.ofFloat(
                                 binding.recyclerViewDetailTimer, View.ALPHA, 1f, 0f
