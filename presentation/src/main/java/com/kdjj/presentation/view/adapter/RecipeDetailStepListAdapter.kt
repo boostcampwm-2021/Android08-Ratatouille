@@ -41,7 +41,7 @@ class RecipeDetailStepListAdapter(
     ) {
         holder.binding.step = item
         holder.binding.lifecycleOwner?.let { owner ->
-            viewModel.liveSelectedStep.observe(owner) { step ->
+            viewModel.liveStepBarSelected.observe(owner) { step ->
                 holder.binding.textViewDetailStepTitle.paintFlags =
                     if (step == item) Paint.UNDERLINE_TEXT_FLAG else 0
             }

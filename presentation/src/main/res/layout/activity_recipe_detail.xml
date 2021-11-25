@@ -34,6 +34,7 @@
             android:background="@color/dark_500"
             android:orientation="horizontal"
             tools:listitem="@layout/item_detail_step"
+            app:moveTo="@{viewModel.liveMoveStepBarToIdx}"
             app:submitList="@{viewModel.liveStepList}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/toolbar_detail"
