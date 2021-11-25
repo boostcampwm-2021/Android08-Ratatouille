@@ -11,5 +11,4 @@ internal class FetchLocalFavoriteRecipeListUseCase @Inject constructor(
 
     override suspend fun invoke(request: FetchLocalFavoriteRecipeListRequest): Result<List<Recipe>> =
         recipeListRepository.fetchLocalFavoriteRecipeListAfter(request.index)
-
 }

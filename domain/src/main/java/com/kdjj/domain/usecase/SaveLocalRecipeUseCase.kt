@@ -4,6 +4,9 @@ import com.kdjj.domain.common.IdGenerator
 import com.kdjj.domain.model.request.SaveLocalRecipeRequest
 import com.kdjj.domain.repository.RecipeImageRepository
 import com.kdjj.domain.repository.RecipeRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import javax.inject.Inject
 
 internal class SaveLocalRecipeUseCase @Inject constructor(
@@ -15,44 +18,40 @@ internal class SaveLocalRecipeUseCase @Inject constructor(
     override suspend fun invoke(request: SaveLocalRecipeRequest): Result<Boolean> =
         kotlin.runCatching {
             val recipe = request.recipe
-            val recipeImageUri = when (recipe.imgPath.isNotEmpty()) {
-                true -> {
-                    if (recipe.imgPath.startsWith("https://") || recipe.imgPath.startsWith("gs://")) {
-                        imageRepository.copyRemoteImageToInternal(recipe.imgPath, idGenerator.generateId())
-                            .getOrThrow()
-                    } else {
-                        imageRepository.copyExternalImageToInternal(recipe.imgPath, idGenerator.generateId())
-                            .getOrThrow()
+            // imgList always size >= 2
+            val imgList = listOf(recipe.imgPath)
+                .plus(recipe.stepList.map { it.imgPath })
+                .map {
+                    CoroutineScope(Dispatchers.IO).async {
+                        copyImageToInternal(it)
                     }
                 }
-                false -> ""
-            }
-            val recipeStepList = recipe.stepList.map { step ->
-                val stepImageUri = when (step.imgPath.isNotEmpty()) {
-                    true -> {
-                        if (recipe.imgPath.startsWith("https://") || recipe.imgPath.startsWith("gs://")) {
-                            imageRepository.copyRemoteImageToInternal(step.imgPath, idGenerator.generateId())
-                                .getOrThrow()
-                        } else {
-                            imageRepository.copyExternalImageToInternal(step.imgPath, idGenerator.generateId())
-                                .getOrThrow()
-                        }
-                    }
-                    false -> ""
-                }
+
+            val recipeStepList = recipe.stepList.mapIndexed { i, step ->
                 step.copy(
                     stepId = idGenerator.generateId(),
-                    imgPath = stepImageUri
+                    imgPath = imgList[i + 1].await()
                 )
             }
 
             recipeRepository.saveLocalRecipe(
                 recipe.copy(
                     recipeId = idGenerator.generateId(),
-                    imgPath = recipeImageUri,
+                    imgPath = imgList.first().await(),
                     stepList = recipeStepList,
                     createTime = System.currentTimeMillis()
                 )
             ).getOrThrow()
         }
+
+    private suspend fun copyImageToInternal(imgPath: String): String {
+        if (imgPath.isEmpty()) return ""
+        return if (imgPath.startsWith("https://") || imgPath.startsWith("gs://")) {
+            imageRepository.copyRemoteImageToInternal(imgPath, idGenerator.generateId())
+                .getOrThrow()
+        } else {
+            imageRepository.copyExternalImageToInternal(imgPath, idGenerator.generateId())
+                .getOrThrow()
+        }
+    }
 }

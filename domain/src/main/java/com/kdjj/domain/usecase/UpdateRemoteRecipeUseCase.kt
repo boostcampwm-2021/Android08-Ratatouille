@@ -3,6 +3,9 @@ package com.kdjj.domain.usecase
 import com.kdjj.domain.repository.RecipeRepository
 import com.kdjj.domain.model.request.UpdateRemoteRecipeRequest
 import com.kdjj.domain.repository.RecipeImageRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import javax.inject.Inject
 
 class UpdateRemoteRecipeUseCase @Inject constructor(
@@ -13,29 +16,33 @@ class UpdateRemoteRecipeUseCase @Inject constructor(
     override suspend fun invoke(request: UpdateRemoteRecipeRequest): Result<Unit> =
         runCatching {
             val recipe = recipeRepository.getLocalRecipe(request.recipeId).getOrThrow()
-            val recipeImageUri = when (recipe.imgPath.isNotEmpty()) {
-                true -> {
-                    recipeImageRepository.convertInternalUriToRemoteStorageUri(recipe.imgPath)
-                        .getOrThrow()
-                }
-                false -> ""
-            }
-            val recipeStepList = recipe.stepList.map { step ->
-                val stepImageUri = when (step.imgPath.isNotEmpty()) {
-                    true -> {
-                        recipeImageRepository.convertInternalUriToRemoteStorageUri(step.imgPath)
-                            .getOrThrow()
+
+            val imgList = listOf(recipe.imgPath)
+                .plus(recipe.stepList.map { it.imgPath })
+                .map {
+                    CoroutineScope(Dispatchers.IO).async {
+                        convertImageToRemote(it)
                     }
-                    false -> ""
                 }
-                step.copy(imgPath = stepImageUri)
+
+            val recipeStepList = recipe.stepList.mapIndexed { i, step ->
+                step.copy(
+                    imgPath = imgList[i + 1].await()
+                )
             }
+
             recipeRepository.uploadRecipe(
                 recipe.copy(
-                    imgPath = recipeImageUri,
+                    imgPath = imgList.first().await(),
                     stepList = recipeStepList,
                     createTime = System.currentTimeMillis()
                 )
             ).getOrThrow()
         }
+
+    private suspend fun convertImageToRemote(imgPath: String): String {
+        return if (imgPath.isEmpty()) ""
+        else recipeImageRepository.convertInternalUriToRemoteStorageUri(imgPath)
+            .getOrThrow()
+    }
 }
