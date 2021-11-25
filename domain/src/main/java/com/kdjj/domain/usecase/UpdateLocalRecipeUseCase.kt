@@ -4,9 +4,8 @@ import com.kdjj.domain.common.IdGenerator
 import com.kdjj.domain.model.request.UpdateLocalRecipeRequest
 import com.kdjj.domain.repository.RecipeImageRepository
 import com.kdjj.domain.repository.RecipeRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 internal class UpdateLocalRecipeUseCase @Inject constructor(
@@ -23,8 +22,10 @@ internal class UpdateLocalRecipeUseCase @Inject constructor(
             val imgList = listOf(updatedRecipe.imgPath)
                 .plus(updatedRecipe.stepList.map { it.imgPath })
                 .map {
-                    CoroutineScope(Dispatchers.IO).async {
-                        copyImageToInternal(it)
+                    coroutineScope {
+                        async {
+                            copyImageToInternal(it)
+                        }
                     }
                 }
 
