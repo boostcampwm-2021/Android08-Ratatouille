@@ -92,8 +92,11 @@ class RecipeDetailActivity : AppCompatActivity() {
         }
 
         timerListAdapter = RecipeDetailTimerListAdapter(viewModel)
-        binding.recyclerViewDetailTimer.adapter = timerListAdapter
-        ItemTouchHelper(itemTouchCallback).attachToRecyclerView(binding.recyclerViewDetailTimer)
+        binding.recyclerViewDetailTimer.apply {
+            adapter = timerListAdapter
+            ItemTouchHelper(itemTouchCallback).attachToRecyclerView(this)
+            addItemDecoration(TimerDecoration())
+        }
 
         setSupportActionBar(binding.toolbarDetail)
 
