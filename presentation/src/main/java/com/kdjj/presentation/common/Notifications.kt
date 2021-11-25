@@ -38,6 +38,14 @@ object Notifications {
             .notify(stepId.hashCode(), builder.build())
     }
 
+    fun createForegroundNotificationBuilder(context: Context) =
+        NotificationCompat.Builder(context, FOREGROUND_ID)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle(context.getString(R.string.ratatouille))
+            .setContentText(context.getString(R.string.appIsRunning))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(getPendingIntent(context))
+
     fun createChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val timerChannel = NotificationChannel(
@@ -53,6 +61,13 @@ object Notifications {
                 NotificationManager.IMPORTANCE_HIGH
             )
             NotificationManagerCompat.from(context).createNotificationChannel(alarmChannel)
+
+            val foregroundChannel = NotificationChannel(
+                FOREGROUND_ID,
+                context.getString(R.string.ratatouilleForeground),
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            NotificationManagerCompat.from(context).createNotificationChannel(foregroundChannel)
         }
     }
 
@@ -67,4 +82,5 @@ object Notifications {
 
     private const val ALARM_CHANNEL_ID = "ID_RATATOUILLE_ALARM"
     private const val TIMER_CHANNEL_ID = "ID_RATATOUILLE_TIMER"
+    private const val FOREGROUND_ID = "ID_FOREGROUND"
 }
