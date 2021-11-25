@@ -301,18 +301,19 @@ internal class RecipeEditorViewModel @Inject constructor(
 
     private fun isRecipeValid(): Boolean {
         if (
-            recipeMetaModel.liveTitleState.value != true ||
-            recipeMetaModel.liveStuffState.value != true
+            !recipeValidator.validateTitle(recipeMetaModel.liveTitle.value ?: "") ||
+            !recipeValidator.validateStuff(recipeMetaModel.liveStuff.value ?: "")
         ) {
             _liveMoveToPosition.value = 0
             return false
         }
 
         _liveStepModelList.value?.forEachIndexed { i, stepModel ->
-            if (stepModel.liveNameState.value != true ||
-                stepModel.liveDescriptionState.value != true ||
-                stepModel.liveTimerMinState.value != true ||
-                stepModel.liveTimerSecState.value != true
+            if (
+                !recipeStepValidator.validateName(stepModel.liveName.value ?: "") ||
+                !recipeStepValidator.validateDescription(stepModel.liveDescription.value ?: "") ||
+                !recipeStepValidator.validateMinutes(stepModel.liveTimerMin.value ?: 0) ||
+                !recipeStepValidator.validateSeconds(stepModel.liveTimerSec.value ?: 0)
             ) {
                 _liveMoveToPosition.value = i + 1
                 return false
