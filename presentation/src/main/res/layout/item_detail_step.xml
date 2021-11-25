@@ -26,7 +26,7 @@
         android:paddingEnd="@dimen/detail_stepItem_paddingHorizontal"
         android:text="@{step.name}"
         android:textSize="@dimen/detail_stepList_textSize"
-        android:textColor="@color/light_100"
+        android:textColor="@{viewModel.liveStepBarSelected == step ? @color/light_100 : @color/dark_400}"
         android:typeface="@{Typeface.defaultFromStyle(viewModel.liveStepBarSelected == step ? Typeface.BOLD : Typeface.NORMAL)}"
         android:onClick="@{() -> viewModel.scrollToStep(step)}"
         tools:text="재료 준비"
