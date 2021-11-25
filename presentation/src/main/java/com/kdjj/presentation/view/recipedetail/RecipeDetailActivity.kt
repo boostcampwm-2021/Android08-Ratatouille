@@ -10,6 +10,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +26,8 @@ import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.view.dialog.CustomProgressDialog
 import com.kdjj.presentation.viewmodel.recipedetail.RecipeDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RecipeDetailActivity : AppCompatActivity() {
@@ -123,20 +126,24 @@ class RecipeDetailActivity : AppCompatActivity() {
         viewModel.eventRecipeDetail.observe(this, EventObserver {
             when (it) {
                 is RecipeDetailViewModel.RecipeDetailEvent.OpenTimer -> {
-                    AnimatorSet().apply {
-                        playTogether(
-                            ObjectAnimator.ofFloat(
-                                binding.recyclerViewDetailTimer,
-                                View.TRANSLATION_Y,
-                                resources.getDimensionPixelSize(R.dimen.detail_timer_animationVertical).toFloat(),
-                                0f,
-                            ),
-                            ObjectAnimator.ofFloat(
-                                binding.recyclerViewDetailTimer, View.ALPHA, 0f, 1f
+                    lifecycleScope.launch {
+                        delay(50)
+                        AnimatorSet().apply {
+                            binding.recyclerViewDetailTimer.visibility = View.VISIBLE
+                            playTogether(
+                                ObjectAnimator.ofFloat(
+                                    binding.recyclerViewDetailTimer,
+                                    View.TRANSLATION_Y,
+                                    binding.recyclerViewDetailTimer.height.toFloat(),
+                                    0f,
+                                ),
+                                ObjectAnimator.ofFloat(
+                                    binding.recyclerViewDetailTimer, View.ALPHA, 0f, 1f
+                                )
                             )
-                        )
-                        duration = 500
-                        start()
+                            duration = 500
+                            start()
+                        }
                     }
                 }
 
@@ -147,7 +154,7 @@ class RecipeDetailActivity : AppCompatActivity() {
                                 binding.recyclerViewDetailTimer,
                                 View.TRANSLATION_Y,
                                 0f,
-                                resources.getDimensionPixelSize(R.dimen.detail_timer_animationVertical).toFloat()
+                                binding.recyclerViewDetailTimer.height.toFloat()
                             ),
                             ObjectAnimator.ofFloat(
                                 binding.recyclerViewDetailTimer, View.ALPHA, 1f, 0f
@@ -156,6 +163,7 @@ class RecipeDetailActivity : AppCompatActivity() {
                         duration = 500
                         doOnEnd { _ ->
                             it.onAnimationEnd()
+                            binding.recyclerViewDetailTimer.visibility = View.GONE
                         }
                         start()
                     }

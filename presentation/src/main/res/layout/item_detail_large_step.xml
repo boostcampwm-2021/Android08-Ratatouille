@@ -5,14 +5,15 @@
 
     <data>
         <variable
-            name="step"
-            type="com.kdjj.domain.model.RecipeStep" />
+            name="model"
+            type="com.kdjj.presentation.model.StepTimerModel" />
 
         <variable
             name="viewModel"
             type="com.kdjj.presentation.viewmodel.recipedetail.RecipeDetailViewModel" />
 
         <import type="android.view.View" />
+        <import type="com.kdjj.presentation.model.StepTimerModel.TimerState" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +27,7 @@
             android:id="@+id/textView_detailItem_type"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{step.type.name()}"
+            android:text="@{model.recipeStep.type.name()}"
             android:textSize="@dimen/detailItem_title_textSize"
             android:textColor="@color/dark_500"
             android:layout_marginStart="@dimen/detailItem_marginHorizontal"
@@ -38,7 +39,7 @@
             android:id="@+id/textView_detailItem_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{step.name}"
+            android:text="@{model.recipeStep.name}"
             android:textSize="@dimen/detailItem_title_textSize"
             android:textColor="@color/dark_500"
             android:textStyle="bold"
@@ -62,16 +63,17 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/detailItem_cardView_paddingBottom">
 
                 <ImageView
                     android:id="@+id/imageView_detailItem"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/detailItem_imageView_height"
-                    android:visibility="@{step.imgPath.empty ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{model.recipeStep.imgPath.empty ? View.GONE : View.VISIBLE}"
                     android:scaleType="centerCrop"
                     tools:src="@color/dark_100"
-                    app:loadImage="@{step.imgPath}"
+                    app:loadImage="@{model.recipeStep.imgPath}"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/textView_detailItem_content"
                     app:layout_constraintStart_toStartOf="parent"
@@ -96,11 +98,12 @@
                     android:id="@+id/textView_detailItem_content"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@{step.description}"
+                    android:text="@{model.recipeStep.description}"
                     android:textSize="@dimen/detailItem_content_textSize"
                     android:textColor="@color/dark_500"
                     android:gravity="center"
                     android:layout_marginTop="@dimen/detailItem_content_marginTop"
+                    android:layout_marginBottom="@dimen/detailItem_content_marginBottom"
                     tools:text="양념과 재료를 고루 섞어 뚜껑을 덮으세요."
                     app:layout_constraintTop_toBottomOf="@id/imageView_detailItem"
                     app:layout_constraintBottom_toTopOf="@id/textView_detailItem_timer"
@@ -111,15 +114,14 @@
                     android:id="@+id/textView_detailItem_timer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/timerMinSec(step.seconds / 60, step.seconds % 60)}"
+                    android:text="@{@string/timerMinSec(model.liveLeftSeconds / 60, model.liveLeftSeconds % 60)}"
                     android:textSize="@dimen/detailItem_timer_textSize"
                     android:textColor="@color/dark_500"
                     android:gravity="center"
                     android:padding="@dimen/detailItem_timer_padding"
-                    android:layout_marginTop="@dimen/detailItem_timer_marginTop"
-                    android:layout_marginBottom="@dimen/detailItem_timer_marginBottom"
-                    android:drawableStart="@drawable/ic_round_play_arrow_24"
-                    android:onClick="@{() -> viewModel.addTimer(step)}"
+                    android:visibility="@{model.recipeStep.seconds == 0 ? View.GONE : View.VISIBLE}"
+                    android:drawableStart="@{model.liveState == TimerState.RUNNING ? @drawable/ic_round_pause_24 : model.liveState == TimerState.END ? @drawable/ic_round_delete_24 : @drawable/ic_round_play_arrow_24}"
+                    android:onClick="@{() -> viewModel.toggleTimer(model)}"
                     tools:text="20:00"
                     app:layout_constraintTop_toBottomOf="@id/textView_detailItem_content"
                     app:layout_constraintBottom_toBottomOf="parent"

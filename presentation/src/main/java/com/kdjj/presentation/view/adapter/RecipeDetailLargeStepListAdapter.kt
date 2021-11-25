@@ -1,29 +1,28 @@
 package com.kdjj.presentation.view.adapter
 
-import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import com.kdjj.domain.model.RecipeStep
 import com.kdjj.presentation.databinding.ItemDetailLargeStepBinding
-import com.kdjj.presentation.databinding.ItemDetailStepBinding
+import com.kdjj.presentation.model.StepTimerModel
 import com.kdjj.presentation.viewmodel.recipedetail.RecipeDetailViewModel
 
 class RecipeDetailLargeStepListAdapter(
     private val viewModel: RecipeDetailViewModel
-) : SingleViewTypeListAdapter<RecipeStep, ItemDetailLargeStepBinding>(
-    object : DiffUtil.ItemCallback<RecipeStep>() {
+) : SingleViewTypeListAdapter<StepTimerModel, ItemDetailLargeStepBinding>(
+    object : DiffUtil.ItemCallback<StepTimerModel>() {
 
-        override fun areItemsTheSame(oldItem: RecipeStep, newItem: RecipeStep): Boolean =
+        override fun areItemsTheSame(oldItem: StepTimerModel, newItem: StepTimerModel): Boolean =
             oldItem == newItem
 
-        override fun areContentsTheSame(oldItem: RecipeStep, newItem: RecipeStep): Boolean =
-            oldItem.name == newItem.name &&
-                    oldItem.type == newItem.type &&
-                    oldItem.description == newItem.description &&
-                    oldItem.seconds == newItem.seconds &&
-                    oldItem.imgPath == newItem.imgPath
+        override fun areContentsTheSame(oldItem: StepTimerModel, newItem: StepTimerModel): Boolean =
+            oldItem.recipeStep.name == newItem.recipeStep.name &&
+                    oldItem.recipeStep.type == newItem.recipeStep.type &&
+                    oldItem.recipeStep.description == newItem.recipeStep.description &&
+                    oldItem.recipeStep.seconds == newItem.recipeStep.seconds &&
+                    oldItem.recipeStep.imgPath == newItem.recipeStep.imgPath
     }
 ) {
 
@@ -39,9 +38,9 @@ class RecipeDetailLargeStepListAdapter(
 
     override fun bind(
         holder: SingleViewTypeViewHolder<ItemDetailLargeStepBinding>,
-        item: RecipeStep
+        item: StepTimerModel
     ) {
-        holder.binding.step = item
+        holder.binding.model = item
         holder.binding.executePendingBindings()
     }
 }
