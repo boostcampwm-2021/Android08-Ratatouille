@@ -35,14 +35,14 @@ class RecipeDetailViewModel @Inject constructor(
         }
     }
 
+    private val _liveTimerList = MutableLiveData<List<StepTimerModel>>(listOf())
+    val liveTimerList: LiveData<List<StepTimerModel>> get() = _liveTimerList
+
     private val _liveSelectedStep = MutableLiveData<RecipeStep>()
     val liveSelectedStep: LiveData<RecipeStep> get() = _liveSelectedStep
 
-    private val _liveMoveToIdx = MutableLiveData<Int>(0)
+    private val _liveMoveToIdx = MutableLiveData<Int>()
     val liveMoveToIdx: LiveData<Int> get() = _liveMoveToIdx
-
-    private val _liveTimerList = MutableLiveData<List<StepTimerModel>>(listOf())
-    val liveTimerList: LiveData<List<StepTimerModel>> get() = _liveTimerList
 
     private var _liveFinishedTimerPosition = MutableLiveData<Int>()
     val liveFinishedTimerPosition: LiveData<Int> get() = _liveFinishedTimerPosition
@@ -92,11 +92,11 @@ class RecipeDetailViewModel @Inject constructor(
         isInitialized = true
     }
 
-    fun selectStep(step: RecipeStep) {
+    fun scrollToStep(step: RecipeStep) {
         _liveMoveToIdx.value = _liveStepList.value?.indexOf(step)
     }
 
-    fun showScrolledTo(idx: Int) {
+    fun updateCurrentStepTo(idx: Int) {
         val step = _liveStepList.value?.getOrNull(idx) ?: return
         if (_liveSelectedStep.value?.stepId != step.stepId) {
             _liveSelectedStep.value = step
