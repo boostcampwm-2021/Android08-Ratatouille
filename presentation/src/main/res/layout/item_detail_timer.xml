@@ -14,8 +14,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView_timer"
-        android:layout_width="@dimen/detail_timer_size"
-        android:layout_height="@dimen/detail_timer_size"
+        android:layout_width="@dimen/detail_timer_width"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/detail_timer_marginHorizontal"
         android:layout_marginEnd="@dimen/detail_timer_marginHorizontal"
         android:layout_marginTop="@dimen/detail_timer_marginVertical"
@@ -28,41 +28,42 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="@dimen/detail_timer_padding">
 
             <TextView
                 android:id="@+id/textView_detail_timerTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:gravity="center"
                 android:maxLines="1"
                 android:text="@{model.recipeStep.name}"
                 android:textColor="@color/dark_500"
                 android:textSize="@dimen/detail_timerTitle_textSize"
                 android:textStyle="bold"
-                android:gravity="center"
-                tools:text="안녕하세요 이건 엄청 긴 데이터입니다."
-                app:layout_constraintVertical_chainStyle="packed"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/textView_detail_timerTime"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="안녕하세요 이건 엄청 긴 데이터입니다." />
 
             <TextView
                 android:id="@+id/textView_detail_timerTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/detail_timerTime_marginTop"
+                android:gravity="center"
                 android:text="@{@string/timerMinSec(model.liveLeftSeconds / 60, model.liveLeftSeconds % 60)}"
                 android:textColor="@color/dark_500"
                 android:textSize="@dimen/detail_timerTime_textSize"
                 android:textStyle="bold"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/detail_timerTime_marginTop"
-                tools:text="03:20"
-                app:layout_constraintTop_toBottomOf="@+id/textView_detail_timerTitle"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/textView_detail_timerTitle"
+                tools:text="03:20" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

@@ -56,10 +56,10 @@
     <dimen name="dialog_button_padding">16dp</dimen>
     <dimen name="dialog_corner">16dp</dimen>
 
-    <dimen name="detail_timer_size">80dp</dimen>
+    <dimen name="detail_timer_width">80sp</dimen>
     <dimen name="detail_timer_corner">12dp</dimen>
     <dimen name="detail_timerTitle_textSize">12sp</dimen>
-    <dimen name="detail_timerTime_marginTop">8dp</dimen>
+    <dimen name="detail_timerTime_marginTop">4dp</dimen>
     <dimen name="detail_timerTime_textSize">16sp</dimen>
     <dimen name="detail_timer_marginHorizontal">8dp</dimen>
     <dimen name="detail_timer_marginVertical">16dp</dimen>
@@ -128,5 +128,6 @@
     <dimen name="detailItem_timer_textSize">12sp</dimen>
     <dimen name="detailItem_timer_marginBottom">8dp</dimen>
     <dimen name="detailItem_timer_padding">4dp</dimen>
+    <dimen name="detail_timer_padding">12dp</dimen>
 
 </resources>
