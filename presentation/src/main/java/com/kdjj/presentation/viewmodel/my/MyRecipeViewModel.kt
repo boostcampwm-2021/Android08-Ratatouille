@@ -121,7 +121,6 @@ internal class MyRecipeViewModel @Inject constructor(
             }.onSuccess { fetchedRecipeList ->
                 val myRecipeList = fetchedRecipeList.map { MyRecipeItem.MyRecipe(it) }
                 if (page == 0) {
-                    _liveLoading.value = false
                     _liveRecipeList.value = myRecipeList
                 } else {
                     _liveRecipeList.value = _liveRecipeList.value?.plus(myRecipeList)
