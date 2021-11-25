@@ -44,17 +44,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/imageView_summary_recipeImage"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView_summary_recipeImage"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/summary_imageView_height"
-                    android:contentDescription="@string/recipeImage"
-                    android:scaleType="centerCrop"
                     android:visibility="@{!viewModel.liveRecipe.imgPath.empty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:loadImage="@{viewModel.liveRecipe.imgPath}"
-                    tools:src="@drawable/ic_baseline_fastfood_24" />
+                    android:layout_marginTop="@dimen/summary_recipeImage_marginTop"
+                    app:cardCornerRadius="@dimen/summary_recipeImage_cardCornerRadius"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/recipeImage"
+                        android:scaleType="centerCrop"
+                        app:loadImage="@{viewModel.liveRecipe.imgPath}"
+                        tools:src="@drawable/ic_baseline_fastfood_24" />
+                </androidx.cardview.widget.CardView>
+
 
                 <TextView
                     android:id="@+id/textView_summary_recipeTypeLabel"
@@ -62,7 +70,7 @@
                     android:layout_marginTop="24dp"
                     android:text="@string/recipeType"
                     app:layout_constraintStart_toStartOf="@id/guideline_summary_textLeft"
-                    app:layout_constraintTop_toBottomOf="@id/imageView_summary_recipeImage" />
+                    app:layout_constraintTop_toBottomOf="@id/cardView_summary_recipeImage" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardView_summary_recipeType"
