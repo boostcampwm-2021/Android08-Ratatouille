@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/blue_600</item>
+        <item name="android:background">@color/dark_700</item>
         <item name="titleTextColor">@color/light_100</item>
     </style>
 
@@ -66,7 +66,7 @@
         <item name="android:paddingEnd">@dimen/summary_floatingButton_paddingEnd</item>
         <item name="android:drawablePadding">@dimen/summary_floatingButton_drawablePadding</item>
         <item name="android:textSize">@dimen/summary_floatingButton_textSize</item>
-        <item name="backgroundTint">@color/blue_500</item>
+        <item name="backgroundTint">@color/dark_500</item>
         <item name="android:background">@drawable/bg_summary_button_round</item>
         <item name="android:layout_marginBottom">@dimen/summary_floatingButton_marginBottom</item>
         <item name="android:visibility">gone</item>
