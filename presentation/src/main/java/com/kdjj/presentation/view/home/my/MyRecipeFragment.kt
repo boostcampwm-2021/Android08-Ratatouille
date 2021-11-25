@@ -15,6 +15,7 @@ import com.kdjj.presentation.R
 import com.kdjj.presentation.common.*
 import com.kdjj.presentation.databinding.FragmentMyRecipeBinding
 import com.kdjj.presentation.view.adapter.MyRecipeListAdapter
+import com.kdjj.presentation.view.dialog.CustomProgressDialog
 import com.kdjj.presentation.viewmodel.my.MyRecipeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -29,7 +30,6 @@ class MyRecipeFragment : Fragment() {
     private val viewModel: MyRecipeViewModel by activityViewModels()
     private val myRecipeAdapter by lazy { MyRecipeListAdapter(viewModel) }
     private val navigation by lazy { Navigation.findNavController(binding.root) }
-
     private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {

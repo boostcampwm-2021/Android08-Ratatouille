@@ -31,6 +31,9 @@ internal class MyRecipeViewModel @Inject constructor(
     private val _liveRecipeItemSelected = MutableLiveData<MyRecipeItem.MyRecipe?>()
     val liveRecipeItemSelected: LiveData<MyRecipeItem.MyRecipe?> get() = _liveRecipeItemSelected
 
+    private val _liveLoading = MutableLiveData(false)
+    val liveLoading: LiveData<Boolean> get() = _liveLoading
+
     private val _liveRecipeList = MutableLiveData(listOf<MyRecipeItem.MyRecipe>())
     private val _liveFetching = MutableLiveData(false)
     val liveRecipeItemList: LiveData<List<MyRecipeItem>> = MediatorLiveData<List<MyRecipeItem>>().apply {
@@ -98,8 +101,13 @@ internal class MyRecipeViewModel @Inject constructor(
 
     fun fetchRecipeList(page: Int) {
         if (_liveFetching.value == true && page > 0) return
-        _liveFetching.value = true
-        if (page == 0) job?.cancel()
+
+        if (page == 0) {
+            job?.cancel()
+            _liveLoading.value = true
+        } else {
+            _liveFetching.value = true
+        }
 
         job = viewModelScope.launch {
             when (_liveSortType.value) {
@@ -113,6 +121,7 @@ internal class MyRecipeViewModel @Inject constructor(
             }.onSuccess { fetchedRecipeList ->
                 val myRecipeList = fetchedRecipeList.map { MyRecipeItem.MyRecipe(it) }
                 if (page == 0) {
+                    _liveLoading.value = false
                     _liveRecipeList.value = myRecipeList
                 } else {
                     _liveRecipeList.value = _liveRecipeList.value?.plus(myRecipeList)

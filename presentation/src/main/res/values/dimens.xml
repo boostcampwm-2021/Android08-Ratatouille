@@ -48,6 +48,9 @@
     <dimen name="myRecipe_padding">10dp</dimen>
     <dimen name="myRecipe_cardView_elevation">8dp</dimen>
     <dimen name="myRecipe_cardView_selected">6dp</dimen>
+    <dimen name="myRecipe_progress_marginStart">10dp</dimen>
+    <dimen name="myRecipe_progress_width">16dp</dimen>
+    <dimen name="myRecipe_progress_height">16dp</dimen>
 
     <dimen name="dialog_title_textSize">18sp</dimen>
     <dimen name="dialog_content_textSize">14sp</dimen>
@@ -141,4 +144,5 @@
     <dimen name="summary_summaryText_padding">16dp</dimen>
     <dimen name="summary_recipeImage_cardCornerRadius">15dp</dimen>
     <dimen name="summary_recipeImage_marginTop">-15dp</dimen>
+
 </resources>
