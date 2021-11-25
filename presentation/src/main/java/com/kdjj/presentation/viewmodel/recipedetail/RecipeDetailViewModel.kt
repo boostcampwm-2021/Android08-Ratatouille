@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
     private val ringtone: Ringtone,
-    private val getLocalRecipeFlowUseCase: FlowUseCase<GetLocalRecipeRequest, Recipe>,
+    private val getLocalRecipeUseCase: ResultUseCase<GetLocalRecipeRequest, Recipe>,
     private val fetchRemoteRecipeUseCase: ResultUseCase<FetchRemoteRecipeRequest, Recipe>
 ) : ViewModel() {
 
@@ -75,26 +75,16 @@ class RecipeDetailViewModel @Inject constructor(
         _liveLoading.value = true
         viewModelScope.launch {
             when (state) {
-                RecipeState.NETWORK -> {
+                RecipeState.NETWORK ->
                     fetchRemoteRecipeUseCase(FetchRemoteRecipeRequest(recipeId))
-                            .onSuccess { recipe ->
-                                _liveStepList.value = recipe.stepList
-                                _liveSelectedStep.value = recipe.stepList.first()
-                                _liveTitle.value = recipe.title
-                            }
-                            .onFailure {
-                                _eventRecipeDetail.value = Event(RecipeDetailEvent.Error)
-                            }
-                }
-                RecipeState.CREATE,
-                RecipeState.DOWNLOAD,
-                RecipeState.UPLOAD -> {
-                    val recipeFlow = getLocalRecipeFlowUseCase(GetLocalRecipeRequest(recipeId))
-                    val recipe = recipeFlow.first()
-                    _liveStepList.value = recipe.stepList
-                    _liveSelectedStep.value = recipe.stepList.first()
-                    _liveTitle.value = recipe.title
-                }
+                RecipeState.CREATE, RecipeState.DOWNLOAD, RecipeState.UPLOAD ->
+                    getLocalRecipeUseCase(GetLocalRecipeRequest(recipeId))
+            }.onSuccess { recipe ->
+                _liveStepList.value = recipe.stepList
+                _liveSelectedStep.value = recipe.stepList.first()
+                _liveTitle.value = recipe.title
+            }.onFailure {
+                _eventRecipeDetail.value = Event(RecipeDetailEvent.Error)
             }
             _liveLoading.value = false
         }
