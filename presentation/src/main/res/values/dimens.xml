@@ -118,7 +118,7 @@
     <dimen name="detailItem_title_textSize">18sp</dimen>
     <dimen name="detailItem_marginHorizontal">24dp</dimen>
     <dimen name="detailItem_title_marginStart">8dp</dimen>
-    <dimen name="detailItem_marginTop">36dp</dimen>
+    <dimen name="detailItem_paddingTop">24dp</dimen>
     <dimen name="detailItem_cardView_marginTop">8dp</dimen>
     <dimen name="detailItem_cardView_corner">16dp</dimen>
     <dimen name="detailItem_imageView_height">250dp</dimen>
@@ -129,5 +129,6 @@
     <dimen name="detailItem_timer_marginBottom">8dp</dimen>
     <dimen name="detailItem_timer_padding">4dp</dimen>
     <dimen name="detail_timer_padding">12dp</dimen>
+    <dimen name="detailItem_paddingBottom">12dp</dimen>
 
 </resources>

@@ -9,7 +9,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/detailItem_paddingTop"
+        android:paddingBottom="@dimen/detailItem_paddingBottom">
 
         <TextView
             android:id="@+id/textView_detailItem_type"
@@ -18,7 +20,6 @@
             android:textSize="@dimen/detailItem_title_textSize"
             android:textColor="@color/dark_500"
             android:layout_marginStart="@dimen/detailItem_marginHorizontal"
-            android:layout_marginTop="@dimen/detailItem_marginTop"
             tools:text="(COOK)"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

@@ -27,170 +27,40 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ScrollView
-            android:id="@+id/scrollView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_detail"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:context=".view.recipedetail.RecipeDetailActivity">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView_detail_timer"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@color/blue_100"
-                    tools:listitem="@layout/item_detail_timer"
-                    app:moveTo="@{viewModel.liveFinishedTimerPosition}"
-                    app:submitList="@{viewModel.liveTimerList}"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-                <ImageView
-                    android:id="@+id/imageView_detail"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/detail_imageView_height"
-                    android:contentDescription="@string/stepImage"
-                    tools:src="@color/dark_100"
-                    app:loadImage="@{viewModel.liveSelectedStep.imgPath}"
-                    android:scaleType="@{viewModel.liveSelectedStep.imgPath.empty ? ImageView.ScaleType.CENTER : ImageView.ScaleType.CENTER_CROP }"
-                    app:layout_constraintTop_toBottomOf="@id/recyclerView_detail_timer"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:background="@color/dark_900"
-                    android:alpha="0.7"
-                    app:layout_constraintTop_toTopOf="@id/recyclerView_detail_step"
-                    app:layout_constraintBottom_toBottomOf="@id/recyclerView_detail_step"
-                    app:layout_constraintStart_toStartOf="@id/recyclerView_detail_step"
-                    app:layout_constraintEnd_toEndOf="@id/recyclerView_detail_step" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView_detail_step"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    tools:listitem="@layout/item_detail_step"
-                    app:submitList="@{viewModel.liveStepList}"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintWidth_default="percent"
-                    app:layout_constraintWidth_min="150dp"
-                    app:layout_constraintWidth_max="300dp"
-                    app:layout_constraintWidth_percent="0.4"
-                    app:layout_constraintTop_toTopOf="@id/imageView_detail"
-                    app:layout_constraintBottom_toBottomOf="@id/imageView_detail"
-                    app:layout_constraintStart_toStartOf="@id/imageView_detail" />
-
-                <TextView
-                    android:id="@+id/textView_detail_stepTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@{viewModel.liveSelectedStep.name}"
-                    android:textSize="@dimen/detail_step_textSize"
-                    android:textColor="@color/dark_500"
-                    android:textStyle="bold"
-                    android:layout_marginTop="@dimen/detail_step_margin"
-                    tools:text="고기 볶기"
-                    app:layout_constraintTop_toBottomOf="@id/imageView_detail"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-                <TextView
-                    android:id="@+id/textView_detail_stepType"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@{viewModel.liveSelectedStep.type.name()}"
-                    android:textSize="@dimen/detail_stepType_textSize"
-                    android:textColor="@color/dark_500"
-                    tools:text="COOK"
-                    app:layout_constraintTop_toBottomOf="@id/textView_detail_stepTitle"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-                <TextView
-                    android:id="@+id/textView_detail_stepContent"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@{viewModel.liveSelectedStep.description}"
-                    android:textSize="@dimen/detail_step_textSize"
-                    android:textColor="@color/dark_500"
-                    android:layout_margin="@dimen/detail_step_margin"
-                    tools:text="양념과 재료를 고루 섞어 뚜껑을 덮고 중불로 20분간 조려줍니다."
-                    app:layout_constraintTop_toBottomOf="@id/textView_detail_stepType"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
-
-        <androidx.cardview.widget.CardView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_detail_step"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/detail_btnAddTimer_margin"
-            android:visibility="@{viewModel.liveSelectedStep.seconds == 0 ? View.GONE : View.VISIBLE}"
+            android:orientation="horizontal"
+            tools:listitem="@layout/item_detail_step"
+            app:submitList="@{viewModel.liveStepList}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_detail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            tools:listitem="@layout/item_detail_large_step"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/recyclerView_detail_step"
+            app:layout_constraintBottom_toTopOf="@id/recyclerView_detail_timer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_detail_timer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/dark_500"
+            tools:listitem="@layout/item_detail_timer"
+            app:moveTo="@{viewModel.liveFinishedTimerPosition}"
+            app:submitList="@{viewModel.liveTimerList}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:cardBackgroundColor="@color/blue_500"
-            app:cardCornerRadius="@dimen/detail_btnAddTimer_corner">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/textView_detail_timerDescription"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{@string/expectedTimeMinSec(viewModel.liveSelectedStep.seconds / 60, viewModel.liveSelectedStep.seconds % 60)}"
-                    android:textSize="@dimen/detail_timerDescription_textSize"
-                    android:textColor="@color/light_100"
-                    android:layout_margin="@dimen/detail_timerDescription_margin"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-                <TextView
-                    android:id="@+id/textView_detail_btnAddTimer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:background="@drawable/bg_btn_bottom"
-                    android:text="@{viewModel.liveSelectedTimer == null ? @string/startTimer : @string/timerMinSec(viewModel.liveSelectedTimer.liveLeftSeconds / 60, viewModel.liveSelectedTimer.liveLeftSeconds % 60)}"
-                    android:textSize="@dimen/detail_btnAddTimer_textSize"
-                    android:textColor="@color/light_100"
-                    android:gravity="center"
-                    android:paddingStart="@dimen/detail_textAddTimer_padding"
-                    android:paddingEnd="@dimen/detail_textAddTimer_padding"
-                    android:clickable="@{viewModel.liveSelectedTimer == null}"
-                    android:focusable="@{viewModel.liveSelectedTimer == null}"
-                    android:onClick="@{() -> viewModel.liveSelectedTimer == null ? viewModel.addTimer(viewModel.liveSelectedStep) : null}"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-                <View
-                    android:layout_width="@dimen/divider_size"
-                    android:layout_height="0dp"
-                    android:background="@color/blue_600"
-                    android:layout_marginTop="@dimen/detail_addTimerDivider_marginVertical"
-                    android:layout_marginBottom="@dimen/detail_addTimerDivider_marginVertical"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/textView_detail_btnAddTimer" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
