@@ -23,7 +23,7 @@
         android:clickable="true"
         android:focusable="true"
         android:onClick="@{() -> model.liveState == TimerState.RUNNING ? model.pause() : model.liveState == TimerState.PAUSED ? model.resume() : null}"
-        app:cardBackgroundColor="@{model.liveState == TimerState.END ? @color/red_500 : @color/dark_100}"
+        app:cardBackgroundColor="@{model.liveState == TimerState.END ? @color/red_500 : @color/light_100}"
         app:cardCornerRadius="@dimen/detail_timer_corner">
 
         <androidx.constraintlayout.widget.ConstraintLayout
