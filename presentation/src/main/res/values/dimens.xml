@@ -87,10 +87,10 @@
     <dimen name="search_resultLabel_margin">16dp</dimen>
     <dimen name="search_keyword_textSize">14sp</dimen>
 
-    <dimen name="summary_label_marginStart">16dp</dimen>
-    <dimen name="summary_label_marginTop">24dp</dimen>
+    <dimen name="summary_label_marginStart">32dp</dimen>
+    <dimen name="summary_label_marginTop">16dp</dimen>
     <dimen name="summary_text_marginEnd">16dp</dimen>
-    <dimen name="summary_text_marginStart">16dp</dimen>
+    <dimen name="summary_text_marginStart">32dp</dimen>
     <dimen name="summary_label_textSize">16sp</dimen>
     <dimen name="summary_text_textSize">14sp</dimen>
     <dimen name="summary_imageView_height">250dp</dimen>
@@ -131,5 +131,8 @@
     <dimen name="detail_timer_padding">12dp</dimen>
     <dimen name="detailItem_paddingBottom">12dp</dimen>
     <dimen name="detail_timer_animation">50dp</dimen>
+    <dimen name="summary_cardView_corner">15dp</dimen>
+    <dimen name="summary_cardView_elevation">4dp</dimen>
+    <dimen name="summary_cardView_strokeWidth">1dp</dimen>
 
 </resources>
