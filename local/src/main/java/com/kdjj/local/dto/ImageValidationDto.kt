@@ -3,9 +3,8 @@ package com.kdjj.local.dto
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "ImageValidation")
-data class ImageValidationDto(
+@Entity(tableName = "UselessImage")
+data class UselessImageDto(
     @PrimaryKey
     val imgPath: String,
-    val validate: Boolean
 )

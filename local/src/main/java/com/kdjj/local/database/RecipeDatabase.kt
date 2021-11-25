@@ -10,7 +10,7 @@ import com.kdjj.local.dto.*
         RecipeMetaDto::class,
         RecipeTypeDto::class,
         RecipeStepDto::class,
-        ImageValidationDto::class,
+        UselessImageDto::class,
         RecipeTempMetaDto::class,
         RecipeTempStepDto::class
     ],
@@ -23,7 +23,7 @@ internal abstract class RecipeDatabase : RoomDatabase() {
     internal abstract fun getRecipeTempDao(): RecipeTempDao
     internal abstract fun getRecipeListDao(): RecipeListDao
     internal abstract fun getRecipeTypeDao(): RecipeTypeDao
-    internal abstract fun getImageValidationDao(): ImageValidationDao
+    internal abstract fun getUselessImageDao(): UselessImageDao
 
     companion object {
 

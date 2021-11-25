@@ -1,6 +1,6 @@
 package com.kdjj.data.repository
 
-import com.kdjj.data.common.flatMap
+import com.kdjj.domain.common.flatMap
 import com.kdjj.data.datasource.RecipeImageLocalDataSource
 import com.kdjj.data.datasource.RecipeImageRemoteDataSource
 import com.kdjj.domain.repository.RecipeImageRepository

@@ -26,6 +26,6 @@ abstract class LocalRecipeImageModule {
 		@Singleton
 		internal fun provideImageValidationDao(
 			recipeDatabase: RecipeDatabase
-		) = recipeDatabase.getImageValidationDao()
+		) = recipeDatabase.getUselessImageDao()
 	}
 }
