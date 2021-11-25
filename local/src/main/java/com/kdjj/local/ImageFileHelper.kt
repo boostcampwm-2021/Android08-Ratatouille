@@ -7,8 +7,8 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
-import com.kdjj.local.dao.ImageValidationDao
-import com.kdjj.local.dto.ImageValidationDto
+import com.kdjj.local.dao.UselessImageDao
+import com.kdjj.local.dto.UselessImageDto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -18,7 +18,7 @@ import javax.inject.Inject
 internal class ImageFileHelper @Inject constructor(
     private val fileDir: File,
     private val contentResolver: ContentResolver,
-    private val imageValidationDao: ImageValidationDao
+    private val uselessImageDao: UselessImageDao
 ) {
 
     suspend fun convertToByteArray(uri: String): Result<Pair<ByteArray, Float?>> = withContext(Dispatchers.IO) {
@@ -51,7 +51,7 @@ internal class ImageFileHelper @Inject constructor(
         var fos: FileOutputStream? = null
         runCatching {
             val filePath = "$fileDir/${fileName}.png"
-            imageValidationDao.insertImageValidation(ImageValidationDto(filePath, false))
+            uselessImageDao.insertUselessImage(UselessImageDto(filePath))
             fos = FileOutputStream(filePath)
             val bitmap = convertByteArrayToBitmap(byteArray, degree)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)

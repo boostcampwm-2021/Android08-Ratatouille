@@ -1,6 +1,6 @@
 package com.kdjj.remote.datasource
 
-import com.kdjj.data.common.errorMap
+import com.kdjj.domain.common.errorMap
 import com.kdjj.data.datasource.RecipeTypeRemoteDataSource
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.remote.dto.toDomain

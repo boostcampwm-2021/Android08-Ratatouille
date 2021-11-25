@@ -1,4 +1,4 @@
-package com.kdjj.data.common
+package com.kdjj.domain.common
 
 import java.lang.Exception
 

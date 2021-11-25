@@ -1,6 +1,6 @@
 package com.kdjj.local.dataSource
 
-import com.kdjj.data.common.errorMap
+import com.kdjj.domain.common.errorMap
 import com.kdjj.data.datasource.RecipeTypeLocalDataSource
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.local.dao.RecipeTypeDao

@@ -1,10 +1,11 @@
 package com.kdjj.local.dataSource
 
 import androidx.room.withTransaction
-import com.kdjj.data.common.errorMap
+import com.kdjj.domain.common.errorMap
 import com.kdjj.data.datasource.RecipeLocalDataSource
 import com.kdjj.domain.model.Recipe
 import com.kdjj.local.database.RecipeDatabase
+import com.kdjj.local.dto.UselessImageDto
 import com.kdjj.local.dto.toDomain
 import com.kdjj.local.dto.toDto
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +19,7 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
 ) : RecipeLocalDataSource {
 
     private val recipeDao = recipeDatabase.getRecipeDao()
-    private val recipeImageValidationDao = recipeDatabase.getImageValidationDao()
+    private val uselessImageDao = recipeDatabase.getUselessImageDao()
 
     override suspend fun saveRecipe(
         recipe: Recipe
@@ -26,11 +27,10 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             runCatching {
                 recipeDatabase.withTransaction {
-                    recipeImageValidationDao.updateValidate(
+                    uselessImageDao.deleteUselessImage(
                         recipe.stepList
                         .map { it.imgPath }
                         .plus(recipe.imgPath),
-                        true
                     )
                     recipeDao.deleteStepList(recipe.recipeId)
                     recipeDao.insertRecipeMeta(recipe.toDto())
@@ -63,15 +63,14 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             runCatching {
                 recipeDatabase.withTransaction {
-                    recipeImageValidationDao.updateValidate(
+                    uselessImageDao.deleteUselessImage(
                         recipe.stepList
-                        .map { it.imgPath }
-                        .plus(recipe.imgPath),
-                        true
+                            .map { it.imgPath }
+                            .plus(recipe.imgPath),
                     )
-                    recipeImageValidationDao.updateValidate(
-                        originImgPathList,
-                        false
+                    uselessImageDao.insertUselessImage(
+                        originImgPathList.filter { it.isNotBlank() }
+                            .map { UselessImageDto(it) }
                     )
                     recipeDao.deleteStepList(recipe.recipeId)
                     recipeDao.insertRecipeMeta(recipe.toDto())
@@ -88,11 +87,10 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             runCatching {
                 recipeDatabase.withTransaction {
-                    recipeImageValidationDao.updateValidate(
+                    uselessImageDao.insertUselessImage(
                         recipe.stepList
-                        .map { it.imgPath }
-                        .plus(recipe.imgPath),
-                        false
+                            .map { UselessImageDto(it.imgPath) }
+                            .plus(UselessImageDto(recipe.imgPath)),
                     )
                     recipeDao.deleteRecipe(recipe.toDto())
                     true

@@ -2,7 +2,7 @@ package com.kdjj.remote.service
 
 import android.net.Uri
 import com.google.firebase.storage.StorageReference
-import com.kdjj.data.common.errorMap
+import com.kdjj.domain.common.errorMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
