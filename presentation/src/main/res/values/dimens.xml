@@ -134,5 +134,7 @@
     <dimen name="summary_cardView_corner">15dp</dimen>
     <dimen name="summary_cardView_elevation">4dp</dimen>
     <dimen name="summary_cardView_strokeWidth">1dp</dimen>
+    <dimen name="summary_textCardView_marginTop">8dp</dimen>
+    <dimen name="summary_summaryText_padding">16dp</dimen>
 
 </resources>
