@@ -8,6 +8,10 @@
             name="step"
             type="com.kdjj.domain.model.RecipeStep" />
 
+        <variable
+            name="viewModel"
+            type="com.kdjj.presentation.viewmodel.recipedetail.RecipeDetailViewModel" />
+
         <import type="android.view.View" />
     </data>
 
@@ -115,6 +119,7 @@
                     android:layout_marginTop="@dimen/detailItem_timer_marginTop"
                     android:layout_marginBottom="@dimen/detailItem_timer_marginBottom"
                     android:drawableStart="@drawable/ic_round_play_arrow_24"
+                    android:onClick="@{() -> viewModel.addTimer(step)}"
                     tools:text="20:00"
                     app:layout_constraintTop_toBottomOf="@id/textView_detailItem_content"
                     app:layout_constraintBottom_toBottomOf="parent"

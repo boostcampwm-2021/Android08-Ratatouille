@@ -34,7 +34,7 @@ class RecipeDetailLargeStepListAdapter(
             }
 
     override fun initViewHolder(binding: ItemDetailLargeStepBinding, getItemPosition: () -> Int) {
-
+        binding.viewModel = viewModel
     }
 
     override fun bind(
