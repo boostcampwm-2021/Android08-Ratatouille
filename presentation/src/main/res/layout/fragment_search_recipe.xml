@@ -98,7 +98,7 @@
             android:layout_width="@dimen/search_tab_textSize"
             android:layout_height="@dimen/search_tab_textSize"
             android:layout_marginStart="@dimen/search_progressBar_marginStart"
-            android:indeterminateTint="@color/blue_500"
+            android:indeterminateTint="@color/dark_500"
             android:visibility="@{viewModel.liveLoading ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toEndOf="@id/textview_search_resultLabel"
             app:layout_constraintTop_toTopOf="@id/textview_search_resultLabel"
