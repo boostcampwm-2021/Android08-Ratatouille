@@ -18,12 +18,15 @@
 
         <import type="com.kdjj.presentation.common.UtilsKt" />
 
+        <import type="com.kdjj.presentation.view.bindingadapter.BindingConverter"/>
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-      >
+        android:clipToPadding="false"
+        android:padding="@dimen/myRecipe_padding">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardView_myRecipe"
@@ -31,17 +34,18 @@
             android:layout_height="0dp"
             android:clickable="true"
             android:focusable="true"
-            app:layout_constraintDimensionRatio="1:1"
             android:onClick="@{ ()-> myRecipeViewModel.recipeItemSelected(myRecipeItem)}"
             app:cardBackgroundColor="@color/light_500"
             app:cardCornerRadius="@dimen/myRecipe_cardView_corner"
+            app:cardElevation="@dimen/myRecipe_cardView_elevation"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
 
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:strokeColor="@color/blue_600"
-            app:strokeWidth="@{myRecipeViewModel.liveRecipeItemSelected == myRecipeItem ?6 : 0}">
+            app:strokeWidth="@{myRecipeViewModel.liveRecipeItemSelected == myRecipeItem ? 6 : 0}">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -140,7 +144,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
