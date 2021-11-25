@@ -4,7 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="step"
+            type="com.kdjj.domain.model.RecipeStep" />
 
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,25 +21,26 @@
             android:id="@+id/textView_detailItem_type"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@{step.type.name()}"
             android:textSize="@dimen/detailItem_title_textSize"
             android:textColor="@color/dark_500"
             android:layout_marginStart="@dimen/detailItem_marginHorizontal"
             tools:text="(COOK)"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textView_detailItem_title"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/textView_detailItem_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@{step.name}"
             android:textSize="@dimen/detailItem_title_textSize"
             android:textColor="@color/dark_500"
             android:textStyle="bold"
             android:layout_marginStart="@dimen/detailItem_title_marginStart"
             android:layout_marginEnd="@dimen/detailItem_marginHorizontal"
             tools:text="고기 볶기"
-            app:layout_constraintTop_toTopOf="@id/textView_detailItem_type"
-            app:layout_constraintBottom_toBottomOf="@id/textView_detailItem_type"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/textView_detailItem_type"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -58,7 +63,9 @@
                     android:id="@+id/imageView_detailItem"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/detailItem_imageView_height"
+                    android:visibility="@{step.imgPath.empty ? View.GONE : View.VISIBLE}"
                     tools:src="@color/dark_100"
+                    app:loadImage="@{step.imgPath}"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/textView_detailItem_content"
                     app:layout_constraintStart_toStartOf="parent"
@@ -83,6 +90,7 @@
                     android:id="@+id/textView_detailItem_content"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:text="@{step.description}"
                     android:textSize="@dimen/detailItem_content_textSize"
                     android:textColor="@color/dark_500"
                     android:gravity="center"
@@ -97,6 +105,7 @@
                     android:id="@+id/textView_detailItem_timer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@{@string/timerMinSec(step.seconds / 60, step.seconds % 60)}"
                     android:textSize="@dimen/detailItem_timer_textSize"
                     android:textColor="@color/dark_500"
                     android:gravity="center"
