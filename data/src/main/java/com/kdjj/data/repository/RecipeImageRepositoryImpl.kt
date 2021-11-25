@@ -29,13 +29,9 @@ internal class RecipeImageRepositoryImpl @Inject constructor(
                         imgInfoList.map {it.fileName},
                         byteArrayDegreePairList.map { it.second }
                     )
-                }
-
-        }.fold(Result.success(emptyList())) { total, item ->
-            Result.success(
-                total.getOrThrow()
-                    .plus(item.getOrThrow())
-            )
+                }.getOrThrow()
+        }.flatten().let {
+            Result.success(it)
         }
 
     override suspend fun copyRemoteImageToInternal(
@@ -49,12 +45,9 @@ internal class RecipeImageRepositoryImpl @Inject constructor(
                         imgInfoList.map { it.fileName },
                         (0..byteArrayList.size).map { null }
                     )
-                }
-        }.fold(Result.success(emptyList())) { total, item ->
-            Result.success(
-                total.getOrThrow()
-                    .plus(item.getOrThrow())
-            )
+                }.getOrThrow()
+        }.flatten().let {
+            Result.success(it)
         }
 
 
