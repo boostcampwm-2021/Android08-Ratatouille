@@ -1,8 +1,9 @@
 package com.kdjj.data.repository
 
-import com.kdjj.data.common.flatMap
+import com.kdjj.domain.common.flatMap
 import com.kdjj.data.datasource.RecipeImageLocalDataSource
 import com.kdjj.data.datasource.RecipeImageRemoteDataSource
+import com.kdjj.domain.model.ImageInfo
 import com.kdjj.domain.repository.RecipeImageRepository
 import javax.inject.Inject
 
@@ -18,18 +19,40 @@ internal class RecipeImageRepositoryImpl @Inject constructor(
     }
 
     override suspend fun copyExternalImageToInternal(
-        uri: String,
-        fileName: String
-    ): Result<String> = recipeImageLocalDataSource.convertToByteArray(uri)
-        .flatMap { (byteArray, degree) ->
-            recipeImageLocalDataSource.convertToInternalStorageUri(byteArray, fileName, degree)
+        imageInfo: List<ImageInfo>
+    ): Result<List<String>> =
+        imageInfo.chunked(10).map { imgInfoList ->
+            recipeImageLocalDataSource.convertToByteArray(imgInfoList.map { it.uri })
+                .flatMap { byteArrayDegreePairList ->
+                    recipeImageLocalDataSource.convertToInternalStorageUri(
+                        byteArrayDegreePairList.map { it.first },
+                        imgInfoList.map {it.fileName},
+                        byteArrayDegreePairList.map { it.second }
+                    )
+                }.getOrThrow()
+        }.flatten().let {
+            Result.success(it)
         }
 
     override suspend fun copyRemoteImageToInternal(
-        uri: String,
-        fileName: String
-    ): Result<String> = recipeImageRemoteDataSource.fetchRecipeImage(uri)
-        .flatMap { byteArray ->
-            recipeImageLocalDataSource.convertToInternalStorageUri(byteArray, fileName)
+        imageInfo: List<ImageInfo>
+    ): Result<List<String>> =
+        imageInfo.chunked(10).map { imgInfoList ->
+            recipeImageRemoteDataSource.fetchRecipeImage(imgInfoList.map { it.uri })
+                .flatMap { byteArrayList ->
+                    recipeImageLocalDataSource.convertToInternalStorageUri(
+                        byteArrayList,
+                        imgInfoList.map { it.fileName },
+                        (0..byteArrayList.size).map { null }
+                    )
+                }.getOrThrow()
+        }.flatten().let {
+            Result.success(it)
         }
+
+
+
+    override fun isUriExists(uri: String): Boolean = recipeImageLocalDataSource.isUriExists(uri)
+
+    override suspend fun deleteUselessImages(): Result<Unit> = recipeImageLocalDataSource.deleteUselessImages()
 }

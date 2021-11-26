@@ -9,6 +9,7 @@ import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.MyRecipeItem
 import com.kdjj.presentation.model.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
@@ -20,7 +21,8 @@ internal class MyRecipeViewModel @Inject constructor(
     private val latestRecipeUseCase: ResultUseCase<FetchLocalLatestRecipeListRequest, List<Recipe>>,
     private val favoriteRecipeUseCase: ResultUseCase<FetchLocalFavoriteRecipeListRequest, List<Recipe>>,
     private val titleRecipeUseCase: ResultUseCase<FetchLocalTitleRecipeListRequest, List<Recipe>>,
-    private val getRecipeUpdateFlowUseCase: FlowUseCase<EmptyRequest, Int>
+    private val getRecipeUpdateFlowUseCase: FlowUseCase<EmptyRequest, Int>,
+    private val deleteUselessImageFileUseCase: ResultUseCase<EmptyRequest, Unit>
 ) : ViewModel() {
 
     private val _liveSortType = MutableLiveData<SortType>()
@@ -28,6 +30,9 @@ internal class MyRecipeViewModel @Inject constructor(
 
     private val _liveRecipeItemSelected = MutableLiveData<MyRecipeItem.MyRecipe?>()
     val liveRecipeItemSelected: LiveData<MyRecipeItem.MyRecipe?> get() = _liveRecipeItemSelected
+
+    private val _liveLoading = MutableLiveData(false)
+    val liveLoading: LiveData<Boolean> get() = _liveLoading
 
     private val _liveRecipeList = MutableLiveData(listOf<MyRecipeItem.MyRecipe>())
     private val _liveFetching = MutableLiveData(false)
@@ -56,15 +61,24 @@ internal class MyRecipeViewModel @Inject constructor(
     private val _eventMyRecipe = MutableLiveData<Event<MyRecipeEvent>>()
     val eventMyRecipe: LiveData<Event<MyRecipeEvent>> get() = _eventMyRecipe
 
+    val mySubject: PublishSubject<ButtonClick> = PublishSubject.create()
+
     sealed class MyRecipeEvent {
-        object AddRecipeHasPressed : MyRecipeEvent()
-        class DoubleClicked(val item: MyRecipeItem.MyRecipe) : MyRecipeEvent()
-        object SearchIconClicked : MyRecipeEvent()
         object DataLoadFailed : MyRecipeEvent()
+    }
+
+    sealed class ButtonClick {
+        object AddRecipeHasPressed : ButtonClick()
+        class DoubleClicked(val item: MyRecipeItem.MyRecipe) : ButtonClick()
+        object SearchIconClicked : ButtonClick()
     }
 
     init {
         setSortType(SortType.SORT_BY_TIME)
+
+        viewModelScope.launch {
+            deleteUselessImageFileUseCase(EmptyRequest)
+        }
 
         viewModelScope.launch {
             getRecipeUpdateFlowUseCase(EmptyRequest)
@@ -87,8 +101,13 @@ internal class MyRecipeViewModel @Inject constructor(
 
     fun fetchRecipeList(page: Int) {
         if (_liveFetching.value == true && page > 0) return
-        _liveFetching.value = true
-        if (page == 0) job?.cancel()
+
+        if (page == 0) {
+            job?.cancel()
+            _liveLoading.value = true
+        } else {
+            _liveFetching.value = true
+        }
 
         job = viewModelScope.launch {
             when (_liveSortType.value) {
@@ -112,6 +131,7 @@ internal class MyRecipeViewModel @Inject constructor(
                 }
             }
             _liveFetching.value = false
+            _liveLoading.value = false
         }
     }
 
@@ -119,15 +139,15 @@ internal class MyRecipeViewModel @Inject constructor(
         if (_liveRecipeItemSelected.value != selectedRecipe) {
             _liveRecipeItemSelected.value = selectedRecipe
         } else {
-            _eventMyRecipe.value = Event(MyRecipeEvent.DoubleClicked(selectedRecipe))
+            mySubject.onNext(ButtonClick.DoubleClicked(selectedRecipe))
         }
     }
 
     fun moveToRecipeEditorActivity() {
-        _eventMyRecipe.value = Event(MyRecipeEvent.AddRecipeHasPressed)
+        mySubject.onNext(ButtonClick.AddRecipeHasPressed)
     }
 
     fun moveToRecipeSearchFragment() {
-        _eventMyRecipe.value = Event(MyRecipeEvent.SearchIconClicked)
+        mySubject.onNext(ButtonClick.SearchIconClicked)
     }
 }

@@ -1,9 +1,10 @@
 package com.kdjj.domain.usecase
 
 import com.kdjj.domain.common.IdGenerator
+import com.kdjj.domain.model.ImageInfo
+import com.kdjj.domain.model.request.SaveLocalRecipeRequest
 import com.kdjj.domain.repository.RecipeImageRepository
 import com.kdjj.domain.repository.RecipeRepository
-import com.kdjj.domain.model.request.SaveLocalRecipeRequest
 import javax.inject.Inject
 
 internal class SaveLocalRecipeUseCase @Inject constructor(
@@ -15,40 +16,47 @@ internal class SaveLocalRecipeUseCase @Inject constructor(
     override suspend fun invoke(request: SaveLocalRecipeRequest): Result<Boolean> =
         kotlin.runCatching {
             val recipe = request.recipe
-            val recipeImageUri = when (recipe.imgPath.isNotEmpty()) {
-                true -> {
-                    if (recipe.imgPath.startsWith("https://") || recipe.imgPath.startsWith("gs://")) {
-                        imageRepository.copyRemoteImageToInternal(recipe.imgPath, idGenerator.generateId())
-                            .getOrThrow()
-                    } else {
-                        imageRepository.copyExternalImageToInternal(recipe.imgPath, idGenerator.generateId())
-                            .getOrThrow()
-                    }
+            val imgList = listOf(recipe.imgPath)
+                .plus(recipe.stepList.map { it.imgPath })
+                 .toMutableList()
+
+            val imgInfoList = imgList.filter { it.isNotBlank() }
+                .map { ImageInfo(it, idGenerator.generateId()) }
+
+            val changedImgList = copyImageToInternal(imgInfoList)
+
+            var i = 0
+            imgList.forEachIndexed { index, s ->
+                if (s.isNotBlank()) {
+                    imgList[index] = changedImgList[i++]
                 }
-                false -> ""
             }
-            val recipeStepList = recipe.stepList.map { step ->
-                val stepImageUri = when (step.imgPath.isNotEmpty()) {
-                    true -> {
-                        if (recipe.imgPath.startsWith("https://") || recipe.imgPath.startsWith("gs://")) {
-                            imageRepository.copyRemoteImageToInternal(step.imgPath, idGenerator.generateId())
-                                .getOrThrow()
-                        } else {
-                            imageRepository.copyExternalImageToInternal(step.imgPath, idGenerator.generateId())
-                                .getOrThrow()
-                        }
-                    }
-                    false -> ""
-                }
-                step.copy(imgPath = stepImageUri)
+
+            val recipeStepList = recipe.stepList.mapIndexed { i, step ->
+                step.copy(
+                    stepId = idGenerator.generateId(),
+                    imgPath = imgList[i + 1]
+                )
             }
 
             recipeRepository.saveLocalRecipe(
                 recipe.copy(
-                    imgPath = recipeImageUri,
+                    recipeId = idGenerator.generateId(),
+                    imgPath = imgList.first(),
                     stepList = recipeStepList,
                     createTime = System.currentTimeMillis()
                 )
             ).getOrThrow()
         }
+
+    private suspend fun copyImageToInternal(imgInfoList: List<ImageInfo>): List<String> {
+        if (imgInfoList.isEmpty()) return listOf()
+        return if (imgInfoList.first().uri.startsWith("https://") || imgInfoList.first().uri.startsWith("gs://")) {
+            imageRepository.copyRemoteImageToInternal(imgInfoList)
+                .getOrThrow()
+        } else {
+            imageRepository.copyExternalImageToInternal(imgInfoList)
+                .getOrThrow()
+        }
+    }
 }

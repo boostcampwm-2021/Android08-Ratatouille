@@ -6,4 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".view.splash.LaunchActivity">
 
+    <ImageView
+        android:id="@+id/imageView_splash_title"
+        android:layout_width="@dimen/splash_title_width"
+        android:layout_height="@dimen/splash_title_height"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_text"
+        app:layout_constraintBottom_toTopOf="@id/imageView_splash_food"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <ImageView
+        android:id="@+id/imageView_splash_food"
+        android:layout_width="@dimen/splash_image_width"
+        android:layout_height="@dimen/splash_image_height"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_food"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView_splash_title" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

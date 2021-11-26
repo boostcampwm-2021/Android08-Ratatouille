@@ -1,5 +1,7 @@
 package com.kdjj.domain.repository
 
+import com.kdjj.domain.model.ImageInfo
+
 interface RecipeImageRepository {
 
     suspend fun convertInternalUriToRemoteStorageUri(
@@ -7,12 +9,16 @@ interface RecipeImageRepository {
     ): Result<String>
 
     suspend fun copyExternalImageToInternal(
-        uri: String,
-        fileName: String
-    ): Result<String>
+        imageInfo: List<ImageInfo>
+    ): Result<List<String>>
 
     suspend fun copyRemoteImageToInternal(
-        uri: String,
-        fileName: String
-    ): Result<String>
+        imageInfo: List<ImageInfo>
+    ): Result<List<String>>
+
+    fun isUriExists(
+        uri: String
+    ): Boolean
+
+    suspend fun deleteUselessImages(): Result<Unit>
 }

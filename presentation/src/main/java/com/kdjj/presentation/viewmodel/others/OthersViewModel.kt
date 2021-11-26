@@ -15,6 +15,7 @@ import com.kdjj.presentation.model.RecipeListItemModel
 import com.kdjj.presentation.model.ResponseError
 import com.kdjj.presentation.model.toRecipeListItemModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -41,13 +42,18 @@ class OthersViewModel @Inject constructor(
         _liveFetchLock.value = false
     }
 
-    private var _eventOtherRecipe = MutableLiveData<Event<OtherRecipeEvent>>()
-    val eventOtherRecipe: LiveData<Event<OtherRecipeEvent>> get() = _eventOtherRecipe
+    val othersSubject: PublishSubject<ButtonClick> = PublishSubject.create()
+
+    private var _eventOthersRecipe = MutableLiveData<Event<OtherRecipeEvent>>()
+    val eventOthersRecipe: LiveData<Event<OtherRecipeEvent>> get() = _eventOthersRecipe
 
     sealed class OtherRecipeEvent {
         class ShowSnackBar(val error: ResponseError) : OtherRecipeEvent()
-        object SearchIconClicked : OtherRecipeEvent()
-        class RecipeItemClicked(val item: RecipeListItemModel) : OtherRecipeEvent()
+    }
+
+    sealed class ButtonClick {
+        object SearchIconClicked : ButtonClick()
+        class RecipeItemClicked(val item: RecipeListItemModel) : ButtonClick()
     }
 
     init {
@@ -121,27 +127,25 @@ class OthersViewModel @Inject constructor(
             _liveFetchLock.value = false
             when (it) {
                 is NetworkException -> {
-                    _eventOtherRecipe.value =
-                        Event(OtherRecipeEvent.ShowSnackBar(ResponseError.NETWORK_CONNECTION))
+                    _eventOthersRecipe.value = Event(OtherRecipeEvent.ShowSnackBar(ResponseError.NETWORK_CONNECTION))
                 }
                 is ApiException -> {
-                    _eventOtherRecipe.value =
-                        Event(OtherRecipeEvent.ShowSnackBar(ResponseError.SERVER))
+                    _eventOthersRecipe.value = Event(OtherRecipeEvent.ShowSnackBar(ResponseError.SERVER))
                 }
                 is CancellationException -> {
                 }
-                else -> _eventOtherRecipe.value =
-                    Event(OtherRecipeEvent.ShowSnackBar(ResponseError.UNKNOWN))
+                else -> _eventOthersRecipe.value = Event(OtherRecipeEvent.ShowSnackBar(ResponseError.UNKNOWN))
+
             }
         }
     }
 
     fun moveToRecipeSearchFragment() {
-        _eventOtherRecipe.value = Event(OtherRecipeEvent.SearchIconClicked)
+        othersSubject.onNext(ButtonClick.SearchIconClicked)
     }
 
     fun recipeItemClick(recipeModel: RecipeListItemModel) {
-        _eventOtherRecipe.value = Event(OtherRecipeEvent.RecipeItemClicked(recipeModel))
+        othersSubject.onNext(ButtonClick.RecipeItemClicked(recipeModel))
     }
 
     enum class OthersSortType {

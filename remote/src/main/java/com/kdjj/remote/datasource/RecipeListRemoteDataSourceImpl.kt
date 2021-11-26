@@ -1,6 +1,6 @@
 package com.kdjj.remote.datasource
 
-import com.kdjj.data.common.errorMap
+import com.kdjj.domain.common.errorMap
 import com.kdjj.data.datasource.RecipeListRemoteDataSource
 import com.kdjj.domain.model.Recipe
 import com.kdjj.remote.common.fireStoreExceptionToDomain

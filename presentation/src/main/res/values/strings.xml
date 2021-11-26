@@ -1,4 +1,13 @@
 <resources>
+    <string name="ratatouilleAlarm">Ratatouille Alarm</string>
+    <string name="ratatouilleTimer">Ratatouille Timer</string>
+    <string name="ratatouilleForeground">Ratatouille Foreground</string>
+    <string name="ratatouille">라따뚜이</string>
+    <string name="appIsRunning">실행중인 타이머가 있습니다!!!</string>
+
+    <string name="timerEnd">%s 타이머 종료!</string>
+    <string name="timerEndContent">%s 타이머가 종료되었습니다. 클릭해서 레시피로 돌아가세요!</string>
+
     <string name="addRecipe">레시피 추가</string>
     <string name="recipeImage">레시피 이미지</string>
     <string name="title">제목</string>
@@ -71,5 +80,7 @@
     <string name="upload">업로드</string>
     <string name="steal">훔쳐오기</string>
     <string name="steal_favorite">훔쳐와서 즐겨찾기 등록</string>
+    <string name="timerButton">타이머 버튼</string>
+    <string name="recipeType">레시피 종류</string>
 
 </resources>

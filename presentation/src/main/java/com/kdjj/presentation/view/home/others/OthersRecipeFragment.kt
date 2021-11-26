@@ -21,6 +21,8 @@ import com.kdjj.presentation.databinding.FragmentOthersRecipeBinding
 import com.kdjj.presentation.view.adapter.OthersRecipeListAdapter
 import com.kdjj.presentation.viewmodel.others.OthersViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class OthersRecipeFragment : Fragment() {
@@ -29,6 +31,13 @@ class OthersRecipeFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: OthersViewModel by viewModels()
     private val navigation by lazy { Navigation.findNavController(binding.root) }
+
+    private val compositeDisposable = CompositeDisposable()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setButtonClickObserver()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,26 +54,37 @@ class OthersRecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setObserver()
         setAdapter()
+        setEventObserver()
         setSwipeRefreshLayout()
         setBinding()
         initToolBar()
     }
 
-    private fun setObserver() {
-        viewModel.eventOtherRecipe.observe(viewLifecycleOwner, EventObserver {
+    private fun setButtonClickObserver() {
+        viewModel.othersSubject
+            .throttleFirst(1, TimeUnit.SECONDS)
+            .subscribe {
+                when (it) {
+                    is OthersViewModel.ButtonClick.RecipeItemClicked -> {
+                        val bundle = bundleOf(
+                            RECIPE_ID to it.item.recipeId,
+                            RECIPE_STATE to it.item.state
+                        )
+                        navigation.navigate(R.id.action_othersFragment_to_recipeSummaryActivity, bundle)
+                    }
+                    is OthersViewModel.ButtonClick.SearchIconClicked -> {
+                        navigation.navigate(R.id.action_othersFragment_to_searchRecipeFragment)
+                    }
+                }
+            }.also {
+                compositeDisposable.add(it)
+            }
+    }
+
+    private fun setEventObserver() {
+        viewModel.eventOthersRecipe.observe(viewLifecycleOwner, EventObserver {
             when (it) {
-                is OthersViewModel.OtherRecipeEvent.RecipeItemClicked -> {
-                    val bundle = bundleOf(
-                        RECIPE_ID to it.item.recipeId,
-                        RECIPE_STATE to it.item.state
-                    )
-                    navigation.navigate(R.id.action_othersFragment_to_recipeSummaryActivity, bundle)
-                }
-                is OthersViewModel.OtherRecipeEvent.SearchIconClicked -> {
-                    navigation.navigate(R.id.action_othersFragment_to_searchRecipeFragment)
-                }
                 is OthersViewModel.OtherRecipeEvent.ShowSnackBar -> {
                     showSnackBar(getString(it.error.stringRes))
                 }
@@ -133,7 +153,12 @@ class OthersRecipeFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.dispose()
+        super.onDestroy()
     }
 }

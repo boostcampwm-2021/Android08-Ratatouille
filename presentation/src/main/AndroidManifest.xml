@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kdjj.presentation">
 
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
@@ -22,6 +24,9 @@
         <activity
             android:name=".view.splash.LaunchActivity"
             android:exported="true" />
+
+        <service android:name=".services.TimerService"
+            android:foregroundServiceType="location"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

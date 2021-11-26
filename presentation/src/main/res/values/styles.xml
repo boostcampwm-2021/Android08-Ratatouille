@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/blue_600</item>
+        <item name="android:background">@color/dark_700</item>
         <item name="titleTextColor">@color/light_100</item>
     </style>
 
@@ -24,6 +24,7 @@
         <item name="android:layout_marginStart">@dimen/editor_inputLabel_marginStart</item>
     </style>
 
+
     <style name="SummaryLabel" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/dark_500</item>
         <item name="android:textSize">@dimen/summary_label_textSize</item>
@@ -31,16 +32,25 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/summary_label_marginTop</item>
-        <item name="android:layout_marginStart">@dimen/summary_label_marginStart</item>
+    </style>
+
+    <style name="SummaryTextCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/summary_textCardView_marginTop</item>
+        <item name="cardCornerRadius">@dimen/summary_cardView_corner</item>
+        <item name="cardElevation">@dimen/summary_cardView_elevation</item>
+        <item name="strokeWidth">@dimen/summary_cardView_strokeWidth</item>
+        <item name="strokeColor">@color/dark_400</item>
+        <item name="android:background">@color/light_500</item>
     </style>
 
     <style name="SummaryText" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/dark_500</item>
         <item name="android:textSize">@dimen/summary_text_textSize</item>
-        <item name="android:layout_marginStart">@dimen/summary_text_marginStart</item>
-        <item name="android:layout_marginEnd">@dimen/summary_text_marginEnd</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">0dp</item>
+        <item name="android:padding">@dimen/summary_summaryText_padding</item>
     </style>
 
     <style name="SummaryFloatingButton">
@@ -56,7 +66,7 @@
         <item name="android:paddingEnd">@dimen/summary_floatingButton_paddingEnd</item>
         <item name="android:drawablePadding">@dimen/summary_floatingButton_drawablePadding</item>
         <item name="android:textSize">@dimen/summary_floatingButton_textSize</item>
-        <item name="backgroundTint">@color/blue_500</item>
+        <item name="backgroundTint">@color/dark_500</item>
         <item name="android:background">@drawable/bg_summary_button_round</item>
         <item name="android:layout_marginBottom">@dimen/summary_floatingButton_marginBottom</item>
         <item name="android:visibility">gone</item>

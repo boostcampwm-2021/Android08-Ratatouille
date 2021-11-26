@@ -6,41 +6,44 @@ import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.RecipeStep
 import com.kdjj.domain.model.request.FetchRemoteRecipeRequest
-import com.kdjj.domain.model.request.GetLocalRecipeFlowRequest
-import com.kdjj.domain.usecase.FlowUseCase
+import com.kdjj.domain.model.request.GetLocalRecipeRequest
 import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.StepTimerModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
     private val ringtone: Ringtone,
-    private val getLocalRecipeFlowUseCase: FlowUseCase<GetLocalRecipeFlowRequest, Recipe>,
+    private val getLocalRecipeUseCase: ResultUseCase<GetLocalRecipeRequest, Recipe>,
     private val fetchRemoteRecipeUseCase: ResultUseCase<FetchRemoteRecipeRequest, Recipe>
 ) : ViewModel() {
 
     private val _liveStepList = MutableLiveData<List<RecipeStep>>()
     val liveStepList: LiveData<List<RecipeStep>> get() = _liveStepList
-
-    private val _liveSelectedStep = MutableLiveData<RecipeStep>()
-    val liveSelectedStep: LiveData<RecipeStep> get() = _liveSelectedStep
+    val liveModelList = liveStepList.map { stepList ->
+        stepList.map { step ->
+            StepTimerModel(step) {
+                ringtone.play()
+                _liveFinishedTimerPosition.value = _liveTimerList.value?.indexOf(it)
+                it.startAnimation()
+            }
+        }
+    }
 
     private val _liveTimerList = MutableLiveData<List<StepTimerModel>>(listOf())
     val liveTimerList: LiveData<List<StepTimerModel>> get() = _liveTimerList
 
-    val liveSelectedTimer: LiveData<StepTimerModel?> = MediatorLiveData<StepTimerModel?>().apply {
-        addSource(_liveTimerList) { timerList ->
-            value = timerList.firstOrNull { it.recipeStep == liveSelectedStep.value }
-        }
+    private val _liveStepBarSelected = MutableLiveData<RecipeStep>()
+    val liveStepBarSelected: LiveData<RecipeStep> get() = _liveStepBarSelected
 
-        addSource(_liveSelectedStep) { step ->
-            value = _liveTimerList.value?.firstOrNull { it.recipeStep == step }
-        }
-    }
+    private val _liveMoveStepBarToIdx = MutableLiveData<Int>()
+    val liveMoveStepBarToIdx: LiveData<Int> get() = _liveMoveStepBarToIdx
+
+    private val _liveMoveToIdx = MutableLiveData<Int>()
+    val liveMoveToIdx: LiveData<Int> get() = _liveMoveToIdx
 
     private var _liveFinishedTimerPosition = MutableLiveData<Int>()
     val liveFinishedTimerPosition: LiveData<Int> get() = _liveFinishedTimerPosition
@@ -73,26 +76,16 @@ class RecipeDetailViewModel @Inject constructor(
         _liveLoading.value = true
         viewModelScope.launch {
             when (state) {
-                RecipeState.NETWORK -> {
+                RecipeState.NETWORK ->
                     fetchRemoteRecipeUseCase(FetchRemoteRecipeRequest(recipeId))
-                            .onSuccess { recipe ->
-                                _liveStepList.value = recipe.stepList
-                                selectStep(recipe.stepList[0])
-                                _liveTitle.value = recipe.title
-                            }
-                            .onFailure {
-                                _eventRecipeDetail.value = Event(RecipeDetailEvent.Error)
-                            }
-                }
-                RecipeState.CREATE,
-                RecipeState.DOWNLOAD,
-                RecipeState.UPLOAD -> {
-                    val recipeFlow = getLocalRecipeFlowUseCase(GetLocalRecipeFlowRequest(recipeId))
-                    val recipe = recipeFlow.first()
-                    _liveStepList.value = recipe.stepList
-                    selectStep(recipe.stepList[0])
-                    _liveTitle.value = recipe.title
-                }
+                RecipeState.CREATE, RecipeState.DOWNLOAD, RecipeState.UPLOAD ->
+                    getLocalRecipeUseCase(GetLocalRecipeRequest(recipeId))
+            }.onSuccess { recipe ->
+                _liveStepList.value = recipe.stepList
+                _liveStepBarSelected.value = recipe.stepList.first()
+                _liveTitle.value = recipe.title
+            }.onFailure {
+                _eventRecipeDetail.value = Event(RecipeDetailEvent.Error)
             }
             _liveLoading.value = false
         }
@@ -100,22 +93,37 @@ class RecipeDetailViewModel @Inject constructor(
         isInitialized = true
     }
 
-    fun selectStep(step: RecipeStep) {
-        _liveSelectedStep.value = step
+    fun scrollToStep(step: RecipeStep) {
+        _liveMoveToIdx.value = _liveStepList.value?.indexOf(step)
     }
 
-    fun addTimer(step: RecipeStep) {
-        _liveTimerList.value?.let { timerList ->
-            if (!timerList.any { it.recipeStep == step }) {
-                if (timerList.isEmpty()) {
-                    _eventRecipeDetail.value = Event(RecipeDetailEvent.OpenTimer)
+    fun updateCurrentStepTo(idx: Int) {
+        val step = _liveStepList.value?.getOrNull(idx) ?: return
+        if (_liveStepBarSelected.value?.stepId != step.stepId) {
+            _liveStepBarSelected.value = step
+            _liveMoveStepBarToIdx.value = idx
+        }
+    }
 
+    fun toggleTimer(model: StepTimerModel) {
+        when (model.liveState.value) {
+            StepTimerModel.TimerState.INITIALIZED -> {
+                _liveTimerList.value?.let { timerList ->
+                    if (timerList.isEmpty()) {
+                        _eventRecipeDetail.value = Event(RecipeDetailEvent.OpenTimer)
+                    }
+                    _liveTimerList.value = timerList + model
+                    model.resume()
                 }
-                _liveTimerList.value = timerList + StepTimerModel(step) {
-                    ringtone.play()
-                    _liveFinishedTimerPosition.value = _liveTimerList.value?.indexOf(it)
-                    it.startAnimation()
-                }
+            }
+            StepTimerModel.TimerState.RUNNING -> {
+                model.pause()
+            }
+            StepTimerModel.TimerState.PAUSED -> {
+                model.resume()
+            }
+            StepTimerModel.TimerState.END -> {
+                removeTimer(model)
             }
         }
     }
@@ -130,7 +138,6 @@ class RecipeDetailViewModel @Inject constructor(
 
     fun removeTimerAt(position: Int) {
         _liveTimerList.value?.getOrNull(position)?.let { model ->
-            model.pause()
             removeTimer(model)
         }
     }
@@ -143,13 +150,22 @@ class RecipeDetailViewModel @Inject constructor(
                     Event(RecipeDetailEvent.CloseTimer {
                         _liveTimerList.value = modelList.toMutableList().apply {
                             remove(timerModel)
+                            timerModel.reset()
                         }
                     })
             } else {
                 _liveTimerList.value = modelList.toMutableList().apply {
                     remove(timerModel)
+                    timerModel.reset()
                 }
             }
         }
+    }
+
+    override fun onCleared() {
+        _liveTimerList.value?.forEach { model ->
+            model.pause()
+        }
+        super.onCleared()
     }
 }

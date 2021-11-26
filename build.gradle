@@ -10,6 +10,7 @@ buildscript {
         mockito_inline_version="2.13.0"
         mockito_version="3.12.4"
         nav_version = "2.3.5"
+        work_version = "2.7.0"
     }
     repositories {
         google()

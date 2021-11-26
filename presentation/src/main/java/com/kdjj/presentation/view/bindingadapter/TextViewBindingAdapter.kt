@@ -15,14 +15,14 @@ fun TextView.formatTotalTime(totalTime: Int) {
 @BindingAdapter("calculateUpdateTime")
 fun TextView.calculateUpdateTime(createTime: Long) {
     val secs = (System.currentTimeMillis() - createTime) / 1000
-    
+
     // 분 60     시간 3600    하루 24 * 3600    1달 : 30 * 24 * 3600     1년 : 365 * 24 * 3600
     val year = secs / 31536000
     val month = secs / 2592000
     val day = secs / 86400
     val hour = secs / 3600
     val min = secs / 60
-    
+
     this.text = if (year != 0L) context.getString(R.string.update_time_year, year.toString())
     else if (month != 0L) context.getString(R.string.update_time_month, month.toString())
     else if (day != 0L) context.getString(R.string.update_time_day, day.toString())
@@ -35,8 +35,8 @@ fun TextView.calculateUpdateTime(createTime: Long) {
 fun TextView.setStepSummary(recipe: Recipe?) {
     recipe ?: return
     val stepSummaryText = recipe.stepList
-        .fold("") { acc, recipeStep ->
-            acc + "${recipeStep.name}\n"
+        .joinToString("\n") { recipeStep ->
+            recipeStep.name
         }
     this.text = stepSummaryText
 }

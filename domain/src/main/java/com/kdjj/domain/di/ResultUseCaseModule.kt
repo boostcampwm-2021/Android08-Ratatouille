@@ -94,4 +94,29 @@ abstract class ResultUseCaseModule {
     internal abstract fun bindUpdateLocalRecipeUseCase(
         updateLocalRecipeUseCase: UpdateLocalRecipeUseCase
     ) : ResultUseCase<UpdateLocalRecipeRequest, Unit>
+
+    @Binds
+    internal abstract fun bindFetchRecipeTempUseCase(
+        fetchRecipeTempUseCase: FetchRecipeTempUseCase
+    ) : ResultUseCase<FetchRecipeTempRequest, Recipe?>
+
+    @Binds
+    internal abstract fun bindSaveRecipeTempUseCase(
+        saveRecipeTempUseCase: SaveRecipeTempUseCase
+    ) : ResultUseCase<SaveRecipeTempRequest, Unit>
+
+    @Binds
+    internal abstract fun bindGetLocalRecipeUseCase(
+        getLocalRecipeUseCase: GetLocalRecipeUseCase
+    ) : ResultUseCase<GetLocalRecipeRequest, Recipe>
+
+    @Binds
+    internal abstract fun bindDeleteRecipeTempUseCase(
+        deleteRecipeTempUseCase: DeleteRecipeTempUseCase
+    ) : ResultUseCase<DeleteRecipeTempRequest, Unit>
+
+    @Binds
+    internal abstract fun bindDeleteUselessImageFileUseCase(
+        deleteUselessImageFileUseCase: DeleteUselessImageFileUseCase
+    ) : ResultUseCase<EmptyRequest, Unit>
 }

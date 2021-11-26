@@ -5,11 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="com.kdjj.presentation.model.SortType" />
 
         <variable
             name="myViewModel"
             type="com.kdjj.presentation.viewmodel.my.MyRecipeViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,11 +30,11 @@
 
         <RadioGroup
             android:id="@+id/radioGroup_myRecipe"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@id/progressBar_myRecipe"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_myRecipe">
 
             <com.kdjj.presentation.view.home.my.TextRadioButton
@@ -40,8 +43,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"
                 android:button="@null"
-                android:minWidth="0dp"
                 android:checked="@{myViewModel.liveSortType.equals(SortType.SORT_BY_TIME)}"
+                android:minWidth="0dp"
                 android:onClick="@{()->myViewModel.setSortType(SortType.SORT_BY_TIME)}"
                 android:text="@string/orderByDate" />
 
@@ -50,10 +53,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"
-                android:checked="@{myViewModel.liveSortType.equals(SortType.SORT_BY_NAME)}"
-                android:onClick="@{()->myViewModel.setSortType(SortType.SORT_BY_NAME)}"
                 android:button="@null"
+                android:checked="@{myViewModel.liveSortType.equals(SortType.SORT_BY_NAME)}"
                 android:minWidth="0dp"
+                android:onClick="@{()->myViewModel.setSortType(SortType.SORT_BY_NAME)}"
                 android:text="@string/orderByName" />
 
             <com.kdjj.presentation.view.home.my.TextRadioButton
@@ -61,28 +64,39 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"
+                android:button="@null"
                 android:checked="@{myViewModel.liveSortType.equals(SortType.SORT_BY_FAVORITE)}"
                 android:onClick="@{()->myViewModel.setSortType(SortType.SORT_BY_FAVORITE)}"
-                android:button="@null"
                 android:text="@string/orderByFavorite" />
         </RadioGroup>
+
+        <ProgressBar
+            android:id="@+id/progressBar_myRecipe"
+            android:layout_width="@dimen/myRecipe_progress_width"
+            android:layout_height="@dimen/myRecipe_progress_height"
+            android:layout_marginStart="@dimen/myRecipe_progress_marginStart"
+            android:indeterminateTint="@color/dark_500"
+            android:visibility="@{myViewModel.liveLoading ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@id/swipeRefreshLayout_my"
+            app:layout_constraintStart_toEndOf="@id/radioGroup_myRecipe"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_myRecipe" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout_my"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/radioGroup_myRecipe"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/radioGroup_myRecipe">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_myRecipe"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:paddingStart="@dimen/myRecipe_space_size"
-                android:paddingEnd="@dimen/myRecipe_space_size"
                 android:orientation="vertical"
+                android:paddingStart="@dimen/myRecipe_padding"
+                android:paddingEnd="@dimen/myRecipe_padding"
                 app:submitList="@{myViewModel.liveRecipeItemList}"
                 tools:listitem="@layout/item_my_recipe_add_recipe" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

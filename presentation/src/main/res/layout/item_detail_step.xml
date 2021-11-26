@@ -16,19 +16,20 @@
 
     <TextView
         android:id="@+id/textView_detail_stepTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:maxLines="1"
         android:ellipsize="end"
         android:paddingTop="@dimen/detail_stepItem_paddingVertical"
         android:paddingBottom="@dimen/detail_stepItem_paddingVertical"
         android:paddingStart="@dimen/detail_stepItem_paddingHorizontal"
         android:paddingEnd="@dimen/detail_stepItem_paddingHorizontal"
+        android:gravity="bottom"
         android:text="@{step.name}"
-        android:textSize="@dimen/detail_stepList_textSize"
-        android:textColor="@color/light_100"
-        android:typeface="@{Typeface.defaultFromStyle(viewModel.liveSelectedStep == step ? Typeface.BOLD : Typeface.NORMAL)}"
-        android:onClick="@{() -> viewModel.selectStep(step)}"
+        android:textSize="@{viewModel.liveStepBarSelected == step ? @dimen/detail_stepListSelected_textSize : @dimen/detail_stepList_textSize}"
+        android:textColor="@{viewModel.liveStepBarSelected == step ? @color/light_100 : @color/dark_400}"
+        android:typeface="@{Typeface.defaultFromStyle(viewModel.liveStepBarSelected == step ? Typeface.BOLD : Typeface.NORMAL)}"
+        android:onClick="@{() -> viewModel.scrollToStep(step)}"
         tools:text="재료 준비"
         tools:background="@color/dark_500" />
 </layout>

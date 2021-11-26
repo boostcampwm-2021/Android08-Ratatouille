@@ -27,6 +27,7 @@ import com.kdjj.presentation.viewmodel.search.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
@@ -39,6 +40,13 @@ class SearchRecipeFragment : Fragment() {
     private val navigation by lazy { Navigation.findNavController(binding.root) }
 
     private lateinit var resultListAdapter: SearchRecipeListAdapter
+
+    private val compositeDisposable = CompositeDisposable()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setButtonClickObserver()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,10 +80,28 @@ class SearchRecipeFragment : Fragment() {
         }
 
         focusInput()
-        setObservers()
+        setEventObservers()
     }
 
-    private fun setObservers() {
+    private fun setButtonClickObserver() {
+        viewModel.searchSubject
+            .throttleFirst(1, TimeUnit.SECONDS)
+            .subscribe {
+                when (it) {
+                    is SearchViewModel.ButtonClick.Summary -> {
+                        val bundle = bundleOf(
+                            RECIPE_ID to it.item.recipeId,
+                            RECIPE_STATE to it.item.state
+                        )
+                        navigation.navigate(R.id.action_searchFragment_to_recipeSummaryActivity, bundle)
+                    }
+                }
+            }.also {
+                compositeDisposable.add(it)
+            }
+    }
+
+    private fun setEventObservers() {
         Observable.create<Unit> { emitter ->
             viewModel.liveKeyword.observe(viewLifecycleOwner) {
                 emitter.onNext(Unit)
@@ -96,13 +122,6 @@ class SearchRecipeFragment : Fragment() {
 
         viewModel.eventSearchRecipe.observe(viewLifecycleOwner, EventObserver {
             when (it) {
-                is SearchViewModel.SearchRecipeEvent.Summary -> {
-                    val bundle = bundleOf(
-                        RECIPE_ID to it.item.recipeId,
-                        RECIPE_STATE to it.item.state
-                    )
-                    navigation.navigate(R.id.action_searchFragment_to_recipeSummaryActivity, bundle)
-                }
                 is SearchViewModel.SearchRecipeEvent.Exception -> {
                     when (it.error) {
                         ResponseError.NETWORK_CONNECTION, ResponseError.SERVER ->
@@ -133,5 +152,10 @@ class SearchRecipeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.dispose()
+        super.onDestroy()
     }
 }

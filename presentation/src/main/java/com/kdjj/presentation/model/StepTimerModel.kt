@@ -18,7 +18,7 @@ class StepTimerModel(
     private val _liveLeftSeconds = MutableLiveData((leftMillis / 1000).toInt())
     val liveLeftSeconds: LiveData<Int> get() = _liveLeftSeconds
 
-    private val _liveState = MutableLiveData(TimerState.PAUSED)
+    private val _liveState = MutableLiveData(TimerState.INITIALIZED)
     val liveState: LiveData<TimerState> get() = _liveState
 
     private lateinit var timer: CountDownTimer
@@ -26,18 +26,21 @@ class StepTimerModel(
     private val _eventAnimation = MutableLiveData<Event<Unit>>()
     val eventAnimation: LiveData<Event<Unit>> get() = _eventAnimation
 
-    init {
-        resume()
+    fun reset() {
+        timer.cancel()
+        leftMillis = recipeStep.seconds * 1000L
+        _liveState.value = TimerState.INITIALIZED
     }
 
     fun pause() {
-        if (_liveState.value != TimerState.RUNNING) return
         timer.cancel()
         _liveState.value = TimerState.PAUSED
     }
 
     fun resume() {
-        if (_liveState.value != TimerState.PAUSED) return
+        if (_liveState.value != TimerState.PAUSED && _liveState.value != TimerState.INITIALIZED)
+            return
+
         timer = StepTimer(leftMillis, {
             leftMillis = it
         }, {
@@ -52,6 +55,7 @@ class StepTimerModel(
     }
 
     enum class TimerState {
+        INITIALIZED,
         RUNNING,
         PAUSED,
         END

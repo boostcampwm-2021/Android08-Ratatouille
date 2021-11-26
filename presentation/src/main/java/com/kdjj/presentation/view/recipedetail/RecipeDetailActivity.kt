@@ -2,29 +2,30 @@ package com.kdjj.presentation.view.recipedetail
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kdjj.domain.model.*
 import com.kdjj.presentation.R
-import com.kdjj.presentation.common.DisplayConverter
-import com.kdjj.presentation.common.EventObserver
-import com.kdjj.presentation.common.RECIPE_ID
-import com.kdjj.presentation.common.RECIPE_STATE
+import com.kdjj.presentation.common.*
 import com.kdjj.presentation.databinding.ActivityRecipeDetailBinding
+import com.kdjj.presentation.model.StepTimerModel
+import com.kdjj.presentation.services.TimerService
+import com.kdjj.presentation.view.adapter.RecipeDetailLargeStepListAdapter
 import com.kdjj.presentation.view.adapter.RecipeDetailStepListAdapter
 import com.kdjj.presentation.view.adapter.RecipeDetailTimerListAdapter
-import com.kdjj.presentation.view.adapter.RecipeEditorListAdapter
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.view.dialog.CustomProgressDialog
 import com.kdjj.presentation.viewmodel.recipedetail.RecipeDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecipeDetailActivity : AppCompatActivity() {
@@ -35,9 +36,10 @@ class RecipeDetailActivity : AppCompatActivity() {
     private lateinit var loadingDialog: CustomProgressDialog
 
     private lateinit var stepListAdapter: RecipeDetailStepListAdapter
+    private lateinit var largeStepListAdapter: RecipeDetailLargeStepListAdapter
     private lateinit var timerListAdapter: RecipeDetailTimerListAdapter
 
-    @Inject lateinit var displayConverter: DisplayConverter
+    private var isExiting = false
 
     private val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(
         ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT,
@@ -69,11 +71,34 @@ class RecipeDetailActivity : AppCompatActivity() {
         loadingDialog = CustomProgressDialog(this)
 
         stepListAdapter = RecipeDetailStepListAdapter(viewModel)
-        binding.recyclerViewDetailStep.adapter = stepListAdapter
+        binding.recyclerViewDetailStep.apply {
+            adapter = stepListAdapter
+            addItemDecoration(StepDecoration())
+        }
+
+        largeStepListAdapter = RecipeDetailLargeStepListAdapter(viewModel)
+        binding.recyclerViewDetailLargeStep.apply {
+            adapter = largeStepListAdapter
+            addItemDecoration(LargeStepDecoration())
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    val idx = (recyclerView.layoutManager as? LinearLayoutManager)
+                        ?.findFirstCompletelyVisibleItemPosition()
+                        ?: return
+
+                    viewModel.updateCurrentStepTo(idx)
+                }
+            })
+        }
 
         timerListAdapter = RecipeDetailTimerListAdapter(viewModel)
-        binding.recyclerViewDetailTimer.adapter = timerListAdapter
-        ItemTouchHelper(itemTouchCallback).attachToRecyclerView(binding.recyclerViewDetailTimer)
+        binding.recyclerViewDetailTimer.apply {
+            adapter = timerListAdapter
+            ItemTouchHelper(itemTouchCallback).attachToRecyclerView(this)
+            addItemDecoration(TimerDecoration())
+        }
 
         setSupportActionBar(binding.toolbarDetail)
 
@@ -103,12 +128,16 @@ class RecipeDetailActivity : AppCompatActivity() {
         }
 
         viewModel.eventRecipeDetail.observe(this, EventObserver {
-            when(it){
+            when (it) {
                 is RecipeDetailViewModel.RecipeDetailEvent.OpenTimer -> {
                     AnimatorSet().apply {
+                        binding.recyclerViewDetailTimer.visibility = View.VISIBLE
                         playTogether(
                             ObjectAnimator.ofFloat(
-                                binding.recyclerViewDetailTimer, View.TRANSLATION_Y, displayConverter.dpToPx(-50), 0f
+                                binding.recyclerViewDetailTimer,
+                                View.TRANSLATION_Y,
+                                resources.getDimensionPixelSize(R.dimen.detail_timer_animation).toFloat(),
+                                0f,
                             ),
                             ObjectAnimator.ofFloat(
                                 binding.recyclerViewDetailTimer, View.ALPHA, 0f, 1f
@@ -123,7 +152,10 @@ class RecipeDetailActivity : AppCompatActivity() {
                     AnimatorSet().apply {
                         playTogether(
                             ObjectAnimator.ofFloat(
-                                binding.recyclerViewDetailTimer, View.TRANSLATION_Y, 0f, displayConverter.dpToPx(-50)
+                                binding.recyclerViewDetailTimer,
+                                View.TRANSLATION_Y,
+                                0f,
+                                binding.recyclerViewDetailTimer.height.toFloat()
                             ),
                             ObjectAnimator.ofFloat(
                                 binding.recyclerViewDetailTimer, View.ALPHA, 1f, 0f
@@ -132,6 +164,7 @@ class RecipeDetailActivity : AppCompatActivity() {
                         duration = 500
                         doOnEnd { _ ->
                             it.onAnimationEnd()
+                            binding.recyclerViewDetailTimer.visibility = View.GONE
                         }
                         start()
                     }
@@ -148,5 +181,36 @@ class RecipeDetailActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        applicationContext.stopService(Intent(applicationContext, TimerService::class.java))
+    }
+
+    override fun onBackPressed() {
+        isExiting = true
+        super.onBackPressed()
+    }
+
+    override fun onStop() {
+        if (!isExiting) {
+            Intent(applicationContext, TimerService::class.java).also { timerIntent ->
+                timerIntent.action = "ACTION_START"
+                val timerList = viewModel.liveTimerList.value ?: return
+                timerIntent.putExtra("TIMERS",
+                    timerList.filter { it.liveState.value == StepTimerModel.TimerState.RUNNING }.map { timer ->
+                        "${timer.liveLeftSeconds.value ?: 0}:${timer.recipeStep.stepId}:${timer.recipeStep.name}"
+                    }.toTypedArray()
+                )
+                applicationContext.startService(timerIntent)
+            }
+        }
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        applicationContext.stopService(Intent(applicationContext, TimerService::class.java))
+        super.onDestroy()
     }
 }

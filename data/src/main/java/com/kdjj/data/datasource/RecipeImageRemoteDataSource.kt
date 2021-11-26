@@ -3,8 +3,8 @@ package com.kdjj.data.datasource
 interface RecipeImageRemoteDataSource {
     
     suspend fun fetchRecipeImage(
-        uri: String
-    ): Result<ByteArray>
+        uriList: List<String>
+    ): Result<List<ByteArray>>
     
     suspend fun uploadRecipeImage(
         uri: String

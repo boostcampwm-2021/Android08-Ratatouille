@@ -13,8 +13,8 @@ android {
         applicationId "com.kdjj.ratatouille"
         minSdk 23
         targetSdk 31
-        versionCode 5
-        versionName "2.2"
+        versionCode 6
+        versionName "3.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -49,6 +49,12 @@ dependencies {
 
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    implementation 'androidx.hilt:hilt-work:1.0.0'
+    // When using Kotlin.
+    kapt 'androidx.hilt:hilt-compiler:1.0.0'
+
+    implementation "io.grpc:grpc-okhttp:1.32.2"
 
     implementation project(path: ':data')
     implementation project(path: ':domain')

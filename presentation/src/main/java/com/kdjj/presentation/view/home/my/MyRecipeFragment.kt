@@ -1,7 +1,6 @@
 package com.kdjj.presentation.view.home.my
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -16,8 +15,11 @@ import com.kdjj.presentation.R
 import com.kdjj.presentation.common.*
 import com.kdjj.presentation.databinding.FragmentMyRecipeBinding
 import com.kdjj.presentation.view.adapter.MyRecipeListAdapter
+import com.kdjj.presentation.view.dialog.CustomProgressDialog
 import com.kdjj.presentation.viewmodel.my.MyRecipeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -28,9 +30,12 @@ class MyRecipeFragment : Fragment() {
     private val viewModel: MyRecipeViewModel by activityViewModels()
     private val myRecipeAdapter by lazy { MyRecipeListAdapter(viewModel) }
     private val navigation by lazy { Navigation.findNavController(binding.root) }
+    private val compositeDisposable = CompositeDisposable()
 
-    @Inject
-    lateinit var displayConverter: DisplayConverter
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setButtonClickObserver()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,7 +51,7 @@ class MyRecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolBar()
-        setObservers()
+        setEventObserver()
         initSwipeRefreshLayout()
         initRecyclerView()
     }
@@ -67,36 +72,47 @@ class MyRecipeFragment : Fragment() {
         }
     }
 
-    private fun setObservers() {
+    private fun setButtonClickObserver() {
+        viewModel.mySubject
+            .throttleFirst(1, TimeUnit.SECONDS)
+            .subscribe {
+                when (it) {
+                    is MyRecipeViewModel.ButtonClick.AddRecipeHasPressed -> {
+                        navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
+                    }
+                    is MyRecipeViewModel.ButtonClick.DoubleClicked -> {
+                        val bundle = bundleOf(
+                            RECIPE_ID to it.item.recipe.recipeId,
+                            RECIPE_STATE to it.item.recipe.state
+                        )
+                        navigation.navigate(
+                            R.id.action_myRecipeFragment_to_recipeSummaryActivity,
+                            bundle
+                        )
+                    }
+                    is MyRecipeViewModel.ButtonClick.SearchIconClicked -> {
+                        navigation.navigate(R.id.action_myRecipeFragment_to_searchRecipeFragment)
+                    }
+                }
+            }.also {
+                compositeDisposable.add(it)
+            }
+    }
+
+    private fun setEventObserver() {
         viewModel.eventMyRecipe.observe(viewLifecycleOwner, EventObserver {
             when (it) {
-                is MyRecipeViewModel.MyRecipeEvent.AddRecipeHasPressed -> {
-                    navigation.navigate(R.id.action_myRecipeFragment_to_recipeEditorActivity)
-                }
-                is MyRecipeViewModel.MyRecipeEvent.DoubleClicked -> {
-                    val bundle = bundleOf(
-                        RECIPE_ID to it.item.recipe.recipeId,
-                        RECIPE_STATE to it.item.recipe.state
-                    )
-                    navigation.navigate(
-                        R.id.action_myRecipeFragment_to_recipeSummaryActivity,
-                        bundle
-                    )
-                }
                 is MyRecipeViewModel.MyRecipeEvent.DataLoadFailed -> {
                     Snackbar.make(
                         binding.root,
                         getString(R.string.dataLoadFailMessage),
                         Snackbar.LENGTH_LONG
                     )
-                        .setAction(getString(R.string.refresh)) {
-                            viewModel.refreshRecipeList()
-                        }
-                        .setActionTextColor(requireContext().getColor(R.color.blue_500))
-                        .show()
-                }
-                is MyRecipeViewModel.MyRecipeEvent.SearchIconClicked -> {
-                    navigation.navigate(R.id.action_myRecipeFragment_to_searchRecipeFragment)
+                    .setAction(getString(R.string.refresh)) {
+                        viewModel.refreshRecipeList()
+                    }
+                    .setActionTextColor(requireContext().getColor(R.color.blue_500))
+                    .show()
                 }
             }
         })
@@ -120,9 +136,6 @@ class MyRecipeFragment : Fragment() {
             layoutManager = GridLayoutManager(requireContext(), spanCount)
             adapter = myRecipeAdapter
 
-            val space = resources.getDimensionPixelSize(R.dimen.myRecipe_space_size)
-            addItemDecoration(SpacesItemDecoration(space))
-
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
@@ -140,5 +153,10 @@ class MyRecipeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.dispose()
+        super.onDestroy()
     }
 }

@@ -1,5 +1,7 @@
 package com.kdjj.presentation.view.recipesummary
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -15,12 +17,15 @@ import com.kdjj.presentation.common.RECIPE_ID
 import com.kdjj.presentation.common.RECIPE_STATE
 import com.kdjj.presentation.databinding.ActivityRecipeSummaryBinding
 import com.kdjj.presentation.model.RecipeSummaryType
+import com.kdjj.presentation.model.UpdateFavoriteResult
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.view.dialog.CustomProgressDialog
 import com.kdjj.presentation.view.recipedetail.RecipeDetailActivity
 import com.kdjj.presentation.view.recipeeditor.RecipeEditorActivity
 import com.kdjj.presentation.viewmodel.recipesummary.RecipeSummaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class RecipeSummaryActivity : AppCompatActivity() {
@@ -53,6 +58,8 @@ class RecipeSummaryActivity : AppCompatActivity() {
 
     private lateinit var loadingDialog: CustomProgressDialog
 
+    private val compositeDisposable = CompositeDisposable()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -65,11 +72,12 @@ class RecipeSummaryActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbarSummary)
 
         initViewModel()
-        initObserver()
-        initEventObserver()
+        initObservers()
+        setEventObservers()
+        setButtonClickObserver()
     }
 
-    private fun initObserver() = with(recipeSummaryViewModel) {
+    private fun initObservers() = with(recipeSummaryViewModel) {
 
         liveRecipe.observe(this@RecipeSummaryActivity) { recipe ->
             title = recipe.title
@@ -87,25 +95,68 @@ class RecipeSummaryActivity : AppCompatActivity() {
         liveFabState.observe(this@RecipeSummaryActivity) { (recipeSummaryType, isFabOpen) ->
             val buttonList = floatingMenuIdListMap[recipeSummaryType]
             if (!isInitializeFab) {
+                binding.groupSummaryFabMenu.alpha = 0.0f
                 binding.groupSummaryFabMenu.visibility = View.GONE
-                buttonList?.forEach { button ->
-                    button.visibility = View.VISIBLE
-                }
                 isInitializeFab = true
             }
             if (isFabOpen) {
                 buttonList?.forEachIndexed { index, button ->
-                    button.animate().alpha(1.0f).duration = 80L * index
+                    button.animate()
+                        .alpha(1.0f)
+                        .setDuration(80L * index)
+                        .setListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationStart(animation: Animator?) {
+                                button.visibility = View.VISIBLE
+                            }
+                        })
                 }
             } else {
                 buttonList?.reversed()?.forEachIndexed { index, button ->
-                    button.animate().alpha(0.0f).duration = 80L * index
+                    button.animate()
+                        .alpha(0.0f)
+                        .setDuration(80L * index)
+                        .setListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator?) {
+                                button.visibility = View.GONE
+                            }
+                        })
                 }
             }
         }
     }
 
-    private fun initEventObserver() = with(recipeSummaryViewModel) {
+    private fun setButtonClickObserver() = with(recipeSummaryViewModel) {
+        summarySubject.throttleFirst(1, TimeUnit.SECONDS)
+            .subscribe {
+                when (it) {
+                    is RecipeSummaryViewModel.ButtonClick.OpenRecipeDetail -> {
+                        val intent = Intent(
+                            this@RecipeSummaryActivity,
+                            RecipeDetailActivity::class.java
+                        ).apply {
+                            putExtra(RECIPE_ID, it.item.recipeId)
+                            putExtra(RECIPE_STATE, it.item.state)
+                        }
+                        startActivity(intent)
+                    }
+
+                    is RecipeSummaryViewModel.ButtonClick.OpenRecipeEditor -> {
+                        val intent = Intent(
+                            this@RecipeSummaryActivity,
+                            RecipeEditorActivity::class.java
+                        ).apply {
+                            putExtra(RECIPE_ID, it.item.recipeId)
+                            putExtra(RECIPE_STATE, it.item.state)
+                        }
+                        startActivity(intent)
+                    }
+                }
+            }.also {
+                compositeDisposable.add(it)
+            }
+    }
+
+    private fun setEventObservers() = with(recipeSummaryViewModel) {
         eventRecipeSummary.observe(this@RecipeSummaryActivity, EventObserver {
             when (it) {
                 is RecipeSummaryViewModel.RecipeSummaryEvent.LoadError -> {
@@ -118,26 +169,15 @@ class RecipeSummaryActivity : AppCompatActivity() {
                     }
                 }
 
-                is RecipeSummaryViewModel.RecipeSummaryEvent.OpenRecipeDetail -> {
-                    val intent = Intent(
-                        this@RecipeSummaryActivity,
-                        RecipeDetailActivity::class.java
-                    ).apply {
-                        putExtra(RECIPE_ID, it.item.recipeId)
-                        putExtra(RECIPE_STATE, it.item.state)
-                    }
-                    startActivity(intent)
-                }
-
-                is RecipeSummaryViewModel.RecipeSummaryEvent.OpenRecipeEditor -> {
-                    val intent = Intent(
-                        this@RecipeSummaryActivity,
-                        RecipeEditorActivity::class.java
-                    ).apply {
-                        putExtra(RECIPE_ID, it.item.recipeId)
-                        putExtra(RECIPE_STATE, it.item.state)
-                    }
-                    startActivity(intent)
+                RecipeSummaryViewModel.RecipeSummaryEvent.DeleteConfirm -> {
+                    ConfirmDialogBuilder.create(
+                        context = this@RecipeSummaryActivity,
+                        title = "삭제 확인",
+                        content = "레시피를 삭제하면 다시 볼 수 없습니다.\n정말 삭제하시겠습니까?",
+                        showCancel = true,
+                        onCancelListener = null,
+                        onConfirmListener = { recipeSummaryViewModel.deleteRecipe() }
+                    )
                 }
 
                 is RecipeSummaryViewModel.RecipeSummaryEvent.DeleteFinish -> {
@@ -165,7 +205,11 @@ class RecipeSummaryActivity : AppCompatActivity() {
                 }
 
                 is RecipeSummaryViewModel.RecipeSummaryEvent.UpdateFavoriteFinish -> {
-                    val message = if (it.flag) "즐겨찾기 추가 / 제거 성공" else "즐겨찾기 추가 / 제거 실패"
+                    val message = when (it.result) {
+                        UpdateFavoriteResult.ADD -> "즐겨찾기 추가 성공"
+                        UpdateFavoriteResult.REMOVE -> "즐겨찾기 제거 성공"
+                        UpdateFavoriteResult.ERROR -> "즐겨찾기 변경 실패"
+                    }
                     showSnackBar(message)
                 }
             }
@@ -180,11 +224,16 @@ class RecipeSummaryActivity : AppCompatActivity() {
         }
     }
 
-    fun showSnackBar(message: String) {
+    private fun showSnackBar(message: String) {
         Snackbar.make(
             binding.root,
             message,
             Snackbar.LENGTH_LONG
         ).show()
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.dispose()
+        super.onDestroy()
     }
 }

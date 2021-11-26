@@ -14,6 +14,6 @@ class TextRadioButton : AppCompatRadioButton {
     override fun setChecked(checked: Boolean) {
         super.setChecked(checked)
         setTypeface(null, if (checked) Typeface.BOLD else Typeface.NORMAL)
-        if(checked) setTextColor(context.getColor(R.color.blue_600)) else setTextColor(context.getColor(R.color.dark_500))
+        if(checked) setTextColor(context.getColor(R.color.dark_500)) else setTextColor(context.getColor(R.color.dark_400))
     }
 }

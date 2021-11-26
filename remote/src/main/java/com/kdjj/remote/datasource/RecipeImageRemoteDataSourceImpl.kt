@@ -9,9 +9,9 @@ internal class RecipeImageRemoteDataSourceImpl @Inject constructor(
 ) : RecipeImageRemoteDataSource {
     
     override suspend fun fetchRecipeImage(
-        uri: String
-    ): Result<ByteArray> {
-        return firebaseStorageService.fetchRecipeImage(uri)
+        uriList: List<String>
+    ): Result<List<ByteArray>> {
+        return firebaseStorageService.fetchRecipeImage(uriList)
     }
     
     override suspend fun uploadRecipeImage(

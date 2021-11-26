@@ -1,13 +1,7 @@
 package com.kdjj.data.di
 
-import com.kdjj.data.repository.RecipeImageRepositoryImpl
-import com.kdjj.data.repository.RecipeListRepositoryImpl
-import com.kdjj.data.repository.RecipeRepositoryImpl
-import com.kdjj.data.repository.RecipeTypeRepositoryImpl
-import com.kdjj.domain.repository.RecipeImageRepository
-import com.kdjj.domain.repository.RecipeListRepository
-import com.kdjj.domain.repository.RecipeRepository
-import com.kdjj.domain.repository.RecipeTypeRepository
+import com.kdjj.data.repository.*
+import com.kdjj.domain.repository.*
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
@@ -38,4 +32,10 @@ abstract class RepositoryModule {
     internal abstract fun bindRecipeImageRepository(
         recipeImageRepositoryImpl: RecipeImageRepositoryImpl
     ): RecipeImageRepository
+
+    @Binds
+    @Singleton
+    internal abstract fun bindRecipeTempRepository(
+        recipeTempRepositoryImpl: RecipeTempRepositoryImpl
+    ): RecipeTempRepository
 }

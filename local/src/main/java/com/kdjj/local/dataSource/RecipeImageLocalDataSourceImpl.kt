@@ -1,25 +1,41 @@
 package com.kdjj.local.dataSource
 
 import com.kdjj.data.datasource.RecipeImageLocalDataSource
-import com.kdjj.local.FileSaveHelper
+import com.kdjj.local.ImageFileHelper
+import com.kdjj.local.dao.UselessImageDao
+import com.kdjj.local.dto.UselessImageDto
 import javax.inject.Inject
 
 internal class RecipeImageLocalDataSourceImpl @Inject constructor(
-    private val fileSaveHelper: FileSaveHelper,
+    private val imageFileHelper: ImageFileHelper,
+    private val uselessImageDao: UselessImageDao
 ) : RecipeImageLocalDataSource {
 
     override suspend fun convertToByteArray(
-        uri: String
-    ): Result<Pair<ByteArray, Float?>> {
-        return fileSaveHelper.convertToByteArray(uri)
+        uriList: List<String>
+    ): Result<List<Pair<ByteArray, Float?>>> {
+        return imageFileHelper.convertToByteArray(uriList)
     }
 
     override suspend fun convertToInternalStorageUri(
-        byteArray: ByteArray,
-        fileName: String,
-        degree: Float?
-    ): Result<String> {
-        return fileSaveHelper.convertToInternalStorageUri(byteArray, fileName, degree)
+        byteArrayList: List<ByteArray>,
+        fileNameList: List<String>,
+        degreeList: List<Float?>
+    ): Result<List<String>> {
+        return imageFileHelper.convertToInternalStorageUri(byteArrayList, fileNameList, degreeList)
     }
+
+    override fun isUriExists(
+        uri: String
+    ): Boolean = imageFileHelper.isUriExists(uri)
+
+    override suspend fun deleteUselessImages(): Result<Unit> =
+        runCatching {
+            uselessImageDao.getAllUselessImage()
+                .forEach {
+                    imageFileHelper.deleteImageFile(it.imgPath)
+                    uselessImageDao.deleteUselessImage(UselessImageDto(it.imgPath))
+                }
+        }
 }
 
