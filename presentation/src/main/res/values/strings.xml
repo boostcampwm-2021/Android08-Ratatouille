@@ -83,5 +83,6 @@
     <string name="steal_favorite">훔쳐와서 즐겨찾기 등록</string>
     <string name="timerButton">타이머 버튼</string>
     <string name="recipeType">레시피 종류</string>
+    <string name="savingTemp">임시저장 중</string>
 
 </resources>

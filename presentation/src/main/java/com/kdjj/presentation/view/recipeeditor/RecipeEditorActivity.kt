@@ -256,11 +256,6 @@ class RecipeEditorActivity : AppCompatActivity() {
         )
     }
 
-    override fun onPause() {
-        viewModel.saveTempRecipe()
-        super.onPause()
-    }
-
     override fun onBackPressed() {
         viewModel.showExitDialog()
     }
