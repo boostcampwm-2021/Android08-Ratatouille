@@ -108,7 +108,6 @@ class SearchRecipeFragment : Fragment() {
             }
         }
             .debounce(500, TimeUnit.MILLISECONDS)
-            .subscribeOn(AndroidSchedulers.mainThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 viewModel.updateSearchKeyword()
