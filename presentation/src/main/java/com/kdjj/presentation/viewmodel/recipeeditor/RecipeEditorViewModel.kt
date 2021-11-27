@@ -225,7 +225,11 @@ internal class RecipeEditorViewModel @Inject constructor(
     }
 
     fun showExitDialog() {
-        _eventRecipeEditor.value = Event(RecipeEditorEvent.ExitDialog)
+        if (didEdit) {
+            _eventRecipeEditor.value = Event(RecipeEditorEvent.ExitDialog)
+        } else {
+            _eventRecipeEditor.value = Event(RecipeEditorEvent.Exit)
+        }
     }
 
     fun deleteTemp() {
@@ -297,6 +301,10 @@ internal class RecipeEditorViewModel @Inject constructor(
     private fun saveRecipe() {
         _liveRegisterHasPressed.value = true
         if (isRecipeValid()) {
+            if (!didEdit) {
+                _eventRecipeEditor.value = Event(RecipeEditorEvent.SaveResult(true))
+                return
+            }
             _liveLoading.value = true
             viewModelScope.launch {
                 val recipe = recipeMetaModel.toDomain(
