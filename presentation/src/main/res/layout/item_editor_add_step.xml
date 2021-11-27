@@ -18,7 +18,8 @@
         android:layout_marginTop="@dimen/editor_step_marginTop"
         android:layout_marginEnd="@dimen/editor_step_marginHorizontal"
         android:layout_marginBottom="@dimen/bottomButton_space"
-        app:cardBackgroundColor="@color/light_300">
+        app:cardBackgroundColor="@color/light_300"
+        app:cardCornerRadius="@dimen/editor_card_corner" >
 
         <ImageView
             android:id="@+id/imageView_btn_addStep"

@@ -22,7 +22,8 @@
         android:layout_marginTop="@dimen/editor_step_marginTop"
         android:layout_marginStart="@dimen/editor_step_marginHorizontal"
         android:layout_marginEnd="@dimen/editor_step_marginHorizontal"
-        app:cardBackgroundColor="@color/light_300">
+        app:cardBackgroundColor="@color/light_300"
+        app:cardCornerRadius="@dimen/editor_card_corner" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
