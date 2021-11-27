@@ -22,6 +22,7 @@ import com.kdjj.presentation.services.TimerService
 import com.kdjj.presentation.view.adapter.RecipeDetailLargeStepListAdapter
 import com.kdjj.presentation.view.adapter.RecipeDetailStepListAdapter
 import com.kdjj.presentation.view.adapter.RecipeDetailTimerListAdapter
+import com.kdjj.presentation.view.bindingadapter.moveTo
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.view.dialog.CustomProgressDialog
 import com.kdjj.presentation.viewmodel.recipedetail.RecipeDetailViewModel
@@ -127,8 +128,8 @@ class RecipeDetailActivity : AppCompatActivity() {
             title = it
         }
 
-        viewModel.eventRecipeDetail.observe(this, EventObserver {
-            when (it) {
+        viewModel.eventRecipeDetail.observe(this, EventObserver { event ->
+            when (event) {
                 is RecipeDetailViewModel.RecipeDetailEvent.OpenTimer -> {
                     AnimatorSet().apply {
                         binding.recyclerViewDetailTimer.visibility = View.VISIBLE
@@ -147,7 +148,6 @@ class RecipeDetailActivity : AppCompatActivity() {
                         start()
                     }
                 }
-
                 is RecipeDetailViewModel.RecipeDetailEvent.CloseTimer -> {
                     AnimatorSet().apply {
                         playTogether(
@@ -163,13 +163,12 @@ class RecipeDetailActivity : AppCompatActivity() {
                         )
                         duration = 500
                         doOnEnd { _ ->
-                            it.onAnimationEnd()
+                            event.onAnimationEnd()
                             binding.recyclerViewDetailTimer.visibility = View.GONE
                         }
                         start()
                     }
                 }
-
                 is RecipeDetailViewModel.RecipeDetailEvent.Error -> {
                     ConfirmDialogBuilder.create(
                         this,
@@ -178,6 +177,15 @@ class RecipeDetailActivity : AppCompatActivity() {
                     ) {
                         finish()
                     }
+                }
+                is RecipeDetailViewModel.RecipeDetailEvent.MoveToStep -> {
+                    binding.recyclerViewDetailLargeStep.moveTo(event.idx)
+                }
+                is RecipeDetailViewModel.RecipeDetailEvent.MoveToStepBar -> {
+                    binding.recyclerViewDetailStep.moveTo(event.idx)
+                }
+                is RecipeDetailViewModel.RecipeDetailEvent.MoveToTimer -> {
+                    binding.recyclerViewDetailTimer.moveTo(event.idx)
                 }
             }
         })

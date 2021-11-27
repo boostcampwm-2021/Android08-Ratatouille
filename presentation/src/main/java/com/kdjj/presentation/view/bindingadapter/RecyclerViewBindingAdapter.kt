@@ -20,7 +20,7 @@ fun <T, VH : RecyclerView.ViewHolder> RecyclerView.submitList(list: List<T>?, ca
 }
 
 @BindingAdapter("app:moveTo")
-fun <T, VH : RecyclerView.ViewHolder> RecyclerView.moveTo(i: Int?) {
+fun RecyclerView.moveTo(i: Int?) {
     val scroller = (tag as? LinearSmoothScroller) ?: object : LinearSmoothScroller(context) {
         override fun getVerticalSnapPreference(): Int = SNAP_TO_START
     }.also {

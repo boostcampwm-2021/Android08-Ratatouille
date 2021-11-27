@@ -27,7 +27,9 @@ class RecipeDetailViewModel @Inject constructor(
         stepList.map { step ->
             StepTimerModel(step) {
                 ringtone.play()
-                _liveFinishedTimerPosition.value = _liveTimerList.value?.indexOf(it)
+                _liveTimerList.value?.indexOf(it)?.let { idx ->
+                    _eventRecipeDetail.value = Event(RecipeDetailEvent.MoveToTimer(idx))
+                }
                 it.startAnimation()
             }
         }
@@ -38,15 +40,6 @@ class RecipeDetailViewModel @Inject constructor(
 
     private val _liveStepBarSelected = MutableLiveData<RecipeStep>()
     val liveStepBarSelected: LiveData<RecipeStep> get() = _liveStepBarSelected
-
-    private val _liveMoveStepBarToIdx = MutableLiveData<Int>()
-    val liveMoveStepBarToIdx: LiveData<Int> get() = _liveMoveStepBarToIdx
-
-    private val _liveMoveToIdx = MutableLiveData<Int>()
-    val liveMoveToIdx: LiveData<Int> get() = _liveMoveToIdx
-
-    private var _liveFinishedTimerPosition = MutableLiveData<Int>()
-    val liveFinishedTimerPosition: LiveData<Int> get() = _liveFinishedTimerPosition
 
     private val _liveLoading = MutableLiveData(false)
     val liveLoading: LiveData<Boolean> get() = _liveLoading
@@ -60,9 +53,12 @@ class RecipeDetailViewModel @Inject constructor(
     val eventRecipeDetail: LiveData<Event<RecipeDetailEvent>> get() = _eventRecipeDetail
 
     sealed class RecipeDetailEvent {
-        object OpenTimer: RecipeDetailEvent()
-        class CloseTimer(val onAnimationEnd: () -> Unit): RecipeDetailEvent()
-        object Error: RecipeDetailEvent()
+        class MoveToStepBar(val idx: Int) : RecipeDetailEvent()
+        class MoveToStep(val idx: Int) : RecipeDetailEvent()
+        class MoveToTimer(val idx: Int) : RecipeDetailEvent()
+        object OpenTimer : RecipeDetailEvent()
+        class CloseTimer(val onAnimationEnd: () -> Unit) : RecipeDetailEvent()
+        object Error : RecipeDetailEvent()
     }
 
     fun initializeWith(recipeId: String?, state: RecipeState?) {
@@ -94,14 +90,16 @@ class RecipeDetailViewModel @Inject constructor(
     }
 
     fun scrollToStep(step: RecipeStep) {
-        _liveMoveToIdx.value = _liveStepList.value?.indexOf(step)
+        _liveStepList.value?.indexOf(step)?.let { idx ->
+            _eventRecipeDetail.value = Event(RecipeDetailEvent.MoveToStep(idx))
+        }
     }
 
     fun updateCurrentStepTo(idx: Int) {
         val step = _liveStepList.value?.getOrNull(idx) ?: return
         if (_liveStepBarSelected.value?.stepId != step.stepId) {
             _liveStepBarSelected.value = step
-            _liveMoveStepBarToIdx.value = idx
+            _eventRecipeDetail.value = Event(RecipeDetailEvent.MoveToStepBar(idx))
         }
     }
 
