@@ -73,6 +73,8 @@ internal class RecipeEditorViewModel @Inject constructor(
         class SaveResult(val isSuccess: Boolean) : RecipeEditorEvent()
         class TempDialog(val recipeId: String) : RecipeEditorEvent()
         object Error : RecipeEditorEvent()
+        object ExitDialog : RecipeEditorEvent()
+        object Exit : RecipeEditorEvent()
     }
 
     private lateinit var tempRecipe: Recipe
@@ -200,11 +202,18 @@ internal class RecipeEditorViewModel @Inject constructor(
         }
     }
 
-    fun stopAndDeleteTemp() {
+    fun showExitDialog() {
+        _eventRecipeEditor.value = Event(RecipeEditorEvent.ExitDialog)
+    }
+
+    fun deleteTemp() {
         tempJob?.cancel()
         doSaveTemp = false
+        _liveLoading.value = true
         viewModelScope.launch {
             deleteRecipeTempUseCase(DeleteRecipeTempRequest(recipeMetaModel.recipeId))
+            _liveLoading.value = false
+            _eventRecipeEditor.value = Event(RecipeEditorEvent.Exit)
         }
     }
 
@@ -276,7 +285,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                     if (recipe.state == RecipeState.UPLOAD) registerUploadTask(recipe.recipeId)
                     _eventRecipeEditor.value =
                         Event(RecipeEditorEvent.SaveResult(true))
-                    stopAndDeleteTemp()
+                    deleteTemp()
                 }.onFailure {
                     _eventRecipeEditor.value =
                         Event(RecipeEditorEvent.SaveResult(false))
