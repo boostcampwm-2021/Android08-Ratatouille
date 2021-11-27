@@ -69,6 +69,7 @@ internal class RecipeEditorViewModel @Inject constructor(
     val eventRecipeEditor: LiveData<Event<RecipeEditorEvent>> get() = _eventRecipeEditor
 
     sealed class RecipeEditorEvent {
+        class MoveToPosition(val idx: Int) : RecipeEditorEvent()
         class SaveResult(val isSuccess: Boolean) : RecipeEditorEvent()
         class TempDialog(val recipeId: String) : RecipeEditorEvent()
         object Error : RecipeEditorEvent()
@@ -277,7 +278,9 @@ internal class RecipeEditorViewModel @Inject constructor(
     private fun addRecipeStep() {
         _liveStepModelList.value = (_liveStepModelList.value ?: listOf()) +
                 RecipeEditorItem.RecipeStepModel.create(recipeStepValidator)
-        _liveMoveToPosition.value = (_liveStepModelList.value?.size ?: 0) + 2
+        _eventRecipeEditor.value = Event(
+            RecipeEditorEvent.MoveToPosition((_liveStepModelList.value?.size ?: 0) + 2)
+        )
         doEdit()
     }
 
@@ -348,7 +351,7 @@ internal class RecipeEditorViewModel @Inject constructor(
             !recipeValidator.validateTitle(recipeMetaModel.liveTitle.value ?: "") ||
             !recipeValidator.validateStuff(recipeMetaModel.liveStuff.value ?: "")
         ) {
-            _liveMoveToPosition.value = 0
+            _eventRecipeEditor.value = Event(RecipeEditorEvent.MoveToPosition(0))
             return false
         }
 
@@ -359,7 +362,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                 !recipeStepValidator.validateMinutes(stepModel.liveTimerMin.value ?: 0) ||
                 !recipeStepValidator.validateSeconds(stepModel.liveTimerSec.value ?: 0)
             ) {
-                _liveMoveToPosition.value = i + 1
+                _eventRecipeEditor.value = Event(RecipeEditorEvent.MoveToPosition(i + 1))
                 return false
             }
         }
