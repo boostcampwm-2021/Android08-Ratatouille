@@ -180,6 +180,19 @@ class RecipeEditorActivity : AppCompatActivity() {
                         viewModel.showRecipeFromTemp()
                     }
                 }
+                is RecipeEditorViewModel.RecipeEditorEvent.ExitDialog -> {
+                    ConfirmDialogBuilder.create(
+                        this,
+                        "나가기",
+                        "변경 사항을 저장하지 않고 나가시겠습니까?",
+                        true,
+                    ) {
+                        viewModel.deleteTemp()
+                    }
+                }
+                is RecipeEditorViewModel.RecipeEditorEvent.Exit -> {
+                    finish()
+                }
             }
         })
     }
@@ -249,14 +262,6 @@ class RecipeEditorActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        ConfirmDialogBuilder.create(
-            this,
-            "나가기",
-            "변경 사항을 저장하지 않고 나가시겠습니까?",
-            true,
-        ) {
-            viewModel.stopAndDeleteTemp()
-            super.onBackPressed()
-        }
+        viewModel.showExitDialog()
     }
 }
