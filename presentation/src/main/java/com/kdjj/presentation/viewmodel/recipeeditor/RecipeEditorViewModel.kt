@@ -18,7 +18,6 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.coroutines.Job
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -232,14 +231,16 @@ internal class RecipeEditorViewModel @Inject constructor(
         }
     }
 
-    fun deleteTemp() {
+    fun deleteTemp(finish: Boolean) {
         tempJob?.cancel()
         _liveTempLoading.value = false
         _liveLoading.value = true
         viewModelScope.launch {
             deleteRecipeTempUseCase(DeleteRecipeTempRequest(recipeMetaModel.recipeId))
             _liveLoading.value = false
-            _eventRecipeEditor.value = Event(RecipeEditorEvent.Exit)
+            if (finish) {
+                _eventRecipeEditor.value = Event(RecipeEditorEvent.Exit)
+            }
         }
     }
 
@@ -319,11 +320,10 @@ internal class RecipeEditorViewModel @Inject constructor(
                     if (recipe.state == RecipeState.UPLOAD) registerUploadTask(recipe.recipeId)
                     _eventRecipeEditor.value =
                         Event(RecipeEditorEvent.SaveResult(true))
-                    deleteTemp()
+                    deleteTemp(false)
                 }.onFailure {
                     _eventRecipeEditor.value =
                         Event(RecipeEditorEvent.SaveResult(false))
-
                 }
                 _liveLoading.value = false
             }
