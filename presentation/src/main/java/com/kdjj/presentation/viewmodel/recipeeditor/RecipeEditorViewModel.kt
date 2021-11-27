@@ -96,7 +96,6 @@ internal class RecipeEditorViewModel @Inject constructor(
     init {
         editorSubject.throttleFirst(1, TimeUnit.SECONDS)
             .subscribe {
-                println(Thread.currentThread())
                 when (it) {
                     ButtonClick.SAVE -> {
                         saveRecipe()
