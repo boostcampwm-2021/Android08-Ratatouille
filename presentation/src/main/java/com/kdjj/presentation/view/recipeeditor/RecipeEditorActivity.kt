@@ -18,6 +18,7 @@ import com.kdjj.presentation.common.EventObserver
 import com.kdjj.presentation.common.RECIPE_ID
 import com.kdjj.presentation.databinding.ActivityRecipeEditorBinding
 import com.kdjj.presentation.view.adapter.RecipeEditorListAdapter
+import com.kdjj.presentation.view.bindingadapter.moveTo
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.view.dialog.CustomProgressDialog
 import com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel
@@ -192,6 +193,9 @@ class RecipeEditorActivity : AppCompatActivity() {
                 }
                 is RecipeEditorViewModel.RecipeEditorEvent.Exit -> {
                     finish()
+                }
+                is RecipeEditorViewModel.RecipeEditorEvent.MoveToPosition -> {
+                    binding.recyclerViewEditor.moveTo(event.idx)
                 }
             }
         })
