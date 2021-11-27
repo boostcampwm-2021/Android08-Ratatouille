@@ -9,6 +9,8 @@
         <variable
             name="viewModel"
             type="com.kdjj.presentation.viewmodel.recipeeditor.RecipeEditorViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,6 +26,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView_editor_tempLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/savingTemp"
+            android:textSize="@dimen/editor_tempLoading_textSize"
+            android:textColor="@color/light_500"
+            android:layout_marginEnd="@dimen/editor_step_marginHorizontal"
+            app:layout_constraintTop_toTopOf="@id/toolbar_editor"
+            app:layout_constraintBottom_toBottomOf="@id/toolbar_editor"
+            app:layout_constraintEnd_toEndOf="@id/toolbar_editor" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_editor_tempLoading"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="@{viewModel.liveTempLoading ? View.VISIBLE : View.GONE}"
+            app:constraint_referenced_ids="progressBar_editor_tempLoading, textView_editor_tempLoading" />
+
+        <ProgressBar
+            android:id="@+id/progressBar_editor_tempLoading"
+            android:layout_width="@dimen/editor_tempLoading_textSize"
+            android:layout_height="@dimen/editor_tempLoading_textSize"
+            android:indeterminateTint="@color/light_500"
+            android:layout_marginEnd="@dimen/editor_tempProgress_marginEnd"
+            app:layout_constraintTop_toTopOf="@id/textView_editor_tempLoading"
+            app:layout_constraintBottom_toBottomOf="@id/textView_editor_tempLoading"
+            app:layout_constraintEnd_toStartOf="@id/textView_editor_tempLoading" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_editor"

@@ -14,9 +14,11 @@ import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.model.toDomain
 import com.kdjj.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.coroutines.Job
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -67,8 +69,6 @@ internal class RecipeEditorViewModel @Inject constructor(
     private val _eventRecipeEditor = MutableLiveData<Event<RecipeEditorEvent>>()
     val eventRecipeEditor: LiveData<Event<RecipeEditorEvent>> get() = _eventRecipeEditor
 
-    private var doSaveTemp = true
-
     sealed class RecipeEditorEvent {
         class SaveResult(val isSuccess: Boolean) : RecipeEditorEvent()
         class TempDialog(val recipeId: String) : RecipeEditorEvent()
@@ -88,9 +88,16 @@ internal class RecipeEditorViewModel @Inject constructor(
     private val compositeDisposable = CompositeDisposable()
     val editorSubject: PublishSubject<ButtonClick> = PublishSubject.create()
 
+    private val tempSubject: PublishSubject<Unit> = PublishSubject.create()
+    private var didEdit = false
+
+    private val _liveTempLoading = MutableLiveData(false)
+    val liveTempLoading: LiveData<Boolean> get() = _liveTempLoading
+
     init {
         editorSubject.throttleFirst(1, TimeUnit.SECONDS)
             .subscribe {
+                println(Thread.currentThread())
                 when (it) {
                     ButtonClick.SAVE -> {
                         saveRecipe()
@@ -104,6 +111,20 @@ internal class RecipeEditorViewModel @Inject constructor(
             .also {
                 compositeDisposable.add(it)
             }
+
+        tempSubject.debounce(3, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                saveTempRecipe()
+            }
+            .also {
+                compositeDisposable.add(it)
+            }
+    }
+
+    fun doEdit() {
+        didEdit = true
+        tempSubject.onNext(Unit)
     }
 
     fun initializeWith(loadingRecipeId: String?) {
@@ -173,6 +194,7 @@ internal class RecipeEditorViewModel @Inject constructor(
         viewModelScope.launch {
             deleteRecipeTempUseCase(DeleteRecipeTempRequest(NEW_ID))
         }
+        isInitialized = true
     }
 
     private suspend fun loadFromLocal(recipeId: String) {
@@ -189,9 +211,8 @@ internal class RecipeEditorViewModel @Inject constructor(
             }
     }
 
-    fun saveTempRecipe() {
-        if (!doSaveTemp) return
-
+    private fun saveTempRecipe() {
+        _liveTempLoading.value = true
         tempJob?.cancel()
         tempJob = viewModelScope.launch {
             val recipe = recipeMetaModel.toDomain(
@@ -199,6 +220,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                 liveRecipeTypes.value ?: listOf()
             )
             saveRecipeTempUseCase(SaveRecipeTempRequest(recipe))
+            _liveTempLoading.value = false
         }
     }
 
@@ -208,7 +230,7 @@ internal class RecipeEditorViewModel @Inject constructor(
 
     fun deleteTemp() {
         tempJob?.cancel()
-        doSaveTemp = false
+        _liveTempLoading.value = false
         _liveLoading.value = true
         viewModelScope.launch {
             deleteRecipeTempUseCase(DeleteRecipeTempRequest(recipeMetaModel.recipeId))
@@ -229,6 +251,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                 is RecipeEditorItem.RecipeStepModel ->
                     model.liveImgPath.value = uri
             }
+            doEdit()
         }
         _liveImgTarget.value = null
     }
@@ -251,12 +274,14 @@ internal class RecipeEditorViewModel @Inject constructor(
         _liveStepModelList.value = (_liveStepModelList.value ?: listOf()) +
                 RecipeEditorItem.RecipeStepModel.create(recipeStepValidator)
         _liveMoveToPosition.value = (_liveStepModelList.value?.size ?: 0) + 2
+        doEdit()
     }
 
     fun removeRecipeStep(position: Int) {
         _liveStepModelList.value?.let { modelList ->
             _liveStepModelList.value = modelList.subList(0, position - 1) +
                     modelList.subList(position, modelList.size)
+            doEdit()
         }
     }
 
@@ -265,6 +290,7 @@ internal class RecipeEditorViewModel @Inject constructor(
             _liveStepModelList.value = modelList.toMutableList().apply {
                 set(from - 1, set(to - 1, get(from - 1)))
             }
+            doEdit()
         }
     }
 
