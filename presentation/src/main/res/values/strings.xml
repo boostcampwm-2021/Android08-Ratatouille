@@ -9,6 +9,7 @@
     <string name="timerEndContent">%s 타이머가 종료되었습니다. 클릭해서 레시피로 돌아가세요!</string>
 
     <string name="addRecipe">레시피 추가</string>
+    <string name="editRecipe">레시피 수정</string>
     <string name="recipeImage">레시피 이미지</string>
     <string name="title">제목</string>
     <string name="type">종류</string>
