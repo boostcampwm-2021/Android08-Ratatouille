@@ -53,6 +53,9 @@ class SearchViewModel @Inject constructor(
     private val _eventSearchRecipe = MutableLiveData<Event<SearchRecipeEvent>>()
     val eventSearchRecipe: LiveData<Event<SearchRecipeEvent>> get() = _eventSearchRecipe
 
+    private val _liveNoResult = MutableLiveData(false)
+    val liveNoResult: LiveData<Boolean> get() = _liveNoResult
+
     val searchSubject: PublishSubject<ButtonClick> = PublishSubject.create()
 
     sealed class SearchRecipeEvent {
@@ -89,6 +92,7 @@ class SearchViewModel @Inject constructor(
         isFetching = true
 
         _liveResultList.value = listOf()
+        _liveNoResult.value = false
         if (liveKeyword.value?.isNotBlank() != true) {
             isFetching = false
             return
@@ -104,6 +108,9 @@ class SearchViewModel @Inject constructor(
                         )
                     )
                         .onSuccess {
+                            if (it.isEmpty()) {
+                                _liveNoResult.value = true
+                            }
                             _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
                         }
                         .onFailure { t ->
@@ -118,6 +125,9 @@ class SearchViewModel @Inject constructor(
                         )
                     )
                         .onSuccess {
+                            if (it.isEmpty()) {
+                                _liveNoResult.value = true
+                            }
                             _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
                         }
                         .onFailure { t ->
