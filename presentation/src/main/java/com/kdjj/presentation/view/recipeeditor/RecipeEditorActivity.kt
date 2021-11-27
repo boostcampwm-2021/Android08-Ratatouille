@@ -187,7 +187,7 @@ class RecipeEditorActivity : AppCompatActivity() {
                         "변경 사항을 저장하지 않고 나가시겠습니까?",
                         true,
                     ) {
-                        viewModel.deleteTemp()
+                        viewModel.deleteTemp(true)
                     }
                 }
                 is RecipeEditorViewModel.RecipeEditorEvent.Exit -> {
