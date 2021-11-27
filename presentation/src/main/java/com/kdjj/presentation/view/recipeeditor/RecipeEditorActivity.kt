@@ -106,7 +106,6 @@ class RecipeEditorActivity : AppCompatActivity() {
         loadingDialog = CustomProgressDialog(this)
 
         setSupportActionBar(binding.toolbarEditor)
-        setTitle(R.string.addRecipe)
 
         val adapter = RecipeEditorListAdapter(viewModel)
         binding.recyclerViewEditor.adapter = adapter
@@ -123,6 +122,10 @@ class RecipeEditorActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
+
+        viewModel.liveEditing.observe(this) { isEditing ->
+            setTitle(if (isEditing) R.string.editRecipe else R.string.addRecipe)
+        }
 
         viewModel.liveImgTarget.observe(this) { model ->
             model?.let { showSelectImageDialog() }

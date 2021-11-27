@@ -61,7 +61,8 @@ internal class RecipeEditorViewModel @Inject constructor(
     private val _liveMoveToPosition = MutableLiveData<Int>()
     val liveMoveToPosition: LiveData<Int> get() = _liveMoveToPosition
 
-    private var isEditing = false
+    private val _liveEditing = MutableLiveData(false)
+    val liveEditing: LiveData<Boolean> get() = _liveEditing
 
     private val _eventRecipeEditor = MutableLiveData<Event<RecipeEditorEvent>>()
     val eventRecipeEditor: LiveData<Event<RecipeEditorEvent>> get() = _eventRecipeEditor
@@ -108,7 +109,9 @@ internal class RecipeEditorViewModel @Inject constructor(
 
         _liveLoading.value = true
         val recipeId = loadingRecipeId?.also {
-            isEditing = true
+            if (loadingRecipeId.isNotEmpty()) {
+                _liveEditing.value = true
+            }
         } ?: NEW_ID
 
         viewModelScope.launch {
@@ -265,12 +268,11 @@ internal class RecipeEditorViewModel @Inject constructor(
                     _liveStepModelList.value ?: listOf(),
                     liveRecipeTypes.value ?: listOf()
                 )
-                val res = if (isEditing) {
+                if (_liveEditing.value == true) {
                     updateLocalRecipeUseCase(UpdateLocalRecipeRequest(recipe))
                 } else {
                     saveRecipeUseCase(SaveLocalRecipeRequest(recipe))
-                }
-                res.onSuccess {
+                }.onSuccess {
                     if (recipe.state == RecipeState.UPLOAD) registerUploadTask(recipe.recipeId)
                     _eventRecipeEditor.value =
                         Event(RecipeEditorEvent.SaveResult(true))
