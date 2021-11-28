@@ -1,21 +1,20 @@
 package com.kdjj.domain.usecase
 
-import com.kdjj.domain.model.RecipeState
-import com.kdjj.domain.model.request.UploadRecipeRequest
+import com.kdjj.domain.model.request.UpdateUploadedRecipeRequest
 import com.kdjj.domain.repository.RecipeImageRepository
 import com.kdjj.domain.repository.RecipeRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
-class UploadRecipeUseCase @Inject constructor(
+class UpdateUploadedRecipeUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository,
     private val recipeImageRepository: RecipeImageRepository
-) : ResultUseCase<UploadRecipeRequest, Unit> {
+) : ResultUseCase<UpdateUploadedRecipeRequest, Unit> {
 
-    override suspend fun invoke(request: UploadRecipeRequest): Result<Unit> =
+    override suspend fun invoke(request: UpdateUploadedRecipeRequest): Result<Unit> =
         runCatching {
-            val recipe = request.recipe
+            val recipe = recipeRepository.getLocalRecipe(request.recipeId).getOrThrow()
 
             val imgList = listOf(recipe.imgPath)
                 .plus(recipe.stepList.map { it.imgPath })
@@ -40,12 +39,6 @@ class UploadRecipeUseCase @Inject constructor(
                     createTime = System.currentTimeMillis()
                 )
             ).getOrThrow()
-
-            recipeRepository.updateMyRecipe(
-                recipe.copy(
-                    state = RecipeState.UPLOAD
-                )
-            ).getOrNull()
         }
 
     private suspend fun convertImageToRemote(imgPath: String): String {

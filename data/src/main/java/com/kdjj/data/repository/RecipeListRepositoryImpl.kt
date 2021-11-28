@@ -11,39 +11,39 @@ internal class RecipeListRepositoryImpl @Inject constructor(
     private val recipeListLocalDataSource: RecipeListLocalDataSource,
 ) : RecipeListRepository {
     
-    override suspend fun fetchRemoteLatestRecipeListAfter(
+    override suspend fun fetchOthersLatestRecipeListAfter(
         refresh: Boolean
     ): Result<List<Recipe>> =
         recipeListRemoteDataSource.fetchLatestRecipeListAfter(refresh)
-    
-    override suspend fun fetchRemotePopularRecipeListAfter(
+
+    override suspend fun fetchOthersPopularRecipeListAfter(
         refresh: Boolean
     ): Result<List<Recipe>> =
         recipeListRemoteDataSource.fetchPopularRecipeListAfter(refresh)
-    
-    override suspend fun fetchRemoteSearchRecipeListAfter(
+
+    override suspend fun fetchOthersSearchRecipeListAfter(
         keyword: String,
         refresh: Boolean
     ): Result<List<Recipe>> =
         recipeListRemoteDataSource.fetchSearchRecipeListAfter(keyword, refresh)
-    
-    override suspend fun fetchLocalLatestRecipeListAfter(
+
+    override suspend fun fetchMyLatestRecipeListAfter(
         index: Int
     ): Result<List<Recipe>> =
         recipeListLocalDataSource.fetchLatestRecipeListAfter(index)
-    
-    override suspend fun fetchLocalFavoriteRecipeListAfter(
+
+    override suspend fun fetchMyFavoriteRecipeListAfter(
         index: Int
     ): Result<List<Recipe>> =
         recipeListLocalDataSource.fetchFavoriteRecipeListAfter(index)
-    
-    override suspend fun fetchLocalSearchRecipeListAfter(
+
+    override suspend fun fetchMySearchRecipeListAfter(
         keyword: String,
         index: Int
     ): Result<List<Recipe>> =
         recipeListLocalDataSource.fetchSearchRecipeListAfter(keyword, index)
 
-    override suspend fun fetchLocalTitleRecipeListAfter(
+    override suspend fun fetchMyTitleRecipeListAfter(
         index: Int
     ): Result<List<Recipe>> =
         recipeListLocalDataSource.fetchTitleListAfter(index)

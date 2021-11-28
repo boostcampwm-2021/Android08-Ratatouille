@@ -22,14 +22,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeSummaryViewModel @Inject constructor(
-    private val getLocalRecipeFlowUseCase: FlowUseCase<GetLocalRecipeRequest, Recipe>,
-    private val updateLocalRecipeFavoriteUseCase: ResultUseCase<UpdateLocalRecipeFavoriteRequest, Boolean>,
-    private val deleteLocalRecipeUseCase: ResultUseCase<DeleteLocalRecipeRequest, Boolean>,
-    private val deleteRemoteRecipeUseCase: ResultUseCase<DeleteRemoteRecipeRequest, Unit>,
-    private val fetchRemoteRecipeUseCase: ResultUseCase<FetchRemoteRecipeRequest, Recipe>,
-    private val saveLocalRecipeUseCase: ResultUseCase<SaveLocalRecipeRequest, Boolean>,
+    private val getMyRecipeFlowUseCase: FlowUseCase<GetMyRecipeRequest, Recipe>,
+    private val updateMyRecipeFavoriteUseCase: ResultUseCase<UpdateMyRecipeFavoriteRequest, Boolean>,
+    private val deleteMyRecipeUseCase: ResultUseCase<DeleteMyRecipeRequest, Boolean>,
+    private val deleteUploadedRecipeUseCase: ResultUseCase<DeleteUploadedRecipeRequest, Unit>,
+    private val fetchOthersRecipeUseCase: ResultUseCase<FetchOthersRecipeRequest, Recipe>,
+    private val saveMyRecipeUseCase: ResultUseCase<SaveMyRecipeRequest, Boolean>,
     private val uploadRecipeUseCase: ResultUseCase<UploadRecipeRequest, Unit>,
-    private val increaseViewCountUseCase: ResultUseCase<IncreaseRemoteRecipeViewCountRequest, Unit>,
+    private val increaseViewCountUseCase: ResultUseCase<IncreaseOthersRecipeViewCountRequest, Unit>,
     private val fetchRecipeTypeListUseCase: ResultUseCase<EmptyRequest, List<RecipeType>>,
     private val idGenerator: IdGenerator
 ) : ViewModel() {
@@ -113,7 +113,7 @@ class RecipeSummaryViewModel @Inject constructor(
                     RecipeState.CREATE,
                     RecipeState.UPLOAD,
                     RecipeState.DOWNLOAD -> {
-                        getLocalRecipeFlowUseCase(GetLocalRecipeRequest(recipeId))
+                        getMyRecipeFlowUseCase(GetMyRecipeRequest(recipeId))
                             .collect { recipe ->
                                 _liveRecipe.value = recipe
                                 updateFabState(recipe)
@@ -121,12 +121,12 @@ class RecipeSummaryViewModel @Inject constructor(
                             }
                     }
                     RecipeState.NETWORK -> {
-                        fetchRemoteRecipeUseCase(FetchRemoteRecipeRequest(recipeId))
+                        fetchOthersRecipeUseCase(FetchOthersRecipeRequest(recipeId))
                             .onSuccess { recipe ->
                                 _liveRecipe.value = recipe
                                 updateFabState(recipe)
                                 increaseViewCountUseCase(
-                                    IncreaseRemoteRecipeViewCountRequest(
+                                    IncreaseOthersRecipeViewCountRequest(
                                         recipe
                                     )
                                 )
@@ -171,7 +171,7 @@ class RecipeSummaryViewModel @Inject constructor(
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
                 val favoriteResult =
-                    updateLocalRecipeFavoriteUseCase(UpdateLocalRecipeFavoriteRequest(recipe))
+                    updateMyRecipeFavoriteUseCase(UpdateMyRecipeFavoriteRequest(recipe))
                         .onSuccess { newFavorite ->
                             val favoriteState = if (newFavorite) {
                                 UpdateFavoriteResult.ADD
@@ -205,10 +205,10 @@ class RecipeSummaryViewModel @Inject constructor(
                     RecipeState.CREATE,
                     RecipeState.UPLOAD,
                     RecipeState.DOWNLOAD -> {
-                        deleteLocalRecipeUseCase(DeleteLocalRecipeRequest(recipe))
+                        deleteMyRecipeUseCase(DeleteMyRecipeRequest(recipe))
                     }
                     RecipeState.NETWORK -> {
-                        deleteRemoteRecipeUseCase(DeleteRemoteRecipeRequest(recipe))
+                        deleteUploadedRecipeUseCase(DeleteUploadedRecipeRequest(recipe))
                     }
                 }
                 _eventRecipeSummary.value =
@@ -228,7 +228,7 @@ class RecipeSummaryViewModel @Inject constructor(
                     state = RecipeState.DOWNLOAD,
                     stepList = recipe.stepList.map { it.copy(stepId = idGenerator.generateId()) }
                 )
-                val saveResult = saveLocalRecipeUseCase(SaveLocalRecipeRequest(newRecipe))
+                val saveResult = saveMyRecipeUseCase(SaveMyRecipeRequest(newRecipe))
 
                 _eventRecipeSummary.value =
                     Event(RecipeSummaryEvent.SaveFinish(saveResult.isSuccess))
@@ -248,7 +248,7 @@ class RecipeSummaryViewModel @Inject constructor(
                     isFavorite = true,
                     stepList = recipe.stepList.map { it.copy(stepId = idGenerator.generateId()) }
                 )
-                val saveResult = saveLocalRecipeUseCase(SaveLocalRecipeRequest(newRecipe))
+                val saveResult = saveMyRecipeUseCase(SaveMyRecipeRequest(newRecipe))
 
                 _eventRecipeSummary.value =
                     Event(RecipeSummaryEvent.SaveFinish(saveResult.isSuccess))

@@ -18,9 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class MyRecipeViewModel @Inject constructor(
-    private val latestRecipeUseCase: ResultUseCase<FetchLocalLatestRecipeListRequest, List<Recipe>>,
-    private val favoriteRecipeUseCase: ResultUseCase<FetchLocalFavoriteRecipeListRequest, List<Recipe>>,
-    private val titleRecipeUseCase: ResultUseCase<FetchLocalTitleRecipeListRequest, List<Recipe>>,
+    private val latestRecipeUseCase: ResultUseCase<FetchMyLatestRecipeListRequest, List<Recipe>>,
+    private val favoriteRecipeUseCase: ResultUseCase<FetchMyFavoriteRecipeListRequest, List<Recipe>>,
+    private val titleRecipeUseCase: ResultUseCase<FetchMyTitleRecipeListRequest, List<Recipe>>,
     private val getRecipeUpdateFlowUseCase: FlowUseCase<EmptyRequest, Int>,
     private val deleteUselessImageFileUseCase: ResultUseCase<EmptyRequest, Unit>
 ) : ViewModel() {
@@ -112,11 +112,11 @@ internal class MyRecipeViewModel @Inject constructor(
         job = viewModelScope.launch {
             when (_liveSortType.value) {
                 SortType.SORT_BY_TIME ->
-                    latestRecipeUseCase(FetchLocalLatestRecipeListRequest(page))
+                    latestRecipeUseCase(FetchMyLatestRecipeListRequest(page))
                 SortType.SORT_BY_FAVORITE ->
-                    favoriteRecipeUseCase(FetchLocalFavoriteRecipeListRequest(page))
+                    favoriteRecipeUseCase(FetchMyFavoriteRecipeListRequest(page))
                 SortType.SORT_BY_NAME ->
-                    titleRecipeUseCase(FetchLocalTitleRecipeListRequest(page))
+                    titleRecipeUseCase(FetchMyTitleRecipeListRequest(page))
                 else -> return@launch
             }.onSuccess { fetchedRecipeList ->
                 val myRecipeList = fetchedRecipeList.map { MyRecipeItem.MyRecipe(it) }

@@ -15,9 +15,9 @@ import com.kdjj.presentation.model.toDomain
 import com.kdjj.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.coroutines.Job
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -26,13 +26,13 @@ import javax.inject.Inject
 internal class RecipeEditorViewModel @Inject constructor(
     private val recipeValidator: RecipeValidator,
     private val recipeStepValidator: RecipeStepValidator,
-    private val saveRecipeUseCase: ResultUseCase<SaveLocalRecipeRequest, Boolean>,
+    private val saveRecipeUseCase: ResultUseCase<SaveMyRecipeRequest, Boolean>,
     private val fetchRecipeTypesUseCase: ResultUseCase<EmptyRequest, List<RecipeType>>,
-    private val getLocalRecipeUseCase: ResultUseCase<GetLocalRecipeRequest, Recipe>,
+    private val getMyRecipeUseCase: ResultUseCase<GetMyRecipeRequest, Recipe>,
     private val fetchRecipeTempUseCase: ResultUseCase<FetchRecipeTempRequest, Recipe?>,
     private val saveRecipeTempUseCase: ResultUseCase<SaveRecipeTempRequest, Unit>,
     private val deleteRecipeTempUseCase: ResultUseCase<DeleteRecipeTempRequest, Unit>,
-    private val updateLocalRecipeUseCase: ResultUseCase<UpdateLocalRecipeRequest, Unit>,
+    private val updateMyRecipeUseCase: ResultUseCase<UpdateMyRecipeRequest, Unit>,
     private val idGenerator: IdGenerator,
     private val workManager: WorkManager
 ) : ViewModel() {
@@ -197,7 +197,7 @@ internal class RecipeEditorViewModel @Inject constructor(
     }
 
     private suspend fun loadFromLocal(recipeId: String) {
-        getLocalRecipeUseCase(GetLocalRecipeRequest(recipeId))
+        getMyRecipeUseCase(GetMyRecipeRequest(recipeId))
             .onSuccess { recipe ->
                 val (metaModel, stepList) =
                     recipe.toPresentation(recipeValidator, _liveRecipeTypes.value ?: listOf(), recipeStepValidator)
@@ -315,9 +315,9 @@ internal class RecipeEditorViewModel @Inject constructor(
                     liveRecipeTypes.value ?: listOf()
                 )
                 if (_liveEditing.value == true) {
-                    updateLocalRecipeUseCase(UpdateLocalRecipeRequest(recipe))
+                    updateMyRecipeUseCase(UpdateMyRecipeRequest(recipe))
                 } else {
-                    saveRecipeUseCase(SaveLocalRecipeRequest(recipe))
+                    saveRecipeUseCase(SaveMyRecipeRequest(recipe))
                 }.onSuccess {
                     if (recipe.state == RecipeState.UPLOAD) registerUploadTask(recipe.recipeId)
                     _eventRecipeEditor.value =
