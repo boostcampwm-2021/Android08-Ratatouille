@@ -175,9 +175,9 @@ internal class RecipeEditorViewModel @Inject constructor(
         } else {
             viewModelScope.launch {
                 loadFromLocal(recipeId)
+                isInitialized = true
             }
         }
-        isInitialized = true
     }
 
     private fun createNewRecipe() {
