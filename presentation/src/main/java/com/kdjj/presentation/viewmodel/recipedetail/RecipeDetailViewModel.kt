@@ -5,8 +5,8 @@ import androidx.lifecycle.*
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.RecipeState
 import com.kdjj.domain.model.RecipeStep
-import com.kdjj.domain.model.request.FetchRemoteRecipeRequest
-import com.kdjj.domain.model.request.GetLocalRecipeRequest
+import com.kdjj.domain.model.request.FetchOthersRecipeRequest
+import com.kdjj.domain.model.request.GetMyRecipeRequest
 import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.model.StepTimerModel
@@ -17,8 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
     private val ringtone: Ringtone,
-    private val getLocalRecipeUseCase: ResultUseCase<GetLocalRecipeRequest, Recipe>,
-    private val fetchRemoteRecipeUseCase: ResultUseCase<FetchRemoteRecipeRequest, Recipe>
+    private val getMyRecipeUseCase: ResultUseCase<GetMyRecipeRequest, Recipe>,
+    private val fetchOthersRecipeUseCase: ResultUseCase<FetchOthersRecipeRequest, Recipe>
 ) : ViewModel() {
 
     private val _liveStepList = MutableLiveData<List<RecipeStep>>()
@@ -77,9 +77,9 @@ class RecipeDetailViewModel @Inject constructor(
         viewModelScope.launch {
             when (state) {
                 RecipeState.NETWORK ->
-                    fetchRemoteRecipeUseCase(FetchRemoteRecipeRequest(recipeId))
+                    fetchOthersRecipeUseCase(FetchOthersRecipeRequest(recipeId))
                 RecipeState.CREATE, RecipeState.DOWNLOAD, RecipeState.UPLOAD ->
-                    getLocalRecipeUseCase(GetLocalRecipeRequest(recipeId))
+                    getMyRecipeUseCase(GetMyRecipeRequest(recipeId))
             }.onSuccess { recipe ->
                 _liveStepList.value = recipe.stepList
                 _liveStepBarSelected.value = recipe.stepList.first()

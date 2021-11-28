@@ -15,26 +15,26 @@ internal class RecipeRepositoryImpl @Inject constructor(
 
     private val isUpdated = MutableStateFlow(0)
 
-    override suspend fun saveLocalRecipe(
+    override suspend fun saveMyRecipe(
         recipe: Recipe
     ): Result<Boolean> {
         return recipeLocalDataSource.saveRecipe(recipe).onSuccess { isUpdated.value++ }
     }
 
-    override suspend fun updateLocalRecipe(
+    override suspend fun updateMyRecipe(
         recipe: Recipe
     ): Result<Boolean> {
         return recipeLocalDataSource.updateRecipe(recipe).onSuccess { isUpdated.value++ }
     }
 
-    override suspend fun updateLocalRecipe(
+    override suspend fun updateMyRecipe(
         recipe: Recipe,
         originImgPathList: List<String>
     ): Result<Unit> {
         return recipeLocalDataSource.updateRecipe(recipe, originImgPathList).onSuccess { isUpdated.value++ }
     }
 
-    override suspend fun deleteLocalRecipe(
+    override suspend fun deleteMyRecipe(
         recipe: Recipe
     ): Result<Boolean> {
         return recipeLocalDataSource.deleteRecipe(recipe).onSuccess { isUpdated.value++ }
@@ -46,25 +46,25 @@ internal class RecipeRepositoryImpl @Inject constructor(
         return recipeRemoteDataSource.uploadRecipe(recipe)
     }
 
-    override suspend fun increaseRemoteRecipeViewCount(
+    override suspend fun increaseOthersRecipeViewCount(
         recipe: Recipe
     ): Result<Unit> {
         return recipeRemoteDataSource.increaseViewCount(recipe)
     }
 
-    override suspend fun deleteRemoteRecipe(
+    override suspend fun deleteOthersRecipe(
         recipe: Recipe
     ): Result<Unit> {
         return recipeRemoteDataSource.deleteRecipe(recipe)
     }
 
-    override fun getLocalRecipeFlow(
+    override fun getMyRecipeFlow(
         recipeId: String
     ): Flow<Recipe> {
         return recipeLocalDataSource.getRecipeFlow(recipeId)
     }
 
-    override suspend fun fetchRemoteRecipe(recipeId: String): Result<Recipe> {
+    override suspend fun fetchOthersRecipe(recipeId: String): Result<Recipe> {
         return recipeRemoteDataSource.fetchRecipe(recipeId)
     }
 

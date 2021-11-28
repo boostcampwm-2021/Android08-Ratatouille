@@ -2,9 +2,9 @@ package com.kdjj.domain.di
 
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.request.EmptyRequest
-import com.kdjj.domain.model.request.GetLocalRecipeRequest
+import com.kdjj.domain.model.request.GetMyRecipeRequest
 import com.kdjj.domain.usecase.FlowUseCase
-import com.kdjj.domain.usecase.GetLocalRecipeFlowUseCase
+import com.kdjj.domain.usecase.GetMyRecipeFlowUseCase
 import com.kdjj.domain.usecase.GetRecipeUpdateFlowUseCase
 import dagger.Binds
 import dagger.Module
@@ -13,9 +13,9 @@ import dagger.Module
 abstract class FlowUseCaseModule {
 
     @Binds
-    internal abstract fun bindGetLocalRecipeFlowUseCase(
-        getLocalRecipeFlowUseCase: GetLocalRecipeFlowUseCase
-    ): FlowUseCase<GetLocalRecipeRequest, Recipe>
+    internal abstract fun bindGetMyRecipeFlowUseCase(
+        getMyRecipeFlowUseCase: GetMyRecipeFlowUseCase
+    ): FlowUseCase<GetMyRecipeRequest, Recipe>
 
     @Binds
     internal abstract fun bindGetRecipeUpdateFlowUseCase(

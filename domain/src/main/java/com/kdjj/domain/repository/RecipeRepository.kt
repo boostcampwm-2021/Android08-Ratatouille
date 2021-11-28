@@ -2,20 +2,18 @@ package com.kdjj.domain.repository
 
 import com.kdjj.domain.model.Recipe
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.StateFlow
 
 interface RecipeRepository {
 
-    suspend fun saveLocalRecipe(
+    suspend fun saveMyRecipe(
         recipe: Recipe
     ): Result<Boolean>
 
-    suspend fun updateLocalRecipe(
+    suspend fun updateMyRecipe(
         recipe: Recipe
     ): Result<Boolean>
 
-    suspend fun deleteLocalRecipe(
+    suspend fun deleteMyRecipe(
         recipe: Recipe
     ): Result<Boolean>
 
@@ -23,19 +21,19 @@ interface RecipeRepository {
         recipe: Recipe
     ): Result<Unit>
 
-    suspend fun increaseRemoteRecipeViewCount(
+    suspend fun increaseOthersRecipeViewCount(
         recipe: Recipe
     ): Result<Unit>
 
-    suspend fun deleteRemoteRecipe(
+    suspend fun deleteOthersRecipe(
         recipe: Recipe
     ): Result<Unit>
 
-    fun getLocalRecipeFlow(
+    fun getMyRecipeFlow(
         recipeId: String
     ): Flow<Recipe>
 
-    suspend fun fetchRemoteRecipe(
+    suspend fun fetchOthersRecipe(
         recipeId: String
     ): Result<Recipe>
 
@@ -45,7 +43,7 @@ interface RecipeRepository {
         recipeId: String
     ): Result<Recipe>
 
-    suspend fun updateLocalRecipe(
+    suspend fun updateMyRecipe(
         recipe: Recipe,
         originImgPathList: List<String>
     ): Result<Unit>

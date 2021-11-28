@@ -4,33 +4,33 @@ import com.kdjj.domain.model.Recipe
 
 interface RecipeListRepository {
     
-    suspend fun fetchRemoteLatestRecipeListAfter(
+    suspend fun fetchOthersLatestRecipeListAfter(
         refresh: Boolean
     ): Result<List<Recipe>>
-    
-    suspend fun fetchRemotePopularRecipeListAfter(
+
+    suspend fun fetchOthersPopularRecipeListAfter(
         refresh: Boolean
     ): Result<List<Recipe>>
-    
-    suspend fun fetchRemoteSearchRecipeListAfter(
+
+    suspend fun fetchOthersSearchRecipeListAfter(
         keyword: String,
         refresh: Boolean
     ): Result<List<Recipe>>
-    
-    suspend fun fetchLocalLatestRecipeListAfter(
+
+    suspend fun fetchMyLatestRecipeListAfter(
         index: Int
     ): Result<List<Recipe>>
-    
-    suspend fun fetchLocalFavoriteRecipeListAfter(
+
+    suspend fun fetchMyFavoriteRecipeListAfter(
         index: Int
     ): Result<List<Recipe>>
-    
-    suspend fun fetchLocalSearchRecipeListAfter(
+
+    suspend fun fetchMySearchRecipeListAfter(
         keyword: String,
         index: Int
     ): Result<List<Recipe>>
 
-    suspend fun fetchLocalTitleRecipeListAfter(
+    suspend fun fetchMyTitleRecipeListAfter(
         index: Int
     ): Result<List<Recipe>>
 }

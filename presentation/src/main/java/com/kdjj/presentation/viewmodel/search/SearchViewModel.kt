@@ -8,8 +8,8 @@ import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.exception.ApiException
 import com.kdjj.domain.model.exception.NetworkException
 import com.kdjj.domain.model.request.EmptyRequest
-import com.kdjj.domain.model.request.FetchLocalSearchRecipeListRequest
-import com.kdjj.domain.model.request.FetchRemoteSearchRecipeListRequest
+import com.kdjj.domain.model.request.FetchMySearchRecipeListRequest
+import com.kdjj.domain.model.request.FetchOthersSearchRecipeListRequest
 import com.kdjj.domain.usecase.FlowUseCase
 import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
@@ -27,8 +27,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val fetchLocalSearchUseCase: ResultUseCase<FetchLocalSearchRecipeListRequest, List<Recipe>>,
-    private val fetchRemoteSearchUseCase: ResultUseCase<FetchRemoteSearchRecipeListRequest, List<Recipe>>,
+    private val fetchMySearchUseCase: ResultUseCase<FetchMySearchRecipeListRequest, List<Recipe>>,
+    private val fetchOthersSearchUseCase: ResultUseCase<FetchOthersSearchRecipeListRequest, List<Recipe>>,
     private val getRecipeUpdateFlowUseCase: FlowUseCase<EmptyRequest, Int>
 ) : ViewModel() {
     private val _liveTabState = MutableLiveData(SearchTabState.OTHERS_RECIPE)
@@ -101,8 +101,8 @@ class SearchViewModel @Inject constructor(
         fetchingJob = viewModelScope.launch {
             when (liveTabState.value) {
                 SearchTabState.OTHERS_RECIPE -> {
-                    fetchRemoteSearchUseCase(
-                        FetchRemoteSearchRecipeListRequest(
+                    fetchOthersSearchUseCase(
+                        FetchOthersSearchRecipeListRequest(
                             liveKeyword.value
                                 ?: "", true
                         )
@@ -118,8 +118,8 @@ class SearchViewModel @Inject constructor(
                         }
                 }
                 SearchTabState.MY_RECIPE -> {
-                    fetchLocalSearchUseCase(
-                        FetchLocalSearchRecipeListRequest(
+                    fetchMySearchUseCase(
+                        FetchMySearchRecipeListRequest(
                             liveKeyword.value
                                 ?: "", 0
                         )
@@ -152,8 +152,8 @@ class SearchViewModel @Inject constructor(
         fetchingJob = viewModelScope.launch {
             when (liveTabState.value) {
                 SearchTabState.OTHERS_RECIPE -> {
-                    fetchRemoteSearchUseCase(
-                        FetchRemoteSearchRecipeListRequest(
+                    fetchOthersSearchUseCase(
+                        FetchOthersSearchRecipeListRequest(
                             liveKeyword.value
                                 ?: "", false
                         )
@@ -168,8 +168,8 @@ class SearchViewModel @Inject constructor(
                         }
                 }
                 SearchTabState.MY_RECIPE -> {
-                    fetchLocalSearchUseCase(
-                        FetchLocalSearchRecipeListRequest(
+                    fetchMySearchUseCase(
+                        FetchMySearchRecipeListRequest(
                             liveKeyword.value
                                 ?: "", _liveResultList.value?.size ?: 0
                         )
