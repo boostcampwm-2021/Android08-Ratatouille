@@ -4,6 +4,7 @@ import androidx.room.withTransaction
 import com.kdjj.data.datasource.RecipeLocalDataSource
 import com.kdjj.domain.common.errorMap
 import com.kdjj.domain.model.Recipe
+import com.kdjj.domain.model.exception.NotExistRecipeException
 import com.kdjj.local.database.RecipeDatabase
 import com.kdjj.local.dto.UselessImageDto
 import com.kdjj.local.dto.toDomain
@@ -111,7 +112,7 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
     ): Result<Recipe> =
         withContext(Dispatchers.IO) {
             runCatching {
-                recipeDao.getRecipeDto(recipeId).toDomain()
+                recipeDao.getRecipeDto(recipeId)?.toDomain() ?: throw NotExistRecipeException()
             }
         }
 }
