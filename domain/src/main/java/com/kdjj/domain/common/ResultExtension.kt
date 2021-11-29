@@ -20,3 +20,12 @@ inline fun <T, R> Result<T>.flatMap(
         else -> Result.failure(exception)
     }
 }
+
+inline fun <T> Result<T>.handleWith(
+    transform: (Throwable) -> Result<T>
+): Result<T> {
+    return when (val exception = exceptionOrNull()) {
+        null -> this
+        else -> transform(exception)
+    }
+}

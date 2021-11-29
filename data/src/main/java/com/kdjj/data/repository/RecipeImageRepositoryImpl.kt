@@ -20,19 +20,26 @@ internal class RecipeImageRepositoryImpl @Inject constructor(
 
     override suspend fun copyExternalImageToInternal(
         imageInfo: List<ImageInfo>
-    ): Result<List<String>> =
-        imageInfo.chunked(10).map { imgInfoList ->
+    ): Result<List<String>> {
+        return imageInfo.chunked(10).map { imgInfoList ->
             recipeImageLocalDataSource.convertToByteArray(imgInfoList.map { it.uri })
                 .flatMap { byteArrayDegreePairList ->
                     recipeImageLocalDataSource.convertToInternalStorageUri(
                         byteArrayDegreePairList.map { it.first },
-                        imgInfoList.map {it.fileName},
+                        imgInfoList.map { it.fileName },
                         byteArrayDegreePairList.map { it.second }
-                    )
-                }.getOrThrow()
-        }.flatten().let {
-            Result.success(it)
+                    ).onFailure {
+                        return Result.failure(it)
+                    }
+                }
+        }.fold(Result.success(listOf())) { acc, result ->
+            acc.flatMap { accList ->
+                result.flatMap { resultList ->
+                    Result.success(accList + resultList)
+                }
+            }
         }
+    }
 
     override suspend fun copyRemoteImageToInternal(
         imageInfo: List<ImageInfo>
@@ -45,12 +52,14 @@ internal class RecipeImageRepositoryImpl @Inject constructor(
                         imgInfoList.map { it.fileName },
                         (0..byteArrayList.size).map { null }
                     )
-                }.getOrThrow()
-        }.flatten().let {
-            Result.success(it)
+                }
+        }.fold(Result.success(listOf())) { acc, result ->
+            acc.flatMap { accList ->
+                result.flatMap { resultList ->
+                    Result.success(accList + resultList)
+                }
+            }
         }
-
-
 
     override fun isUriExists(uri: String): Boolean = recipeImageLocalDataSource.isUriExists(uri)
 
