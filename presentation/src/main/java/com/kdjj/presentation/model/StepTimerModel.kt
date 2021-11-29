@@ -71,8 +71,8 @@ class StepTimerModel (
         _eventAnimation.value = Event(Unit)
     }
 
-    fun onBackgroundOrForeground(){
-        isRunningOnBackground = !isRunningOnBackground
+    fun setBackground(state: Boolean){
+        isRunningOnBackground = state
     }
 
     enum class TimerState {

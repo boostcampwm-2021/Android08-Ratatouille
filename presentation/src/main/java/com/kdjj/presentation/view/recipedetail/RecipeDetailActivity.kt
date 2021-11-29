@@ -193,7 +193,7 @@ class RecipeDetailActivity : AppCompatActivity() {
     override fun onRestart() {
         super.onRestart()
         applicationContext.stopService(Intent(applicationContext, TimerService::class.java))
-        viewModel.onBackgroundOrForeground()
+        viewModel.setBackground(false)
     }
 
     override fun onBackPressed() {
@@ -207,7 +207,7 @@ class RecipeDetailActivity : AppCompatActivity() {
                 action = ACTION_START
             }
             applicationContext.startService(intent)
-            viewModel.onBackgroundOrForeground()
+            viewModel.setBackground(true)
         }
         super.onStop()
     }

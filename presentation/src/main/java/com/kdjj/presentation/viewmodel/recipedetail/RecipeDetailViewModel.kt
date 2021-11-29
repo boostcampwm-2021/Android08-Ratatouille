@@ -162,9 +162,9 @@ class RecipeDetailViewModel @Inject constructor(
         }
     }
 
-    fun onBackgroundOrForeground(){
+    fun setBackground(state: Boolean){
         _liveTimerList.value?.forEach { stepTimerModel ->
-            stepTimerModel.onBackgroundOrForeground()
+            stepTimerModel.setBackground(state)
         }
     }
 
