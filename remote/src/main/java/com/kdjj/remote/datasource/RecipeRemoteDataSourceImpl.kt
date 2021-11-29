@@ -16,22 +16,16 @@ internal class RecipeRemoteDataSourceImpl @Inject constructor(
     override suspend fun uploadRecipe(recipe: Recipe): Result<Unit> =
         runCatching {
             recipeService.uploadRecipe(recipe.toDto())
-        }.errorMap {
-            Exception(it.message)
         }
 
     override suspend fun increaseViewCount(recipe: Recipe): Result<Unit> =
         runCatching {
             recipeService.increaseViewCount(recipe.toDto())
-        }.errorMap {
-            Exception(it.message)
         }
 
     override suspend fun deleteRecipe(recipe: Recipe): Result<Unit> =
         runCatching {
             recipeService.deleteRecipe(recipe.toDto())
-        }.errorMap {
-            Exception(it.message)
         }
 
     override suspend fun fetchRecipe(recipeID: String): Result<Recipe> =

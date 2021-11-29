@@ -40,8 +40,6 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
                     }
                 }
                 true
-            }.errorMap {
-                Exception(it.message)
             }
         }
 
@@ -52,8 +50,6 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
             runCatching {
                 recipeDao.updateRecipeMeta(recipe.toDto())
                 true
-            }.errorMap {
-                Exception(it.message)
             }
         }
 
@@ -96,8 +92,6 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
                     recipeDao.deleteRecipe(recipe.toDto())
                     true
                 }
-            }.errorMap {
-                Exception(it.message)
             }
         }
 

@@ -2,7 +2,6 @@ package com.kdjj.remote.service
 
 import android.net.Uri
 import com.google.firebase.storage.StorageReference
-import com.kdjj.domain.common.errorMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.tasks.await
@@ -28,8 +27,6 @@ internal class FirebaseStorageServiceImpl @Inject constructor(
                     }
                 }
                 res.map { it.await() }
-            }.errorMap {
-                Exception(it.message)
             }
         }
 
@@ -44,8 +41,6 @@ internal class FirebaseStorageServiceImpl @Inject constructor(
                 refer.putFile(file).await()
                 val newUri = refer.downloadUrl.await()
                 newUri.toString()
-            }.errorMap {
-                Exception(it.message)
             }
         }
     }
