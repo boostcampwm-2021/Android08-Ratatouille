@@ -276,6 +276,7 @@ internal class RecipeEditorViewModel @Inject constructor(
             .onFailure {
                 _eventRecipeEditor.value = Event(RecipeEditorEvent.Error)
             }
+        _liveLoading.value = false
     }
 
     private fun saveTempRecipe() {
