@@ -56,10 +56,12 @@ class StepTimerModel (
             }
         }, {
             onFinishListener(this)
-            notifications.showAlarm(
-                recipeStep.stepId,
-                recipeStep.name
-            )
+            if(isRunningOnBackground){
+                notifications.showAlarm(
+                    recipeStep.stepId,
+                    recipeStep.name
+                )
+            }
         }).start()
         _liveState.value = TimerState.RUNNING
     }
