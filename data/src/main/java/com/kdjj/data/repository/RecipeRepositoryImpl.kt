@@ -72,7 +72,9 @@ internal class RecipeRepositoryImpl @Inject constructor(
         return isUpdated
     }
 
-    override suspend fun getLocalRecipe(recipeId: String): Result<Recipe> {
+    override suspend fun getLocalRecipe(
+        recipeId: String
+    ): Result<Recipe> {
         return recipeLocalDataSource.getRecipe(recipeId)
     }
 }
