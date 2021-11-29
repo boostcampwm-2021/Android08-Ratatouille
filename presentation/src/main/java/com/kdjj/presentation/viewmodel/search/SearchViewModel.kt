@@ -56,6 +56,8 @@ class SearchViewModel @Inject constructor(
     private val _liveNoResult = MutableLiveData(false)
     val liveNoResult: LiveData<Boolean> get() = _liveNoResult
 
+    private var lastKeyword = ""
+
     val searchSubject: PublishSubject<ButtonClick> = PublishSubject.create()
 
     sealed class SearchRecipeEvent {
@@ -86,6 +88,10 @@ class SearchViewModel @Inject constructor(
     }
 
     fun updateSearchKeyword() {
+        if (lastKeyword == liveKeyword.value ?: "") {
+            return
+        }
+
         if (isFetching) {
             fetchingJob?.cancel()
         }
@@ -93,8 +99,9 @@ class SearchViewModel @Inject constructor(
 
         _liveResultList.value = listOf()
         _liveNoResult.value = false
-        if (liveKeyword.value?.isNotBlank() != true) {
+        if (liveKeyword.value?.isBlank() == true) {
             isFetching = false
+            lastKeyword = ""
             return
         }
 
@@ -103,8 +110,7 @@ class SearchViewModel @Inject constructor(
                 SearchTabState.OTHERS_RECIPE -> {
                     fetchOthersSearchUseCase(
                         FetchOthersSearchRecipeListRequest(
-                            liveKeyword.value
-                                ?: "", true
+                            liveKeyword.value ?: "", true
                         )
                     )
                         .onSuccess {
@@ -112,6 +118,7 @@ class SearchViewModel @Inject constructor(
                                 _liveNoResult.value = true
                             }
                             _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
+                            lastKeyword = liveKeyword.value ?: ""
                         }
                         .onFailure { t ->
                             setException(t)
@@ -120,8 +127,7 @@ class SearchViewModel @Inject constructor(
                 SearchTabState.MY_RECIPE -> {
                     fetchMySearchUseCase(
                         FetchMySearchRecipeListRequest(
-                            liveKeyword.value
-                                ?: "", 0
+                            liveKeyword.value ?: "", 0
                         )
                     )
                         .onSuccess {
@@ -129,6 +135,7 @@ class SearchViewModel @Inject constructor(
                                 _liveNoResult.value = true
                             }
                             _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
+                            lastKeyword = liveKeyword.value ?: ""
                         }
                         .onFailure { t ->
                             setException(t)
