@@ -5,9 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.kdjj.domain.model.RecipeStep
 import com.kdjj.presentation.common.Event
+import com.kdjj.presentation.common.Notifications
 
-class StepTimerModel(
+class StepTimerModel (
     val recipeStep: RecipeStep,
+    private val notifications: Notifications,
     private val onFinishListener: (StepTimerModel) -> Unit
 ) {
     private var leftMillis = recipeStep.seconds * 1000L
@@ -26,6 +28,8 @@ class StepTimerModel(
     private val _eventAnimation = MutableLiveData<Event<Unit>>()
     val eventAnimation: LiveData<Event<Unit>> get() = _eventAnimation
 
+    private var isRunningOnBackground = false
+
     fun reset() {
         timer.cancel()
         leftMillis = recipeStep.seconds * 1000L
@@ -43,8 +47,19 @@ class StepTimerModel(
 
         timer = StepTimer(leftMillis, {
             leftMillis = it
+            if(isRunningOnBackground){
+                notifications.showTimer(
+                    recipeStep.stepId,
+                    recipeStep.name,
+                    (leftMillis / 1000).toInt(),
+                )
+            }
         }, {
             onFinishListener(this)
+            notifications.showAlarm(
+                recipeStep.stepId,
+                recipeStep.name
+            )
         }).start()
         _liveState.value = TimerState.RUNNING
     }
@@ -52,6 +67,10 @@ class StepTimerModel(
     fun startAnimation() {
         _liveState.value = TimerState.END
         _eventAnimation.value = Event(Unit)
+    }
+
+    fun onBackgroundOrForeground(){
+        isRunningOnBackground = !isRunningOnBackground
     }
 
     enum class TimerState {

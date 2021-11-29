@@ -6,7 +6,7 @@ class StepTimer(
     leftTimeInMillis: Long,
     private val onTickListener: (Long) -> Unit,
     private val onFinishListener: () -> Unit
-) : CountDownTimer(leftTimeInMillis, 100L) {
+) : CountDownTimer(leftTimeInMillis, 1000L) {
 
     override fun onTick(millisUntilFinished: Long) {
         onTickListener(millisUntilFinished)

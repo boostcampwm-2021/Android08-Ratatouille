@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
@@ -17,7 +16,6 @@ import com.kdjj.domain.model.*
 import com.kdjj.presentation.R
 import com.kdjj.presentation.common.*
 import com.kdjj.presentation.databinding.ActivityRecipeDetailBinding
-import com.kdjj.presentation.model.StepTimerModel
 import com.kdjj.presentation.services.TimerService
 import com.kdjj.presentation.view.adapter.RecipeDetailLargeStepListAdapter
 import com.kdjj.presentation.view.adapter.RecipeDetailStepListAdapter
@@ -137,7 +135,8 @@ class RecipeDetailActivity : AppCompatActivity() {
                             ObjectAnimator.ofFloat(
                                 binding.recyclerViewDetailTimer,
                                 View.TRANSLATION_Y,
-                                resources.getDimensionPixelSize(R.dimen.detail_timer_animation).toFloat(),
+                                resources.getDimensionPixelSize(R.dimen.detail_timer_animation)
+                                    .toFloat(),
                                 0f,
                             ),
                             ObjectAnimator.ofFloat(
@@ -194,6 +193,7 @@ class RecipeDetailActivity : AppCompatActivity() {
     override fun onRestart() {
         super.onRestart()
         applicationContext.stopService(Intent(applicationContext, TimerService::class.java))
+        viewModel.onBackgroundOrForeground()
     }
 
     override fun onBackPressed() {
@@ -203,16 +203,11 @@ class RecipeDetailActivity : AppCompatActivity() {
 
     override fun onStop() {
         if (!isExiting) {
-            Intent(applicationContext, TimerService::class.java).also { timerIntent ->
-                timerIntent.action = "ACTION_START"
-                val timerList = viewModel.liveTimerList.value ?: return
-                timerIntent.putExtra("TIMERS",
-                    timerList.filter { it.liveState.value == StepTimerModel.TimerState.RUNNING }.map { timer ->
-                        "${timer.liveLeftSeconds.value ?: 0}:${timer.recipeStep.stepId}:${timer.recipeStep.name}"
-                    }.toTypedArray()
-                )
-                applicationContext.startService(timerIntent)
+            val intent = Intent(applicationContext, TimerService::class.java).apply {
+                action = ACTION_START
             }
+            applicationContext.startService(intent)
+            viewModel.onBackgroundOrForeground()
         }
         super.onStop()
     }
