@@ -1,8 +1,8 @@
 package com.kdjj.local.dataSource
 
 import androidx.room.withTransaction
-import com.kdjj.domain.common.errorMap
 import com.kdjj.data.datasource.RecipeLocalDataSource
+import com.kdjj.domain.common.errorMap
 import com.kdjj.domain.model.Recipe
 import com.kdjj.local.database.RecipeDatabase
 import com.kdjj.local.dto.UselessImageDto
@@ -104,9 +104,11 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
         recipeId: String
     ): Flow<Recipe> =
         recipeDao.getRecipe(recipeId)
-                .map { it.toDomain() }
+            .map { it.toDomain() }
 
-    override suspend fun getRecipe(recipeId: String): Result<Recipe> =
+    override suspend fun getRecipe(
+        recipeId: String
+    ): Result<Recipe> =
         withContext(Dispatchers.IO) {
             runCatching {
                 recipeDao.getRecipeDto(recipeId).toDomain()
