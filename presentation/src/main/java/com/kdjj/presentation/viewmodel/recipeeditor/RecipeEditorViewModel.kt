@@ -57,8 +57,6 @@ internal class RecipeEditorViewModel @Inject constructor(
     private val _liveLoading = MutableLiveData(false)
     val liveLoading: LiveData<Boolean> get() = _liveLoading
 
-    private var isInitialized = false
-
     private val _liveEditing = MutableLiveData(false)
     val liveEditing: LiveData<Boolean> get() = _liveEditing
 
@@ -180,7 +178,7 @@ internal class RecipeEditorViewModel @Inject constructor(
     }
 
     fun initializeWith(loadingRecipeId: String?) {
-        if (isInitialized) return
+        if (_liveStepModelList.value != null) return
 
         _liveLoading.value = true
         val recipeId = loadingRecipeId?.also {
@@ -211,7 +209,7 @@ internal class RecipeEditorViewModel @Inject constructor(
     }
 
     fun showRecipeFromTemp() {
-        if (isInitialized) return
+        if (_liveStepModelList.value != null) return
 
         _liveLoading.value = true
         val (metaModel, stepList) =
@@ -227,22 +225,19 @@ internal class RecipeEditorViewModel @Inject constructor(
             viewModelScope.launch {
                 oldRecipe = getMyRecipeUseCase(GetMyRecipeRequest(tempRecipe.recipeId)).getOrNull()
                 _liveLoading.value = false
-                isInitialized = true
             }
         } else {
             _liveLoading.value = false
-            isInitialized = true
         }
     }
 
     fun showRecipeFromLocal(recipeId: String) {
-        if (isInitialized) return
+        if (_liveStepModelList.value != null) return
         if (recipeId == NEW_ID) {
             createNewRecipe()
         } else {
             viewModelScope.launch {
                 loadFromLocal(recipeId)
-                isInitialized = true
             }
         }
     }
@@ -259,7 +254,6 @@ internal class RecipeEditorViewModel @Inject constructor(
         viewModelScope.launch {
             deleteRecipeTempUseCase(DeleteRecipeTempRequest(NEW_ID))
         }
-        isInitialized = true
         _liveLoading.value = false
     }
 
@@ -277,10 +271,11 @@ internal class RecipeEditorViewModel @Inject constructor(
                 _eventRecipeEditor.value = Event(RecipeEditorEvent.Error)
             }
         _liveLoading.value = false
+
     }
 
     private fun saveTempRecipe() {
-        if (!isInitialized || isSameWithOld()) {
+        if (_liveStepModelList.value == null || isSameWithOld()) {
             return
         }
         _liveTempLoading.value = true
