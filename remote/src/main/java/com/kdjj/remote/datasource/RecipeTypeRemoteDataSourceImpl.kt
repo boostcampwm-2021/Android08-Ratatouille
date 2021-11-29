@@ -1,6 +1,5 @@
 package com.kdjj.remote.datasource
 
-import com.kdjj.domain.common.errorMap
 import com.kdjj.data.datasource.RecipeTypeRemoteDataSource
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.remote.dto.toDomain
@@ -17,7 +16,5 @@ internal class RecipeTypeRemoteDataSourceImpl @Inject constructor(
                 .map { it.toDomain() }
             if (recipeTypeList.isEmpty()) throw Exception("Can't fetch recipe type.")
             recipeTypeList
-        }.errorMap {
-            Exception(it.message)
         }
 }

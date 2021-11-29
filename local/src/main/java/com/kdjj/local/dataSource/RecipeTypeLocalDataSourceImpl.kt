@@ -1,6 +1,5 @@
 package com.kdjj.local.dataSource
 
-import com.kdjj.domain.common.errorMap
 import com.kdjj.data.datasource.RecipeTypeLocalDataSource
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.local.dao.RecipeTypeDao
@@ -25,8 +24,6 @@ internal class RecipeTypeLocalDataSourceImpl @Inject constructor(
                     recipeTypeDao.insertRecipeType(recipeTypeEntity)
                 }
                 true
-            }.errorMap {
-                Exception(it.message)
             }
         }
     
@@ -35,8 +32,6 @@ internal class RecipeTypeLocalDataSourceImpl @Inject constructor(
             runCatching {
                 recipeTypeDao.getAllRecipeTypeList()
                     .map { it.toDomain() }
-            }.errorMap {
-                Exception(it.message)
             }
         }
 }
