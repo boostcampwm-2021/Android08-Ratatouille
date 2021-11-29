@@ -28,5 +28,5 @@ internal interface RecipeDao {
     fun getRecipe(recipeId: String): Flow<RecipeDto>
 
     @Query("SELECT * FROM RecipeMeta WHERE recipeMetaId = :recipeId")
-    fun getRecipeDto(recipeId: String): RecipeDto
+    fun getRecipeDto(recipeId: String): RecipeDto?
 }
