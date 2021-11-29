@@ -59,9 +59,6 @@ internal class RecipeEditorViewModel @Inject constructor(
 
     private var isInitialized = false
 
-    private val _liveMoveToPosition = MutableLiveData<Int>()
-    val liveMoveToPosition: LiveData<Int> get() = _liveMoveToPosition
-
     private val _liveEditing = MutableLiveData(false)
     val liveEditing: LiveData<Boolean> get() = _liveEditing
 
@@ -89,7 +86,7 @@ internal class RecipeEditorViewModel @Inject constructor(
     val editorSubject: PublishSubject<ButtonClick> = PublishSubject.create()
 
     private val tempSubject: PublishSubject<Unit> = PublishSubject.create()
-    private var didEdit = false
+    private var oldRecipe: Recipe? = null
 
     private val _liveTempLoading = MutableLiveData(false)
     val liveTempLoading: LiveData<Boolean> get() = _liveTempLoading
@@ -122,8 +119,64 @@ internal class RecipeEditorViewModel @Inject constructor(
     }
 
     fun doEdit() {
-        didEdit = true
         tempSubject.onNext(Unit)
+    }
+
+    private fun isSameWithOld(): Boolean {
+        oldRecipe?.let { oldRecipe ->
+            if (
+                recipeMetaModel.liveTitle.value != oldRecipe.title ||
+                recipeMetaModel.liveStuff.value != oldRecipe.stuff ||
+                recipeMetaModel.liveRecipeImgPath.value != oldRecipe.imgPath ||
+                recipeMetaModel.liveRecipeTypeInt.value != liveRecipeTypes.value?.indexOf(oldRecipe.type)
+            ) {
+                return false
+            }
+
+            if (_liveStepModelList.value?.size != oldRecipe.stepList.size) {
+                return false
+            }
+
+            _liveStepModelList.value?.let { stepList ->
+                stepList.forEachIndexed { idx, model ->
+                    if (
+                        model.liveName.value != oldRecipe.stepList[idx].name ||
+                        model.liveDescription.value != oldRecipe.stepList[idx].description ||
+                        model.liveImgPath.value != oldRecipe.stepList[idx].imgPath ||
+                        model.liveTimerMin.value != oldRecipe.stepList[idx].seconds / 60 ||
+                        model.liveTimerSec.value != oldRecipe.stepList[idx].seconds % 60 ||
+                        model.liveTypeInt.value != oldRecipe.stepList[idx].type.ordinal
+                    ) {
+                        return false
+                    }
+                }
+            }
+            return true
+        } ?: run {
+            if (
+                recipeMetaModel.liveTitle.value?.isEmpty() != true ||
+                recipeMetaModel.liveStuff.value?.isEmpty() != true ||
+                recipeMetaModel.liveRecipeImgPath.value?.isEmpty() != true ||
+                recipeMetaModel.liveRecipeTypeInt.value != 0
+            ) {
+                return false
+            }
+
+            _liveStepModelList.value?.get(0)?.let { model ->
+                if (
+                    model.liveName.value?.isEmpty() != true ||
+                    model.liveDescription.value?.isEmpty() != true ||
+                    model.liveImgPath.value?.isEmpty() != true ||
+                    model.liveTimerMin.value != 0 ||
+                    model.liveTimerSec.value != 0 ||
+                    model.liveTypeInt.value != 0
+                ) {
+                    return false
+                }
+            }
+
+            return true
+        }
     }
 
     fun initializeWith(loadingRecipeId: String?) {
@@ -141,6 +194,7 @@ internal class RecipeEditorViewModel @Inject constructor(
                 .onSuccess { recipeTypes ->
                     _liveRecipeTypes.value = recipeTypes
                     fetchRecipeTempUseCase(FetchRecipeTempRequest(recipeId)).getOrNull()?.let {
+                        _liveLoading.value = false
                         tempRecipe = it
                         _eventRecipeEditor.value = Event(RecipeEditorEvent.TempDialog(recipeId))
                     } ?: if (recipeId == NEW_ID) {
@@ -150,14 +204,16 @@ internal class RecipeEditorViewModel @Inject constructor(
                     }
                 }
                 .onFailure {
+                    _liveLoading.value = false
                     _eventRecipeEditor.value = Event(RecipeEditorEvent.Error)
                 }
-            _liveLoading.value = false
         }
     }
 
     fun showRecipeFromTemp() {
         if (isInitialized) return
+
+        _liveLoading.value = true
         val (metaModel, stepList) =
             tempRecipe.toPresentation(
                 recipeValidator,
@@ -166,7 +222,17 @@ internal class RecipeEditorViewModel @Inject constructor(
             )
         recipeMetaModel = metaModel
         _liveStepModelList.value = stepList
-        isInitialized = true
+
+        if (tempRecipe.recipeId.isNotEmpty()) {
+            viewModelScope.launch {
+                oldRecipe = getMyRecipeUseCase(GetMyRecipeRequest(tempRecipe.recipeId)).getOrNull()
+                _liveLoading.value = false
+                isInitialized = true
+            }
+        } else {
+            _liveLoading.value = false
+            isInitialized = true
+        }
     }
 
     fun showRecipeFromLocal(recipeId: String) {
@@ -194,11 +260,13 @@ internal class RecipeEditorViewModel @Inject constructor(
             deleteRecipeTempUseCase(DeleteRecipeTempRequest(NEW_ID))
         }
         isInitialized = true
+        _liveLoading.value = false
     }
 
     private suspend fun loadFromLocal(recipeId: String) {
         getMyRecipeUseCase(GetMyRecipeRequest(recipeId))
             .onSuccess { recipe ->
+                oldRecipe = recipe
                 val (metaModel, stepList) =
                     recipe.toPresentation(recipeValidator, _liveRecipeTypes.value ?: listOf(), recipeStepValidator)
                 recipeMetaModel = metaModel
@@ -211,6 +279,9 @@ internal class RecipeEditorViewModel @Inject constructor(
     }
 
     private fun saveTempRecipe() {
+        if (!isInitialized || isSameWithOld()) {
+            return
+        }
         _liveTempLoading.value = true
         tempJob?.cancel()
         tempJob = viewModelScope.launch {
@@ -224,10 +295,10 @@ internal class RecipeEditorViewModel @Inject constructor(
     }
 
     fun showExitDialog() {
-        if (didEdit) {
-            _eventRecipeEditor.value = Event(RecipeEditorEvent.ExitDialog)
+        if (isSameWithOld()) {
+            deleteTemp(true)
         } else {
-            _eventRecipeEditor.value = Event(RecipeEditorEvent.Exit)
+            _eventRecipeEditor.value = Event(RecipeEditorEvent.ExitDialog)
         }
     }
 
@@ -304,7 +375,7 @@ internal class RecipeEditorViewModel @Inject constructor(
     private fun saveRecipe() {
         _liveRegisterHasPressed.value = true
         if (isRecipeValid()) {
-            if (!didEdit) {
+            if (isSameWithOld()) {
                 _eventRecipeEditor.value = Event(RecipeEditorEvent.SaveResult(true))
                 return
             }
