@@ -9,6 +9,7 @@ import com.kdjj.domain.model.request.FetchOthersRecipeRequest
 import com.kdjj.domain.model.request.GetMyRecipeRequest
 import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
+import com.kdjj.presentation.common.Notifications
 import com.kdjj.presentation.model.StepTimerModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -18,14 +19,15 @@ import javax.inject.Inject
 class RecipeDetailViewModel @Inject constructor(
     private val ringtone: Ringtone,
     private val getMyRecipeUseCase: ResultUseCase<GetMyRecipeRequest, Recipe>,
-    private val fetchOthersRecipeUseCase: ResultUseCase<FetchOthersRecipeRequest, Recipe>
+    private val fetchOthersRecipeUseCase: ResultUseCase<FetchOthersRecipeRequest, Recipe>,
+    private val notifications: Notifications
 ) : ViewModel() {
 
     private val _liveStepList = MutableLiveData<List<RecipeStep>>()
     val liveStepList: LiveData<List<RecipeStep>> get() = _liveStepList
     val liveModelList = liveStepList.map { stepList ->
         stepList.map { step ->
-            StepTimerModel(step) {
+            StepTimerModel(step, notifications) {
                 ringtone.play()
                 _liveTimerList.value?.indexOf(it)?.let { idx ->
                     _eventRecipeDetail.value = Event(RecipeDetailEvent.MoveToTimer(idx))
@@ -157,6 +159,12 @@ class RecipeDetailViewModel @Inject constructor(
                     timerModel.reset()
                 }
             }
+        }
+    }
+
+    fun onBackgroundOrForeground(){
+        _liveTimerList.value?.forEach { stepTimerModel ->
+            stepTimerModel.onBackgroundOrForeground()
         }
     }
 
