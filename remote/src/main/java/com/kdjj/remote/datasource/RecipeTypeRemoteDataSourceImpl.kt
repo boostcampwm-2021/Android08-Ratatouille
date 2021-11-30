@@ -3,11 +3,11 @@ package com.kdjj.remote.datasource
 import com.kdjj.data.datasource.RecipeTypeRemoteDataSource
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.remote.dto.toDomain
-import com.kdjj.remote.service.FirestoreService
+import com.kdjj.remote.service.RecipeTypeService
 import javax.inject.Inject
 
 internal class RecipeTypeRemoteDataSourceImpl @Inject constructor(
-    private val fireStoreService: FirestoreService
+    private val fireStoreService: RecipeTypeService
 ) : RecipeTypeRemoteDataSource {
 
     override suspend fun fetchRecipeTypeList(): Result<List<RecipeType>> =

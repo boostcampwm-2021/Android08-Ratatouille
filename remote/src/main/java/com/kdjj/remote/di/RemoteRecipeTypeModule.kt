@@ -1,9 +1,9 @@
 package com.kdjj.remote.di
 
 import com.kdjj.data.datasource.RecipeTypeRemoteDataSource
-import com.kdjj.remote.service.FirestoreService
-import com.kdjj.remote.service.FirestoreServiceImpl
 import com.kdjj.remote.datasource.RecipeTypeRemoteDataSourceImpl
+import com.kdjj.remote.service.RecipeTypeService
+import com.kdjj.remote.service.RecipeTypeServiceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -19,10 +19,10 @@ abstract class RemoteRecipeTypeModule {
     internal abstract fun bindRecipeTypeRemoteDataSource(
         recipeTypeRemoteDataSourceImpl: RecipeTypeRemoteDataSourceImpl
     ): RecipeTypeRemoteDataSource
-    
+
     @Binds
     @Singleton
-    internal abstract fun bindFireStoreDao(
-        firestoreDaoImpl: FirestoreServiceImpl
-    ): FirestoreService
+    internal abstract fun bindRecipeTypeService(
+        recipeTypeServiceImpl: RecipeTypeServiceImpl
+    ): RecipeTypeService
 }
