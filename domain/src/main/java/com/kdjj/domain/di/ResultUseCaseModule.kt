@@ -13,7 +13,7 @@ abstract class ResultUseCaseModule {
     @Binds
     internal abstract fun bindDeleteMyRecipeUseCase(
         deleteMyRecipeUseCase: DeleteMyRecipeUseCase
-    ): ResultUseCase<DeleteMyRecipeRequest, Boolean>
+    ): ResultUseCase<DeleteMyRecipeRequest, Unit>
 
     @Binds
     internal abstract fun bindFetchMyFavoriteRecipeListUseCase(
@@ -58,7 +58,7 @@ abstract class ResultUseCaseModule {
     @Binds
     internal abstract fun bindSaveMyRecipeUseCase(
         saveMyRecipeUseCase: SaveMyRecipeUseCase
-    ): ResultUseCase<SaveMyRecipeRequest, Boolean>
+    ): ResultUseCase<SaveMyRecipeRequest, Unit>
 
     @Binds
     internal abstract fun bindUpdateMyRecipeFavoriteUseCase(

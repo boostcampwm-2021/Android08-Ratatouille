@@ -12,9 +12,9 @@ internal class SaveMyRecipeUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository,
     private val imageRepository: RecipeImageRepository,
     private val idGenerator: IdGenerator,
-) : ResultUseCase<SaveMyRecipeRequest, Boolean> {
+) : ResultUseCase<SaveMyRecipeRequest, Unit> {
 
-    override suspend fun invoke(request: SaveMyRecipeRequest): Result<Boolean> {
+    override suspend fun invoke(request: SaveMyRecipeRequest): Result<Unit> {
         val recipe = request.recipe
         val imgList = listOf(recipe.imgPath) + recipe.stepList.map { it.imgPath }
 

@@ -7,15 +7,15 @@ interface RecipeRepository {
 
     suspend fun saveMyRecipe(
         recipe: Recipe
-    ): Result<Boolean>
+    ): Result<Unit>
 
     suspend fun updateMyRecipe(
         recipe: Recipe
-    ): Result<Boolean>
+    ): Result<Unit>
 
     suspend fun deleteMyRecipe(
         recipe: Recipe
-    ): Result<Boolean>
+    ): Result<Unit>
 
     suspend fun uploadRecipe(
         recipe: Recipe

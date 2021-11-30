@@ -24,7 +24,7 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
 
     override suspend fun saveRecipe(
         recipe: Recipe
-    ): Result<Boolean> =
+    ): Result<Unit> =
         withContext(Dispatchers.IO) {
             runCatching {
                 recipeDatabase.withTransaction {
@@ -39,17 +39,15 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
                         recipeDao.insertRecipeStep(recipeStep.toDto(recipe.recipeId, idx + 1))
                     }
                 }
-                true
             }
         }
 
     override suspend fun updateRecipe(
         recipe: Recipe
-    ): Result<Boolean> =
+    ): Result<Unit> =
         withContext(Dispatchers.IO) {
             runCatching {
                 recipeDao.updateRecipeMeta(recipe.toDto())
-                true
             }
         }
 
@@ -80,7 +78,7 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
 
     override suspend fun deleteRecipe(
         recipe: Recipe
-    ): Result<Boolean> =
+    ): Result<Unit> =
         withContext(Dispatchers.IO) {
             runCatching {
                 recipeDatabase.withTransaction {
@@ -90,7 +88,6 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
                             .plus(UselessImageDto(recipe.imgPath)),
                     )
                     recipeDao.deleteRecipe(recipe.toDto())
-                    true
                 }
             }
         }

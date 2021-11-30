@@ -21,7 +21,7 @@ internal class RecipeTypeRepositoryImpl @Inject constructor(
     
     override suspend fun saveRecipeTypeList(
         recipeTypeList: List<RecipeType>
-    ): Result<Boolean> {
+    ): Result<Unit> {
         return localDataSource.saveRecipeTypeList(recipeTypeList)
     }
 }

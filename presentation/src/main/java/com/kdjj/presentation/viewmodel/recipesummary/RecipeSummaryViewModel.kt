@@ -24,10 +24,10 @@ import javax.inject.Inject
 class RecipeSummaryViewModel @Inject constructor(
     private val getMyRecipeFlowUseCase: FlowUseCase<GetMyRecipeRequest, Recipe>,
     private val updateMyRecipeFavoriteUseCase: ResultUseCase<UpdateMyRecipeFavoriteRequest, Boolean>,
-    private val deleteMyRecipeUseCase: ResultUseCase<DeleteMyRecipeRequest, Boolean>,
+    private val deleteMyRecipeUseCase: ResultUseCase<DeleteMyRecipeRequest, Unit>,
     private val deleteUploadedRecipeUseCase: ResultUseCase<DeleteUploadedRecipeRequest, Unit>,
     private val fetchOthersRecipeUseCase: ResultUseCase<FetchOthersRecipeRequest, Recipe>,
-    private val saveMyRecipeUseCase: ResultUseCase<SaveMyRecipeRequest, Boolean>,
+    private val saveMyRecipeUseCase: ResultUseCase<SaveMyRecipeRequest, Unit>,
     private val uploadRecipeUseCase: ResultUseCase<UploadRecipeRequest, Unit>,
     private val increaseViewCountUseCase: ResultUseCase<IncreaseOthersRecipeViewCountRequest, Unit>,
     private val fetchRecipeTypeListUseCase: ResultUseCase<EmptyRequest, List<RecipeType>>,

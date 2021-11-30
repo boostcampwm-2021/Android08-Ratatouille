@@ -26,7 +26,7 @@ import javax.inject.Inject
 internal class RecipeEditorViewModel @Inject constructor(
     private val recipeValidator: RecipeValidator,
     private val recipeStepValidator: RecipeStepValidator,
-    private val saveRecipeUseCase: ResultUseCase<SaveMyRecipeRequest, Boolean>,
+    private val saveRecipeUseCase: ResultUseCase<SaveMyRecipeRequest, Unit>,
     private val fetchRecipeTypesUseCase: ResultUseCase<EmptyRequest, List<RecipeType>>,
     private val getMyRecipeUseCase: ResultUseCase<GetMyRecipeRequest, Recipe>,
     private val fetchRecipeTempUseCase: ResultUseCase<FetchRecipeTempRequest, Recipe?>,

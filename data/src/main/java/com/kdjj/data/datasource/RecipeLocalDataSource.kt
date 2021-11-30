@@ -7,15 +7,15 @@ interface RecipeLocalDataSource {
 
     suspend fun saveRecipe(
         recipe: Recipe
-    ): Result<Boolean>
+    ): Result<Unit>
 
     suspend fun updateRecipe(
         recipe: Recipe
-    ): Result<Boolean>
+    ): Result<Unit>
 
     suspend fun deleteRecipe(
         recipe: Recipe
-    ): Result<Boolean>
+    ): Result<Unit>
 
     fun getRecipeFlow(
         recipeId: String
