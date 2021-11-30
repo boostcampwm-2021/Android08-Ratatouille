@@ -12,41 +12,36 @@ import javax.inject.Inject
 internal class FirebaseStorageServiceImpl @Inject constructor(
     private val storageRef: StorageReference
 ) : FirebaseStorageService {
-    
+
     override suspend fun fetchRecipeImage(
         uriList: List<String>
-    ): Result<List<ByteArray>> =
-         withContext(Dispatchers.IO) {
-            runCatching {
-                val res = uriList.map {
-                    async {
-                        storageRef.storage
-                            .getReferenceFromUrl(it)
-                            .getBytes(MAX_SIZE)
-                            .await()
-                    }
+    ): List<ByteArray> =
+        withContext(Dispatchers.IO) {
+            val res = uriList.map {
+                async {
+                    storageRef.storage
+                        .getReferenceFromUrl(it)
+                        .getBytes(MAX_SIZE)
+                        .await()
                 }
-                res.map { it.await() }
             }
+            res.map { it.await() }
         }
 
-    
+
     override suspend fun uploadRecipeImage(
         uri: String
-    ): Result<String> {
-        return withContext(Dispatchers.IO) {
-            runCatching {
-                val file = Uri.fromFile(File(uri))
-                val refer = storageRef.child("images/${file.lastPathSegment}")
-                refer.putFile(file).await()
-                val newUri = refer.downloadUrl.await()
-                newUri.toString()
-            }
+    ): String =
+        withContext(Dispatchers.IO) {
+            val file = Uri.fromFile(File(uri))
+            val refer = storageRef.child("images/${file.lastPathSegment}")
+            refer.putFile(file).await()
+            val newUri = refer.downloadUrl.await()
+            newUri.toString()
         }
-    }
-    
+
     companion object {
-        
+
         val MAX_SIZE: Long = 10485760L
     }
 }

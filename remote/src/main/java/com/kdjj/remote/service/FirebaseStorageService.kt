@@ -4,9 +4,9 @@ internal interface FirebaseStorageService {
     
     suspend fun fetchRecipeImage(
         uriList: List<String>
-    ): Result<List<ByteArray>>
-    
+    ): List<ByteArray>
+
     suspend fun uploadRecipeImage(
         uri: String
-    ): Result<String>
+    ): String
 }
