@@ -28,9 +28,9 @@ internal class RecipeImageRepositoryImpl @Inject constructor(
                         byteArrayDegreePairList.map { it.first },
                         imgInfoList.map { it.fileName },
                         byteArrayDegreePairList.map { it.second }
-                    ).onFailure {
-                        return Result.failure(it)
-                    }
+                    )
+                }.onFailure {
+                    return Result.failure(it)
                 }
         }.fold(Result.success(listOf())) { acc, result ->
             acc.flatMap { accList ->
@@ -52,6 +52,8 @@ internal class RecipeImageRepositoryImpl @Inject constructor(
                         imgInfoList.map { it.fileName },
                         (0..byteArrayList.size).map { null }
                     )
+                }.onFailure {
+                    return Result.failure(it)
                 }
         }.fold(Result.success(listOf())) { acc, result ->
             acc.flatMap { accList ->
