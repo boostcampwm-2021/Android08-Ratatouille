@@ -7,6 +7,7 @@ import com.kdjj.domain.model.request.FetchOthersPopularRecipeListRequest
 import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.viewmodel.common.MainCoroutineRule
 import com.kdjj.presentation.viewmodel.common.getDummyRecipeList
+import io.reactivex.rxjava3.observers.TestObserver
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineScope
 import org.junit.Assert.assertEquals
@@ -31,7 +32,6 @@ class OthersViewModelTest {
     @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
-
         TestCoroutineScope(mainCoroutineRule.coroutineContext).launch {
             `when`(mockFetchOthersLatestRecipeListUseCase(
                 FetchOthersLatestRecipeListRequest(true))
@@ -47,7 +47,6 @@ class OthersViewModelTest {
                     getDummyRecipeList()
                 )
             )
-
             viewModel = OthersViewModel(mockFetchOthersLatestRecipeListUseCase, mockFetchOthersFavoriteRecipeListUseCase)
         }
     }
@@ -63,15 +62,24 @@ class OthersViewModelTest {
     }
 
     @Test
-    fun refreshList() {
-    }
-
-    @Test
     fun fetchNextRecipeListPage() {
     }
 
     @Test
-    fun moveToRecipeSearchFragment() {
+    fun moveToRecipeSearchFragment_subscribeOthersSubject_equalsValueSearchIconClicked() {
+        //given
+        val testObserver = TestObserver<OthersViewModel.ButtonClick>()
+        viewModel.othersSubject
+            .subscribe(testObserver)
+
+        //when
+        viewModel.moveToRecipeSearchFragment()
+        viewModel.othersSubject.onComplete()
+
+        //then
+        //assertResult :
+        //assertSubscribed(), assertValues(values) ,assertNoErrors(), assertComplete()를 연속으로 호출합니다.
+        testObserver.assertResult(OthersViewModel.ButtonClick.SearchIconClicked)
     }
 
     @Test
