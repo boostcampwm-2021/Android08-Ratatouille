@@ -5,6 +5,7 @@ import com.kdjj.domain.model.*
 import com.kdjj.domain.model.request.FetchOthersLatestRecipeListRequest
 import com.kdjj.domain.model.request.FetchOthersPopularRecipeListRequest
 import com.kdjj.domain.usecase.ResultUseCase
+import com.kdjj.presentation.model.toRecipeListItemModel
 import com.kdjj.presentation.viewmodel.common.MainCoroutineRule
 import com.kdjj.presentation.viewmodel.common.getDummyRecipeList
 import io.reactivex.rxjava3.observers.TestObserver
@@ -84,5 +85,17 @@ class OthersViewModelTest {
 
     @Test
     fun recipeItemClick() {
+        //given
+        val testObserver = TestObserver<OthersViewModel.ButtonClick>()
+        val recipeListItemModel = getDummyRecipeList()[0].toRecipeListItemModel()
+        viewModel.othersSubject
+            .subscribe(testObserver)
+
+        //when
+        viewModel.recipeItemClick(recipeListItemModel)
+
+        //then
+        testObserver.assertValueCount(1)
+            .assertNoErrors()
     }
 }
