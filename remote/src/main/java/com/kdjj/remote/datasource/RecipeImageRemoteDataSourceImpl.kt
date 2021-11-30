@@ -2,18 +2,18 @@ package com.kdjj.remote.datasource
 
 import com.kdjj.data.datasource.RecipeImageRemoteDataSource
 import com.kdjj.domain.common.errorMap
-import com.kdjj.remote.service.FirebaseStorageService
+import com.kdjj.remote.service.RecipeImageService
 import javax.inject.Inject
 
 internal class RecipeImageRemoteDataSourceImpl @Inject constructor(
-    private val firebaseStorageService: FirebaseStorageService
+    private val recipeImageService: RecipeImageService
 ) : RecipeImageRemoteDataSource {
 
     override suspend fun fetchRecipeImage(
         uriList: List<String>
     ): Result<List<ByteArray>> =
         runCatching {
-            firebaseStorageService.fetchRecipeImage(uriList)
+            recipeImageService.fetchRecipeImage(uriList)
         }.errorMap {
             Exception(it.message)
         }
@@ -23,7 +23,7 @@ internal class RecipeImageRemoteDataSourceImpl @Inject constructor(
         uri: String
     ): Result<String> =
         runCatching {
-            firebaseStorageService.uploadRecipeImage(uri)
+            recipeImageService.uploadRecipeImage(uri)
         }.errorMap {
             Exception(it.message)
         }
