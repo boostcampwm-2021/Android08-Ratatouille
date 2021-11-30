@@ -9,8 +9,10 @@ import com.kdjj.presentation.viewmodel.common.MainCoroutineRule
 import com.kdjj.presentation.viewmodel.common.getDummyRecipeList
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineScope
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 
@@ -48,5 +50,31 @@ class OthersViewModelTest {
 
             viewModel = OthersViewModel(mockFetchOthersLatestRecipeListUseCase, mockFetchOthersFavoriteRecipeListUseCase)
         }
+    }
+
+    @Test
+    fun setChecked_typeToPopular_liveSortTypeChanged() {
+        //given
+        viewModel.setChecked(OthersViewModel.OthersSortType.LATEST)
+        //when
+        viewModel.setChecked(OthersViewModel.OthersSortType.POPULAR)
+        //then
+        assertEquals(OthersViewModel.OthersSortType.POPULAR, viewModel.liveSortType.value)
+    }
+
+    @Test
+    fun refreshList() {
+    }
+
+    @Test
+    fun fetchNextRecipeListPage() {
+    }
+
+    @Test
+    fun moveToRecipeSearchFragment() {
+    }
+
+    @Test
+    fun recipeItemClick() {
     }
 }
