@@ -6,9 +6,9 @@ import javax.inject.Inject
 
 internal class DeleteMyRecipeUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository
-) : ResultUseCase<DeleteMyRecipeRequest, Boolean> {
+) : ResultUseCase<DeleteMyRecipeRequest, Unit> {
 
-    override suspend fun invoke(request: DeleteMyRecipeRequest): Result<Boolean> {
+    override suspend fun invoke(request: DeleteMyRecipeRequest): Result<Unit> {
         return recipeRepository.deleteMyRecipe(request.recipe)
     }
 }

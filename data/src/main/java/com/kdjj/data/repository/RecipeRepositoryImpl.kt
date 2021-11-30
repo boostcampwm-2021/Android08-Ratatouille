@@ -17,13 +17,13 @@ internal class RecipeRepositoryImpl @Inject constructor(
 
     override suspend fun saveMyRecipe(
         recipe: Recipe
-    ): Result<Boolean> {
+    ): Result<Unit> {
         return recipeLocalDataSource.saveRecipe(recipe).onSuccess { isUpdated.value++ }
     }
 
     override suspend fun updateMyRecipe(
         recipe: Recipe
-    ): Result<Boolean> {
+    ): Result<Unit> {
         return recipeLocalDataSource.updateRecipe(recipe).onSuccess { isUpdated.value++ }
     }
 
@@ -36,7 +36,7 @@ internal class RecipeRepositoryImpl @Inject constructor(
 
     override suspend fun deleteMyRecipe(
         recipe: Recipe
-    ): Result<Boolean> {
+    ): Result<Unit> {
         return recipeLocalDataSource.deleteRecipe(recipe).onSuccess { isUpdated.value++ }
     }
 

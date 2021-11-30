@@ -10,5 +10,5 @@ interface RecipeTypeRepository {
     
     suspend fun saveRecipeTypeList(
         recipeTypeList: List<RecipeType>
-    ): Result<Boolean>
+    ): Result<Unit>
 }

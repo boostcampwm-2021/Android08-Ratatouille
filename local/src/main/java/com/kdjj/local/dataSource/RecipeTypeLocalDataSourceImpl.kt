@@ -15,7 +15,7 @@ internal class RecipeTypeLocalDataSourceImpl @Inject constructor(
     
     override suspend fun saveRecipeTypeList(
         recipeTypeList: List<RecipeType>
-    ): Result<Boolean> =
+    ): Result<Unit> =
         withContext(Dispatchers.IO) {
             runCatching {
                 recipeTypeList.map { recipeType ->
@@ -23,7 +23,6 @@ internal class RecipeTypeLocalDataSourceImpl @Inject constructor(
                 }.forEach { recipeTypeEntity ->
                     recipeTypeDao.insertRecipeType(recipeTypeEntity)
                 }
-                true
             }
         }
     
