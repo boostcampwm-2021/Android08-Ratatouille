@@ -7,12 +7,12 @@ import com.kdjj.remote.service.RecipeTypeService
 import javax.inject.Inject
 
 internal class RecipeTypeRemoteDataSourceImpl @Inject constructor(
-    private val fireStoreService: RecipeTypeService
+    private val recipeTypeService: RecipeTypeService
 ) : RecipeTypeRemoteDataSource {
 
     override suspend fun fetchRecipeTypeList(): Result<List<RecipeType>> =
         runCatching {
-            val recipeTypeList = fireStoreService.fetchRecipeTypes()
+            val recipeTypeList = recipeTypeService.fetchRecipeTypes()
                 .map { it.toDomain() }
             if (recipeTypeList.isEmpty()) throw Exception("Can't fetch recipe type.")
             recipeTypeList
