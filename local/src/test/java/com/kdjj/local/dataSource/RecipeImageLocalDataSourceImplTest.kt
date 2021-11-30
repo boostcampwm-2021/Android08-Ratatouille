@@ -123,9 +123,9 @@ class RecipeImageLocalDataSourceImplTest {
 
     @Test
     fun deleteUselessImages_getSuccess_true(): Unit = runBlocking {
-        //when
-        `when`(mockUselessImageDao.getAllUselessImage()).thenReturn(uselessImageDtoList)
         //given
+        `when`(mockUselessImageDao.getAllUselessImage()).thenReturn(uselessImageDtoList)
+        //when
         recipeImageLocalDataSourceImpl.deleteUselessImages()
         //then
         verify(mockImageFileHelper, times(uselessImageDtoList.size))
