@@ -1,7 +1,7 @@
 package com.kdjj.remote.service
 
-internal interface FirebaseStorageService {
-    
+internal interface RecipeImageService {
+
     suspend fun fetchRecipeImage(
         uriList: List<String>
     ): List<ByteArray>
