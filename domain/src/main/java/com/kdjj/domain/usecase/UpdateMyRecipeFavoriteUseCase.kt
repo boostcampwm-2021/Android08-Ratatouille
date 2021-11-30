@@ -8,11 +8,11 @@ internal class UpdateMyRecipeFavoriteUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository
 ) : ResultUseCase<UpdateMyRecipeFavoriteRequest, Boolean> {
 
-    override suspend fun invoke(request: UpdateMyRecipeFavoriteRequest): Result<Boolean> =
-        runCatching {
-            val recipe = request.recipe
-            val newFavoriteState = !recipe.isFavorite
-            recipeRepository.updateMyRecipe(recipe.copy(isFavorite = newFavoriteState)).getOrThrow()
+    override suspend fun invoke(request: UpdateMyRecipeFavoriteRequest): Result<Boolean> {
+        val recipe = request.recipe
+        val newFavoriteState = !recipe.isFavorite
+        return recipeRepository.updateMyRecipe(recipe.copy(isFavorite = newFavoriteState)).map {
             newFavoriteState
         }
+    }
 }
