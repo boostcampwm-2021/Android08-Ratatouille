@@ -1,6 +1,7 @@
 package com.kdjj.domain.usecase
 
 import com.kdjj.domain.common.IdGenerator
+import com.kdjj.domain.common.flatMap
 import com.kdjj.domain.model.ImageInfo
 import com.kdjj.domain.model.request.UpdateMyRecipeRequest
 import com.kdjj.domain.repository.RecipeImageRepository
@@ -13,55 +14,51 @@ internal class UpdateMyRecipeUseCase @Inject constructor(
     private val idGenerator: IdGenerator,
 ) : ResultUseCase<UpdateMyRecipeRequest, Unit> {
 
-    override suspend fun invoke(request: UpdateMyRecipeRequest): Result<Unit> =
-        runCatching {
-            val originRecipe = recipeRepository.getLocalRecipe(request.updatedRecipe.recipeId).getOrThrow()
-            var updatedRecipe = request.updatedRecipe
+    override suspend fun invoke(request: UpdateMyRecipeRequest): Result<Unit> {
+        return recipeRepository.getLocalRecipe(request.updatedRecipe.recipeId).flatMap { originRecipe ->
+            val updatedRecipe = request.updatedRecipe
+            val imgList = listOf(updatedRecipe.imgPath) + updatedRecipe.stepList.map { it.imgPath }
 
-            val imgList = listOf(updatedRecipe.imgPath)
-                .plus(updatedRecipe.stepList.map { it.imgPath })
-                .toMutableList()
-
-            val imgInfoList = imgList.filter { it.isNotBlank() }
-                .map { ImageInfo(it, idGenerator.generateId()) }
-
-            val changedImgList = copyImageToInternal(imgInfoList)
-
-            var i = 0
-            imgList.forEachIndexed { index, s ->
-                if (s.isNotBlank()) {
-                    imgList[index] = changedImgList[i++]
-                }
+            val imgInfoList = imgList.filter {
+                it.isNotBlank()
+            }.map {
+                ImageInfo(it, idGenerator.generateId())
             }
 
-            val updatedRecipeStepList = updatedRecipe.stepList.mapIndexed { i, step ->
-                step.copy(
-                    stepId = if (step.stepId.isBlank()) idGenerator.generateId()
-                    else step.stepId,
-                    imgPath = imgList[i + 1]
+            copyImageToInternal(imgInfoList).flatMap { changedImgList ->
+                var i = 0
+                val totalImgList = imgList.map {
+                    if (it.isEmpty()) it else changedImgList[i++]
+                }
+
+                val stepList = updatedRecipe.stepList.mapIndexed { idx, step ->
+                    step.copy(
+                        stepId = if (step.stepId.isBlank()) idGenerator.generateId()
+                        else step.stepId,
+                        imgPath = totalImgList[idx + 1]
+                    )
+                }
+
+                recipeRepository.updateMyRecipe(
+                    updatedRecipe.copy(
+                        imgPath = totalImgList.first(),
+                        stepList = stepList,
+                        createTime = System.currentTimeMillis()
+                    ),
+                    originRecipe.stepList.map { it.imgPath }.plus(originRecipe.imgPath)
                 )
             }
-
-            updatedRecipe = updatedRecipe.copy(
-                imgPath = imgList.first(),
-                stepList = updatedRecipeStepList,
-                createTime = System.currentTimeMillis()
-            )
-
-            recipeRepository.updateMyRecipe(
-                updatedRecipe,
-                originRecipe.stepList.map { it.imgPath }.plus(originRecipe.imgPath)
-            ).getOrThrow()
         }
+    }
 
-    private suspend fun copyImageToInternal(imgInfoList: List<ImageInfo>): List<String> {
-        if (imgInfoList.isEmpty()) return listOf()
-        return if (imgInfoList.first().uri.startsWith("https://") || imgInfoList.first().uri.startsWith("gs://")) {
-            imageRepository.copyRemoteImageToInternal(imgInfoList)
-                .getOrThrow()
-        } else {
-            imageRepository.copyExternalImageToInternal(imgInfoList)
-                .getOrThrow()
+    private suspend fun copyImageToInternal(imgInfoList: List<ImageInfo>): Result<List<String>> {
+        return when {
+            imgInfoList.isEmpty() ->
+                Result.success(listOf())
+            imgInfoList.first().uri.startsWith("https://") || imgInfoList.first().uri.startsWith("gs://") ->
+                imageRepository.copyRemoteImageToInternal(imgInfoList)
+            else ->
+                imageRepository.copyExternalImageToInternal(imgInfoList)
         }
     }
 }
