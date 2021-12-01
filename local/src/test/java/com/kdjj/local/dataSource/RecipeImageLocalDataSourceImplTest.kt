@@ -15,44 +15,44 @@ class RecipeImageLocalDataSourceImplTest {
     private lateinit var mockUselessImageDao: UselessImageDao
     private lateinit var recipeImageLocalDataSourceImpl: RecipeImageLocalDataSourceImpl
 
-    private val testUri = "this is test uri1"
+    private val dummyUri = "this is test uri1"
 
-    private val testUriList = listOf(
+    private val dummyUriList = listOf(
         "this is test uri1",
         "this is test uri2",
         "this is test uri3",
         "this is test uri4"
     )
 
-    private val testByteArrayWithDegreeList = listOf(
+    private val dummyByteArrayWithDegreeList = listOf(
         Pair("this is test uri1".toByteArray(), 90f),
         Pair("this is test uri2".toByteArray(), 90f),
         Pair("this is test uri3".toByteArray(), 90f),
         Pair("this is test uri4".toByteArray(), 90f)
     )
 
-    private val testByteArrayList = listOf(
+    private val dummyByteArrayList = listOf(
         "this is test uri1".toByteArray(),
         "this is test uri2".toByteArray(),
         "this is test uri3".toByteArray(),
         "this is test uri4".toByteArray()
     )
 
-    private val testFileNameList = listOf(
+    private val dummyFileNameList = listOf(
         "file1",
         "file2",
         "file3",
         "file4",
     )
 
-    private val testDegreeList = listOf(
+    private val dummyDegreeList = listOf(
         90f,
         90f,
         90f,
         90f,
     )
 
-    private val uselessImageDtoList = listOf(
+    private val dummyUselessImageDtoList = listOf(
         UselessImageDto("imagePath"),
         UselessImageDto("imagePath"),
         UselessImageDto("imagePath"),
@@ -70,15 +70,13 @@ class RecipeImageLocalDataSourceImplTest {
     @Test
     fun convertToByteArray_getImageByteArrayAndImageDegreeList_true(): Unit = runBlocking {
         //given
-        `when`(mockImageFileHelper.convertToByteArray(testUriList)).thenReturn(
-            Result.success(testByteArrayWithDegreeList)
+        `when`(mockImageFileHelper.convertToByteArray(dummyUriList)).thenReturn(
+            Result.success(dummyByteArrayWithDegreeList)
         )
-
         //when
-        val testResult = recipeImageLocalDataSourceImpl.convertToByteArray(testUriList)
-
+        val testResult = recipeImageLocalDataSourceImpl.convertToByteArray(dummyUriList)
         //then
-        assertEquals(testByteArrayWithDegreeList, testResult.getOrNull())
+        assertEquals(dummyByteArrayWithDegreeList, testResult.getOrNull())
     }
 
     @Test
@@ -86,27 +84,27 @@ class RecipeImageLocalDataSourceImplTest {
         //given
         `when`(
             mockImageFileHelper.convertToInternalStorageUri(
-                testByteArrayList,
-                testFileNameList,
-                testDegreeList
+                dummyByteArrayList,
+                dummyFileNameList,
+                dummyDegreeList
             )
-        ).thenReturn(Result.success(testUriList))
+        ).thenReturn(Result.success(dummyUriList))
         //when
         val testResult = recipeImageLocalDataSourceImpl.convertToInternalStorageUri(
-            testByteArrayList,
-            testFileNameList,
-            testDegreeList
+            dummyByteArrayList,
+            dummyFileNameList,
+            dummyDegreeList
         )
         //then
-        assertEquals(testUriList, testResult.getOrNull())
+        assertEquals(dummyUriList, testResult.getOrNull())
     }
 
     @Test
     fun isUriExists_getTrue_true(): Unit = runBlocking {
         //given
-        `when`(mockImageFileHelper.isUriExists(testUri)).thenReturn(true)
+        `when`(mockImageFileHelper.isUriExists(dummyUri)).thenReturn(true)
         //when
-        val testResult = recipeImageLocalDataSourceImpl.isUriExists(testUri)
+        val testResult = recipeImageLocalDataSourceImpl.isUriExists(dummyUri)
         //then
         assertTrue(testResult)
     }
@@ -114,9 +112,9 @@ class RecipeImageLocalDataSourceImplTest {
     @Test
     fun isUriExists_getFalse_false(): Unit = runBlocking {
         //given
-        `when`(mockImageFileHelper.isUriExists(testUri)).thenReturn(false)
+        `when`(mockImageFileHelper.isUriExists(dummyUri)).thenReturn(false)
         //when
-        val testResult = recipeImageLocalDataSourceImpl.isUriExists(testUri)
+        val testResult = recipeImageLocalDataSourceImpl.isUriExists(dummyUri)
         //then
         assertFalse(testResult)
     }
@@ -124,13 +122,13 @@ class RecipeImageLocalDataSourceImplTest {
     @Test
     fun deleteUselessImages_getSuccess_true(): Unit = runBlocking {
         //given
-        `when`(mockUselessImageDao.getAllUselessImage()).thenReturn(uselessImageDtoList)
+        `when`(mockUselessImageDao.getAllUselessImage()).thenReturn(dummyUselessImageDtoList)
         //when
         recipeImageLocalDataSourceImpl.deleteUselessImages()
         //then
-        verify(mockImageFileHelper, times(uselessImageDtoList.size))
+        verify(mockImageFileHelper, times(dummyUselessImageDtoList.size))
             .deleteImageFile("imagePath")
-        verify(mockUselessImageDao,  times(uselessImageDtoList.size))
+        verify(mockUselessImageDao,  times(dummyUselessImageDtoList.size))
             .deleteUselessImage(UselessImageDto("imagePath"))
     }
 }

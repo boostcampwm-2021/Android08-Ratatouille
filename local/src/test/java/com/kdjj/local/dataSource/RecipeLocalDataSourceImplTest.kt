@@ -1,6 +1,5 @@
 package com.kdjj.local.dataSource
 
-import androidx.room.withTransaction
 import com.kdjj.domain.model.*
 import com.kdjj.local.dao.RecipeDao
 import com.kdjj.local.dao.UselessImageDao
@@ -21,7 +20,7 @@ class RecipeLocalDataSourceImplTest {
     private lateinit var mockUselessImageDao: UselessImageDao
     private lateinit var recipeLocalDataSourceImpl: RecipeLocalDataSourceImpl
 
-    private val testRecipeStepList = listOf(
+    private val dummyRecipeStepList = listOf(
         RecipeStep(
             "stepId",
             "굽기",
@@ -32,13 +31,13 @@ class RecipeLocalDataSourceImplTest {
         )
     )
 
-    private val testRecipe = Recipe(
+    private val dummyRecipe = Recipe(
         "recipeId",
         "고기",
         RecipeType(1, "한식"),
         "stuff",
         "image path",
-        testRecipeStepList,
+        dummyRecipeStepList,
         "authrId",
         100,
         false,
@@ -46,7 +45,7 @@ class RecipeLocalDataSourceImplTest {
         RecipeState.CREATE
     )
 
-    private val recipeMeta = RecipeMetaDto(
+    private val dummyRecipeMeta = RecipeMetaDto(
         "recipeId",
         "두둥탁! 맛있는 감자탕!!",
         "stuff",
@@ -58,7 +57,7 @@ class RecipeLocalDataSourceImplTest {
         1L,
     )
 
-    private val recipeStepDto = RecipeStepDto(
+    private val dummyRecipeStepDto = RecipeStepDto(
         "stepId",
         "삶기",
         1,
@@ -69,15 +68,15 @@ class RecipeLocalDataSourceImplTest {
         "recipeId"
     )
 
-    private val recipeTypeDto = RecipeTypeDto(1L, "한식")
+    private val dummyRecipeTypeDto = RecipeTypeDto(1L, "한식")
 
-    private val recipeDto = RecipeDto(
-        recipeMeta,
-        recipeTypeDto,
-        listOf(recipeStepDto)
+    private val dummyRecipeDto = RecipeDto(
+        dummyRecipeMeta,
+        dummyRecipeTypeDto,
+        listOf(dummyRecipeStepDto)
     )
 
-    private val testRecipeId = "recipeId"
+    private val dummyRecipeId = "recipeId"
 
     @Before
     fun setup() {
@@ -91,30 +90,30 @@ class RecipeLocalDataSourceImplTest {
     @Test
     fun updateFavoriteRecipe_successfullyFavoriteUpdated_true(): Unit = runBlocking {
         //given
-        recipeLocalDataSourceImpl.updateRecipe(testRecipe)
+        recipeLocalDataSourceImpl.updateRecipe(dummyRecipe)
         //then
-        verify(mockRecipeDao, times(1)).updateRecipeMeta(testRecipe.toDto())
+        verify(mockRecipeDao, times(1)).updateRecipeMeta(dummyRecipe.toDto())
     }
 
     @Test
     fun getRecipeFlow_getRecipeFlowByRecipeId_true(): Unit = runBlocking {
         //when
-        `when`(mockRecipeDao.getRecipe(testRecipeId)).thenReturn(flowOf(recipeDto))
+        `when`(mockRecipeDao.getRecipe(dummyRecipeId)).thenReturn(flowOf(dummyRecipeDto))
         //given
-        val testResult = recipeLocalDataSourceImpl.getRecipeFlow(testRecipeId)
+        val testResult = recipeLocalDataSourceImpl.getRecipeFlow(dummyRecipeId)
         //then
         testResult.collect {
-            assertEquals(recipeDto.toDomain(), it)
+            assertEquals(dummyRecipeDto.toDomain(), it)
         }
     }
 
     @Test
     fun getRecipe_getRecipeByRecipeId_true(): Unit = runBlocking {
         //when
-        `when`(mockRecipeDao.getRecipeDto(testRecipeId)).thenReturn(recipeDto)
+        `when`(mockRecipeDao.getRecipeDto(dummyRecipeId)).thenReturn(dummyRecipeDto)
         //given
-        val testResult = recipeLocalDataSourceImpl.getRecipe(testRecipeId)
+        val testResult = recipeLocalDataSourceImpl.getRecipe(dummyRecipeId)
         //then
-        assertEquals(recipeDto.toDomain(), testResult.getOrNull())
+        assertEquals(dummyRecipeDto.toDomain(), testResult.getOrNull())
     }
 }
