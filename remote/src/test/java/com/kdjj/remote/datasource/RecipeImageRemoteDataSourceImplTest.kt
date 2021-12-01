@@ -1,4 +1,4 @@
-package com.kdjj.remote.recipe
+package com.kdjj.remote.datasource
 
 //class RecipeImageRemoteDataSourceImplTest {
 //

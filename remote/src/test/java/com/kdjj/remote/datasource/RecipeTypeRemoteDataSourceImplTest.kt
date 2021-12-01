@@ -1,6 +1,5 @@
-package com.kdjj.remote.recipe
+package com.kdjj.remote.datasource
 
-import com.kdjj.remote.datasource.RecipeTypeRemoteDataSourceImpl
 import com.kdjj.remote.dto.RecipeTypeDto
 import com.kdjj.remote.dto.toDomain
 import com.kdjj.remote.service.RecipeTypeService
