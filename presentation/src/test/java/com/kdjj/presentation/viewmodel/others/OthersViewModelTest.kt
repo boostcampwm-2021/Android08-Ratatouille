@@ -52,8 +52,10 @@ class OthersViewModelTest {
     fun setChecked_typeToPopular_liveSortTypeChanged() {
         //given
         viewModel.setChecked(OthersViewModel.OthersSortType.LATEST)
+
         //when
         viewModel.setChecked(OthersViewModel.OthersSortType.POPULAR)
+
         //then
         assertEquals(OthersViewModel.OthersSortType.POPULAR, viewModel.liveSortType.value)
     }

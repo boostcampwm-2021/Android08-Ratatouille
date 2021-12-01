@@ -8,10 +8,12 @@ import com.kdjj.domain.model.request.FetchMyLatestRecipeListRequest
 import com.kdjj.domain.model.request.FetchMyTitleRecipeListRequest
 import com.kdjj.domain.usecase.FlowUseCase
 import com.kdjj.domain.usecase.ResultUseCase
+import com.kdjj.presentation.model.MyRecipeItem
 import com.kdjj.presentation.model.SortType
 import com.kdjj.presentation.viewmodel.common.MainCoroutineRule
 import com.kdjj.presentation.viewmodel.common.getDummyRecipeList
 import com.kdjj.presentation.viewmodel.common.getOrAwaitValue
+import io.reactivex.rxjava3.observers.TestObserver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
@@ -39,18 +41,20 @@ class MyRecipeViewModelTest {
     private lateinit var viewModel: MyRecipeViewModel
     private val testRecipeFlow = MutableStateFlow(0)
 
+    private val dummyRecipeList = getDummyRecipeList()
+
     @Before
     fun setUp(): Unit = runBlocking {
         `when`(mockDeleteUselessImageFileUseCase(EmptyRequest)).thenReturn(Result.success(Unit))
         `when`(mockGetRecipeUpdateFlowUseCase(EmptyRequest)).thenReturn(testRecipeFlow)
         `when`(mockLatestRecipeUseCase(FetchMyLatestRecipeListRequest(0))).thenReturn(
             Result.success(
-                getDummyRecipeList()
+                dummyRecipeList
             )
         )
         `when`(mockTitleRecipeUseCase(FetchMyTitleRecipeListRequest(0))).thenReturn(
             Result.success(
-                getDummyRecipeList()
+                dummyRecipeList
             )
         )
         viewModel = MyRecipeViewModel(mockLatestRecipeUseCase, mockFavoriteRecipeUseCase,
@@ -61,8 +65,10 @@ class MyRecipeViewModelTest {
     fun setSortType_typeToName_liveSortTypeChanged(): Unit = runBlocking {
         //given
         viewModel.setSortType(SortType.SORT_BY_TIME)
+
         //when
         viewModel.setSortType(SortType.SORT_BY_NAME)
+
         //then
         assertEquals(SortType.SORT_BY_NAME, viewModel.liveSortType.value)
     }
@@ -71,8 +77,10 @@ class MyRecipeViewModelTest {
     fun refreshRecipeList_callAfter_FetchOnlyOne(): Unit = runBlocking {
         //given
         viewModel.setSortType(SortType.SORT_BY_NAME)
+
         //when
         viewModel.refreshRecipeList()
+
         //then
         verify(mockTitleRecipeUseCase, times(2)).invoke(FetchMyTitleRecipeListRequest(0))
     }
@@ -91,7 +99,34 @@ class MyRecipeViewModelTest {
     }
 
     @Test
-    fun recipeItemSelected() {
+    fun recipeItemSelected_clickFirst_liveRecipeItemSelectedChanged() {
+        //when
+        viewModel.recipeItemSelected(MyRecipeItem.MyRecipe(dummyRecipeList[0]))
+
+        //then
+        assertEquals(viewModel.liveRecipeItemSelected.value?.recipe, dummyRecipeList[0])
+    }
+
+    @Test
+    fun recipeItemSelected_doubleClicked_mySubjectEqualsDoubleClicked() {
+        //given
+        val testObserver = TestObserver<MyRecipeViewModel.ButtonClick>()
+        viewModel.mySubject
+            .subscribe(testObserver)
+        val myRecipe = MyRecipeItem.MyRecipe(dummyRecipeList[0])
+
+        //when
+        viewModel.recipeItemSelected(myRecipe)
+        viewModel.recipeItemSelected(myRecipe)
+
+        //then
+        testObserver.assertValue {
+            if (it is MyRecipeViewModel.ButtonClick.DoubleClicked) {
+                it.item == myRecipe
+            } else {
+                false
+            }
+        }
     }
 
     @Test
