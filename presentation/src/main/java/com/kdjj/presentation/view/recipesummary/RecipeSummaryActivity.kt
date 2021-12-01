@@ -162,8 +162,8 @@ class RecipeSummaryActivity : AppCompatActivity() {
                 is RecipeSummaryViewModel.RecipeSummaryEvent.LoadError -> {
                     ConfirmDialogBuilder.create(
                         this@RecipeSummaryActivity,
-                        "오류 발생",
-                        "레시피를 들고오던 라따뚜이가 넘어졌습니다..ㅠㅠ\n확인버튼을 누르면 이전 화면으로 돌아갑니다."
+                        getString(R.string.errorOccurs),
+                        getString(R.string.ratatouilleErrorMassage)
                     ) {
                         finish()
                     }
@@ -172,8 +172,8 @@ class RecipeSummaryActivity : AppCompatActivity() {
                 RecipeSummaryViewModel.RecipeSummaryEvent.DeleteConfirm -> {
                     ConfirmDialogBuilder.create(
                         context = this@RecipeSummaryActivity,
-                        title = "삭제 확인",
-                        content = "레시피를 삭제하면 다시 볼 수 없습니다.\n정말 삭제하시겠습니까?",
+                        title = getString(R.string.deleteConfirm),
+                        content = getString(R.string.deleteConfirmContent),
                         showCancel = true,
                         onCancelListener = null,
                         onConfirmListener = { recipeSummaryViewModel.deleteRecipe() }
@@ -184,31 +184,31 @@ class RecipeSummaryActivity : AppCompatActivity() {
                     if (it.flag) {
                         ConfirmDialogBuilder.create(
                             this@RecipeSummaryActivity,
-                            "삭제 완료",
-                            "레시피가 정상적으로 삭제되었습니다.\n확인을 눌러 이전화면으로 돌아가주세요."
+                            getString(R.string.deleteFinish),
+                            getString(R.string.deleteFinishContent)
                         ) {
                             finish()
                         }
                     } else {
-                        showSnackBar("삭제 실패")
+                        showSnackBar(getString(R.string.deleteFailed))
                     }
                 }
 
                 is RecipeSummaryViewModel.RecipeSummaryEvent.UploadFinish -> {
-                    val message = if (it.flag) "업로드 성공" else "업로드 실패"
+                    val message = if (it.flag) getString(R.string.uploadSuccess) else getString(R.string.uploadFailed)
                     showSnackBar(message)
                 }
 
                 is RecipeSummaryViewModel.RecipeSummaryEvent.SaveFinish -> {
-                    val message = if (it.flag) "저장 성공" else "저장 실패"
+                    val message = if (it.flag) getString(R.string.saveSuccess) else getString(R.string.saveFailed)
                     showSnackBar(message)
                 }
 
                 is RecipeSummaryViewModel.RecipeSummaryEvent.UpdateFavoriteFinish -> {
                     val message = when (it.result) {
-                        UpdateFavoriteResult.ADD -> "즐겨찾기 추가 성공"
-                        UpdateFavoriteResult.REMOVE -> "즐겨찾기 제거 성공"
-                        UpdateFavoriteResult.ERROR -> "즐겨찾기 변경 실패"
+                        UpdateFavoriteResult.ADD -> getString(R.string.favoriteAddSuccess)
+                        UpdateFavoriteResult.REMOVE -> getString(R.string.favoriteRemoveSuccess)
+                        UpdateFavoriteResult.ERROR -> getString(R.string.favoriteChangeSuccess)
                     }
                     showSnackBar(message)
                 }

@@ -146,24 +146,24 @@ class RecipeEditorActivity : AppCompatActivity() {
                     if (event.isSuccess) {
                         ConfirmDialogBuilder.create(
                             this,
-                            "저장 완료",
-                            "레시피가 정상적으로 저장되었습니다.",
+                            getString(R.string.saveFinish),
+                            getString(R.string.saveFinishContent)
                         ) {
                             finish()
                         }
                     } else {
                         ConfirmDialogBuilder.create(
                             this,
-                            "저장 실패",
-                            "레시피를 저장하지 못했습니다.",
+                            getString(R.string.saveFailed),
+                            getString(R.string.saveFailedContent)
                         ) { }
                     }
                 }
                 is RecipeEditorViewModel.RecipeEditorEvent.Error -> {
                     ConfirmDialogBuilder.create(
                         this,
-                        "오류 발생",
-                        "레시피를 들고오던 라따뚜이가 넘어졌습니다..ㅠㅠ\n확인버튼을 누르면 이전 화면으로 돌아갑니다."
+                        getString(R.string.errorOccurs),
+                        getString(R.string.ratatouilleErrorMassage)
                     ) {
                         finish()
                     }
@@ -171,8 +171,8 @@ class RecipeEditorActivity : AppCompatActivity() {
                 is RecipeEditorViewModel.RecipeEditorEvent.TempDialog -> {
                     ConfirmDialogBuilder.create(
                         this,
-                        "임시 저장된 레시피",
-                        "저장되지 않은 수정 내역이 존재합니다. 이어서 수정하시겠습니까?",
+                        getString(R.string.tempRecipe),
+                        getString(R.string.tempRecipeContent),
                         true,
                         {
                             viewModel.showRecipeFromLocal(event.recipeId)
@@ -184,8 +184,8 @@ class RecipeEditorActivity : AppCompatActivity() {
                 is RecipeEditorViewModel.RecipeEditorEvent.ExitDialog -> {
                     ConfirmDialogBuilder.create(
                         this,
-                        "나가기",
-                        "변경 사항을 저장하지 않고 나가시겠습니까?",
+                        getString(R.string.exit),
+                        getString(R.string.exitContent),
                         true,
                     ) {
                         viewModel.deleteTemp(true)
