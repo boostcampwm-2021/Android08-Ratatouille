@@ -17,10 +17,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
 
 @HiltViewModel
 internal class RecipeEditorViewModel @Inject constructor(
@@ -83,7 +90,7 @@ internal class RecipeEditorViewModel @Inject constructor(
     private val compositeDisposable = CompositeDisposable()
     val editorSubject: PublishSubject<ButtonClick> = PublishSubject.create()
 
-    private val tempSubject: PublishSubject<Unit> = PublishSubject.create()
+    private val tempFlow = MutableStateFlow(0)
     private var oldRecipe: Recipe? = null
 
     private val _liveTempLoading = MutableLiveData(false)
@@ -106,18 +113,16 @@ internal class RecipeEditorViewModel @Inject constructor(
                 compositeDisposable.add(it)
             }
 
-        tempSubject.debounce(3, TimeUnit.SECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                saveTempRecipe()
-            }
-            .also {
-                compositeDisposable.add(it)
-            }
+        viewModelScope.launch {
+            tempFlow.debounce(3000)
+                .collect {
+                    saveTempRecipe()
+                }
+        }
     }
 
     fun doEdit() {
-        tempSubject.onNext(Unit)
+        tempFlow.value++
     }
 
     private fun isSameWithOld(): Boolean {
