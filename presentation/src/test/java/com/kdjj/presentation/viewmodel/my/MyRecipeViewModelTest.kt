@@ -8,11 +8,13 @@ import com.kdjj.domain.model.request.FetchMyLatestRecipeListRequest
 import com.kdjj.domain.model.request.FetchMyTitleRecipeListRequest
 import com.kdjj.domain.usecase.FlowUseCase
 import com.kdjj.domain.usecase.ResultUseCase
+import com.kdjj.presentation.model.SortType
 import com.kdjj.presentation.viewmodel.common.MainCoroutineRule
 import com.kdjj.presentation.viewmodel.common.getDummyRecipeList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -36,6 +38,7 @@ class MyRecipeViewModelTest {
 
     private lateinit var viewModel: MyRecipeViewModel
     private val testRecipeFlow = MutableStateFlow(0)
+
     @Before
     fun setUp(): Unit = runBlocking {
         `when`(mockDeleteUselessImageFileUseCase(EmptyRequest)).thenReturn(Result.success(Unit))
@@ -45,12 +48,23 @@ class MyRecipeViewModelTest {
                 getDummyRecipeList()
             )
         )
+        `when`(mockTitleRecipeUseCase(FetchMyTitleRecipeListRequest(0))).thenReturn(
+            Result.success(
+                getDummyRecipeList()
+            )
+        )
         viewModel = MyRecipeViewModel(mockLatestRecipeUseCase, mockFavoriteRecipeUseCase,
             mockTitleRecipeUseCase, mockGetRecipeUpdateFlowUseCase, mockDeleteUselessImageFileUseCase)
     }
 
     @Test
-    fun setSortType() {
+    fun setSortType_typeToName_liveSortTypeChanged(): Unit = runBlocking {
+        //given
+        viewModel.setSortType(SortType.SORT_BY_TIME)
+        //when
+        viewModel.setSortType(SortType.SORT_BY_NAME)
+        //then
+        assertEquals(SortType.SORT_BY_NAME, viewModel.liveSortType.value)
     }
 
     @Test
