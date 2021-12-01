@@ -24,13 +24,6 @@ class RecipeImageLocalDataSourceImplTest {
         "this is test uri4"
     )
 
-    private val dummyByteArrayWithDegreeList = listOf(
-        Pair("this is test uri1".toByteArray(), 90f),
-        Pair("this is test uri2".toByteArray(), 90f),
-        Pair("this is test uri3".toByteArray(), 90f),
-        Pair("this is test uri4".toByteArray(), 90f)
-    )
-
     private val dummyByteArrayList = listOf(
         "this is test uri1".toByteArray(),
         "this is test uri2".toByteArray(),
@@ -58,6 +51,8 @@ class RecipeImageLocalDataSourceImplTest {
         UselessImageDto("imagePath"),
         UselessImageDto("imagePath")
     )
+
+    private val dummyByteArrayWithDegreeList = dummyByteArrayList.zip(dummyDegreeList)
 
     @Before
     fun setup() {
@@ -128,7 +123,7 @@ class RecipeImageLocalDataSourceImplTest {
         //then
         verify(mockImageFileHelper, times(dummyUselessImageDtoList.size))
             .deleteImageFile("imagePath")
-        verify(mockUselessImageDao,  times(dummyUselessImageDtoList.size))
+        verify(mockUselessImageDao, times(dummyUselessImageDtoList.size))
             .deleteUselessImage(UselessImageDto("imagePath"))
     }
 }

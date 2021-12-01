@@ -6,7 +6,9 @@ import com.kdjj.local.dao.UselessImageDao
 import com.kdjj.local.database.RecipeDatabase
 import com.kdjj.local.dto.*
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -102,9 +104,7 @@ class RecipeLocalDataSourceImplTest {
         //given
         val testResult = recipeLocalDataSourceImpl.getRecipeFlow(dummyRecipeId)
         //then
-        testResult.collect {
-            assertEquals(dummyRecipeDto.toDomain(), it)
-        }
+        assertEquals(dummyRecipeDto.toDomain(), testResult.first())
     }
 
     @Test
