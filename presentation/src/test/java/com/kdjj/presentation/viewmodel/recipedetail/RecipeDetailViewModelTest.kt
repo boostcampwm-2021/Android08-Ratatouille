@@ -118,12 +118,40 @@ class RecipeDetailViewModelTest {
     }
 
     @Test
-    fun scrollToStep() {
+    fun scrollToStep_selectFirst_updatedEvent(): Unit = runBlocking {
+        //given
+        viewModelInit()
+        val selectIdx = 0
 
+        //when
+        viewModel.scrollToStep(dummyRecipe.stepList[selectIdx])
+
+        //then
+        val eventRecipeDetailValue = viewModel.eventRecipeDetail.value?.getContentIfNotHandled()
+        if (eventRecipeDetailValue is RecipeDetailViewModel.RecipeDetailEvent.MoveToStep) {
+            assertEquals(eventRecipeDetailValue.idx, selectIdx)
+        } else {
+            assert(false)
+        }
     }
 
     @Test
-    fun updateCurrentStepTo() {
+    fun updateCurrentStepTo_selectLast_updatedEventAndLiveStepBarSelected() {
+        //given
+        val updatedCurrentStepIdx = dummyRecipe.stepList.lastIndex
+        viewModelInit()
+
+        //when
+        viewModel.updateCurrentStepTo(updatedCurrentStepIdx)
+
+        //then
+        assertEquals(viewModel.liveStepBarSelected.value, dummyRecipe.stepList.last())
+        val eventRecipeDetailValue = viewModel.eventRecipeDetail.value?.getContentIfNotHandled()
+        if (eventRecipeDetailValue is RecipeDetailViewModel.RecipeDetailEvent.MoveToStepBar) {
+            assertEquals(eventRecipeDetailValue.idx, updatedCurrentStepIdx)
+        } else {
+            assert(false)
+        }
     }
 
     @Test
@@ -144,5 +172,14 @@ class RecipeDetailViewModelTest {
 
     @Test
     fun onCleared() {
+    }
+
+    private fun viewModelInit(): Unit = runBlocking {
+        `when`(mockGetMyRecipeUseCase(GetMyRecipeRequest(dummyRecipe.recipeId))).thenReturn(
+            Result.success(
+                dummyRecipe
+            )
+        )
+        viewModel.initializeWith(dummyRecipe.recipeId, RecipeState.CREATE)
     }
 }

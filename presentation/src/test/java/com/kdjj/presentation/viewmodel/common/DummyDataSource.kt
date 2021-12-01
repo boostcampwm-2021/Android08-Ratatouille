@@ -17,6 +17,44 @@ fun getDummyRecipeList() = listOf<Recipe>(
                 description = "썰어",
                 imgPath = "contents/dfsdfsf.png",
                 seconds = 10
+            ),
+            RecipeStep(
+                stepId = "s02",
+                name = "썰기",
+                type = RecipeStepType.FRY,
+                description = "썰어",
+                imgPath = "contents/dfsdfsf.png",
+                seconds = 10
+            )
+        ),
+        viewCount = 0,
+        authorId = "device01",
+        imgPath = "contents/dsfsfdsf.png",
+        createTime = System.currentTimeMillis(),
+        type = RecipeType(1, "기타")
+    ),
+    Recipe(
+        recipeId = "02",
+        title = "딸빙",
+        stuff = "딸기 3개",
+        state = RecipeState.CREATE,
+        isFavorite = false,
+        stepList = listOf(
+            RecipeStep(
+                stepId = "s03",
+                name = "썰기",
+                type = RecipeStepType.FRY,
+                description = "썰어",
+                imgPath = "contents/dfsdfsf.png",
+                seconds = 10
+            ),
+            RecipeStep(
+                stepId = "s04",
+                name = "썰기",
+                type = RecipeStepType.FRY,
+                description = "썰어",
+                imgPath = "contents/dfsdfsf.png",
+                seconds = 10
             )
         ),
         viewCount = 0,
