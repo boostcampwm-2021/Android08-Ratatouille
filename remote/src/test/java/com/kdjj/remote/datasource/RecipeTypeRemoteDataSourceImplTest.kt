@@ -14,12 +14,12 @@ class RecipeTypeRemoteDataSourceImplTest {
 
     private lateinit var mockRecipeTypeService: RecipeTypeService
     private lateinit var recipeRemoteDataSourceImpl: RecipeTypeRemoteDataSourceImpl
-    private val testRecipeTypeDtoList = listOf(
+    private val dummyRecipeTypeDtoList = listOf(
         RecipeTypeDto(1, "한식"),
         RecipeTypeDto(1, "중식"),
         RecipeTypeDto(1, "양식")
     )
-    private val testRecipeTypeList = testRecipeTypeDtoList.map { it.toDomain() }
+    private val dummyRecipeTypeList = dummyRecipeTypeDtoList.map { it.toDomain() }
 
     @Before
     fun setup() {
@@ -31,12 +31,12 @@ class RecipeTypeRemoteDataSourceImplTest {
     @Test
     fun fetchRecipeTypes_getRecipeTypeList_true(): Unit = runBlocking {
         // given
-        `when`(mockRecipeTypeService.fetchRecipeTypes()).thenReturn(testRecipeTypeDtoList)
+        `when`(mockRecipeTypeService.fetchRecipeTypes()).thenReturn(dummyRecipeTypeDtoList)
 
         // when
         val recipeTypeList = recipeRemoteDataSourceImpl.fetchRecipeTypeList()
 
         // then
-        assertEquals(Result.success(testRecipeTypeList), recipeTypeList)
+        assertEquals(Result.success(dummyRecipeTypeList), recipeTypeList)
     }
 }
