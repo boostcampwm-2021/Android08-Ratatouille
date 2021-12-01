@@ -32,8 +32,6 @@
                 tools:node="remove" />
         </provider>
 
-        <receiver android:name="com.kdjj.presentation.viewmodel.recipedetail.NotificationBroadcastReceiver"/>
-
     </application>
 
 </manifest>
