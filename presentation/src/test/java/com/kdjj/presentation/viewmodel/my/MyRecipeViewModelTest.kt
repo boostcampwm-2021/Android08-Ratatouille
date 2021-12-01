@@ -1,0 +1,75 @@
+package com.kdjj.presentation.viewmodel.my
+
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.kdjj.domain.model.Recipe
+import com.kdjj.domain.model.request.EmptyRequest
+import com.kdjj.domain.model.request.FetchMyFavoriteRecipeListRequest
+import com.kdjj.domain.model.request.FetchMyLatestRecipeListRequest
+import com.kdjj.domain.model.request.FetchMyTitleRecipeListRequest
+import com.kdjj.domain.usecase.FlowUseCase
+import com.kdjj.domain.usecase.ResultUseCase
+import com.kdjj.presentation.viewmodel.common.MainCoroutineRule
+import com.kdjj.presentation.viewmodel.common.getDummyRecipeList
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.runBlocking
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
+
+class MyRecipeViewModelTest {
+
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
+
+    @ExperimentalCoroutinesApi
+    @get:Rule
+    val mainCoroutineRule = MainCoroutineRule()
+
+    private val mockLatestRecipeUseCase = mock(ResultUseCase::class.java) as ResultUseCase<FetchMyLatestRecipeListRequest, List<Recipe>>
+    private val mockFavoriteRecipeUseCase = mock(ResultUseCase::class.java) as ResultUseCase<FetchMyFavoriteRecipeListRequest, List<Recipe>>
+    private val mockTitleRecipeUseCase = mock(ResultUseCase::class.java) as ResultUseCase<FetchMyTitleRecipeListRequest, List<Recipe>>
+    private val mockGetRecipeUpdateFlowUseCase = mock(FlowUseCase::class.java) as FlowUseCase<EmptyRequest, Int>
+    private val mockDeleteUselessImageFileUseCase = mock(ResultUseCase::class.java) as ResultUseCase<EmptyRequest, Unit>
+
+    private lateinit var viewModel: MyRecipeViewModel
+    private val testRecipeFlow = MutableStateFlow(0)
+    @Before
+    fun setUp(): Unit = runBlocking {
+        `when`(mockDeleteUselessImageFileUseCase(EmptyRequest)).thenReturn(Result.success(Unit))
+        `when`(mockGetRecipeUpdateFlowUseCase(EmptyRequest)).thenReturn(testRecipeFlow)
+        `when`(mockLatestRecipeUseCase(FetchMyLatestRecipeListRequest(0))).thenReturn(
+            Result.success(
+                getDummyRecipeList()
+            )
+        )
+        viewModel = MyRecipeViewModel(mockLatestRecipeUseCase, mockFavoriteRecipeUseCase,
+            mockTitleRecipeUseCase, mockGetRecipeUpdateFlowUseCase, mockDeleteUselessImageFileUseCase)
+    }
+
+    @Test
+    fun setSortType() {
+    }
+
+    @Test
+    fun refreshRecipeList() {
+    }
+
+    @Test
+    fun fetchRecipeList() {
+    }
+
+    @Test
+    fun recipeItemSelected() {
+    }
+
+    @Test
+    fun moveToRecipeEditorActivity() {
+    }
+
+    @Test
+    fun moveToRecipeSearchFragment() {
+    }
+}

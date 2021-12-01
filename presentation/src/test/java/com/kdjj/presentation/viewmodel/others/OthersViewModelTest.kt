@@ -10,7 +10,6 @@ import com.kdjj.presentation.viewmodel.common.MainCoroutineRule
 import com.kdjj.presentation.viewmodel.common.getDummyRecipeList
 import io.reactivex.rxjava3.observers.TestObserver
 import kotlinx.coroutines.*
-import kotlinx.coroutines.test.TestCoroutineScope
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -19,11 +18,11 @@ import org.mockito.Mockito.*
 
 class OthersViewModelTest {
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val instantExecutorRule = InstantTaskExecutorRule()
 
     @ExperimentalCoroutinesApi
     @get:Rule
-    var mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = MainCoroutineRule()
 
     private val mockFetchOthersLatestRecipeListUseCase = mock(ResultUseCase::class.java) as ResultUseCase<FetchOthersLatestRecipeListRequest, @JvmSuppressWildcards List<Recipe>>
     private val mockFetchOthersFavoriteRecipeListUseCase = mock(ResultUseCase::class.java) as ResultUseCase<FetchOthersPopularRecipeListRequest, @JvmSuppressWildcards List<Recipe>>
@@ -31,24 +30,22 @@ class OthersViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Before
-    fun setUp() {
-        TestCoroutineScope(mainCoroutineRule.coroutineContext).launch {
-            `when`(mockFetchOthersLatestRecipeListUseCase(
-                FetchOthersLatestRecipeListRequest(true))
-            ).thenReturn(
-                Result.success(
-                    getDummyRecipeList()
-                )
+    fun setUp(): Unit = runBlocking {
+        `when`(mockFetchOthersLatestRecipeListUseCase(
+            FetchOthersLatestRecipeListRequest(true))
+        ).thenReturn(
+            Result.success(
+                getDummyRecipeList()
             )
-            `when`(mockFetchOthersFavoriteRecipeListUseCase(
-                FetchOthersPopularRecipeListRequest(true))
-            ).thenReturn(
-                Result.success(
-                    getDummyRecipeList()
-                )
+        )
+        `when`(mockFetchOthersFavoriteRecipeListUseCase(
+            FetchOthersPopularRecipeListRequest(true))
+        ).thenReturn(
+            Result.success(
+                getDummyRecipeList()
             )
-            viewModel = OthersViewModel(mockFetchOthersLatestRecipeListUseCase, mockFetchOthersFavoriteRecipeListUseCase)
-        }
+        )
+        viewModel = OthersViewModel(mockFetchOthersLatestRecipeListUseCase, mockFetchOthersFavoriteRecipeListUseCase)
     }
 
     @Test
