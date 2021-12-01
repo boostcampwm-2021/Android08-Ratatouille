@@ -35,7 +35,7 @@ class RecipeRemoteDataSourceImplTest {
         stepList = listOf(dummyRecipeStep1),
         authorId = "",
         viewCount = 0,
-        isFavorite = true,
+        isFavorite = false,
         createTime = 0,
         state = RecipeState.NETWORK
     )
