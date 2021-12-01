@@ -84,7 +84,7 @@ class RecipeRemoteDataSourceImplTest {
     }
 
     @Test
-    fun fetchRecipe_giveRecipeId_successAndDummyRecipe(): Unit = runBlocking {
+    fun fetchRecipe_giveRecipeId_successAndRecipe(): Unit = runBlocking {
         // given
         `when`(mockRecipeService.fetchRecipe(dummyRecipeId)).thenReturn(dummyRecipe.toDto())
 
