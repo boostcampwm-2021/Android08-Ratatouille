@@ -68,6 +68,7 @@
     <string name="severErrorMessage">서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="dataLoadFailMessage">데이터 로드에 실패하였습니다.</string>
     <string name="unknownErrorMessage">예상치 못한 에러가 발생했습니다. 다시 시도해 주세요.</string>
+    <string name="ratatouilleErrorMassage">레시피를 들고오던 라따뚜이가 넘어졌습니다..ㅠㅠ\n확인 버튼을 누르면 이전 화면으로 돌아갑니다.</string>
     <string name="refresh">새로고침</string>
 
     <string name="othersRecipe">남의 레시피</string>
@@ -85,5 +86,31 @@
     <string name="recipeType">레시피 종류</string>
     <string name="savingTemp">임시저장 중</string>
     <string name="noSearchResult">검색 결과가 없습니다.</string>
+
+    <string name="deleteConfirm">삭제 확인</string>
+    <string name="deleteConfirmContent">레시피를 삭제하면 다시 볼 수 없습니다.\n정말 삭제하시겠습니까?</string>
+    <string name="deleteFinish">삭제 완료</string>
+    <string name="deleteFinishContent">레시피가 정상적으로 삭제되었습니다.\n확인을 눌러 이전화면으로 돌아가주세요.</string>
+    <string name="deleteFailed">삭제 실패</string>
+
+    <string name="uploadSuccess">업로드 성공</string>
+    <string name="uploadFailed">업로드 실패</string>
+
+    <string name="saveSuccess">저장 성공</string>
+    <string name="saveFailed">저장 실패</string>
+
+    <string name="saveFinish">저장 완료</string>
+    <string name="saveFinishContent">레시피가 정상적으로 저장되었습니다.</string>
+    <string name="saveFailedContent">레시피를 저장하지 못했습니다.</string>
+
+    <string name="tempRecipe">임시 저장된 레시피</string>
+    <string name="tempRecipeContent">저장되지 않은 수정 내역이 존재합니다. 이어서 수정하시겠습니까?</string>
+
+    <string name="exit">나가기</string>
+    <string name="exitContent">변경 사항을 저장하지 않고 나가시겠습니까?</string>
+
+    <string name="favoriteAddSuccess">즐겨찾기 추가 성공</string>
+    <string name="favoriteRemoveSuccess">즐겨찾기 제거 성공</string>
+    <string name="favoriteChangeSuccess">즐겨찾기 변경 실패</string>
 
 </resources>
