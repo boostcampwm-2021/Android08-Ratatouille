@@ -11,6 +11,7 @@ import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.model.SortType
 import com.kdjj.presentation.viewmodel.common.MainCoroutineRule
 import com.kdjj.presentation.viewmodel.common.getDummyRecipeList
+import com.kdjj.presentation.viewmodel.common.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
@@ -67,7 +68,7 @@ class MyRecipeViewModelTest {
     }
 
     @Test
-    fun refreshRecipeList(): Unit = runBlocking {
+    fun refreshRecipeList_callAfter_FetchOnlyOne(): Unit = runBlocking {
         //given
         viewModel.setSortType(SortType.SORT_BY_NAME)
         //when
@@ -77,7 +78,16 @@ class MyRecipeViewModelTest {
     }
 
     @Test
-    fun fetchRecipeList() {
+    fun fetchRecipeList_callAfter_liveDataUpdated(): Unit = runBlocking {
+        //given
+        viewModel.setSortType(SortType.SORT_BY_NAME)
+
+        //when
+        viewModel.fetchRecipeList(0)
+
+        //then
+        verify(mockTitleRecipeUseCase, times(2)).invoke(FetchMyTitleRecipeListRequest(0))
+        assertEquals(true, viewModel.liveRecipeItemList.getOrAwaitValue().isNotEmpty())
     }
 
     @Test
