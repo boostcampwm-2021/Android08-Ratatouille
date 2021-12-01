@@ -3,7 +3,7 @@ package com.kdjj.remote.recipe
 import com.kdjj.remote.datasource.RecipeTypeRemoteDataSourceImpl
 import com.kdjj.remote.dto.RecipeTypeDto
 import com.kdjj.remote.dto.toDomain
-import com.kdjj.remote.service.RecipeTypeServiceImpl
+import com.kdjj.remote.service.RecipeTypeService
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -13,7 +13,7 @@ import org.mockito.Mockito.mock
 
 class RecipeTypeRemoteDataSourceImplTest {
 
-    private lateinit var mockRecipeTypeServiceImpl: RecipeTypeServiceImpl
+    private lateinit var mockRecipeTypeService: RecipeTypeService
     private lateinit var recipeRemoteDataSourceImpl: RecipeTypeRemoteDataSourceImpl
     private val testRecipeTypeDtoList = listOf(
         RecipeTypeDto(1, "한식"),
@@ -25,14 +25,14 @@ class RecipeTypeRemoteDataSourceImplTest {
     @Before
     fun setup() {
         // given
-        mockRecipeTypeServiceImpl = mock(RecipeTypeServiceImpl::class.java)
-        recipeRemoteDataSourceImpl = RecipeTypeRemoteDataSourceImpl(mockRecipeTypeServiceImpl)
+        mockRecipeTypeService = mock(RecipeTypeService::class.java)
+        recipeRemoteDataSourceImpl = RecipeTypeRemoteDataSourceImpl(mockRecipeTypeService)
     }
 
     @Test
     fun fetchRecipeTypes_getRecipeTypeList_true(): Unit = runBlocking {
         // given
-        `when`(mockRecipeTypeServiceImpl.fetchRecipeTypes()).thenReturn(testRecipeTypeDtoList)
+        `when`(mockRecipeTypeService.fetchRecipeTypes()).thenReturn(testRecipeTypeDtoList)
 
         // when
         val recipeTypeList = recipeRemoteDataSourceImpl.fetchRecipeTypeList()
