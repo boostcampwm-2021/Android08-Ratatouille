@@ -5,6 +5,8 @@ import com.kdjj.data.datasource.RecipeLocalDataSource
 import com.kdjj.domain.common.errorMap
 import com.kdjj.domain.model.Recipe
 import com.kdjj.domain.model.exception.NotExistRecipeException
+import com.kdjj.local.dao.RecipeDao
+import com.kdjj.local.dao.UselessImageDao
 import com.kdjj.local.database.RecipeDatabase
 import com.kdjj.local.dto.UselessImageDto
 import com.kdjj.local.dto.toDomain
@@ -16,11 +18,10 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 internal class RecipeLocalDataSourceImpl @Inject constructor(
-    private val recipeDatabase: RecipeDatabase
+    private val recipeDatabase: RecipeDatabase,
+    private val recipeDao: RecipeDao,
+    private val uselessImageDao: UselessImageDao
 ) : RecipeLocalDataSource {
-
-    private val recipeDao = recipeDatabase.getRecipeDao()
-    private val uselessImageDao = recipeDatabase.getUselessImageDao()
 
     override suspend fun saveRecipe(
         recipe: Recipe
@@ -30,8 +31,8 @@ internal class RecipeLocalDataSourceImpl @Inject constructor(
                 recipeDatabase.withTransaction {
                     uselessImageDao.deleteUselessImage(
                         recipe.stepList
-                        .map { it.imgPath }
-                        .plus(recipe.imgPath),
+                            .map { it.imgPath }
+                            .plus(recipe.imgPath),
                     )
                     recipeDao.deleteStepList(recipe.recipeId)
                     recipeDao.insertRecipeMeta(recipe.toDto())
