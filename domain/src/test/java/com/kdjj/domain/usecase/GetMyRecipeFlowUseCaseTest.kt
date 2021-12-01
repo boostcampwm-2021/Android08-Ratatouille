@@ -28,7 +28,7 @@ class GetMyRecipeFlowUseCaseTest {
     }
 
     @Test
-    fun getMyRecipeFlowUseCase_givenSuccess_returnSuccess(): Unit = runBlocking {
+    fun getMyRecipeFlowUseCase_givenFlowRecipe_returnFlowRecipe(): Unit = runBlocking {
         //when
         `when`(mockRecipeRepository.getMyRecipeFlow(mockGetMyRecipeRequest.recipeId))
             .thenReturn(flowOf(mockRecipe))
