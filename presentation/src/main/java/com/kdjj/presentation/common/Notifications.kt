@@ -9,7 +9,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.kdjj.presentation.R
-import com.kdjj.presentation.viewmodel.recipedetail.NotificationBroadcastReceiver
+import com.kdjj.presentation.view.recipedetail.RecipeDetailActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -81,8 +81,8 @@ class Notifications @Inject constructor(
         }
 
         private fun getPendingIntent(context: Context): PendingIntent {
-            val intent = Intent(context, NotificationBroadcastReceiver::class.java)
-            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val intent = Intent(context, RecipeDetailActivity::class.java)
+            return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
         fun cancelAllNotification(context: Context) {

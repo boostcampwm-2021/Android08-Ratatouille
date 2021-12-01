@@ -14,7 +14,8 @@
             android:exported="false" />
         <activity
             android:name=".view.recipedetail.RecipeDetailActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTop" />
         <activity
             android:name=".view.home.HomeActivity"
             android:exported="false" />
