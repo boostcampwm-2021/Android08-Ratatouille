@@ -87,7 +87,6 @@ class RecipeListLocalDataSourceImplTest {
             .thenReturn(listOf(dummyRecipeDto))
         //when
         val testResult = recipeListLocalDataSourceImpl.fetchSearchRecipeListAfter(dummyKeyword, dummyIndex)
-        println("aaa $testResult")
         //then
         assertEquals(listOf(dummyRecipeDto).map { it.toDomain() }, testResult.getOrNull())
     }
