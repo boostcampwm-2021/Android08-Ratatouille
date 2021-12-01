@@ -8,6 +8,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import java.lang.Exception
 
 class DeleteRecipeTempUseCaseTest {
 
@@ -23,7 +24,7 @@ class DeleteRecipeTempUseCaseTest {
     }
 
     @Test
-    fun deleteRecipeTempUseCase(): Unit = runBlocking {
+    fun deleteRecipeTempUseCase_givenSuccess_returnSuccess(): Unit = runBlocking {
         //given
         `when`(mockTempRepository.deleteRecipeTemp(mockDeleteRecipeTempRequest.recipeId))
             .thenReturn(Result.success(Unit))
@@ -32,6 +33,19 @@ class DeleteRecipeTempUseCaseTest {
         val testResult = deleteRecipeTempUseCase.invoke(mockDeleteRecipeTempRequest)
 
         //then
-        assertEquals(Result.success(Unit), testResult)
+        assertTrue(testResult.isSuccess)
+    }
+
+    @Test
+    fun deleteRecipeTempUseCase_givenFailure_returnFailure(): Unit = runBlocking {
+        //given
+        `when`(mockTempRepository.deleteRecipeTemp(mockDeleteRecipeTempRequest.recipeId))
+            .thenReturn(Result.failure(Exception()))
+
+        //when
+        val testResult = deleteRecipeTempUseCase.invoke(mockDeleteRecipeTempRequest)
+
+        //then
+        assertTrue(testResult.isFailure)
     }
 }

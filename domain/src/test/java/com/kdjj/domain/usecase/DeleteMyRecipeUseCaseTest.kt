@@ -24,7 +24,7 @@ class DeleteMyRecipeUseCaseTest {
     }
 
     @Test
-    fun deleteMyRecipeUseCase(): Unit = runBlocking {
+    fun deleteMyRecipeUseCase_givenSuccess_returnSuccess(): Unit = runBlocking {
         //given
         `when`(mockRecipeRepository.deleteMyRecipe(mockDeleteMyRecipeRequest.recipe))
             .thenReturn(Result.success(Unit))
@@ -33,6 +33,19 @@ class DeleteMyRecipeUseCaseTest {
         val testResult = deleteMyRecipeUseCase.invoke(mockDeleteMyRecipeRequest)
 
         //then
-        assertEquals(Result.success(Unit), testResult)
+        assertTrue(testResult.isSuccess)
+    }
+
+    @Test
+    fun deleteMyRecipeUseCase_givenFailure_returnFailure(): Unit = runBlocking {
+        //given
+        `when`(mockRecipeRepository.deleteMyRecipe(mockDeleteMyRecipeRequest.recipe))
+            .thenReturn(Result.failure(Exception()))
+
+        //when
+        val testResult = deleteMyRecipeUseCase.invoke(mockDeleteMyRecipeRequest)
+
+        //then
+        assertTrue(testResult.isFailure)
     }
 }
