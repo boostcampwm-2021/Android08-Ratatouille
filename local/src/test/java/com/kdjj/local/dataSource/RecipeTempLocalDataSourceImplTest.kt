@@ -90,7 +90,7 @@ class RecipeTempLocalDataSourceImplTest {
     }
 
     @Test
-    fun getRecipeTemp(): Unit = runBlocking {
+    fun getRecipeTemp_getRecipe_true(): Unit = runBlocking {
         //given
         `when`(mockRecipeTempDao.getRecipeTemp(dummyId)).thenReturn(dummyRecipeTempDto)
         //when

@@ -14,14 +14,14 @@ class RecipeTypeLocalDataSourceImplTest {
     private lateinit var mockRecipeTypeDao: RecipeTypeDao
     private lateinit var recipeTypeLocalDataSourceImpl: RecipeTypeLocalDataSourceImpl
 
-    private val testRecipeTypeList = listOf(
+    private val dummyRecipeTypeList = listOf(
         RecipeType(1, "a"),
         RecipeType(2, "b"),
         RecipeType(3, "c"),
         RecipeType(4, "d")
     )
 
-    private val testRecipeTypeDtoList = testRecipeTypeList.map { it.toDto() }
+    private val dummyRecipeTypeDtoList = dummyRecipeTypeList.map { it.toDto() }
 
     @Before
     fun setup() {
@@ -32,9 +32,9 @@ class RecipeTypeLocalDataSourceImplTest {
     @Test
     fun saveRecipeTypeList_saveRecipeTypeListIntoDatabase_true(): Unit = runBlocking {
         //given
-        recipeTypeLocalDataSourceImpl.saveRecipeTypeList(testRecipeTypeList)
+        recipeTypeLocalDataSourceImpl.saveRecipeTypeList(dummyRecipeTypeList)
         //then
-        testRecipeTypeList.forEach {
+        dummyRecipeTypeList.forEach {
             verify(mockRecipeTypeDao, times(1)).insertRecipeType(it.toDto())
         }
     }
@@ -42,10 +42,10 @@ class RecipeTypeLocalDataSourceImplTest {
     @Test
     fun fetchRecipeTypeList_getRecipeTypes_true(): Unit = runBlocking {
         //when
-        `when`(mockRecipeTypeDao.getAllRecipeTypeList()).thenReturn(testRecipeTypeDtoList)
+        `when`(mockRecipeTypeDao.getAllRecipeTypeList()).thenReturn(dummyRecipeTypeDtoList)
         //given
         val testResult = recipeTypeLocalDataSourceImpl.fetchRecipeTypeList()
         //then
-        assertEquals(testRecipeTypeList, testResult.getOrNull())
+        assertEquals(dummyRecipeTypeList, testResult.getOrNull())
     }
 }
