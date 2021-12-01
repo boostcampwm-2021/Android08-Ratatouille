@@ -127,13 +127,40 @@ class MyRecipeViewModelTest {
                 false
             }
         }
+        testObserver.dispose()
     }
 
     @Test
-    fun moveToRecipeEditorActivity() {
+    fun moveToRecipeEditorActivity_callAfter_AddRecipeHasPressed() {
+        //given
+        val testObserver = TestObserver<MyRecipeViewModel.ButtonClick>()
+        viewModel.mySubject
+            .subscribe(testObserver)
+
+        //when
+        viewModel.moveToRecipeEditorActivity()
+
+        //then
+        testObserver.assertValue {
+            it is MyRecipeViewModel.ButtonClick.AddRecipeHasPressed
+        }
+        testObserver.dispose()
     }
 
     @Test
-    fun moveToRecipeSearchFragment() {
+    fun moveToRecipeSearchFragment_callAfter_SearchIconClicked() {
+        //given
+        val testObserver = TestObserver<MyRecipeViewModel.ButtonClick>()
+        viewModel.mySubject
+            .subscribe(testObserver)
+
+        //when
+        viewModel.moveToRecipeSearchFragment()
+
+        //then
+        testObserver.assertValue {
+            it is MyRecipeViewModel.ButtonClick.SearchIconClicked
+        }
+        testObserver.dispose()
     }
 }

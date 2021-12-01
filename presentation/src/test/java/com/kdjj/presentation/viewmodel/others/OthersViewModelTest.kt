@@ -119,6 +119,7 @@ class OthersViewModelTest {
         //assertResult :
         //assertSubscribed(), assertValues(values) ,assertNoErrors(), assertComplete()를 연속으로 호출합니다.
         testObserver.assertResult(OthersViewModel.ButtonClick.SearchIconClicked)
+        testObserver.dispose()
     }
 
     @Test
@@ -135,5 +136,6 @@ class OthersViewModelTest {
         //then
         testObserver.assertValueCount(1)
             .assertNoErrors()
+        testObserver.dispose()
     }
 }
