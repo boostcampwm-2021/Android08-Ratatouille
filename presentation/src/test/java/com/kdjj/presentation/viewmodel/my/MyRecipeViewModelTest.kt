@@ -18,8 +18,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
+import org.mockito.Mockito.*
 
 class MyRecipeViewModelTest {
 
@@ -68,7 +67,13 @@ class MyRecipeViewModelTest {
     }
 
     @Test
-    fun refreshRecipeList() {
+    fun refreshRecipeList(): Unit = runBlocking {
+        //given
+        viewModel.setSortType(SortType.SORT_BY_NAME)
+        //when
+        viewModel.refreshRecipeList()
+        //then
+        verify(mockTitleRecipeUseCase, times(2)).invoke(FetchMyTitleRecipeListRequest(0))
     }
 
     @Test
