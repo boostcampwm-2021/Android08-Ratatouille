@@ -15,8 +15,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
+import org.mockito.Mockito.*
 
 class OthersViewModelTest {
     @get:Rule
@@ -63,7 +62,47 @@ class OthersViewModelTest {
     }
 
     @Test
-    fun fetchNextRecipeListPage() {
+    fun refreshList_callAfter_fetchLockTrueAndFetchOnlyOne(): Unit = runBlocking  {
+        //given
+        viewModel.setFetchEnabled.run()
+        viewModel.setChecked(OthersViewModel.OthersSortType.LATEST)
+
+        //when
+        viewModel.refreshList()
+
+        //then
+        verify(mockFetchOthersLatestRecipeListUseCase, times(2)).invoke(FetchOthersLatestRecipeListRequest(true))
+        assertEquals(true, viewModel.liveFetchLock.value)
+    }
+
+    @Test
+    fun fetchNextRecipeListPage_fetchLatestList_fetchLockTrueAndFetchOnlyOne(): Unit = runBlocking {
+        //given
+        viewModel.setFetchEnabled.run()
+        viewModel.setChecked(OthersViewModel.OthersSortType.LATEST)
+
+        //when
+        viewModel.setFetchEnabled.run()
+        viewModel.fetchNextRecipeListPage(true)
+
+        //then
+        verify(mockFetchOthersLatestRecipeListUseCase, times(2)).invoke(FetchOthersLatestRecipeListRequest(true))
+        assertEquals(true, viewModel.liveFetchLock.value)
+    }
+
+    @Test
+    fun fetchNextRecipeListPage_fetchPopularList_fetchLockTrueAndFetchOnlyOne(): Unit = runBlocking {
+        //given
+        viewModel.setFetchEnabled.run()
+        viewModel.setChecked(OthersViewModel.OthersSortType.POPULAR)
+
+        //when
+        viewModel.setFetchEnabled.run()
+        viewModel.fetchNextRecipeListPage(true)
+
+        //then
+        verify(mockFetchOthersFavoriteRecipeListUseCase, times(2)).invoke(FetchOthersPopularRecipeListRequest(true))
+        assertEquals(true, viewModel.liveFetchLock.value)
     }
 
     @Test
@@ -84,7 +123,7 @@ class OthersViewModelTest {
     }
 
     @Test
-    fun recipeItemClick() {
+    fun recipeItemClick_subscribeOthersSubject_equalsValueCount() {
         //given
         val testObserver = TestObserver<OthersViewModel.ButtonClick>()
         val recipeListItemModel = getDummyRecipeList()[0].toRecipeListItemModel()
