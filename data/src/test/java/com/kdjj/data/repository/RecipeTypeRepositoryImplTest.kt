@@ -10,6 +10,7 @@ import org.junit.Test
 import org.mockito.Mockito.*
 
 class RecipeTypeRepositoryImplTest {
+
     private lateinit var repositoryImpl: RecipeTypeRepositoryImpl
     private lateinit var localDataSource: RecipeTypeLocalDataSource
     private lateinit var remoteDataSource: RecipeTypeRemoteDataSource
