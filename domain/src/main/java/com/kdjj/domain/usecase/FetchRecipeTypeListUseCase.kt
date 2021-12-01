@@ -1,6 +1,5 @@
 package com.kdjj.domain.usecase
 
-import com.kdjj.domain.common.handleWith
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.repository.RecipeTypeRepository
 import com.kdjj.domain.model.request.EmptyRequest
@@ -11,10 +10,6 @@ class FetchRecipeTypeListUseCase @Inject constructor(
 ) : ResultUseCase<EmptyRequest, @JvmSuppressWildcards List<RecipeType>> {
 	
 	override suspend fun invoke(request: EmptyRequest): Result<List<RecipeType>> {
-		return recipeTypeRepository.fetchRemoteRecipeTypeList().onSuccess { result ->
-			recipeTypeRepository.saveRecipeTypeList(result)
-		}.handleWith {
-			recipeTypeRepository.fetchLocalRecipeTypeList()
-		}
+		return recipeTypeRepository.fetchRecipeTypeList()
 	}
 }

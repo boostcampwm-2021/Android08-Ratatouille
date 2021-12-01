@@ -2,6 +2,7 @@ package com.kdjj.data.repository
 
 import com.kdjj.data.datasource.RecipeTypeLocalDataSource
 import com.kdjj.data.datasource.RecipeTypeRemoteDataSource
+import com.kdjj.domain.common.handleWith
 import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.repository.RecipeTypeRepository
 import javax.inject.Inject
@@ -11,17 +12,11 @@ internal class RecipeTypeRepositoryImpl @Inject constructor(
     private val remoteDataSource: RecipeTypeRemoteDataSource
 ) : RecipeTypeRepository {
     
-    override suspend fun fetchRemoteRecipeTypeList(): Result<List<RecipeType>> {
-        return remoteDataSource.fetchRecipeTypeList()
-    }
-    
-    override suspend fun fetchLocalRecipeTypeList(): Result<List<RecipeType>> {
-        return localDataSource.fetchRecipeTypeList()
-    }
-    
-    override suspend fun saveRecipeTypeList(
-        recipeTypeList: List<RecipeType>
-    ): Result<Unit> {
-        return localDataSource.saveRecipeTypeList(recipeTypeList)
+    override suspend fun fetchRecipeTypeList(): Result<List<RecipeType>> {
+        return remoteDataSource.fetchRecipeTypeList().onSuccess { result ->
+            localDataSource.saveRecipeTypeList(result)
+        }.handleWith {
+            localDataSource.fetchRecipeTypeList()
+        }
     }
 }
