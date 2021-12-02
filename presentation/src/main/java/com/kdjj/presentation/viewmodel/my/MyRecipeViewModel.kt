@@ -21,7 +21,7 @@ internal class MyRecipeViewModel @Inject constructor(
     private val latestRecipeUseCase: ResultUseCase<FetchMyLatestRecipeListRequest, List<Recipe>>,
     private val favoriteRecipeUseCase: ResultUseCase<FetchMyFavoriteRecipeListRequest, List<Recipe>>,
     private val titleRecipeUseCase: ResultUseCase<FetchMyTitleRecipeListRequest, List<Recipe>>,
-    private val getRecipeUpdateFlowUseCase: FlowUseCase<EmptyRequest, Int>,
+    private val getRecipeUpdateFlowUseCase: FlowUseCase<EmptyRequest, Unit>,
     private val deleteUselessImageFileUseCase: ResultUseCase<EmptyRequest, Unit>
 ) : ViewModel() {
 

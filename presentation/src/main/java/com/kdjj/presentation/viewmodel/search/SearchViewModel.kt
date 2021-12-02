@@ -29,7 +29,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val fetchMySearchUseCase: ResultUseCase<FetchMySearchRecipeListRequest, List<Recipe>>,
     private val fetchOthersSearchUseCase: ResultUseCase<FetchOthersSearchRecipeListRequest, List<Recipe>>,
-    private val getRecipeUpdateFlowUseCase: FlowUseCase<EmptyRequest, Int>
+    private val getRecipeUpdateFlowUseCase: FlowUseCase<EmptyRequest, Unit>
 ) : ViewModel() {
     private val _liveTabState = MutableLiveData(SearchTabState.OTHERS_RECIPE)
     val liveTabState: LiveData<SearchTabState> get() = _liveTabState

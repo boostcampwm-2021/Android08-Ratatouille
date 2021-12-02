@@ -20,5 +20,5 @@ abstract class FlowUseCaseModule {
     @Binds
     internal abstract fun bindGetRecipeUpdateFlowUseCase(
         getRecipeUpdateFlowUseCase: GetRecipeUpdateFlowUseCase
-    ): FlowUseCase<EmptyRequest, Int>
+    ): FlowUseCase<EmptyRequest, Unit>
 }
