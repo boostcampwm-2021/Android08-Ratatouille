@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
@@ -191,10 +192,11 @@ class RecipeDetailActivity : AppCompatActivity() {
         })
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        applicationContext.stopService(Intent(applicationContext, TimerService::class.java))
+    override fun onStart() {
         viewModel.setBackground(false)
+        Notifications.cancelAllNotification(this)
+        applicationContext.stopService(Intent(applicationContext, TimerService::class.java))
+        super.onStart()
     }
 
     override fun onBackPressed() {
@@ -214,6 +216,7 @@ class RecipeDetailActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        Notifications.cancelAllNotification(this)
         applicationContext.stopService(Intent(applicationContext, TimerService::class.java))
         super.onDestroy()
     }
