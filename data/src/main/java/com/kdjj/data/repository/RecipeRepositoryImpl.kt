@@ -21,9 +21,7 @@ internal class RecipeRepositoryImpl @Inject constructor(
         recipe: Recipe
     ): Result<Unit> {
         return recipeLocalDataSource.saveRecipe(recipe).onSuccess {
-            coroutineScope {
-                isUpdatedFlow.emit(Unit)
-            }
+            isUpdatedFlow.emit(Unit)
         }
     }
 
@@ -31,9 +29,7 @@ internal class RecipeRepositoryImpl @Inject constructor(
         recipe: Recipe
     ): Result<Unit> {
         return recipeLocalDataSource.updateRecipe(recipe).onSuccess {
-            coroutineScope {
-                isUpdatedFlow.emit(Unit)
-            }
+            isUpdatedFlow.emit(Unit)
         }
     }
 
@@ -42,9 +38,7 @@ internal class RecipeRepositoryImpl @Inject constructor(
         originImgPathList: List<String>
     ): Result<Unit> {
         return recipeLocalDataSource.updateRecipe(recipe, originImgPathList).onSuccess {
-            coroutineScope {
-                isUpdatedFlow.emit(Unit)
-            }
+            isUpdatedFlow.emit(Unit)
         }
     }
 
@@ -52,9 +46,7 @@ internal class RecipeRepositoryImpl @Inject constructor(
         recipe: Recipe
     ): Result<Unit> {
         return recipeLocalDataSource.deleteRecipe(recipe).onSuccess {
-            coroutineScope {
-                isUpdatedFlow.emit(Unit)
-            }
+            isUpdatedFlow.emit(Unit)
         }
     }
 
