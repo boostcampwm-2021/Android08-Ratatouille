@@ -16,6 +16,7 @@ import com.kdjj.domain.model.*
 import com.kdjj.presentation.R
 import com.kdjj.presentation.common.*
 import com.kdjj.presentation.databinding.ActivityRecipeDetailBinding
+import com.kdjj.presentation.model.StepTimerModel
 import com.kdjj.presentation.services.TimerService
 import com.kdjj.presentation.view.adapter.RecipeDetailLargeStepListAdapter
 import com.kdjj.presentation.view.adapter.RecipeDetailStepListAdapter
@@ -202,7 +203,7 @@ class RecipeDetailActivity : AppCompatActivity() {
     }
 
     override fun onStop() {
-        if (!isExiting) {
+        if (!isExiting && viewModel.liveModelList.value?.any { it.liveState.value == StepTimerModel.TimerState.RUNNING } == true) {
             val intent = Intent(applicationContext, TimerService::class.java).apply {
                 action = ACTION_START
             }
