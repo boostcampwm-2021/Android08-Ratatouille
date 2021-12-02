@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.kdjj.presentation.viewmodel.home.others.OthersViewModel"/>
+        <import type="com.kdjj.presentation.viewmodel.home.others.OthersViewModel.OthersSortType"/>
         <import type="android.view.View"/>
         <variable
             name="viewModel"
@@ -49,7 +49,7 @@
                 android:id="@+id/radioButton_others_popular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="@{viewModel.liveSortType == OthersSortType.POPULAR}"
+                android:checked="@{viewModel.liveSortType ==   OthersSortType.POPULAR}"
                 android:onClick="@{()->viewModel.setChecked(OthersSortType.POPULAR)}"
                 android:button="@null"
                 android:layout_marginStart="@dimen/myRecipe_radioButton_marginLeft"
