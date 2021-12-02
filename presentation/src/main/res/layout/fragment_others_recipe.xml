@@ -4,11 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.kdjj.presentation.viewmodel.others.OthersViewModel.OthersSortType"/>
+        <import type="com.kdjj.presentation.viewmodel.home.others.OthersViewModel"/>
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="com.kdjj.presentation.viewmodel.others.OthersViewModel" />
+            type="com.kdjj.presentation.viewmodel.home.others.OthersViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -13,7 +13,7 @@ import com.kdjj.presentation.databinding.ItemMyRecipeAddRecipeBinding
 import com.kdjj.presentation.databinding.ItemMyRecipeBinding
 import com.kdjj.presentation.databinding.ItemMyRecipeProgressBinding
 import com.kdjj.presentation.model.MyRecipeItem
-import com.kdjj.presentation.viewmodel.my.MyRecipeViewModel
+import com.kdjj.presentation.viewmodel.home.my.MyRecipeViewModel
 
 internal class MyRecipeListAdapter(private val viewModel: MyRecipeViewModel) :
     ListAdapter<MyRecipeItem, RecyclerView.ViewHolder>(object :

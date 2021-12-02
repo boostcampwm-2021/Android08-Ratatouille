@@ -1,8 +1,11 @@
-package com.kdjj.presentation.viewmodel.my
+package com.kdjj.presentation.viewmodel.home.my
 
 import androidx.lifecycle.*
 import com.kdjj.domain.model.Recipe
-import com.kdjj.domain.model.request.*
+import com.kdjj.domain.model.request.EmptyRequest
+import com.kdjj.domain.model.request.FetchMyFavoriteRecipeListRequest
+import com.kdjj.domain.model.request.FetchMyLatestRecipeListRequest
+import com.kdjj.domain.model.request.FetchMyTitleRecipeListRequest
 import com.kdjj.domain.usecase.FlowUseCase
 import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event

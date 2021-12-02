@@ -1,4 +1,4 @@
-package com.kdjj.presentation.viewmodel.others
+package com.kdjj.presentation.viewmodel.home.others
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -2,13 +2,11 @@ package com.kdjj.presentation.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.Glide
-import com.kdjj.presentation.R
 import com.kdjj.presentation.databinding.ItemListRecipeBinding
 import com.kdjj.presentation.model.RecipeListItemModel
-import com.kdjj.presentation.viewmodel.others.OthersViewModel
+import com.kdjj.presentation.viewmodel.home.others.OthersViewModel
 
 class OthersRecipeListAdapter(
     private val viewModel: OthersViewModel,
