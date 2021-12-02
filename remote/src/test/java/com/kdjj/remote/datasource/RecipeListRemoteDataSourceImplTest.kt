@@ -19,7 +19,7 @@ class RecipeListRemoteDataSourceImplTest {
     private val dummyRecipeStep1 = RecipeStep(
         stepId = "dummyStepId1",
         name = "dummyStep1",
-        type = RecipeStepType.FRY,
+        type = RecipeStepType.values().first(),
         description = "dummyStepDescription",
         imgPath = "",
         seconds = 0
