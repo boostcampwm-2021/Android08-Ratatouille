@@ -282,9 +282,13 @@ internal class RecipeEditorViewModel @Inject constructor(
     }
 
     private fun saveTempRecipe() {
-        if (_liveStepModelList.value == null || isSameWithOld()) {
+        if (
+            _liveStepModelList.value == null || isSameWithOld() ||
+            (_eventRecipeEditor.value?.peekContent() as? RecipeEditorEvent.SaveResult)?.isSuccess == true
+        ) {
             return
         }
+
         _liveTempLoading.value = true
         tempJob?.cancel()
         tempJob = viewModelScope.launch {
