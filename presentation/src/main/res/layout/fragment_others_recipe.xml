@@ -5,6 +5,7 @@
 
     <data>
         <import type="com.kdjj.presentation.viewmodel.home.others.OthersViewModel.OthersSortType"/>
+
         <import type="android.view.View"/>
         <variable
             name="viewModel"
