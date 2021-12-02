@@ -22,11 +22,6 @@ class TimerService : LifecycleService() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    override fun onDestroy() {
-        Notifications.cancelAllNotification(this)
-        super.onDestroy()
-    }
-
     companion object {
         const val FOREGROUND_NOTIFICATION_ID = 1
     }
