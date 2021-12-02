@@ -44,6 +44,58 @@
 👧스테파니: 나도 나만의 요리 지침서를 만들거야!!  
 👨라따뚜이: 하하하하하
 
+## 👨‍💻 기슬 스택
+
+![Untitled](https://user-images.githubusercontent.com/56161518/144422866-9c9a323c-d1a3-4ee4-9723-c387baed4889.png)
+
+## 🍮 프로젝트 구조
+### Multi Module & Clean Architecture
+```
+├── app
+│   ├── app
+│   └── di 
+│       ├── data 
+│       └── domain
+│
+├── data
+│   ├── common
+│   ├── datasource(Interface)
+│   ├── di
+│   └── repository(Impl)
+│
+├── domain
+│   ├── di
+│   ├── model
+│   ├── repository(Interface)
+│   ├── request
+│   └── usecase
+│
+├── presentation
+│   ├── common
+│   ├── model
+│   ├── view
+│   │   ├── adapter
+│   │   ├── dialog
+│   │   ├── home
+│   │   ├── recipeeditor
+│   │   └── splash
+│   └── viewmodel
+│       └── recipeeditor
+│
+├── local
+│   ├── dao
+│   ├── dataSource(Impl)
+│   ├── database
+│   ├── di
+│   └── dto
+│
+└── remote
+    ├── dao
+    ├── datasource(Impl)
+    ├── di
+    └── dto
+```
+
 ## 🍖 주요 기능
 
 **❤ 나만의 레시피를 은밀하게 저장**
@@ -91,58 +143,6 @@
 | 레시피 타이머 ⏱                                                                                                         |
 |-------------------------------------------------------------------------------------------------------------------|
 | ![number3](https://user-images.githubusercontent.com/56161518/144393153-26a44a3a-a389-4f96-b538-1a9be7ad1bd0.gif) |
-
-## 👨‍💻 기슬 스택
-
-![Untitled](https://user-images.githubusercontent.com/56161518/144422866-9c9a323c-d1a3-4ee4-9723-c387baed4889.png)
-
-## 🍮 프로젝트 구조
-
-```
-├── app
-│   ├── app
-│   └── di 
-│       ├── data 
-│       └── domain
-│
-├── data
-│   ├── common
-│   ├── datasource(Interface)
-│   ├── di
-│   └── repository(Impl)
-│
-├── domain
-│   ├── di
-│   ├── model
-│   ├── repository(Interface)
-│   ├── request
-│   └── usecase
-│
-├── presentation
-│   ├── common
-│   ├── model
-│   ├── view
-│   │   ├── adapter
-│   │   ├── dialog
-│   │   ├── home
-│   │   ├── recipeeditor
-│   │   └── splash
-│   └── viewmodel
-│       └── recipeeditor
-│
-├── local
-│   ├── dao
-│   ├── dataSource(Impl)
-│   ├── database
-│   ├── di
-│   └── dto
-│
-└── remote
-    ├── dao
-    ├── datasource(Impl)
-    ├── di
-    └── dto
-```
 
 ## 프로젝트 관리
 
