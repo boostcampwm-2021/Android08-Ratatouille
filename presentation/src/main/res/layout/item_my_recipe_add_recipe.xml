@@ -6,7 +6,7 @@
 
         <variable
             name="myRecipeViewModel"
-            type="com.kdjj.presentation.viewmodel.my.MyRecipeViewModel" />
+            type="com.kdjj.presentation.viewmodel.home.my.MyRecipeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

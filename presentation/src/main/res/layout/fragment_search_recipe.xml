@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.kdjj.presentation.viewmodel.search.SearchViewModel" />
+            type="com.kdjj.presentation.viewmodel.home.search.SearchViewModel" />
 
         <import type="com.kdjj.presentation.model.SearchTabState" />
         <import type="android.view.View" />

@@ -10,7 +10,7 @@
 
         <variable
             name="myViewModel"
-            type="com.kdjj.presentation.viewmodel.my.MyRecipeViewModel" />
+            type="com.kdjj.presentation.viewmodel.home.my.MyRecipeViewModel" />
 
         <import type="android.view.View" />
     </data>

@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.kdjj.presentation.databinding.ItemListRecipeBinding
 import com.kdjj.presentation.model.RecipeListItemModel
-import com.kdjj.presentation.viewmodel.search.SearchViewModel
+import com.kdjj.presentation.viewmodel.home.search.SearchViewModel
 
 class SearchRecipeListAdapter(
     private val viewModel: SearchViewModel,

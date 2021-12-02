@@ -2,7 +2,6 @@ package com.kdjj.presentation.view.home.search
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +23,7 @@ import com.kdjj.presentation.databinding.FragmentSearchRecipeBinding
 import com.kdjj.presentation.model.ResponseError
 import com.kdjj.presentation.view.adapter.SearchRecipeListAdapter
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
-import com.kdjj.presentation.viewmodel.search.SearchViewModel
+import com.kdjj.presentation.viewmodel.home.search.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable

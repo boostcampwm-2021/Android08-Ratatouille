@@ -1,4 +1,4 @@
-package com.kdjj.presentation.viewmodel.search
+package com.kdjj.presentation.viewmodel.home.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
