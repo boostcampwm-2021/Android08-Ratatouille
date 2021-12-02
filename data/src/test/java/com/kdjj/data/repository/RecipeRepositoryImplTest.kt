@@ -3,7 +3,6 @@ package com.kdjj.data.repository
 import com.kdjj.data.datasource.RecipeLocalDataSource
 import com.kdjj.data.datasource.RecipeRemoteDataSource
 import com.kdjj.domain.model.*
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -35,13 +34,10 @@ class RecipeRepositoryImplTest {
                 .thenReturn(Result.success(Unit))
 
             // when
-            val updatedFlow = repositoryImpl.getRecipeUpdateFlow()
-            val oldUpdatedValue = updatedFlow.first()
             val result = repositoryImpl.saveMyRecipe(mockRecipe)
 
             // then
             assertTrue(result.isSuccess)
-            assertEquals(oldUpdatedValue + 1, updatedFlow.first())
         }
     }
 
@@ -53,13 +49,10 @@ class RecipeRepositoryImplTest {
                 .thenReturn(Result.failure(Exception()))
 
             // when
-            val updatedFlow = repositoryImpl.getRecipeUpdateFlow()
-            val oldUpdatedValue = updatedFlow.first()
             val result = repositoryImpl.saveMyRecipe(mockRecipe)
 
             // then
             assertTrue(result.isFailure)
-            assertEquals(oldUpdatedValue, updatedFlow.first())
         }
     }
 
@@ -71,13 +64,10 @@ class RecipeRepositoryImplTest {
                 .thenReturn(Result.success(Unit))
 
             // when
-            val updatedFlow = repositoryImpl.getRecipeUpdateFlow()
-            val oldUpdatedValue = updatedFlow.first()
             val result = repositoryImpl.updateMyRecipe(mockRecipe)
 
             // then
             assertTrue(result.isSuccess)
-            assertEquals(oldUpdatedValue + 1, updatedFlow.first())
         }
     }
 
@@ -89,13 +79,10 @@ class RecipeRepositoryImplTest {
                 .thenReturn(Result.failure(Exception()))
 
             // when
-            val updatedFlow = repositoryImpl.getRecipeUpdateFlow()
-            val oldUpdatedValue = updatedFlow.first()
             val result = repositoryImpl.updateMyRecipe(mockRecipe)
 
             // then
             assertTrue(result.isFailure)
-            assertEquals(oldUpdatedValue, updatedFlow.first())
         }
     }
 
@@ -107,13 +94,10 @@ class RecipeRepositoryImplTest {
                 .thenReturn(Result.success(Unit))
 
             // when
-            val updatedFlow = repositoryImpl.getRecipeUpdateFlow()
-            val oldUpdatedValue = updatedFlow.first()
             val result = repositoryImpl.updateMyRecipe(mockRecipe, listOf())
 
             // then
             assertTrue(result.isSuccess)
-            assertEquals(oldUpdatedValue + 1, updatedFlow.first())
         }
     }
 
@@ -125,13 +109,10 @@ class RecipeRepositoryImplTest {
                 .thenReturn(Result.failure(Exception()))
 
             // when
-            val updatedFlow = repositoryImpl.getRecipeUpdateFlow()
-            val oldUpdatedValue = updatedFlow.first()
             val result = repositoryImpl.updateMyRecipe(mockRecipe, listOf())
 
             // then
             assertTrue(result.isFailure)
-            assertEquals(oldUpdatedValue, updatedFlow.first())
         }
     }
 
@@ -143,13 +124,10 @@ class RecipeRepositoryImplTest {
                 .thenReturn(Result.success(Unit))
 
             // when
-            val updatedFlow = repositoryImpl.getRecipeUpdateFlow()
-            val oldUpdatedValue = updatedFlow.first()
             val result = repositoryImpl.deleteMyRecipe(mockRecipe)
 
             // then
             assertTrue(result.isSuccess)
-            assertEquals(oldUpdatedValue + 1, updatedFlow.first())
         }
     }
 
@@ -161,13 +139,10 @@ class RecipeRepositoryImplTest {
                 .thenReturn(Result.failure(Exception()))
 
             // when
-            val updatedFlow = repositoryImpl.getRecipeUpdateFlow()
-            val oldUpdatedValue = updatedFlow.first()
             val result = repositoryImpl.deleteMyRecipe(mockRecipe)
 
             // then
             assertTrue(result.isFailure)
-            assertEquals(oldUpdatedValue, updatedFlow.first())
         }
     }
 
