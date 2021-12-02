@@ -7,8 +7,8 @@ import javax.inject.Inject
 
 class GetRecipeUpdateFlowUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository
-) : FlowUseCase<EmptyRequest, Int> {
+) : FlowUseCase<EmptyRequest, Unit> {
 
-    override fun invoke(request: EmptyRequest): Flow<Int> =
+    override fun invoke(request: EmptyRequest): Flow<Unit> =
         recipeRepository.getRecipeUpdateFlow()
 }

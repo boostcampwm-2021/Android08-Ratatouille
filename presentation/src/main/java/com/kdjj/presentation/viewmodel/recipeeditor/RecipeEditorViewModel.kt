@@ -90,7 +90,7 @@ internal class RecipeEditorViewModel @Inject constructor(
     private val compositeDisposable = CompositeDisposable()
     val editorSubject: PublishSubject<ButtonClick> = PublishSubject.create()
 
-    private val tempFlow = MutableStateFlow(0)
+    private val tempFlow = MutableSharedFlow<Unit>(0)
     private var oldRecipe: Recipe? = null
 
     private val _liveTempLoading = MutableLiveData(false)
@@ -122,7 +122,9 @@ internal class RecipeEditorViewModel @Inject constructor(
     }
 
     fun doEdit() {
-        tempFlow.value++
+        viewModelScope.launch {
+            tempFlow.emit(Unit)
+        }
     }
 
     private fun isSameWithOld(): Boolean {
