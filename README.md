@@ -83,29 +83,44 @@
 │       └── domain
 │
 ├── data
-│   ├── common
 │   ├── datasource(Interface)
 │   ├── di
 │   └── repository(Impl)
 │
 ├── domain
+│   ├── common
 │   ├── di
 │   ├── model
+│   │   ├── exception
+│   │   └── request
 │   ├── repository(Interface)
-│   ├── request
 │   └── usecase
 │
 ├── presentation
 │   ├── common
+│   ├── di
 │   ├── model
+│   ├── services
 │   ├── view
 │   │   ├── adapter
+│   │   ├── bindingadapter
 │   │   ├── dialog
 │   │   ├── home
+│   │   │   ├── my
+│   │   │   ├── others
+│   │   │   └── search
+│   │   ├── recipedetail
 │   │   ├── recipeeditor
+│   │   ├── recipesummary
 │   │   └── splash
 │   └── viewmodel
-│       └── recipeeditor
+│   │   ├── home
+│   │   │   ├── my
+│   │   │   ├── others
+│   │   │   └── search
+│   │   ├── recipedetail
+│   │   ├── recipeeditor
+│   │   └── recipesummary
 │
 ├── local
 │   ├── dao
@@ -115,8 +130,9 @@
 │   └── dto
 │
 └── remote
-    ├── dao
+    ├── common
     ├── datasource(Impl)
     ├── di
-    └── dto
+    ├── dto
+    └── service
 ```
