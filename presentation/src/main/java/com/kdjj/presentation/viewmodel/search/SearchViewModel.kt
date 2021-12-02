@@ -57,6 +57,7 @@ class SearchViewModel @Inject constructor(
     val liveNoResult: LiveData<Boolean> get() = _liveNoResult
 
     private var lastKeyword = ""
+    private var lastTabState = _liveTabState.value ?: SearchTabState.OTHERS_RECIPE
 
     val searchSubject: PublishSubject<ButtonClick> = PublishSubject.create()
 
@@ -88,7 +89,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun updateSearchKeyword() {
-        if (lastKeyword == liveKeyword.value ?: "") {
+        if (lastKeyword == liveKeyword.value ?: "" && lastTabState == liveTabState.value) {
             return
         }
 
@@ -119,6 +120,7 @@ class SearchViewModel @Inject constructor(
                             }
                             _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
                             lastKeyword = liveKeyword.value ?: ""
+                            lastTabState = SearchTabState.OTHERS_RECIPE
                         }
                         .onFailure { t ->
                             setException(t)
@@ -136,6 +138,7 @@ class SearchViewModel @Inject constructor(
                             }
                             _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
                             lastKeyword = liveKeyword.value ?: ""
+                            lastTabState = SearchTabState.MY_RECIPE
                         }
                         .onFailure { t ->
                             setException(t)
