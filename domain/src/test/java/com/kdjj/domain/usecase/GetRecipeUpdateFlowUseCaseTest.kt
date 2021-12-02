@@ -27,12 +27,12 @@ class GetRecipeUpdateFlowUseCaseTest {
     @Test
     fun getRecipeUpdateFlowUseCase_givenFlowInt_returnFlowInt(): Unit = runBlocking {
         //when
-        `when`(mockRecipeRepository.getRecipeUpdateFlow()).thenReturn(flowOf(1))
+        `when`(mockRecipeRepository.getRecipeUpdateFlow()).thenReturn(flowOf(Unit))
 
         //given
         val testResult = getRecipeUpdateFlowUseCase.invoke(mockEmptyRequest)
 
         //then
-        assertEquals(1, testResult.first())
+        assertEquals(Unit, testResult.first())
     }
 }
