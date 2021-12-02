@@ -26,7 +26,7 @@ class RecipeLocalDataSourceImplTest {
         RecipeStep(
             "stepId",
             "굽기",
-            RecipeStepType.FRY,
+            RecipeStepType.COOK,
             "description",
             "image path",
             1000,
@@ -63,7 +63,7 @@ class RecipeLocalDataSourceImplTest {
         "stepId",
         "삶기",
         1,
-        RecipeStepType.FRY,
+        RecipeStepType.COOK,
         "description",
         "image path",
         1000,
