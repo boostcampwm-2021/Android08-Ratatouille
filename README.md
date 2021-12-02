@@ -94,6 +94,10 @@
 |-------------------------------------------------------------------------------------------------------------------|
 | ![number3](https://user-images.githubusercontent.com/56161518/144393153-26a44a3a-a389-4f96-b538-1a9be7ad1bd0.gif) |
 
+## 기슬 스택
+
+![Untitled](https://user-images.githubusercontent.com/56161518/144422866-9c9a323c-d1a3-4ee4-9723-c387baed4889.png)
+
 ## 🌮 관련 링크
 
 ### [💜 프로토타입 / C4 모델](https://www.figma.com/file/cHfiiAwilyKdbPcO7KgWmu/%EB%82%98%EB%A7%8C%EC%9D%98-%EC%9D%80%EB%B0%80%ED%95%9C-%EB%9D%BC%EB%94%B0%EB%9A%9C%EC%9D%B4%E2%9D%A4?node-id=64%3A9879)
