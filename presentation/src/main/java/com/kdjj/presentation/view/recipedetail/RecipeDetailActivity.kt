@@ -199,13 +199,18 @@ class RecipeDetailActivity : AppCompatActivity() {
         super.onStart()
     }
 
+    override fun onResume() {
+        viewModel.requestTimerVisibility()
+        super.onResume()
+    }
+
     override fun onBackPressed() {
         isExiting = true
         super.onBackPressed()
     }
 
     override fun onStop() {
-        if (!isExiting && viewModel.liveModelList.value?.any { it.liveState.value == StepTimerModel.TimerState.RUNNING } == true) {
+        if (!isExiting && checkTimerIsRunning()) {
             val intent = Intent(applicationContext, TimerService::class.java).apply {
                 action = ACTION_START
             }
@@ -220,4 +225,7 @@ class RecipeDetailActivity : AppCompatActivity() {
         applicationContext.stopService(Intent(applicationContext, TimerService::class.java))
         super.onDestroy()
     }
+
+   private fun checkTimerIsRunning(): Boolean =
+       viewModel.liveModelList.value?.any { it.liveState.value == StepTimerModel.TimerState.RUNNING } == true
 }
