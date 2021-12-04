@@ -130,6 +130,8 @@ class RecipeSummaryViewModel @Inject constructor(
                                         recipe
                                     )
                                 )
+                            }.onFailure {
+                                _eventRecipeSummary.value = Event(RecipeSummaryEvent.LoadError)
                             }
                         _liveLoading.value = false
                     }
