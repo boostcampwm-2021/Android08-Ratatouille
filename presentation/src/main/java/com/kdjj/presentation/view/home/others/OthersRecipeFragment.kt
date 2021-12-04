@@ -22,8 +22,6 @@ import com.kdjj.presentation.databinding.FragmentOthersRecipeBinding
 import com.kdjj.presentation.view.adapter.OthersRecipeListAdapter
 import com.kdjj.presentation.viewmodel.home.others.OthersViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
@@ -34,8 +32,6 @@ class OthersRecipeFragment : Fragment() {
     private val viewModel: OthersViewModel by viewModels()
     private val navigation by lazy { Navigation.findNavController(binding.root) }
 
-    @ExperimentalCoroutinesApi
-    @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setButtonClickObserver()
@@ -63,8 +59,6 @@ class OthersRecipeFragment : Fragment() {
         initToolBar()
     }
 
-    @ExperimentalCoroutinesApi
-    @InternalCoroutinesApi
     private fun setButtonClickObserver() {
         lifecycleScope.launchWhenStarted {
             viewModel.clickFlow.throttleFirst(1000L)

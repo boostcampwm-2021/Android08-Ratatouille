@@ -85,7 +85,7 @@
                 android:focusable="true"
                 android:gravity="center"
                 android:padding="@dimen/bottomButton_padding"
-                android:onClick="@{() -> viewModel.editorSubject.onNext(ButtonClick.SAVE)}"
+                android:onClick="@{() -> viewModel.clickFlow.tryEmit(ButtonClick.SAVE)}"
                 android:text="@string/registerRecipe"
                 android:textColor="@color/light_100"
                 android:textSize="@dimen/bottomButton_textSize" />

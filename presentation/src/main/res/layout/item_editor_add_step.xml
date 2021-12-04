@@ -31,7 +31,7 @@
             android:contentDescription="@string/addStepButton"
             android:clickable="true"
             android:focusable="true"
-            android:onClick="@{() -> viewModel.editorSubject.onNext(ButtonClick.ADD_STEP)}"
+            android:onClick="@{() -> viewModel.clickFlow.tryEmit(ButtonClick.ADD_STEP)}"
             android:src="@drawable/ic_round_add_24" />
     </androidx.cardview.widget.CardView>
 </layout>
