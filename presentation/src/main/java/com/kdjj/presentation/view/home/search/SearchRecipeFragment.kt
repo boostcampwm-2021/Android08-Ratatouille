@@ -27,9 +27,6 @@ import com.kdjj.presentation.view.adapter.SearchRecipeListAdapter
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.viewmodel.home.search.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
 
@@ -44,8 +41,6 @@ class SearchRecipeFragment : Fragment() {
 
     private lateinit var resultListAdapter: SearchRecipeListAdapter
 
-    @ExperimentalCoroutinesApi
-    @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setButtonClickObserver()
@@ -62,8 +57,6 @@ class SearchRecipeFragment : Fragment() {
         return binding.root
     }
 
-    @FlowPreview
-    @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         resultListAdapter = SearchRecipeListAdapter(viewModel)
@@ -88,8 +81,6 @@ class SearchRecipeFragment : Fragment() {
         setEventObservers()
     }
 
-    @ExperimentalCoroutinesApi
-    @InternalCoroutinesApi
     private fun setButtonClickObserver() {
         lifecycleScope.launchWhenStarted {
             viewModel.clickFlow.throttleFirst(1000L)
@@ -107,8 +98,6 @@ class SearchRecipeFragment : Fragment() {
         }
     }
 
-    @FlowPreview
-    @InternalCoroutinesApi
     private fun setEventObservers() {
         lifecycleScope.launchWhenStarted {
             viewModel.liveKeyword.debounce(500)
@@ -136,7 +125,6 @@ class SearchRecipeFragment : Fragment() {
                 }
             }
         })
-
     }
 
     private fun showSnackBar(@StringRes resId: Int) {

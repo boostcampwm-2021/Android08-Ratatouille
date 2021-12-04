@@ -9,25 +9,17 @@ import com.kdjj.domain.model.RecipeType
 import com.kdjj.domain.model.request.*
 import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.*
+import com.kdjj.presentation.common.extensions.throttleFirst
 import com.kdjj.presentation.model.NEW_ID
 import com.kdjj.presentation.model.RecipeEditorItem
 import com.kdjj.presentation.model.toDomain
 import com.kdjj.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 
 @HiltViewModel
 internal class RecipeEditorViewModel @Inject constructor(
@@ -87,8 +79,7 @@ internal class RecipeEditorViewModel @Inject constructor(
         ADD_STEP
     }
 
-    private val compositeDisposable = CompositeDisposable()
-    val editorSubject: PublishSubject<ButtonClick> = PublishSubject.create()
+    val clickFlow = MutableSharedFlow<ButtonClick>(extraBufferCapacity = 1)
 
     private val tempFlow = MutableSharedFlow<Unit>()
     private var oldRecipe: Recipe? = null
@@ -97,21 +88,19 @@ internal class RecipeEditorViewModel @Inject constructor(
     val liveTempLoading: LiveData<Boolean> get() = _liveTempLoading
 
     init {
-        editorSubject.throttleFirst(1, TimeUnit.SECONDS)
-            .subscribe {
-                when (it) {
-                    ButtonClick.SAVE -> {
-                        saveRecipe()
+        viewModelScope.launch {
+            clickFlow.throttleFirst(1000L)
+                .collect {
+                    when (it) {
+                        ButtonClick.SAVE -> {
+                            saveRecipe()
+                        }
+                        ButtonClick.ADD_STEP -> {
+                            addRecipeStep()
+                        }
                     }
-                    ButtonClick.ADD_STEP -> {
-                        addRecipeStep()
-                    }
-                    else -> {}
                 }
-            }
-            .also {
-                compositeDisposable.add(it)
-            }
+        }
 
         viewModelScope.launch {
             tempFlow.debounce(3000)
@@ -446,10 +435,5 @@ internal class RecipeEditorViewModel @Inject constructor(
         }
 
         return true
-    }
-
-    override fun onCleared() {
-        compositeDisposable.dispose()
-        super.onCleared()
     }
 }

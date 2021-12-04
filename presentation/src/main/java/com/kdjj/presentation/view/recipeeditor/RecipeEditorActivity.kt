@@ -30,6 +30,7 @@ import java.util.*
 @AndroidEntryPoint
 class RecipeEditorActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRecipeEditorBinding
+
     private val viewModel: RecipeEditorViewModel by viewModels()
 
     private lateinit var loadingDialog: CustomProgressDialog
