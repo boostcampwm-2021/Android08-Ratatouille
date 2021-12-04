@@ -105,6 +105,12 @@ class RecipeDetailViewModel @Inject constructor(
         }
     }
 
+    fun requestTimerVisibility() {
+        if (_liveTimerList.value?.isNotEmpty() == true) {
+            _eventRecipeDetail.value = Event(RecipeDetailEvent.OpenTimer)
+        }
+    }
+
     fun toggleTimer(model: StepTimerModel) {
         when (model.liveState.value) {
             StepTimerModel.TimerState.INITIALIZED -> {
