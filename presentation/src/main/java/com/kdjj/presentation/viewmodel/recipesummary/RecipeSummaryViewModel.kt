@@ -130,8 +130,8 @@ class RecipeSummaryViewModel @Inject constructor(
                                         recipe
                                     )
                                 )
-                                _liveLoading.value = false
                             }
+                        _liveLoading.value = false
                     }
                 }
             }
