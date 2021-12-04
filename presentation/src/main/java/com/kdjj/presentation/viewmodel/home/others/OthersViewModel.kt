@@ -15,9 +15,9 @@ import com.kdjj.presentation.model.RecipeListItemModel
 import com.kdjj.presentation.model.ResponseError
 import com.kdjj.presentation.model.toRecipeListItemModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,7 +42,7 @@ class OthersViewModel @Inject constructor(
         _liveFetchLock.value = false
     }
 
-    val othersSubject: PublishSubject<ButtonClick> = PublishSubject.create()
+    val clickFlow = MutableSharedFlow<ButtonClick>(extraBufferCapacity = 1)
 
     private var _eventOthersRecipe = MutableLiveData<Event<OtherRecipeEvent>>()
     val eventOthersRecipe: LiveData<Event<OtherRecipeEvent>> get() = _eventOthersRecipe
@@ -141,11 +141,11 @@ class OthersViewModel @Inject constructor(
     }
 
     fun moveToRecipeSearchFragment() {
-        othersSubject.onNext(ButtonClick.SearchIconClicked)
+        clickFlow.tryEmit(ButtonClick.SearchIconClicked)
     }
 
     fun recipeItemClick(recipeModel: RecipeListItemModel) {
-        othersSubject.onNext(ButtonClick.RecipeItemClicked(recipeModel))
+        clickFlow.tryEmit(ButtonClick.RecipeItemClicked(recipeModel))
     }
 
     enum class OthersSortType {

@@ -23,11 +23,9 @@ import com.kdjj.presentation.databinding.FragmentMyRecipeBinding
 import com.kdjj.presentation.view.adapter.MyRecipeListAdapter
 import com.kdjj.presentation.viewmodel.home.my.MyRecipeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
-import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class MyRecipeFragment : Fragment() {
@@ -37,7 +35,6 @@ class MyRecipeFragment : Fragment() {
     private val viewModel: MyRecipeViewModel by activityViewModels()
     private val myRecipeAdapter by lazy { MyRecipeListAdapter(viewModel) }
     private val navigation by lazy { Navigation.findNavController(binding.root) }
-    private val compositeDisposable = CompositeDisposable()
 
     @ExperimentalCoroutinesApi
     @InternalCoroutinesApi
@@ -163,10 +160,5 @@ class MyRecipeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onDestroy() {
-        compositeDisposable.dispose()
-        super.onDestroy()
     }
 }
