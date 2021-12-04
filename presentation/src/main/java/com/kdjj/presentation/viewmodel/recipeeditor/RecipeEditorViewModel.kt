@@ -90,7 +90,7 @@ internal class RecipeEditorViewModel @Inject constructor(
     private val compositeDisposable = CompositeDisposable()
     val editorSubject: PublishSubject<ButtonClick> = PublishSubject.create()
 
-    private val tempFlow = MutableSharedFlow<Unit>(0)
+    private val tempFlow = MutableSharedFlow<Unit>()
     private var oldRecipe: Recipe? = null
 
     private val _liveTempLoading = MutableLiveData(false)

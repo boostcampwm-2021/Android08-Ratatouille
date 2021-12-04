@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -64,7 +65,7 @@ internal class MyRecipeViewModel @Inject constructor(
     private val _eventMyRecipe = MutableLiveData<Event<MyRecipeEvent>>()
     val eventMyRecipe: LiveData<Event<MyRecipeEvent>> get() = _eventMyRecipe
 
-    val mySubject: PublishSubject<ButtonClick> = PublishSubject.create()
+    val clickFlow = MutableSharedFlow<ButtonClick>(extraBufferCapacity = 1)
 
     sealed class MyRecipeEvent {
         object DataLoadFailed : MyRecipeEvent()
@@ -142,15 +143,15 @@ internal class MyRecipeViewModel @Inject constructor(
         if (_liveRecipeItemSelected.value != selectedRecipe) {
             _liveRecipeItemSelected.value = selectedRecipe
         } else {
-            mySubject.onNext(ButtonClick.DoubleClicked(selectedRecipe))
+            clickFlow.tryEmit(ButtonClick.DoubleClicked(selectedRecipe))
         }
     }
 
     fun moveToRecipeEditorActivity() {
-        mySubject.onNext(ButtonClick.AddRecipeHasPressed)
+        clickFlow.tryEmit(ButtonClick.AddRecipeHasPressed)
     }
 
     fun moveToRecipeSearchFragment() {
-        mySubject.onNext(ButtonClick.SearchIconClicked)
+        clickFlow.tryEmit(ButtonClick.SearchIconClicked)
     }
 }

@@ -15,7 +15,7 @@ internal class RecipeRepositoryImpl @Inject constructor(
     private val recipeRemoteDataSource: RecipeRemoteDataSource
 ) : RecipeRepository {
 
-    private val isUpdatedFlow = MutableSharedFlow<Unit>(0)
+    private val isUpdatedFlow = MutableSharedFlow<Unit>()
 
     override suspend fun saveMyRecipe(
         recipe: Recipe
