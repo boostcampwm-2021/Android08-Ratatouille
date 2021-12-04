@@ -18,9 +18,10 @@ import com.kdjj.presentation.model.ResponseError
 import com.kdjj.presentation.model.SearchTabState
 import com.kdjj.presentation.model.toRecipeListItemModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,7 +38,7 @@ class SearchViewModel @Inject constructor(
     private val _liveResultList = MutableLiveData<List<RecipeListItemModel>>(listOf())
     val liveResultList: LiveData<List<RecipeListItemModel>> get() = _liveResultList
 
-    val liveKeyword = MutableLiveData("")
+    val liveKeyword = MutableStateFlow("")
 
     private var fetchingJob: Job? = null
 
@@ -59,7 +60,7 @@ class SearchViewModel @Inject constructor(
     private var lastKeyword = ""
     private var lastTabState = _liveTabState.value ?: SearchTabState.OTHERS_RECIPE
 
-    val searchSubject: PublishSubject<ButtonClick> = PublishSubject.create()
+    val clickFlow = MutableSharedFlow<ButtonClick>()
 
     sealed class SearchRecipeEvent {
         class Exception(val error: ResponseError) : SearchRecipeEvent()
@@ -89,7 +90,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun updateSearchKeyword() {
-        if (lastKeyword == liveKeyword.value ?: "" && lastTabState == liveTabState.value) {
+        if (lastKeyword == liveKeyword.value && lastTabState == liveTabState.value) {
             return
         }
 
@@ -100,7 +101,7 @@ class SearchViewModel @Inject constructor(
 
         _liveResultList.value = listOf()
         _liveNoResult.value = false
-        if (liveKeyword.value?.isBlank() == true) {
+        if (liveKeyword.value.isBlank()) {
             isFetching = false
             lastKeyword = ""
             return
@@ -111,7 +112,7 @@ class SearchViewModel @Inject constructor(
                 SearchTabState.OTHERS_RECIPE -> {
                     fetchOthersSearchUseCase(
                         FetchOthersSearchRecipeListRequest(
-                            liveKeyword.value ?: "", true
+                            liveKeyword.value, true
                         )
                     )
                         .onSuccess {
@@ -119,7 +120,7 @@ class SearchViewModel @Inject constructor(
                                 _liveNoResult.value = true
                             }
                             _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
-                            lastKeyword = liveKeyword.value ?: ""
+                            lastKeyword = liveKeyword.value
                             lastTabState = SearchTabState.OTHERS_RECIPE
                         }
                         .onFailure { t ->
@@ -129,7 +130,7 @@ class SearchViewModel @Inject constructor(
                 SearchTabState.MY_RECIPE -> {
                     fetchMySearchUseCase(
                         FetchMySearchRecipeListRequest(
-                            liveKeyword.value ?: "", 0
+                            liveKeyword.value, 0
                         )
                     )
                         .onSuccess {
@@ -137,7 +138,7 @@ class SearchViewModel @Inject constructor(
                                 _liveNoResult.value = true
                             }
                             _liveResultList.value = it.map(Recipe::toRecipeListItemModel)
-                            lastKeyword = liveKeyword.value ?: ""
+                            lastKeyword = liveKeyword.value
                             lastTabState = SearchTabState.MY_RECIPE
                         }
                         .onFailure { t ->
@@ -153,7 +154,7 @@ class SearchViewModel @Inject constructor(
         if (isFetching) return
         isFetching = true
 
-        if (liveKeyword.value?.isNotBlank() != true) {
+        if (!liveKeyword.value.isNotBlank()) {
             _liveResultList.value = listOf()
             isFetching = false
             return
@@ -164,8 +165,8 @@ class SearchViewModel @Inject constructor(
                 SearchTabState.OTHERS_RECIPE -> {
                     fetchOthersSearchUseCase(
                         FetchOthersSearchRecipeListRequest(
-                            liveKeyword.value
-                                ?: "", false
+                            liveKeyword.value,
+                            false
                         )
                     )
                         .onSuccess { recipeList ->
@@ -180,8 +181,8 @@ class SearchViewModel @Inject constructor(
                 SearchTabState.MY_RECIPE -> {
                     fetchMySearchUseCase(
                         FetchMySearchRecipeListRequest(
-                            liveKeyword.value
-                                ?: "", _liveResultList.value?.size ?: 0
+                            liveKeyword.value,
+                            _liveResultList.value?.size ?: 0
                         )
                     )
                         .onSuccess { recipeList ->
@@ -199,7 +200,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun moveToSummary(recipeModel: RecipeListItemModel) {
-        searchSubject.onNext(ButtonClick.Summary(recipeModel))
+        clickFlow.tryEmit(ButtonClick.Summary(recipeModel))
     }
 
 
