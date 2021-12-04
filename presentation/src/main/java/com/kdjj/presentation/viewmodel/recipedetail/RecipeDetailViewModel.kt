@@ -51,6 +51,9 @@ class RecipeDetailViewModel @Inject constructor(
 
     private var isInitialized = false
 
+    private val _liveTimerVisibility = MutableLiveData(false)
+    val liveTimerVisibility: LiveData<Boolean> get() = _liveTimerVisibility
+
     private val _eventRecipeDetail = MutableLiveData<Event<RecipeDetailEvent>>()
     val eventRecipeDetail: LiveData<Event<RecipeDetailEvent>> get() = _eventRecipeDetail
 
@@ -105,17 +108,12 @@ class RecipeDetailViewModel @Inject constructor(
         }
     }
 
-    fun requestTimerVisibility() {
-        if (_liveTimerList.value?.isNotEmpty() == true) {
-            _eventRecipeDetail.value = Event(RecipeDetailEvent.OpenTimer)
-        }
-    }
-
     fun toggleTimer(model: StepTimerModel) {
         when (model.liveState.value) {
             StepTimerModel.TimerState.INITIALIZED -> {
                 _liveTimerList.value?.let { timerList ->
                     if (timerList.isEmpty()) {
+                        _liveTimerVisibility.value = true
                         _eventRecipeDetail.value = Event(RecipeDetailEvent.OpenTimer)
                     }
                     _liveTimerList.value = timerList + model
@@ -158,6 +156,7 @@ class RecipeDetailViewModel @Inject constructor(
                             remove(timerModel)
                             timerModel.reset()
                         }
+                        _liveTimerVisibility.value = false
                     })
             } else {
                 _liveTimerList.value = modelList.toMutableList().apply {

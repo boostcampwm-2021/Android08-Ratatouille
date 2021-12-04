@@ -128,11 +128,14 @@ class RecipeDetailActivity : AppCompatActivity() {
             title = it
         }
 
+        viewModel.liveTimerVisibility.observe(this) { visible ->
+            binding.recyclerViewDetailTimer.visibility = if (visible) View.VISIBLE else View.GONE
+        }
+
         viewModel.eventRecipeDetail.observe(this, EventObserver { event ->
             when (event) {
                 is RecipeDetailViewModel.RecipeDetailEvent.OpenTimer -> {
                     AnimatorSet().apply {
-                        binding.recyclerViewDetailTimer.visibility = View.VISIBLE
                         playTogether(
                             ObjectAnimator.ofFloat(
                                 binding.recyclerViewDetailTimer,
@@ -165,7 +168,6 @@ class RecipeDetailActivity : AppCompatActivity() {
                         duration = 500
                         doOnEnd { _ ->
                             event.onAnimationEnd()
-                            binding.recyclerViewDetailTimer.visibility = View.GONE
                         }
                         start()
                     }
@@ -197,11 +199,6 @@ class RecipeDetailActivity : AppCompatActivity() {
         Notifications.cancelAllNotification(this)
         applicationContext.stopService(Intent(applicationContext, TimerService::class.java))
         super.onStart()
-    }
-
-    override fun onResume() {
-        viewModel.requestTimerVisibility()
-        super.onResume()
     }
 
     override fun onBackPressed() {
