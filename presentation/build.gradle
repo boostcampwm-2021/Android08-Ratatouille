@@ -79,9 +79,6 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
-    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
-    implementation 'io.reactivex.rxjava3:rxjava:3.1.2'
-
     // WorkManager
     implementation "androidx.work:work-runtime-ktx:$work_version"
     implementation 'androidx.hilt:hilt-work:1.0.0'

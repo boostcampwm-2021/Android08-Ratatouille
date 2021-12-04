@@ -9,15 +9,14 @@ import com.kdjj.domain.usecase.FlowUseCase
 import com.kdjj.domain.usecase.ResultUseCase
 import com.kdjj.presentation.common.Event
 import com.kdjj.presentation.common.IdGenerator
+import com.kdjj.presentation.common.extensions.throttleFirst
 import com.kdjj.presentation.model.RecipeSummaryType
 import com.kdjj.presentation.model.UpdateFavoriteResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -72,34 +71,32 @@ class RecipeSummaryViewModel @Inject constructor(
     private val userId = idGenerator.getDeviceId()
     private var collectJob: Job? = null
 
-    private val compositeDisposable = CompositeDisposable()
-    val fabClickSubject: PublishSubject<FabClick> = PublishSubject.create()
-    val summarySubject: PublishSubject<ButtonClick> = PublishSubject.create()
+    val fabClickFlow = MutableSharedFlow<FabClick>(extraBufferCapacity = 1)
+    val buttonClickFLow = MutableSharedFlow<ButtonClick>(extraBufferCapacity = 1)
 
     init {
-        fabClickSubject.throttleFirst(1, TimeUnit.SECONDS)
-            .subscribe {
-                when (it) {
-                    FabClick.UpdateRecipeFavorite -> {
-                        updateRecipeFavorite()
+        viewModelScope.launch {
+            fabClickFlow.throttleFirst(1000L)
+                .collect {
+                    when (it) {
+                        FabClick.UpdateRecipeFavorite -> {
+                            updateRecipeFavorite()
+                        }
+                        FabClick.RequestDeleteConfirm -> {
+                            requestDeleteConfirm()
+                        }
+                        FabClick.SaveRecipeToLocal -> {
+                            saveRecipeToLocal()
+                        }
+                        FabClick.SaveRecipeToLocalWithFavorite -> {
+                            saveRecipeToLocalWithFavorite()
+                        }
+                        FabClick.UploadRecipe -> {
+                            uploadRecipe()
+                        }
                     }
-                    FabClick.RequestDeleteConfirm -> {
-                        requestDeleteConfirm()
-                    }
-                    FabClick.SaveRecipeToLocal -> {
-                        saveRecipeToLocal()
-                    }
-                    FabClick.SaveRecipeToLocalWithFavorite -> {
-                        saveRecipeToLocalWithFavorite()
-                    }
-                    FabClick.UploadRecipe -> {
-                        uploadRecipe()
-                    }
-                    else -> {}
                 }
-            }.also {
-                compositeDisposable.add(it)
-            }
+        }
     }
 
     fun initViewModel(recipeId: String?, recipeState: RecipeState?) {
@@ -172,20 +169,19 @@ class RecipeSummaryViewModel @Inject constructor(
         _liveLoading.value = true
         viewModelScope.launch {
             liveRecipe.value?.let { recipe ->
-                val favoriteResult =
-                    updateMyRecipeFavoriteUseCase(UpdateMyRecipeFavoriteRequest(recipe))
-                        .onSuccess { newFavorite ->
-                            val favoriteState = if (newFavorite) {
-                                UpdateFavoriteResult.ADD
-                            } else {
-                                UpdateFavoriteResult.REMOVE
-                            }
-                            _eventRecipeSummary.value =
-                                Event(RecipeSummaryEvent.UpdateFavoriteFinish(favoriteState))
-                        }.onFailure {
-                            _eventRecipeSummary.value =
-                                Event(RecipeSummaryEvent.UpdateFavoriteFinish(UpdateFavoriteResult.ERROR))
+                updateMyRecipeFavoriteUseCase(UpdateMyRecipeFavoriteRequest(recipe))
+                    .onSuccess { newFavorite ->
+                        val favoriteState = if (newFavorite) {
+                            UpdateFavoriteResult.ADD
+                        } else {
+                            UpdateFavoriteResult.REMOVE
                         }
+                        _eventRecipeSummary.value =
+                            Event(RecipeSummaryEvent.UpdateFavoriteFinish(favoriteState))
+                    }.onFailure {
+                        _eventRecipeSummary.value =
+                            Event(RecipeSummaryEvent.UpdateFavoriteFinish(UpdateFavoriteResult.ERROR))
+                    }
 
             }
             _liveLoading.value = false
@@ -273,13 +269,13 @@ class RecipeSummaryViewModel @Inject constructor(
 
     fun openRecipeDetail() {
         liveRecipe.value?.let { recipe ->
-            summarySubject.onNext(ButtonClick.OpenRecipeDetail(recipe))
+            buttonClickFLow.tryEmit(ButtonClick.OpenRecipeDetail(recipe))
         }
     }
 
     fun openRecipeEditor() {
         liveRecipe.value?.let { recipe ->
-            summarySubject.onNext(ButtonClick.OpenRecipeEditor(recipe))
+            buttonClickFLow.tryEmit(ButtonClick.OpenRecipeEditor(recipe))
         }
     }
 
@@ -291,10 +287,5 @@ class RecipeSummaryViewModel @Inject constructor(
 
     private fun notifyNoInfo() {
         _eventRecipeSummary.value = Event(RecipeSummaryEvent.LoadError)
-    }
-
-    override fun onCleared() {
-        compositeDisposable.dispose()
-        super.onCleared()
     }
 }

@@ -208,7 +208,7 @@
             android:id="@+id/button_summary_favorite"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@{viewModel.liveRecipe.favorite == true ? @drawable/ic_baseline_star_16dp : @drawable/ic_star_white_16dp}"
-            android:onClick="@{() -> viewModel.fabClickSubject.onNext(FabClick.UpdateRecipeFavorite)}"
+            android:onClick="@{() -> viewModel.fabClickFlow.tryEmit(FabClick.UpdateRecipeFavorite)}"
             android:text="@{viewModel.liveRecipe.favorite == true ? @string/cancelFavorite : @string/registFavorite}"
             app:layout_constraintBottom_toTopOf="@id/button_summary_edit"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
@@ -226,7 +226,7 @@
             android:id="@+id/button_summary_delete"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_trash_white_16dp"
-            android:onClick="@{() -> viewModel.fabClickSubject.onNext(FabClick.RequestDeleteConfirm)}"
+            android:onClick="@{() -> viewModel.fabClickFlow.tryEmit(FabClick.RequestDeleteConfirm)}"
             android:text="@string/delete"
             app:layout_constraintBottom_toTopOf="@id/button_summary_upload"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
@@ -235,7 +235,7 @@
             android:id="@+id/button_summary_upload"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_upload_white_16dp"
-            android:onClick="@{() -> viewModel.fabClickSubject.onNext(FabClick.UploadRecipe)}"
+            android:onClick="@{() -> viewModel.fabClickFlow.tryEmit(FabClick.UploadRecipe)}"
             android:text="@string/upload"
             app:layout_constraintBottom_toTopOf="@id/button_summary_stealFavorite"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
@@ -244,7 +244,7 @@
             android:id="@+id/button_summary_stealFavorite"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_star_white_16dp"
-            android:onClick="@{() -> viewModel.fabClickSubject.onNext(FabClick.SaveRecipeToLocalWithFavorite)}"
+            android:onClick="@{() -> viewModel.fabClickFlow.tryEmit(FabClick.SaveRecipeToLocalWithFavorite)}"
             android:text="@string/steal_favorite"
             app:layout_constraintBottom_toTopOf="@id/button_summary_steal"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
@@ -253,7 +253,7 @@
             android:id="@+id/button_summary_steal"
             style="@style/SummaryFloatingButton"
             android:drawableEnd="@drawable/ic_directions_walk_white_16dp"
-            android:onClick="@{() -> viewModel.fabClickSubject.onNext(FabClick.SaveRecipeToLocal)}"
+            android:onClick="@{() -> viewModel.fabClickFlow.tryEmit(FabClick.SaveRecipeToLocal)}"
             android:text="@string/steal"
             app:layout_constraintBottom_toTopOf="@id/floatingActionButton_summary"
             app:layout_constraintEnd_toEndOf="@id/floatingActionButton_summary" />
