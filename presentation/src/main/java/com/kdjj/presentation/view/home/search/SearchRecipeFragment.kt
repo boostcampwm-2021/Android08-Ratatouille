@@ -11,6 +11,7 @@ import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,16 +20,18 @@ import com.kdjj.presentation.R
 import com.kdjj.presentation.common.EventObserver
 import com.kdjj.presentation.common.RECIPE_ID
 import com.kdjj.presentation.common.RECIPE_STATE
+import com.kdjj.presentation.common.extensions.throttleFirst
 import com.kdjj.presentation.databinding.FragmentSearchRecipeBinding
 import com.kdjj.presentation.model.ResponseError
 import com.kdjj.presentation.view.adapter.SearchRecipeListAdapter
 import com.kdjj.presentation.view.dialog.ConfirmDialogBuilder
 import com.kdjj.presentation.viewmodel.home.search.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.debounce
 
 @AndroidEntryPoint
 class SearchRecipeFragment : Fragment() {
@@ -41,8 +44,8 @@ class SearchRecipeFragment : Fragment() {
 
     private lateinit var resultListAdapter: SearchRecipeListAdapter
 
-    private val compositeDisposable = CompositeDisposable()
-
+    @ExperimentalCoroutinesApi
+    @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setButtonClickObserver()
@@ -59,6 +62,8 @@ class SearchRecipeFragment : Fragment() {
         return binding.root
     }
 
+    @FlowPreview
+    @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         resultListAdapter = SearchRecipeListAdapter(viewModel)
@@ -83,37 +88,34 @@ class SearchRecipeFragment : Fragment() {
         setEventObservers()
     }
 
+    @ExperimentalCoroutinesApi
+    @InternalCoroutinesApi
     private fun setButtonClickObserver() {
-        viewModel.searchSubject
-            .throttleFirst(1, TimeUnit.SECONDS)
-            .subscribe {
-                when (it) {
-                    is SearchViewModel.ButtonClick.Summary -> {
-                        val bundle = bundleOf(
-                            RECIPE_ID to it.item.recipeId,
-                            RECIPE_STATE to it.item.state
-                        )
-                        navigation.navigate(R.id.action_searchFragment_to_recipeSummaryActivity, bundle)
+        lifecycleScope.launchWhenStarted {
+            viewModel.clickFlow.throttleFirst(1000L)
+                .collect {
+                    when (it) {
+                        is SearchViewModel.ButtonClick.Summary -> {
+                            val bundle = bundleOf(
+                                RECIPE_ID to it.item.recipeId,
+                                RECIPE_STATE to it.item.state
+                            )
+                            navigation.navigate(R.id.action_searchFragment_to_recipeSummaryActivity, bundle)
+                        }
                     }
                 }
-            }.also {
-                compositeDisposable.add(it)
-            }
+        }
     }
 
+    @FlowPreview
+    @InternalCoroutinesApi
     private fun setEventObservers() {
-        Observable.create<Unit> { emitter ->
-            viewModel.liveKeyword.observe(viewLifecycleOwner) {
-                emitter.onNext(Unit)
-            }
+        lifecycleScope.launchWhenStarted {
+            viewModel.liveKeyword.debounce(500)
+                .collect {
+                    viewModel.updateSearchKeyword()
+                }
         }
-            .debounce(500, TimeUnit.MILLISECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                viewModel.updateSearchKeyword()
-            }, {
-                it.printStackTrace()
-            })
 
         viewModel.liveTabState.observe(viewLifecycleOwner) {
             viewModel.updateSearchKeyword()
@@ -151,10 +153,5 @@ class SearchRecipeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onDestroy() {
-        compositeDisposable.dispose()
-        super.onDestroy()
     }
 }
