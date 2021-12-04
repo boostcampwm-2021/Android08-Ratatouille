@@ -28,7 +28,7 @@ internal class RecipeEditorListAdapter(private val viewModel: RecipeEditorViewMo
                     oldItem.recipeId == newItem.recipeId
                 oldItem is RecipeEditorItem.RecipeStepModel &&
                         newItem is RecipeEditorItem.RecipeStepModel ->
-                    oldItem.stepId == newItem.stepId
+                    oldItem.hashCode() == newItem.hashCode()
                 oldItem is RecipeEditorItem.PlusButton && newItem is RecipeEditorItem.PlusButton -> true
                 else -> false
             }
