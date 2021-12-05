@@ -126,7 +126,7 @@ class RecipeSummaryActivity : AppCompatActivity() {
 
     private fun setButtonClickObserver() = with(recipeSummaryViewModel) {
         lifecycleScope.launchWhenStarted {
-            buttonClickFLow.throttleFirst(1000L)
+            buttonClickFLow.throttleFirst()
                 .collect {
                     when (it) {
                         is RecipeSummaryViewModel.ButtonClick.OpenRecipeDetail -> {
