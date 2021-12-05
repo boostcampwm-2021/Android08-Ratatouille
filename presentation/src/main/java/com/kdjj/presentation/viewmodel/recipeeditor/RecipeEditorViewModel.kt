@@ -89,7 +89,7 @@ internal class RecipeEditorViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            clickFlow.throttleFirst(1000L)
+            clickFlow.throttleFirst()
                 .collect {
                     when (it) {
                         ButtonClick.SAVE -> {

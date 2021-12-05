@@ -76,7 +76,7 @@ class MyRecipeFragment : Fragment() {
 
     private fun setButtonClickObserver() {
         lifecycleScope.launchWhenStarted {
-            viewModel.clickFlow.throttleFirst(1000L)
+            viewModel.clickFlow.throttleFirst()
                 .collect {
                     when (it) {
                         is MyRecipeViewModel.ButtonClick.AddRecipeHasPressed -> {

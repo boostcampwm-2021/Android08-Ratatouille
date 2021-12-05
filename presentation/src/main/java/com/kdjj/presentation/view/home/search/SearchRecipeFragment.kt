@@ -83,7 +83,7 @@ class SearchRecipeFragment : Fragment() {
 
     private fun setButtonClickObserver() {
         lifecycleScope.launchWhenStarted {
-            viewModel.clickFlow.throttleFirst(1000L)
+            viewModel.clickFlow.throttleFirst()
                 .collect {
                     when (it) {
                         is SearchViewModel.ButtonClick.Summary -> {

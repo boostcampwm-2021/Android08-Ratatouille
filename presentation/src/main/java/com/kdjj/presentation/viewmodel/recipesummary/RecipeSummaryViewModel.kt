@@ -76,7 +76,7 @@ class RecipeSummaryViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            fabClickFlow.throttleFirst(1000L)
+            fabClickFlow.throttleFirst()
                 .collect {
                     when (it) {
                         FabClick.UpdateRecipeFavorite -> {
